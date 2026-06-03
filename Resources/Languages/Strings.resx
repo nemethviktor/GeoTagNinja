@@ -1547,4 +1547,8 @@ That said the code _should_ be able to comprehend other layouts. Note if the cli
     <value>Clear All</value>
     <comment>The string 'Clear All', as in clear all filters.</comment>
   </data>
+  <data name="ckb_AlwaysRecenterMap" xml:space="preserve">
+    <value>Always Re-centre map?</value>
+    <comment>This is on by default. It affects whether the map should be recentered each time the user clicks on an item or we should instead check if an existing item is already on the map. The downside of the latter is that we don't re-zoom, so it's not a perfect solution.</comment>
+  </data>
 </root>

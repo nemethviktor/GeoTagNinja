@@ -59,13 +59,13 @@ internal static class HelperExifReadExifData
             dataTable: HelperVariables.DtHelperDataApplicationSettings,
             settingTabPage: "tpg_CustomRules",
             settingId: "ckb_IncludePredeterminedCountries"
-        );
+, defaultValue: false);
 
         bool stopProcessingRules = HelperDataApplicationSettings.DataReadCheckBoxSettingTrueOrFalse(
             dataTable: HelperVariables.DtHelperDataApplicationSettings,
             settingTabPage: "tpg_CustomRules",
             settingId: "ckb_StopProcessingRules"
-        );
+, defaultValue: false);
 
         #region Actual value allocation block
 

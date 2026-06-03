@@ -1060,7 +1060,7 @@ public partial class FrmMainApp : Form
 
         // Only recenter for selected items when at least one selected coordinate is outside the current view.
         // Missing coordinates deliberately preserve the user's current map position.
-        if (hasSelectedItems)
+        if (hasSelectedItems && !HelperVariables.UserSettingAlwaysRecenterMap)
         {
             if (!hasSelectedCoordinates)
             {
@@ -1445,12 +1445,9 @@ public partial class FrmMainApp : Form
             // Full redraws still use the existing fitBounds behavior when a recenter is actually needed.
             if (shouldRecenterMap && mapHasRenderableCoordinates)
             {
-                string fitBoundsScript = $"map.fitBounds([[{dblMinLat.ToString(provider: CultureInfo.InvariantCulture)}, {dblMinLng.ToString(provider: CultureInfo.InvariantCulture)}], [{dblMaxLat.ToString(provider: CultureInfo.InvariantCulture)}, {dblMaxLng.ToString(provider: CultureInfo.InvariantCulture)}]]);";
-                if (_lastZoomLevel > 0 &&
-                    HelperVariables.UserSettingRetainMapZoom)
-                {
-                    fitBoundsScript += $"map.setZoom({_lastZoomLevel.Value});";
-                }
+                char curlyOpen = '{';
+                char curlyClose = '}';
+                string fitBoundsScript = $"map.fitBounds([[{dblMinLat.ToString(provider: CultureInfo.InvariantCulture)}, {dblMinLng.ToString(provider: CultureInfo.InvariantCulture)}], [{dblMaxLat.ToString(provider: CultureInfo.InvariantCulture)}, {dblMaxLng.ToString(provider: CultureInfo.InvariantCulture)}]], {curlyOpen}padding: [50, 50]{curlyClose});";
 
                 return fitBoundsScript;
             }

@@ -18,9 +18,10 @@ internal static class HelperDataApplicationSettings
     /// <param name="dataTable">The DataTable form which the data is read</param>
     /// <param name="settingTabPage">TabPage of the above</param>
     /// <param name="settingId">The Checkbox's name itself</param>
+    /// <param name="defaultValue">The value to return as default</param>
     /// <returns>true or false</returns>
     internal static bool DataReadCheckBoxSettingTrueOrFalse(DataTable dataTable, string settingTabPage,
-        string settingId)
+        string settingId, bool defaultValue)
     {
         EnumerableRowCollection<DataRow> drDataTableData =
             from DataRow dataRow in dataTable.AsEnumerable()
@@ -30,7 +31,7 @@ internal static class HelperDataApplicationSettings
             select dataRow;
 
         DataRow dataRows = drDataTableData.FirstOrDefault();
-        return dataRows != null && dataRows[columnName: "settingValue"].ToString() == "true";
+        return dataRows == null ? defaultValue : dataRows[columnName: "settingValue"].ToString() == "true";
     }
 
     /// <summary>
@@ -81,7 +82,7 @@ internal static class HelperDataApplicationSettings
                     dataTable: dataTable,
                     settingTabPage: settingTabPage,
                     settingId: optionValue
-                ))
+, defaultValue: false))
             {
                 whichValueIsTrue = optionValue.Replace(oldValue: "rbt_MapColourMode", newValue: "");
                 break;

@@ -6,6 +6,7 @@
 	- _Finally_ got around to bringing in the streaing data logic. No more lengthy "please wait" box! (It's still there, but for a lot less time.)
 	- As a direct outcome of the above now we have rename (`F2`) and delete (`del`) capabilities #206
 	- Version bump to `1.18` - well overdue.
+	- Merged PR #211 - opt-in to keep map visible without refreshing.
 - BUGS & FIXES:
 	- Patch fractional text values not working in GPX import (#207)
 	- `Remove All Geodata` should remove `GPSDOP` and `GPSHPositioningError`

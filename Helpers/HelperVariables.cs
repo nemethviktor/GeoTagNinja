@@ -60,6 +60,7 @@ internal static class HelperVariables
     internal static bool UserSettingUseImperial = false;
 
     internal static bool UserSettingRetainMapZoom = false;
+    internal static bool UserSettingAlwaysRecenterMap = true;
 
     internal static bool UserSettingImportGPXUseParticularTimeZone;
     internal static bool UserSettingImportGPXUseDST;

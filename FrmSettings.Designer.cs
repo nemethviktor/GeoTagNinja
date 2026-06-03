@@ -35,6 +35,7 @@ namespace GeoTagNinja
             this.tcr_Settings = new System.Windows.Forms.TabControl();
             this.tpg_Application = new System.Windows.Forms.TabPage();
             this.gbx_AppSettings = new System.Windows.Forms.GroupBox();
+            this.ckb_AlwaysRecenterMap = new System.Windows.Forms.CheckBox();
             this.ckb_RetainMapZoom = new System.Windows.Forms.CheckBox();
             this.gbx_Startup_Folder = new System.Windows.Forms.GroupBox();
             this.rbt_UseLastUsedFolder = new System.Windows.Forms.RadioButton();
@@ -145,6 +146,7 @@ namespace GeoTagNinja
             // 
             // gbx_AppSettings
             // 
+            this.gbx_AppSettings.Controls.Add(this.ckb_AlwaysRecenterMap);
             this.gbx_AppSettings.Controls.Add(this.ckb_RetainMapZoom);
             this.gbx_AppSettings.Controls.Add(this.gbx_Startup_Folder);
             this.gbx_AppSettings.Controls.Add(this.pbx_ShowThumbnails);
@@ -162,6 +164,13 @@ namespace GeoTagNinja
             resources.ApplyResources(this.gbx_AppSettings, "gbx_AppSettings");
             this.gbx_AppSettings.Name = "gbx_AppSettings";
             this.gbx_AppSettings.TabStop = false;
+            // 
+            // ckb_AlwaysRecenterMap
+            // 
+            resources.ApplyResources(this.ckb_AlwaysRecenterMap, "ckb_AlwaysRecenterMap");
+            this.ckb_AlwaysRecenterMap.Name = "ckb_AlwaysRecenterMap";
+            this.ckb_AlwaysRecenterMap.UseVisualStyleBackColor = true;
+            this.ckb_AlwaysRecenterMap.CheckStateChanged += new System.EventHandler(this.Any_ckb_CheckStateChanged);
             // 
             // ckb_RetainMapZoom
             // 
@@ -821,5 +830,6 @@ namespace GeoTagNinja
         private System.Windows.Forms.RadioButton rbt_UseLastUsedFolder;
         private System.Windows.Forms.RadioButton rbt_SetStartup_Folder;
         private System.Windows.Forms.CheckBox ckb_RetainMapZoom;
+        private System.Windows.Forms.CheckBox ckb_AlwaysRecenterMap;
     }
 }

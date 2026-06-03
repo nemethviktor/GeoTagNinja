@@ -53,6 +53,9 @@ public partial class FrmSettings : Form
         "rbt_UseLastUsedFolder"
     ];
 
+    private readonly List<string> _checkBoxesWithTrueDefaultValue =
+        ["ckb_AlwaysRecenterMap"];
+
     /// <summary>
     ///     This Form provides an interface for the user to edit various app and file-specific settings.
     /// </summary>
@@ -279,8 +282,8 @@ public partial class FrmSettings : Form
                                .DataReadCheckBoxSettingTrueOrFalse(
                                     dataTable: HelperVariables.DtHelperDataApplicationSettings,
                                     settingTabPage: parentNameToUse,
-                                    settingId: ckb.Name
-                                )
+                                    settingId: ckb.Name,
+                                    defaultValue: _checkBoxesWithTrueDefaultValue.Contains(ckb.Name))
                                 ? CheckState.Checked
                                 : CheckState.Unchecked;
                         }
@@ -329,8 +332,8 @@ public partial class FrmSettings : Form
                                .DataReadCheckBoxSettingTrueOrFalse(
                                     dataTable: HelperVariables.DtHelperDataApplicationSettings,
                                     settingTabPage: parentNameToUse,
-                                    settingId: rbt.Name
-                                );
+                                    settingId: rbt.Name,
+                                    defaultValue: false);
                         }
                         catch (InvalidOperationException) // nonesuch
                         {
@@ -418,8 +421,8 @@ public partial class FrmSettings : Form
                .DataReadCheckBoxSettingTrueOrFalse(
                     dataTable: HelperVariables.DtHelperDataApplicationSettings,
                     settingTabPage: "tpg_CustomRules",
-                    settingId: "ckb_IncludePredeterminedCountries"
-                ));
+                    settingId: "ckb_IncludePredeterminedCountries",
+                    defaultValue: false));
 
         // 01b transfer to screen 
         // Country (e.g. United Kingdom)

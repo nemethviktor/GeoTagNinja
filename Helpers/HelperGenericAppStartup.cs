@@ -273,7 +273,7 @@ internal static class HelperGenericAppStartup
             }
         };
 
-        Dictionary<string, Dictionary<string, string>> boolSettings = new()
+        Dictionary<string, Dictionary<string, string>> boolSettingsWithFalseDefaults = new()
         {
             [key: "tpg_Application"] = new Dictionary<string, string>
             {
@@ -283,12 +283,21 @@ internal static class HelperGenericAppStartup
                 { "UserSettingOnlyShowFCodePPL", "ckb_PopulatedPlacesOnly" },
                 { "UserSettingUseImperial", "ckb_UseImperialNotMetric" },
                 { "UserSettingShowThumbnails", "ckb_ShowThumbnails" },
-                { "UserSettingRetainMapZoom", "ckb_RetainMapZoom" }
+                { "UserSettingRetainMapZoom", "ckb_RetainMapZoom" },
             },
             [key: "tpg_ImportExport_Import"] = new Dictionary<string, string>
             {
                 { "UserSettingImportGPXUseParticularTimeZone", "ckb_UseTimeZone" },
                 { "UserSettingImportGPXUseDST", "ckb_UseDST" }
+            }
+        };
+
+        Dictionary<string, Dictionary<string, string>> boolSettingsWithTrueDefaults = new()
+        {
+            [key: "tpg_Application"] = new Dictionary<string, string>
+            {
+
+                { "UserSettingAlwaysRecenterMap", "ckb_AlwaysRecenterMap"}
             }
         };
 
@@ -328,7 +337,8 @@ internal static class HelperGenericAppStartup
             FrmMainApp.Log.Debug(message: $"Now retrieving: {field.Name}");
 
             TrySetStringValue(dict: stringSettings, tab: settingTabPage, field: field);
-            TrySetBoolValue(dict: boolSettings, tab: settingTabPage, field: field);
+            TrySetBoolValue(dict: boolSettingsWithFalseDefaults, tab: settingTabPage, field: field, defaultValue: false);
+            TrySetBoolValue(dict: boolSettingsWithTrueDefaults, tab: settingTabPage, field: field, defaultValue: true);
             TrySetIntValue(dict: intSettings, tab: settingTabPage, field: field);
             TrySetRadioValue(dict: radioSettings, tab: settingTabPage, field: field);
         }
@@ -364,16 +374,18 @@ internal static class HelperGenericAppStartup
 
     private static void TrySetBoolValue(Dictionary<string, Dictionary<string, string>> dict,
                                         string tab,
-                                        FieldInfo field)
+                                        FieldInfo field,
+                                        bool defaultValue)
     {
         if (dict.TryGetValue(key: tab, value: out Dictionary<string, string> map) &&
             map.TryGetValue(key: field.Name, value: out string controlId))
         {
             if (field.FieldType == typeof(bool))
             {
-                field.SetValue(obj: null, value: HelperDataApplicationSettings.DataReadCheckBoxSettingTrueOrFalse(
-                    dataTable: HelperVariables.DtHelperDataApplicationSettings, settingTabPage: tab,
-                    settingId: controlId));
+                field.SetValue(obj: null, value: HelperDataApplicationSettings.DataReadCheckBoxSettingTrueOrFalse(dataTable: HelperVariables.DtHelperDataApplicationSettings,
+                    settingTabPage: tab,
+                    settingId: controlId,
+                    defaultValue: defaultValue));
             }
             else
             {
@@ -586,7 +598,7 @@ internal static class HelperGenericAppStartup
                 bool useLastUsedFolder = HelperDataApplicationSettings.DataReadCheckBoxSettingTrueOrFalse(
                     dataTable: HelperVariables.DtHelperDataApplicationSettings,
                     settingTabPage: "tpg_Application",
-                    settingId: "rbt_UseLastUsedFolder");
+                    settingId: "rbt_UseLastUsedFolder", defaultValue: false);
                 HelperVariables.UserSettingUseLastUsedFolderAsStartup = useLastUsedFolder;
 
                 if (useLastUsedFolder)
