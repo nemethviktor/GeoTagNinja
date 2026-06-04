@@ -10,6 +10,7 @@
 - BUGS & FIXES:
 	- Patch fractional text values not working in GPX import (#207)
 	- `Remove All Geodata` should remove `GPSDOP` and `GPSHPositioningError`
+	- Fix #212 image rotation not being respected for jpgs
 
 **Build 9600 [20260414]**
 - NEW & UPDATED:

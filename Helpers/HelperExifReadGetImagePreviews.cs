@@ -7,6 +7,7 @@ using System.Diagnostics;
 using System.Drawing;
 using System.Drawing.Imaging;
 using System.IO;
+using System.Linq;
 using System.Text;
 using System.Text.RegularExpressions;
 using System.Threading.Tasks;
@@ -17,6 +18,10 @@ namespace GeoTagNinja.Helpers;
 
 internal static class HelperExifReadGetImagePreviews
 {
+
+    // EXIF Orientation property ID
+    private const int OrientationPropertyId = 0x0112;
+
     internal enum Initiator
     {
         FrmMainAppPictureBox,
@@ -142,6 +147,7 @@ internal static class HelperExifReadGetImagePreviews
         {
             try
             {
+                // currently: heic, heif, webp
                 if (MagickExtensionList.Contains(item: directoryElement.Extension.TrimStart('.').ToLower()))
                 {
                     // actually the reason i'm not using this for _every_ file is that it's just f...ing slow with NEF files(which is what I have plenty of), so it's prohibitive to run on RAW files. 
@@ -151,10 +157,7 @@ internal static class HelperExifReadGetImagePreviews
                 }
                 else
                 {
-                    // via https://stackoverflow.com/a/6576645/3968494
-                    using FileStream stream = new(path: fileNameWithPath, mode: FileMode.Open,
-                        access: FileAccess.Read);
-                    img = Image.FromStream(stream: stream);
+                    img = LoadAndCorrectOrientation(filePath: fileNameWithPath);
                 }
             }
             catch
@@ -400,5 +403,65 @@ internal static class HelperExifReadGetImagePreviews
         }
 
         return null;
+    }
+
+    /// <summary>
+    /// Loads an image from a file path and automatically corrects its rotation based on EXIF metadata.
+    /// </summary>
+    /// <param name="filePath">The full path to the image file.</param>
+    /// <returns>A rotation-corrected <see cref="Image"/> object.</returns>
+    public static Image LoadAndCorrectOrientation(string filePath)
+    {
+        if (string.IsNullOrWhiteSpace(value: filePath))
+        {
+            throw new ArgumentException(message: "File path cannot be null or empty.", paramName: nameof(filePath));
+        }
+
+        // Using FileStream to avoid locking the file directly via Image.FromFile
+        using FileStream stream = new(path: filePath, mode: FileMode.Open, access: FileAccess.Read);
+        Image originalImage = Image.FromStream(stream: stream);
+
+        // Check if the image contains the EXIF orientation property
+        if (originalImage.PropertyIdList.Contains(value: OrientationPropertyId))
+        {
+            System.Drawing.Imaging.PropertyItem propItem = originalImage.GetPropertyItem(propid: OrientationPropertyId);
+
+            if (propItem?.Value != null && propItem.Value.Length > 0)
+            {
+                int orientationValue = propItem.Value[0];
+                RotateFlipType rotateFlipType = GetRotateFlipType(orientation: orientationValue);
+
+                if (rotateFlipType != RotateFlipType.RotateNoneFlipNone)
+                {
+                    originalImage.RotateFlip(rotateFlipType: rotateFlipType);
+
+                    // Remove the orientation flag so it doesn't get double-rotated if saved later
+                    originalImage.RemovePropertyItem(propid: OrientationPropertyId);
+                }
+            }
+        }
+
+        return originalImage;
+    }
+
+    /// <summary>
+    /// Maps the standard EXIF orientation integer value to the corresponding GDI+ RotateFlipType.
+    /// </summary>
+    /// <param name="orientation">The EXIF orientation integer value.</param>
+    /// <returns>The correct <see cref="RotateFlipType"/> needed to fix the image.</returns>
+    private static RotateFlipType GetRotateFlipType(int orientation)
+    {
+        return orientation switch
+        {
+            1 => RotateFlipType.RotateNoneFlipNone,
+            2 => RotateFlipType.RotateNoneFlipX,
+            3 => RotateFlipType.Rotate180FlipNone,
+            4 => RotateFlipType.Rotate180FlipX,
+            5 => RotateFlipType.Rotate90FlipX,
+            6 => RotateFlipType.Rotate90FlipNone,// Very common for vertical phone photos/scans
+            7 => RotateFlipType.Rotate270FlipX,
+            8 => RotateFlipType.Rotate270FlipNone,
+            _ => RotateFlipType.RotateNoneFlipNone,
+        };
     }
 }
