@@ -3,9 +3,9 @@
 name: ExifToolWrapper.cs
 description: C# Wrapper for Phil Harvey's excellent ExifTool
 url: https://github.com/FileMeta/ExifToolWrapper/raw/master/ExifToolWrapper.cs
-version: 1.2
+version: 1.2.2
 keywords: CodeBit
-dateModified: 2019-12-14
+dateModified: 2019-12-14; unknown time by Urmel; 2026-07-06 by V Nemeth
 license: http://unlicense.org
 about: https://sno.phy.queensu.ca/~phil/exiftool/
 # Metadata in MicroYaml format. See http://filemeta.org/CodeBit.html
@@ -40,6 +40,7 @@ For more information, please refer to <http://unlicense.org/>
 //#define EXIF_TRACE
 
 using GeoTagNinja.Helpers;
+using NLog;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel;
@@ -50,14 +51,19 @@ using System.Text;
 
 namespace GeoTagNinja.Model;
 
+/// <summary>
+/// Manages a persistent ExifTool process and provides methods to extract metadata from files via the ExifTool stay_open
+/// protocol, handling process I/O and lifecycle.
+/// </summary>
+/// <remarks>Constructor launches the ExifTool executable (using HelperVariables.ExifToolExePathToUse) and throws
+/// an ApplicationException on failure. Communication uses UTF-8 without BOM and configured timeouts. Not thread-safe;
+/// call Dispose to terminate the external process cleanly (sends the stay_open exit command, waits for exit, and
+/// disposes streams). Includes a static TryParseDate helper for ExifTool date strings (format "YYYY:MM:DD
+/// hh:mm:ss").</remarks>
 public class ExifTool : IDisposable
 {
-    // const string c_arguments = @"-stay_open 1 -@ - -common_args -charset UTF8 -G1 -args";
-    // -stay_open 1 -@ - -common_args invokes to stay open, parse args from stdin/cmdline and
-    // use args for all future -execute command
     private const string c_arguments = @"-stay_open 1 -@ - -common_args -api ""Filter=s/\r|\n/ /g "" -a -s -s -struct -G -ee -charset UTF8 -charset filename=utf8 -args";
 
-    // TODO:                             string commonArgs = @" -api ""Filter=s/\r|\n/ /g "" -a -s -s -struct -sort -G -ee -charset utf8 -charset filename=utf8 -charset photoshop=utf8 -charset exif=utf8 -charset iptc=utf8 ";
     private const string c_exitCommand = "-stay_open\nFalse\n";
     private const int c_timeout = 30000; // in milliseconds
     private const int c_exitTimeout = 15000;
@@ -70,6 +76,19 @@ public class ExifTool : IDisposable
     private StreamWriter m_in;
     private StreamReader m_out;
 
+    private static readonly Logger Log = LogManager.GetCurrentClassLogger();
+
+    /// <summary>
+    /// Initializes a new ExifTool instance and launches the external ExifTool process with redirected standard input
+    /// and output.
+    /// </summary>
+    /// <remarks>Configures ProcessStartInfo to run ExifTool without a window and with redirected streams,
+    /// sets UTF-8 (no BOM) for standard output, and wraps StandardInput.BaseStream with a StreamWriter to control input
+    /// encoding on frameworks that lack StandardInputEncoding. Assigns the process to an internal field and exposes its
+    /// standard output stream.</remarks>
+    /// <exception cref="ApplicationException">Thrown when the ExifTool process fails to start or exits immediately, or when launching the executable fails
+    /// (for example if ExifTool.exe is missing or not on the PATH). When caused by an OS error the inner exception is a
+    /// Win32Exception.</exception>
     public ExifTool()
     {
         // Prepare process start
@@ -102,6 +121,12 @@ public class ExifTool : IDisposable
         m_out = m_exifTool.StandardOutput;
     }
 
+    /// <summary>
+    ///     Retrieves specific predefined tag properties for a target file. 
+    ///     Dynamically configures the extraction arguments to strip out unneeded attributes.
+    /// </summary>
+    /// <param name="filename">The absolute path of the target file to scan.</param>
+    /// <param name="propertiesRead">The collection to hold the extracted metadata properties.</param>
     public void GetProperties(string filename,
                               ICollection<KeyValuePair<string, string>> propertiesRead)
     {
@@ -110,41 +135,62 @@ public class ExifTool : IDisposable
             return;
         }
 
+        // 1. Send the primary target filename block
         m_in.Write(value: filename);
-        m_in.Write(value: "\n-execute\n");
+        m_in.Write(value: "\n");
+
+        // 2. DYNAMIC PRE-FILTER: Feed the specific parameters required
+        // This instructs ExifTool to ignore anything not registered inside your Mapping profiles.
+        IEnumerable<string> targetedTags = Model.SourcesAndAttributes.GetAllRequiredInAttributes();
+        foreach (string tag in targetedTags)
+        {
+            // Format as an explicit extraction target argument (e.g., "-XMP:GPSAltitude")
+            m_in.Write(value: $"-{tag}\n");
+        }
+
+        // 3. Fire the execution sequence
+        m_in.Write(value: "-execute\n");
         m_in.Flush();
-#if EXIF_TRACE
-            Debug.WriteLine(filename);
-            Debug.WriteLine("-execute");
-#endif
+
+        // 4. Safe sequential parsing loop...
         for (; ; )
         {
-            string line = m_out.ReadLine();
-#if EXIF_TRACE
-                Debug.WriteLine(line);
-#endif
+            string? line = m_out.ReadLine();
+            if (line == null)
+            {
+                break;
+            }
+
             if (line.StartsWith(value: "{ready"))
             {
                 break;
             }
 
-            if (line[index: 0] == '-')
+            try
             {
+                if (string.IsNullOrWhiteSpace(value: line) || line[index: 0] != '-')
+                {
+                    continue;
+                }
+
                 int eq = line.IndexOf(value: '=');
                 if (eq > 1)
                 {
                     string key = line.Substring(startIndex: 1, length: eq - 1);
-                    string value = line.Substring(startIndex: eq + 1)
-                        .Trim();
+                    string value = line.Substring(startIndex: eq + 1).Trim();
+
                     if (!propertiesRead.Any(predicate: f => f.Key == key))
                     {
                         propertiesRead.Add(item: new KeyValuePair<string, string>(key: key, value: value));
                     }
                 }
             }
+            catch (Exception ex)
+            {
+                Log.Error(exception: ex, message: $"Failed to parse pre-filtered line token: '{line}'");
+            }
         }
     }
-
     #region Static Methods
 
     /// <summary>

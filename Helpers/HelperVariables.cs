@@ -54,6 +54,9 @@ internal static class HelperVariables
 
     // ReSharper disable once FieldCanBeMadeReadOnly.Global
     internal static bool UserSettingOnlyShowFCodePPL = false;
+    /// <summary>
+    /// This relates to the user setting to whether we are in Details mode or Thumbnail mode for the ListView
+    /// </summary>
     internal static bool UserSettingShowThumbnails;
 
     // ReSharper disable once FieldCanBeMadeReadOnly.Global

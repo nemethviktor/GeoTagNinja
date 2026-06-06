@@ -1327,6 +1327,8 @@ public class DirectoryElement
 
     private Image? ExtractFileThumbnail(string fileNameWithPath, string generatedFileName)
     {
+        Log.Info(message: $"Thumbnail generation started for {fileNameWithPath}");
+
         Image? generatedValue = null;
         try
         {
@@ -1428,6 +1430,8 @@ public class DirectoryElement
             generatedValue = GenerateFixedSizeImage(originalPath: generatedFileName,
                 width: FileListView.ThumbnailSize, height: FileListView.ThumbnailSize);
         }
+
+        Log.Info(message: $"Thumbnail generation finished for {fileNameWithPath}");
 
         return generatedValue;
     }

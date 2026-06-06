@@ -1702,6 +1702,21 @@ public partial class FileListView : System.Windows.Forms.ListView
         }
     }
 
+    /// <summary>
+    /// Processes Windows messages to implement custom context-menu behavior.
+    /// Specifically handles the WM_CONTEXTMENU message (0x007B) by decoding
+    /// the screen coordinates encoded in <paramref name="m"/>.LParam, converting
+    /// them to client coordinates, and invoking <see cref="ShowFilterMenu(Point)"/>
+    /// to display the filter/context menu at that location. Messages other than
+    /// WM_CONTEXTMENU are forwarded to the base window procedure.
+    /// </summary>
+    /// <param name="m">The Windows message being processed.</param>
+    /// <remarks>
+    /// The X and Y coordinates are extracted from the 32-bit LParam by splitting
+    /// it into two 16-bit values using bit shifts and byte conversion. The
+    /// method converts the screen coordinates to client coordinates via
+    /// <see cref="PointToClient(Point)"/> before calling <see cref="ShowFilterMenu(Point)"/>.
+    /// </remarks>
     protected override void WndProc(ref Message m)
     {
         // WM_CONTEXTMENU

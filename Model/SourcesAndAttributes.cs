@@ -18,6 +18,8 @@ namespace GeoTagNinja.Model;
 /// </remarks>
 public static class SourcesAndAttributes
 {
+    private static readonly HashSet<string> _globalInAttributesCache;
+    private static readonly Dictionary<ElementAttribute, ElementAttributeMapping> TagsToAttributes;
     private const int ORDER_INCREMENT_VALUE = 1;
 
     /// <summary>
@@ -83,7 +85,8 @@ public static class SourcesAndAttributes
     }
 
     /// <summary>
-    ///     A dictionary that maps ElementAttribute values to their corresponding ElementAttributeMapping objects.
+    ///     Initialises the static metadata mappings and pre-compiles a unique 
+    ///     cache of all required incoming ExifTool tags.
     /// </summary>
     /// <remarks>
     ///     This dictionary is used to define the mapping between different types of attributes (e.g., GPS, EXIF, XMP) and
@@ -91,12 +94,13 @@ public static class SourcesAndAttributes
     ///     Each ElementAttributeMapping object contains information about the attribute's name, type, input/output attributes,
     ///     and other properties.
     /// </remarks>
-    private static readonly IDictionary<ElementAttribute, ElementAttributeMapping>
-        TagsToAttributes =
-            new Dictionary<ElementAttribute, ElementAttributeMapping>
+    static SourcesAndAttributes()
+    {
+        // A. Move your existing dictionary allocation directly inside here:
+        TagsToAttributes = new Dictionary<ElementAttribute, ElementAttributeMapping>
+        {
             {
-                {
-                    ElementAttribute.GPSAltitude, new ElementAttributeMapping
+                ElementAttribute.GPSAltitude, new ElementAttributeMapping
                     {
                         Name = "GPSAltitude",
                         ColumnHeader = HelperVariables.COL_NAME_PREFIX + FileListColumns.GPS_ALTITUDE,
@@ -884,8 +888,38 @@ public static class SourcesAndAttributes
                         OrderID = ORDER_INCREMENT_VALUE + (int)ElementAttribute.GPSHPositioningError,
                         isGeoData = true
                     }
+            }
+        };
+
+        // B. Populate your unique pre-filter hashset directly from the dictionary you just filled
+        _globalInAttributesCache = [with(comparer: StringComparer.OrdinalIgnoreCase)];
+
+        foreach (KeyValuePair<ElementAttribute, ElementAttributeMapping> kvp in TagsToAttributes)
+        {
+            if (kvp.Value.InAttributes != null)
+            {
+                foreach (string tag in kvp.Value.InAttributes)
+                {
+                    if (!string.IsNullOrWhiteSpace(value: tag))
+                    {
+                        _ = _globalInAttributesCache.Add(item: tag);
+                    }
                 }
-            };
+            }
+        }
+    }
+
+
+    /// <summary>
+    ///     Retrieves a copy of all distinct ExifTool metadata tags required by the mapping configuration.
+    /// </summary>
+    /// <returns>A collection of distinct strings representing critical input attributes.</returns>
+    public static IEnumerable<string> GetAllRequiredInAttributes()
+    {
+        return _globalInAttributesCache;
+    }
+
+
 
     /// <summary>
     ///     Retrieves the list of attributes associated with a given attributeToFind.

@@ -7,6 +7,7 @@
 	- As a direct outcome of the above now we have rename (`F2`) and delete (`del`) capabilities #206
 	- Version bump to `1.18` - well overdue.
 	- Merged PR #211 - opt-in to keep map visible without refreshing.
+	- Also ref #212 rewrote the exiftool wrapper/parser to only care about the tags we need. This speeds up parsing tremendously.
 - BUGS & FIXES:
 	- Patch fractional text values not working in GPX import (#207)
 	- `Remove All Geodata` should remove `GPSDOP` and `GPSHPositioningError`

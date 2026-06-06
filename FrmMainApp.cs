@@ -3117,6 +3117,12 @@ public partial class FrmMainApp : Form
 
     #region Events
 
+    /// <summary>
+    /// Overrides the behaviour for ESC key, namely that it acts as a CancellationToken
+    /// </summary>
+    /// <param name="msg"></param>
+    /// <param name="keyData"></param>
+    /// <returns></returns>
     protected override bool ProcessCmdKey(ref Message msg, Keys keyData)
     {
         if (keyData == Keys.Escape)
