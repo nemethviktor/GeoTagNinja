@@ -5,7 +5,6 @@ using System.Diagnostics;
 using System.Windows.Forms;
 using Themer = WinFormsDarkThemerNinja.Themer;
 
-
 namespace GeoTagNinja;
 
 public partial class FrmPleaseWaitBox : Form
@@ -95,7 +94,6 @@ public partial class FrmPleaseWaitBox : Form
     {
         _frmMainAppInstance.Enabled = true;
     }
-
 
     /// <summary>
     /// Updates the individual Controls' visibilities depending on what stage/action we're on/at

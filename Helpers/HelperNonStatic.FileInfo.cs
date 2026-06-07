@@ -26,6 +26,6 @@ internal partial class HelperNonStatic
     /// <returns></returns>
     public HashSet<FileInfo> CreateHashSetWithComparer()
     {
-        return new HashSet<FileInfo>(new FileInfoEqualityComparer());
+        return [with(new FileInfoEqualityComparer())];
     }
 }

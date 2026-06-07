@@ -96,7 +96,6 @@ public static class SourcesAndAttributes
     /// </remarks>
     static SourcesAndAttributes()
     {
-        // A. Move your existing dictionary allocation directly inside here:
         TagsToAttributes = new Dictionary<ElementAttribute, ElementAttributeMapping>
         {
             {
@@ -891,7 +890,7 @@ public static class SourcesAndAttributes
             }
         };
 
-        // B. Populate your unique pre-filter hashset directly from the dictionary you just filled
+        // Populate the unique pre-filter hashset directly from the dictionary just filled
         _globalInAttributesCache = [with(comparer: StringComparer.OrdinalIgnoreCase)];
 
         foreach (KeyValuePair<ElementAttribute, ElementAttributeMapping> kvp in TagsToAttributes)
@@ -909,7 +908,6 @@ public static class SourcesAndAttributes
         }
     }
 
-
     /// <summary>
     ///     Retrieves a copy of all distinct ExifTool metadata tags required by the mapping configuration.
     /// </summary>
@@ -918,8 +916,6 @@ public static class SourcesAndAttributes
     {
         return _globalInAttributesCache;
     }
-
-
 
     /// <summary>
     ///     Retrieves the list of attributes associated with a given attributeToFind.

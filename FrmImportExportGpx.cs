@@ -11,7 +11,6 @@ using static GeoTagNinja.Helpers.HelperControlAndMessageBoxHandling;
 using static GeoTagNinja.Helpers.HelperGenericAncillaryListsArrays;
 using Themer = WinFormsDarkThemerNinja.Themer;
 
-
 namespace GeoTagNinja;
 
 public partial class FrmImportExportGpx : Form

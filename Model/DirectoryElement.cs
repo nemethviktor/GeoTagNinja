@@ -257,13 +257,10 @@ public class DirectoryElement
             if (frmMainAppInstance.listViewDisplayMode == FrmMainApp.ListViewDisplayMode.LargeIcons)
             {
 
-
                 field = value;
             }
         }
     }
-
-
 
     /// <summary>
     ///     Via https://stackoverflow.com/a/2001462/3968494 - plus I added the ExifRotate because the incoming image's

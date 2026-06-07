@@ -140,7 +140,7 @@ public class ExifTool : IDisposable
         m_in.Write(value: "\n");
 
         // 2. DYNAMIC PRE-FILTER: Feed the specific parameters required
-        // This instructs ExifTool to ignore anything not registered inside your Mapping profiles.
+        // This instructs ExifTool to ignore anything not registered inside the Mapping profiles.
         IEnumerable<string> targetedTags = Model.SourcesAndAttributes.GetAllRequiredInAttributes();
         foreach (string tag in targetedTags)
         {

@@ -145,7 +145,6 @@ internal static class HelperExifDataPointInteractions
         //            }
         //        }
 
-
         foreach (ElementAttribute toponomyDetail in geoDataAttributes)
         {
             dirElemFileToModify.SetAttributeValueAnyType(
@@ -178,7 +177,6 @@ internal static class HelperExifDataPointInteractions
         {
             coordHalfPair = Math.Abs(value: coordHalfPair) % 180;
         }
-
 
         coordHalfPair = Math.Round(value: coordHalfPair, digits: 6);
         return coordHalfPair;

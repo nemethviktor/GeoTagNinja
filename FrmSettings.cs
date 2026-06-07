@@ -1326,7 +1326,6 @@ public partial class FrmSettings : Form
 
         Dictionary<string, string> buttonsDictionary = GetButtonsDictionary();
 
-
         List<string> ItemsToExport = DialogWithOrWithoutCheckBox.DisplayAndReturnList(
             labelText: ReturnControlText(
                 controlName: "mbx_FrmSettings_QuestionWhatToExport",
@@ -1396,7 +1395,6 @@ public partial class FrmSettings : Form
             Dictionary<string, string> checkboxDictionary = GetCheckboxDictionary();
 
             Dictionary<string, string> buttonsDictionary = GetButtonsDictionary();
-
 
             List<string> ItemsToImport = DialogWithOrWithoutCheckBox.DisplayAndReturnList(
                 labelText: ReturnControlText(

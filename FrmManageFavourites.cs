@@ -7,7 +7,6 @@ using System.Drawing;
 using System.Windows.Forms;
 using Themer = WinFormsDarkThemerNinja.Themer;
 
-
 namespace GeoTagNinja;
 
 public partial class FrmManageFavourites : Form

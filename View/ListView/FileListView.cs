@@ -14,7 +14,6 @@ using WinFormsDarkThemerNinja;
 
 namespace GeoTagNinja.View.ListView;
 
-
 public partial class FileListView : System.Windows.Forms.ListView
 {
     // Default values to set for entries
@@ -59,7 +58,6 @@ public partial class FileListView : System.Windows.Forms.ListView
         AfterLabelEdit += FileListView_AfterLabelEdit;
 
     }
-
 
     /// <summary>
     ///     Class containing native method (shell32, etc) definitions in order
@@ -208,7 +206,6 @@ public partial class FileListView : System.Windows.Forms.ListView
         public const string GPSDOP = "GPSDOP";
         public const string GPSHPOSITIONINGERROR = "GPSHPositioningError";
     }
-
 
     private static readonly Dictionary<string, SourcesAndAttributes.ElementAttribute>
         ColumnToAttributeMap = new()
@@ -420,7 +417,6 @@ public partial class FileListView : System.Windows.Forms.ListView
 
     #endregion
 
-
     #endregion
 
     #region External Visible Properties
@@ -603,7 +599,7 @@ public partial class FileListView : System.Windows.Forms.ListView
             // Update subitems based on the new metadata
             for (int i = 1; i < Columns.Count; i++)
             {
-                // Re-use your PickModelValueForColumn logic
+                // Re-use the PickModelValueForColumn logic
                 lvi.SubItems[i].Text = PickModelValueForColumn(de, Columns[i]);
             }
         }
@@ -1301,7 +1297,7 @@ public partial class FileListView : System.Windows.Forms.ListView
     /// <param name="searchValue">The text to match</param>
     private void ApplyAutoFilter(int columnIndex, FilterOperator operatorValue, string searchValue)
     {
-        // 1. Guard: Use your existing check
+        // 1. Guard: Use the existing check
         FrmMainApp frmMain = (FrmMainApp)Application.OpenForms["FrmMainApp"];
         if (frmMain != null && !frmMain.EnsureMetadataIsReadyAndWarnUserIfNot())
         {
@@ -1400,7 +1396,6 @@ public partial class FileListView : System.Windows.Forms.ListView
             Invalidate();
         }
     }
-
 
     /// <summary>
     ///     Reloads the listview's items with data from the DirectoryElementCollection
@@ -1786,7 +1781,7 @@ public partial class FileListView : System.Windows.Forms.ListView
                     if (capturedValue == null)
                     {
                         // Using the Microsoft.VisualBasic Interaction.InputBox 
-                        // Ensure you have the reference to Microsoft.VisualBasic in your project
+                        // Ensure you have the reference to Microsoft.VisualBasic in the project
                         finalSearchValue = Microsoft.VisualBasic.Interaction.InputBox(
                             Prompt: $"{opText}:",
                             Title: "Filter",
@@ -1833,7 +1828,6 @@ public partial class FileListView : System.Windows.Forms.ListView
                 // The local helper now handles the capture correctly
                 AddFilterItem(op: op, value: null);
             }
-
 
             _ = filterSubMenu.DropDownItems.Add(new ToolStripSeparator());
 

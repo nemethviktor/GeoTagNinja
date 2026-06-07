@@ -9,7 +9,6 @@ using System.Windows.Forms;
 using static GeoTagNinja.Helpers.HelperControlAndMessageBoxHandling;
 using Themer = WinFormsDarkThemerNinja.Themer;
 
-
 namespace GeoTagNinja;
 
 public partial class FrmMainApp

@@ -827,7 +827,6 @@ public partial class FrmEditFileData : Form
         return maxAttributeVersion;
     }
 
-
     #region Object events
 
     /// <summary>
@@ -893,7 +892,6 @@ public partial class FrmEditFileData : Form
                     icon: messageBoxIcon,
                     buttons: MessageBoxButtons.OK);
     }
-
 
     /// <summary>
     ///     Pulls data from local storage and fills up the listView and fills the Controls and DataTable.
@@ -982,7 +980,6 @@ public partial class FrmEditFileData : Form
         {
             return;
         }
-
 
         try
         {
@@ -1095,7 +1092,6 @@ public partial class FrmEditFileData : Form
             }
         }
     }
-
 
     /// <summary>
     /// Sets the selected time zone in the combo box based on the specified time zone identifier and date, and updates
@@ -1315,7 +1311,6 @@ public partial class FrmEditFileData : Form
         {
             DirectoryElement dirElemFileToModify = lvi.Tag as DirectoryElement;
 
-
             // this is to prevent code from looping through _all_ the files in a folder pointlessly.
             if (dirElemFileToModify.HasDirtyAttributes(
                     whichAttributeVersion: DirectoryElement.AttributeVersion
@@ -1357,7 +1352,6 @@ public partial class FrmEditFileData : Form
                         version: DirectoryElement.AttributeVersion
                                                  .Stage2EditFormReadyToSaveAndMoveToWriteQueue);
                 }
-
 
                 HelperGenericFileLocking.FileListBeingUpdated = true;
                 await FileListViewReadWrite.ListViewUpdateRowFromDEStage3ReadyToWrite(dirElemFileToModify: dirElemFileToModify);

@@ -346,7 +346,7 @@ internal static class HelperExifExifToolOperator
     /// </summary>
     /// <param name="dirElemToDrop">The DirectoryElement to be removed from the DE3 collection.</param>
     /// <param name="frmMainAppInstance">An instance of the FrmMainApp form.</param>
-    
+
     private static void RemoveDirElementFromDe3AndCopyDataToOriginal(
         DirectoryElement dirElemToDrop,
         FrmMainApp frmMainAppInstance)

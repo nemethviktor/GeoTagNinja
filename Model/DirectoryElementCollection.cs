@@ -432,7 +432,6 @@ public class DirectoryElementCollection : List<DirectoryElement>
 
             _frmPleaseWaitBoxInstance?.UpdateControlsVisibility(stage: FrmPleaseWaitBox.ActionStages.SCANNING);
 
-
             try
             {
                 await Task.Run(action: () =>

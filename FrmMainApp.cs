@@ -1868,22 +1868,20 @@ public partial class FrmMainApp : Form
                 options: new CoreWebView2EnvironmentOptions(
                     additionalBrowserArguments: null, language: "en"));
             await wbv_MapArea.EnsureCoreWebView2Async(environment: c2Wv);
-            // Inside your Form_Load or after InitializeAsync
-
             // 1. Set a filter so we only intercept OSM tile requests (saves performance)
             wbv_MapArea.CoreWebView2.AddWebResourceRequestedFilter(
-                "https://*.tile.openstreetmap.org/*",
+                uri: "https://*.tile.openstreetmap.org/*",
                 Microsoft.Web.WebView2.Core.CoreWebView2WebResourceContext.Image
             );
 
             // 2. Handle the request
-            wbv_MapArea.CoreWebView2.WebResourceRequested += (sender, args) =>
+            wbv_MapArea.CoreWebView2.WebResourceRequested += (object sender, CoreWebView2WebResourceRequestedEventArgs args) =>
             {
                 // Check if the header already exists; if so, remove it to avoid duplicates
                 CoreWebView2HttpRequestHeaders headers = args.Request.Headers;
 
                 // Force the Referer header
-                headers.SetHeader("Referer", "https://www.geotagninja.com/");
+                headers.SetHeader(name: "Referer", value: "https://www.geotagninja.com/");
             };
         }
         catch (Exception ex)
@@ -2339,7 +2337,6 @@ public partial class FrmMainApp : Form
                         fakeControlType: HelperControlAndMessageBoxHandling.FakeControlTypes.MessageBox),
                     icon: MessageBoxIcon.Question,
                     buttons: MessageBoxButtons.YesNo);
-
 
             if (dialogResult == DialogResult.Yes)
             {
@@ -4242,7 +4239,6 @@ nowSavingExif: false));
         }
     }
 
-
     /// <summary>
     ///     Reloads cbx_Favourites items and autocompletesource from FrmMainApp.Favourites
     /// </summary>
@@ -4259,7 +4255,6 @@ nowSavingExif: false));
         cbx_Favourites.AutoCompleteSource = AutoCompleteSource.CustomSource;
         cbx_Favourites.AutoCompleteCustomSource = autoCompleteCustomSource;
     }
-
 
 }
 

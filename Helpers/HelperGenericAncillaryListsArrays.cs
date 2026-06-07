@@ -205,7 +205,6 @@ internal static class HelperGenericAncillaryListsArrays
         return result;
     }
 
-
     /// <summary>
     ///     This is part of a messy and obsolete code logic whereby I was using separate buttons and lables and whatnots for
     ///     ultimately identical purposes (e.g. "OK" or "None" etc). These have now been merged more-or-less and this

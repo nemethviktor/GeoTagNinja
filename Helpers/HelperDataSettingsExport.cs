@@ -47,7 +47,6 @@ internal static class HelperDataSettingsExport
             buttons: MessageBoxButtons.OK);
         return;
 
-
         static void KeepSQLiteTables(List<string> tablesToKeep,
                                      string exportFilePath)
         {
