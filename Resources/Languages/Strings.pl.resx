@@ -1219,4 +1219,7 @@ Zapisz klucz API, gdy zostaniesz o to poproszony. Jeśli tego nie zrobisz od raz
   <data name="Generic_ClearAll" xml:space="preserve">
     <value>Wyczyść wszystko</value>
   </data>
+  <data name="ckb_AlwaysRecenterMap" xml:space="preserve">
+    <value>Zawsze wyśrodkowywać mapę?</value>
+  </data>
 </root>
