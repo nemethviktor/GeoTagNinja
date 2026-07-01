@@ -332,12 +332,17 @@ internal class TagsToModelValueTransformations
             // not set
             return null;
         }
-        bool _ = double.TryParse(s: parseResult.ToString(provider: CultureInfo.InvariantCulture), result: out double returnVal);
-
-        return _
+        bool success = double.TryParse(
+            s: parseResult.ToString(CultureInfo.InvariantCulture),
+            style: NumberStyles.Any,
+            provider: CultureInfo.InvariantCulture,
+            result: out double returnVal
+        );
+        return success
             ? returnVal
             : null;
     }
+
     /// <summary>
     ///     Ensure the value is an actual date-time...
     /// </summary>

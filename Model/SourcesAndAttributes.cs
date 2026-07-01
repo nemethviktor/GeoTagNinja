@@ -862,7 +862,10 @@ public static class SourcesAndAttributes
                         Name = "GPSDOP",
                         ColumnHeader = HelperVariables.COL_NAME_PREFIX + FileListColumns.GPSDOP,
                         TypeOfElement = typeof(double),
-                        InAttributes = ["EXIF:GPSDOP"],
+                        InAttributes = [
+                            "EXIF:GPSDOP",
+                            "XMP:GPSDOP"
+                            ],
                         OutAttributes =
                         [
                             "EXIF:GPSDOP",
@@ -878,7 +881,11 @@ public static class SourcesAndAttributes
                         Name = "GPSHPositioningError",
                         ColumnHeader = HelperVariables.COL_NAME_PREFIX + FileListColumns.GPSHPOSITIONINGERROR,
                         TypeOfElement = typeof(string),
-                        InAttributes = ["EXIF:GPSHPositioningError"],
+                        InAttributes = [
+                            "EXIF:GPSHPositioningError",
+                            "XMP:GPSHPositioningError"
+
+                        ],
                         OutAttributes =
                         [
                             "EXIF:GPSHPositioningError",

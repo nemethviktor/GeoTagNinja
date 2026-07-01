@@ -15,6 +15,8 @@ using Point = System.Drawing.Point;
 
 namespace GeoTagNinja.Helpers;
 
+# region Toponomy
+
 internal static class HelperExifReadExifData
 {
     /// <summary>
@@ -1093,6 +1095,9 @@ internal static class HelperExifReadExifData
 
         return retStr;
     }
+
+
+#endregion
 
     /// <summary>
     ///     This translates between plain English and exiftool tags. For example if the tag we are looking for is "Model" (of

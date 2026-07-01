@@ -2,6 +2,12 @@
 
 **Build 9xxx [20260xxx]** (upcoming release)
 - NEW & UPDATED:
+	- TBA
+- BUGS & FIXES:
+	- Fix #215 GPSDOP/GPSHPositioningError not being processed
+
+**Build 9654 [20260607]**
+- NEW & UPDATED:
 	- Add column filtering #205
 	- _Finally_ got around to bringing in the streaing data logic. No more lengthy "please wait" box! (It's still there, but for a lot less time.)
 	- As a direct outcome of the above now we have rename (`F2`) and delete (`del`) capabilities #206
