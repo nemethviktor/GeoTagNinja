@@ -1,19 +1,16 @@
 ﻿#nullable enable
 using GeoTagNinja.Helpers;
 using GeoTagNinja.Helpers.Exif;
-using GeoTagNinja.Helpers.Generic;
-using GeoTagNinja.View.ListView;
+using GeoTagNinja.View.FileList;
+using GeoTagNinja.View.Forms;
 using NLog;
 using System;
-using System.Collections;
 using System.Collections.Generic;
 using System.Drawing;
 using System.Drawing.Drawing2D;
 using System.Drawing.Imaging;
-using System.Globalization;
 using System.IO;
 using System.Threading.Tasks;
-using System.Windows.Forms;
 using static GeoTagNinja.Model.SourcesAndAttributes;
 
 #pragma warning disable CS8618, CS9264
@@ -89,87 +86,152 @@ public class DirectoryElement
         Stage3ReadyToWrite
     }
 
-    // We need a non generics super class that can be referenced
-    // independent of the concrete values type (generic).
-    private class AttributeValueContainer
+    /// <summary>
+    ///     Non-generic base for <see cref="AttributeValues{T}" />, so that the attribute dictionary can hold
+    ///     containers of differing value types without itself being generic.
+    /// </summary>
+    /// <remarks>
+    ///     <para>
+    ///         Each container holds every <see cref="AttributeVersion" /> of a single attribute of a single file,
+    ///         together with the per-version "user asked for this tag to be deleted" flag.
+    ///     </para>
+    ///     <para>
+    ///         This used to be four hand-written classes (string / int / double / DateTime) whose bodies were
+    ///         identical apart from the type token, each paired with a <c>if (attributeType == typeof(...))</c> ladder
+    ///         at every call site. The generic subclass below replaces all of it; the type ladder now exists exactly
+    ///         once, in <see cref="CreateFor" />.
+    ///     </para>
+    /// </remarks>
+    private abstract class AttributeValueContainer
     {
-        internal Type _myValueType;
-        internal IDictionary _valueDict;
+        /// <summary>
+        ///     The CLR type of the values held here, matching
+        ///     <see cref="SourcesAndAttributes.GetElementAttributesType" /> for the owning attribute.
+        /// </summary>
+        public abstract Type MyValueType { get; }
 
-        public Type MyValueType => _myValueType;
+        /// <summary>
+        ///     The value that stands in for "nothing" for this container's type. Note that for strings this is the
+        ///     display sentinel <see cref="FrmMainApp.NullStringEquivalentGeneric" /> rather than an empty string;
+        ///     that is long-standing behaviour which the refactor preserves rather than quietly changes.
+        /// </summary>
+        public abstract IConvertible BlankValue { get; }
 
-        public IDictionary ValueDict => _valueDict;
-    }
+        /// <summary>Whether a value has been recorded for the given version.</summary>
+        public abstract bool HasVersion(AttributeVersion version);
 
-    private class AttributeValuesString : AttributeValueContainer
-    {
-        public AttributeValuesString(string? initialValue = null,
-                                     AttributeVersion initialVersion =
-                                         AttributeVersion.Original,
-                                     bool isMarkedForDeletion = false)
+        /// <summary>Whether the given version is flagged for removal from the file on the next write.</summary>
+        public abstract bool IsMarkedForDeletion(AttributeVersion version);
+
+        /// <summary>
+        ///     Returns the stored value for the given version, or <see cref="BlankValue" /> if that version is absent.
+        /// </summary>
+        public abstract IConvertible GetValue(AttributeVersion version);
+
+        /// <summary>Records (or overwrites) the value for the given version.</summary>
+        /// <param name="version">The version slot to write into.</param>
+        /// <param name="value">
+        ///     The value to store. Must already be of <see cref="MyValueType" />; callers are expected to have
+        ///     substituted <see cref="BlankValue" /> for anything blank.
+        /// </param>
+        /// <param name="isMarkedForDeletion">Whether the tag should be removed from the file on the next write.</param>
+        public abstract void SetValue(AttributeVersion version,
+                                      IConvertible value,
+                                      bool isMarkedForDeletion);
+
+        /// <summary>Discards the given version, if present.</summary>
+        public abstract void RemoveVersion(AttributeVersion version);
+
+        /// <summary>
+        ///     Creates an empty container for the given attribute value type.
+        /// </summary>
+        /// <param name="attributeType">
+        ///     The CLR type the attribute is declared to hold, per
+        ///     <see cref="SourcesAndAttributes.GetElementAttributesType" />.
+        /// </param>
+        /// <exception cref="ArgumentException">Thrown when the type is not one GeoTagNinja knows how to store.</exception>
+        public static AttributeValueContainer CreateFor(Type attributeType)
         {
-            _myValueType = typeof(string);
-            _valueDict = new Dictionary<AttributeVersion, Tuple<string, bool>>();
-            if (initialValue != null)
+            if (attributeType == typeof(string))
             {
-                _valueDict[key: initialVersion] =
-                    new Tuple<string, bool>(item1: initialValue,
-                        item2: isMarkedForDeletion);
+                return new AttributeValues<string>(blankValue: FrmMainApp.NullStringEquivalentGeneric);
             }
+
+            if (attributeType == typeof(int))
+            {
+                return new AttributeValues<int>(blankValue: FrmMainApp.NullIntEquivalent);
+            }
+
+            if (attributeType == typeof(double))
+            {
+                return new AttributeValues<double>(blankValue: FrmMainApp.NullDoubleEquivalent);
+            }
+
+            if (attributeType == typeof(DateTime))
+            {
+                return new AttributeValues<DateTime>(blankValue: FrmMainApp.NullDateTimeEquivalent);
+            }
+
+            throw new ArgumentException(
+                message: $"'{attributeType.Name}' is not a supported attribute value type.",
+                paramName: nameof(attributeType));
         }
     }
 
-    private class AttributeValuesInt : AttributeValueContainer
+    /// <summary>
+    ///     Holds every recorded <see cref="AttributeVersion" /> of one attribute, strongly typed.
+    /// </summary>
+    /// <typeparam name="T">
+    ///     The attribute's value type - one of <see cref="string" />, <see cref="int" />, <see cref="double" /> or
+    ///     <see cref="DateTime" />.
+    /// </typeparam>
+    private sealed class AttributeValues<T> : AttributeValueContainer
+        where T : IConvertible
     {
-        public AttributeValuesInt(int? initialValue = null,
-                                  AttributeVersion initialVersion =
-                                      AttributeVersion.Original,
-                                  bool isMarkedForDeletion = false)
-        {
-            _myValueType = typeof(int);
-            _valueDict = new Dictionary<AttributeVersion, Tuple<int, bool>>();
-            if (initialValue != null)
-            {
-                _valueDict[key: initialVersion] =
-                    new Tuple<int, bool>(item1: (int)initialValue,
-                        item2: isMarkedForDeletion);
-            }
-        }
-    }
+        private readonly T _blankValue;
 
-    private class AttributeValuesDouble : AttributeValueContainer
-    {
-        public AttributeValuesDouble(double? initialValue = null,
-                                     AttributeVersion initialVersion =
-                                         AttributeVersion.Original,
-                                     bool isMarkedForDeletion = false)
-        {
-            _myValueType = typeof(double);
-            _valueDict = new Dictionary<AttributeVersion, Tuple<double, bool>>();
-            if (initialValue != null)
-            {
-                _valueDict[key: initialVersion] =
-                    new Tuple<double, bool>(item1: (double)initialValue,
-                        item2: isMarkedForDeletion);
-            }
-        }
-    }
+        private readonly Dictionary<AttributeVersion, (T Value, bool IsMarkedForDeletion)> _versions = [];
 
-    private class AttributeValuesDateTime : AttributeValueContainer
-    {
-        public AttributeValuesDateTime(DateTime? initialValue = null,
-                                       AttributeVersion initialVersion =
-                                           AttributeVersion.Original,
-                                       bool isMarkedForDeletion = false)
+        /// <param name="blankValue">The stand-in this type uses for "no value"; see <see cref="BlankValue" />.</param>
+        public AttributeValues(T blankValue)
         {
-            _myValueType = typeof(DateTime);
-            _valueDict = new Dictionary<AttributeVersion, Tuple<DateTime, bool>>();
-            if (initialValue != null)
-            {
-                _valueDict[key: initialVersion] =
-                    new Tuple<DateTime, bool>(item1: (DateTime)initialValue,
-                        item2: isMarkedForDeletion);
-            }
+            _blankValue = blankValue;
+        }
+
+        public override Type MyValueType => typeof(T);
+
+        public override IConvertible BlankValue => _blankValue;
+
+        public override bool HasVersion(AttributeVersion version)
+        {
+            return _versions.ContainsKey(key: version);
+        }
+
+        public override bool IsMarkedForDeletion(AttributeVersion version)
+        {
+            return _versions.TryGetValue(key: version,
+                       value: out (T Value, bool IsMarkedForDeletion) entry) &&
+                   entry.IsMarkedForDeletion;
+        }
+
+        public override IConvertible GetValue(AttributeVersion version)
+        {
+            return _versions.TryGetValue(key: version,
+                value: out (T Value, bool IsMarkedForDeletion) entry)
+                ? entry.Value
+                : _blankValue;
+        }
+
+        public override void SetValue(AttributeVersion version,
+                                      IConvertible value,
+                                      bool isMarkedForDeletion)
+        {
+            _versions[key: version] = ((T)(object)value, isMarkedForDeletion);
+        }
+
+        public override void RemoveVersion(AttributeVersion version)
+        {
+            _ = _versions.Remove(key: version);
         }
     }
 
@@ -263,7 +325,7 @@ public class DirectoryElement
         get;
         private set
         {
-            FrmMainApp frmMainAppInstance = (FrmMainApp)Application.OpenForms[name: "FrmMainApp"];
+            FrmMainApp frmMainAppInstance = FrmMainApp.Instance;
 
             if (frmMainAppInstance.listViewDisplayMode == FrmMainApp.ListViewDisplayMode.LargeIcons)
             {
@@ -365,42 +427,39 @@ public class DirectoryElement
     }
 
     /// <summary>
-    ///     Checks the given generatedValue container for which version to return
-    ///     depending on the version requested.
+    ///     Versions in the order they supersede one another: the later the stage, the more authoritative it is.
     /// </summary>
+    /// <remarks>
+    ///     <see cref="AttributeVersion.Original" /> is what was read off the file; each later stage is a pending edit
+    ///     on its way to being written back. "Give me the current value" therefore means "give me the newest stage
+    ///     that has one", which is what this order encodes. Do not reorder.
+    /// </remarks>
+    private static readonly AttributeVersion[] VersionsNewestFirst =
+    [
+        AttributeVersion.Stage3ReadyToWrite,
+        AttributeVersion.Stage2EditFormReadyToSaveAndMoveToWriteQueue,
+        AttributeVersion.Stage1EditFormIntraTabTransferQueue,
+        AttributeVersion.Original
+    ];
+
+    /// <summary>
+    ///     Resolves which version of a value should actually be returned.
+    /// </summary>
+    /// <param name="avc">The container to inspect.</param>
+    /// <param name="versionRequested">
+    ///     A specific version to look for, or <see langword="null" /> to mean "whichever is newest".
+    /// </param>
+    /// <returns>The version to read, or <see langword="null" /> when the container holds nothing suitable.</returns>
     private AttributeVersion? CheckWhichVersion(AttributeValueContainer avc,
                                                 AttributeVersion? versionRequested)
     {
-        // no need for else-if because the 'return' terminates the loop
-        if (((versionRequested == null) |
-             (versionRequested == AttributeVersion.Stage3ReadyToWrite)) &
-            avc.ValueDict.Contains(key: AttributeVersion.Stage3ReadyToWrite))
+        foreach (AttributeVersion version in VersionsNewestFirst)
         {
-            return AttributeVersion.Stage3ReadyToWrite;
-        }
-
-        if (((versionRequested == null) |
-             (versionRequested ==
-              AttributeVersion.Stage2EditFormReadyToSaveAndMoveToWriteQueue)) &
-            avc.ValueDict.Contains(key: AttributeVersion
-               .Stage2EditFormReadyToSaveAndMoveToWriteQueue))
-        {
-            return AttributeVersion.Stage2EditFormReadyToSaveAndMoveToWriteQueue;
-        }
-
-        if (((versionRequested == null) |
-             (versionRequested == AttributeVersion.Stage1EditFormIntraTabTransferQueue)) &
-            avc.ValueDict.Contains(key: AttributeVersion
-               .Stage1EditFormIntraTabTransferQueue))
-        {
-            return AttributeVersion.Stage1EditFormIntraTabTransferQueue;
-        }
-
-        if (((versionRequested == null) |
-             (versionRequested == AttributeVersion.Original)) &
-            avc.ValueDict.Contains(key: AttributeVersion.Original))
-        {
-            return AttributeVersion.Original;
+            if ((versionRequested == null || versionRequested == version) &&
+                avc.HasVersion(version: version))
+            {
+                return version;
+            }
         }
 
         // Version not found
@@ -408,256 +467,112 @@ public class DirectoryElement
     }
 
     /// <summary>
-    ///     Checks if a generatedValue exists for a particular AttributeValueContainer & version combination
+    ///     Checks if a value exists for a particular container and version combination.
     /// </summary>
-    /// <param name="avc">The AttributeValueContainer to check</param>
+    /// <param name="avc">The container to check</param>
     /// <param name="version">The version to look for</param>
-    /// <returns></returns>
     private bool HasSpecificAttributeWithVersion(AttributeValueContainer avc,
                                                  AttributeVersion version)
     {
-        AttributeVersion? versionCheck =
-            CheckWhichVersion(avc: avc, versionRequested: version);
-        if (versionCheck == null)
-        {
-            return false;
-        }
-
-        // Retrieve and return generatedValue
-
-        return true;
+        return CheckWhichVersion(avc: avc, versionRequested: version) != null;
     }
 
     /// <summary>
-    ///     Checks if a generatedValue exists for a particular attrib & version combination
+    ///     Checks if a value exists for a particular attribute and version combination
     /// </summary>
     /// <param name="attribute">The attribute to check</param>
     /// <param name="version">The version to look for</param>
-    /// <returns></returns>
     public bool HasSpecificAttributeWithVersion(ElementAttribute attribute,
                                                 AttributeVersion version)
     {
-        if (!_Attributes.ContainsKey(key: attribute))
-        {
-            return false;
-        }
-
-        AttributeValueContainer avc = _Attributes[key: attribute];
-        return HasSpecificAttributeWithVersion(avc: avc, version: version);
+        return _Attributes.TryGetValue(key: attribute, value: out AttributeValueContainer avc) &&
+               HasSpecificAttributeWithVersion(avc: avc, version: version);
     }
 
     /// <summary>
     ///     Checks if there is _any_ data for a particular ElementAttribute
     /// </summary>
     /// <param name="attribute">The attribute to check</param>
-    /// <returns></returns>
     public bool HasSpecificAttributeWithAnyVersion(ElementAttribute attribute)
     {
-        if (!_Attributes.ContainsKey(key: attribute))
-        {
-            return false;
-        }
-
-        AttributeValueContainer avc = _Attributes[key: attribute];
-        foreach (AttributeVersion attributeVersion in (AttributeVersion[])Enum.GetValues(
-                     enumType: typeof(AttributeVersion)))
-        {
-            if (HasSpecificAttributeWithVersion(avc: avc, version: attributeVersion))
-            {
-                return true;
-            }
-
-            ;
-        }
-
-        return false;
+        return _Attributes.TryGetValue(key: attribute, value: out AttributeValueContainer avc) &&
+               CheckWhichVersion(avc: avc, versionRequested: null) != null;
     }
 
     /// <summary>
     ///     Informs if the particular tag is marked for removal
     /// </summary>
-    /// <param name="attribute"></param>
-    /// <param name="version"></param>
-    /// <returns></returns>
+    /// <param name="attribute">The attribute to check</param>
+    /// <param name="version">The version to check</param>
     public bool IsMarkedForDeletion(ElementAttribute attribute,
                                     AttributeVersion version)
     {
-        // bit unsure of this but the second half is defo needed because if there is no generatedValue to a particular attribute (it's been deleted or never existed) then
-        // adding a new generatedValue on top will trigger this part to run and would break when adding to the Stage1/2 sets
-        if (!_Attributes.ContainsKey(key: attribute) ||
-            !HasSpecificAttributeWithVersion(attribute: attribute, version: version))
-        {
-            return false;
-        }
-
-        AttributeValueContainer avc = _Attributes[key: attribute];
-        Type attributeType = avc.MyValueType;
-
-        if (attributeType == typeof(string))
-        {
-            IDictionary<AttributeVersion, Tuple<string, bool>> strDict =
-                (IDictionary<AttributeVersion, Tuple<string, bool>>)avc.ValueDict;
-
-            return strDict[key: version]
-               .Item2;
-        }
-
-        if (attributeType == typeof(int))
-        {
-            IDictionary<AttributeVersion, Tuple<int, bool>> intDict =
-                (IDictionary<AttributeVersion, Tuple<int, bool>>)avc.ValueDict;
-            return intDict[key: version]
-               .Item2;
-        }
-
-        if (attributeType == typeof(double))
-        {
-            IDictionary<AttributeVersion, Tuple<double, bool>> doubleDict =
-                (IDictionary<AttributeVersion, Tuple<double, bool>>)avc.ValueDict;
-
-            return doubleDict[key: version]
-               .Item2;
-        }
-
-        if (attributeType == typeof(DateTime))
-        {
-            IDictionary<AttributeVersion, Tuple<DateTime, bool>> DateTimeDict =
-                (IDictionary<AttributeVersion, Tuple<DateTime, bool>>)avc.ValueDict;
-
-            return DateTimeDict[key: version]
-               .Item2;
-        }
-
-        // else
-        // Should not get to here
-        throw new ArgumentException(
-            message:
-            $"Failed to retrieve attribute '{GetElementAttributesName(attributeToFind: attribute)}' of type '{attributeType.Name}");
+        // The second half of the test is needed because adding a brand new value on top of an attribute that has
+        // been cleaned in the past (or never existed) would otherwise look up a version that is not there.
+        return _Attributes.TryGetValue(key: attribute, value: out AttributeValueContainer avc) &&
+               HasSpecificAttributeWithVersion(avc: avc, version: version) &&
+               avc.IsMarkedForDeletion(version: version);
     }
 
     /// <summary>
-    ///     Returns an attribute in string format. If it is a number,
-    ///     a localized conversion is done.
+    ///     Returns an attribute rendered as text.
     /// </summary>
-    /// <param name="attribute">The attribute to return the generatedValue for</param>
-    /// <param name="version">The version to return or null if latest version</param>
-    /// <param name="notFoundValue">The generatedValue to return if no suitable generatedValue was found</param>
-    /// <param name="nowSavingExif">Indicates whether this is when the file is being saved.</param>
-    /// <returns></returns>
-    /// <exception cref="ArgumentException"></exception>
+    /// <param name="attribute">The attribute to return the value for</param>
+    /// <param name="version">The version to return, or null for the newest available version</param>
+    /// <param name="notFoundValue">The value to return if no suitable value was found</param>
+    /// <param name="context">
+    ///     Why the text is wanted - see <see cref="ValueFormatContext" />. This decides whether the value is rendered
+    ///     for a human (current culture) or for a machine (invariant). Getting this wrong is how dates used to end up
+    ///     unparseable on non-English systems, so the parameter is deliberately explicit rather than a bare flag.
+    /// </param>
     public string GetAttributeValueAsString(ElementAttribute attribute,
-                                          AttributeVersion? version = null,
-                                          string? notFoundValue = null,
-                                          bool nowSavingExif = false)
+                                            AttributeVersion? version = null,
+                                            string? notFoundValue = null,
+                                            ValueFormatContext context = ValueFormatContext.Display)
     {
-        if (!_Attributes.ContainsKey(key: attribute))
+        if (!_Attributes.TryGetValue(key: attribute, value: out AttributeValueContainer avc))
         {
-#pragma warning disable CS8603 // Possible null reference return.
-            return notFoundValue;
-
+            return notFoundValue!;
         }
 
-        AttributeValueContainer avc = _Attributes[key: attribute];
-        Type attributeType = avc.MyValueType;
-
-        AttributeVersion? versionCheck =
+        AttributeVersion? versionToReturn =
             CheckWhichVersion(avc: avc, versionRequested: version);
-        if (versionCheck == null)
+        if (versionToReturn == null)
         {
-            return notFoundValue;
-        }
-#pragma warning restore CS8603 // Possible null reference return.
-
-        AttributeVersion versionToReturn = (AttributeVersion)versionCheck;
-
-        // Retrieve and return generatedValue
-        // no need for else-if because the 'return' terminates the loop
-
-        // the logic with the if (strDict[key: versionToReturn].Item2) {return FrmMainApp.NullStringEquivalentGeneric;}
-        // ... is that if something is marked as "to remove" then we want to show a blank generatedValue.
-
-        if (attributeType == typeof(string))
-        {
-            IDictionary<AttributeVersion, Tuple<string, bool>> strDict =
-                (IDictionary<AttributeVersion, Tuple<string, bool>>)avc.ValueDict;
-            Tuple<string, bool> intValue = strDict[key: versionToReturn];
-            return strDict[key: versionToReturn]
-               .Item2
-                ? FrmMainApp.NullStringEquivalentGeneric
-                : intValue.Item1;
+            return notFoundValue!;
         }
 
-        if (attributeType == typeof(int))
+        // A value flagged for removal reads as blank: the user has asked for the tag to go, so the UI should
+        // already reflect that even though the old value is still in memory until the file is actually written.
+        if (avc.IsMarkedForDeletion(version: (AttributeVersion)versionToReturn))
         {
-            IDictionary<AttributeVersion, Tuple<int, bool>> intDict =
-                (IDictionary<AttributeVersion, Tuple<int, bool>>)avc.ValueDict;
-            Tuple<int, bool> intValue = intDict[key: versionToReturn];
-            return intDict[key: versionToReturn]
-               .Item2
-                ? FrmMainApp.NullStringEquivalentGeneric
-                : intValue.Item1.ToString(provider: CultureInfo.InvariantCulture);
+            return FrmMainApp.NullStringEquivalentGeneric;
         }
 
-        if (attributeType == typeof(double))
-        {
-            IDictionary<AttributeVersion, Tuple<double, bool>> doubleDict =
-                (IDictionary<AttributeVersion, Tuple<double, bool>>)avc.ValueDict;
-            Tuple<double, bool> doubleValue = doubleDict[key: versionToReturn];
-            return doubleDict[key: versionToReturn]
-               .Item2
-                ? FrmMainApp.NullStringEquivalentGeneric
-                : doubleValue.Item1.ToString(provider: CultureInfo.InvariantCulture);
-        }
-
-        if (attributeType == typeof(DateTime))
-        {
-            IDictionary<AttributeVersion, Tuple<DateTime, bool>> dateTimeDict =
-                (IDictionary<AttributeVersion, Tuple<DateTime, bool>>)avc.ValueDict;
-            Tuple<DateTime, bool> dateTimeValue = dateTimeDict[key: versionToReturn];
-            if (dateTimeDict[key: versionToReturn]
-               .Item2)
-            {
-                return FrmMainApp.NullStringEquivalentGeneric;
-            }
-
-            string formattedDateTime =
-                dateTimeValue.Item1.ToString(format: "yyyy-MM-dd HH:mm:ss");
-
-            return !nowSavingExif
-                ? dateTimeValue.Item1.ToString(provider: CultureInfo.CurrentCulture)
-                : formattedDateTime;
-        }
-
-        // else
-        // Should not get to here
-        throw new ArgumentException(
-            message:
-            $"Failed to retrieve attribute '{GetElementAttributesName(attributeToFind: attribute)}' of type '{attributeType.Name}' by requesting its generatedValue with type 'string' due to conversion issues.");
+        return AttributeValueFormatter.Format(
+            value: avc.GetValue(version: (AttributeVersion)versionToReturn),
+            context: context);
     }
 
+    /// <summary>
+    ///     Returns the newest version that holds a usable value for the given attribute.
+    /// </summary>
+    /// <param name="attribute">The attribute to inspect.</param>
+    /// <returns>
+    ///     The newest version holding a value, or <see langword="null" /> when there is none - including the case
+    ///     where the newest version is flagged for deletion, since the value is on its way out and falling back to
+    ///     an older version would resurrect it.
+    /// </returns>
     public AttributeVersion? GetMaxAttributeVersion(ElementAttribute attribute)
-
     {
-        List<AttributeVersion> relevantAttributeVersions =
-        [
-            // DO NOT reorder!
-            AttributeVersion.Stage3ReadyToWrite,
-            AttributeVersion.Stage2EditFormReadyToSaveAndMoveToWriteQueue,
-            AttributeVersion.Stage1EditFormIntraTabTransferQueue,
-            AttributeVersion.Original
-        ];
-        foreach (AttributeVersion attributeVersion in relevantAttributeVersions)
+        foreach (AttributeVersion attributeVersion in VersionsNewestFirst)
         {
             if (HasSpecificAttributeWithVersion(attribute: attribute,
                     version: attributeVersion))
             {
-                if (!IsMarkedForDeletion(attribute: attribute, version: attributeVersion))
-                {
-                    return attributeVersion;
-                }
-
-                // if it's marked for deletion then we don't want to return the Original because the assumption is that the generatedValue is being dropped.
-                return null;
+                return IsMarkedForDeletion(attribute: attribute, version: attributeVersion)
+                    ? null
+                    : attributeVersion;
             }
         }
 
@@ -665,269 +580,149 @@ public class DirectoryElement
     }
 
     /// <summary>
-    ///     Returns the generatedValue of an attribute as the given generic.
-    ///     If the attribute has a different type than the generic, an exception is thrown.
-    ///     (The attribute type is taken from SourcesAndAttributes.GetAttributeType().
-    ///     If the version needed is given only that version is checked for and returned.
-    ///     If no version is given, the latest version (ie. modified) is returned if
-    ///     it exists, otherwise original.
-    ///     Item1 is the actual generatedValue we want. Item2 is the bool flag for the deletion mark.
+    ///     Returns the value of an attribute as the requested value type.
     /// </summary>
-    /// <param name="attribute">The attribute to return the generatedValue for</param>
-    /// <param name="version">The version to return or null if latest version</param>
-    /// <param name="notFoundValue">The generatedValue to return if no suitable generatedValue was found</param>
-    /// <returns></returns>
+    /// <remarks>
+    ///     The attribute type comes from <see cref="SourcesAndAttributes.GetElementAttributesType" />; asking for a
+    ///     different one is a programming error rather than a runtime condition, hence the exception.
+    ///     If no version is given, the newest one that holds a value is returned.
+    /// </remarks>
+    /// <param name="attribute">The attribute to return the value for</param>
+    /// <param name="version">The version to return or null for the newest available version</param>
+    /// <param name="notFoundValue">The value to return if no suitable value was found</param>
+    /// <exception cref="ArgumentException">Thrown when the requested type does not match the attribute type.</exception>
     public T? GetAttributeValue<T>(ElementAttribute attribute,
                                    AttributeVersion? version,
                                    T? notFoundValue = null)
         where T : struct
     {
-        if (!_Attributes.ContainsKey(key: attribute))
+        if (!_Attributes.TryGetValue(key: attribute, value: out AttributeValueContainer avc))
         {
             return notFoundValue;
         }
 
-        AttributeValueContainer avc = _Attributes[key: attribute];
-
-        // First check for matching type
-        // requesting a string is always allowed
         Type requestType = typeof(T);
         Type attributeType = avc.MyValueType;
-        if ((requestType != attributeType) & (requestType != typeof(string)))
+        if (requestType != attributeType)
         {
             throw new ArgumentException(
                 message:
-                $"Failed to retrieve attribute '{GetElementAttributesName(attributeToFind: attribute)}' of type '{attributeType.Name}' due to requesting with incompatible return type '{requestType.Name}'.");
+                $"Failed to retrieve attribute {GetElementAttributesName(attributeToFind: attribute)} of type {attributeType.Name} due to requesting with incompatible return type {requestType.Name}.");
         }
 
-        AttributeVersion? versionCheck =
+        AttributeVersion? versionToReturn =
             CheckWhichVersion(avc: avc, versionRequested: version);
-        if (versionCheck == null)
-        {
-            return notFoundValue;
-        }
 
-        AttributeVersion versionToReturn = (AttributeVersion)versionCheck;
-
-        // Retrieve and return generatedValue
-        if (attributeType == typeof(int))
-        {
-            IDictionary<AttributeVersion, Tuple<int, bool>> intDict =
-                (IDictionary<AttributeVersion, Tuple<int, bool>>)avc.ValueDict;
-            int intValue = intDict[key: versionToReturn]
-               .Item1;
-            if (requestType == typeof(int))
-            {
-                return (T)Convert.ChangeType(value: intValue, conversionType: typeof(T));
-            }
-        }
-        else if (attributeType == typeof(double))
-        {
-            IDictionary<AttributeVersion, Tuple<double, bool>> doubleDict =
-                (IDictionary<AttributeVersion, Tuple<double, bool>>)avc.ValueDict;
-            double doubleValue = doubleDict[key: versionToReturn]
-               .Item1;
-            if (requestType == typeof(double))
-            {
-                return (T)Convert.ChangeType(value: doubleValue,
-                    conversionType: typeof(T));
-            }
-        }
-        else if (attributeType == typeof(DateTime))
-        {
-            IDictionary<AttributeVersion, Tuple<DateTime, bool>> DateTimeDict =
-                (IDictionary<AttributeVersion, Tuple<DateTime, bool>>)avc.ValueDict;
-            DateTime DateTimeValue = DateTimeDict[key: versionToReturn]
-               .Item1;
-            if (requestType == typeof(DateTime))
-            {
-                return (T)Convert.ChangeType(value: DateTimeValue,
-                    conversionType: typeof(T));
-            }
-        }
-
-        // Should not get to here
-        throw new ArgumentException(
-            message:
-            $"Failed to retrieve attribute '{GetElementAttributesName(attributeToFind: attribute)}' of type '{attributeType.Name}' by requesting its generatedValue with type '{requestType.Name}' due to conversion issues.");
+        return versionToReturn == null
+            ? notFoundValue
+            : (T)avc.GetValue(version: (AttributeVersion)versionToReturn);
     }
 
     /// <summary>
-    ///     Sets the generatedValue for the given attribute - without needing to specify the Type.
+    ///     Sets the value for the given attribute from text, converting it to the declared type of the attribute.
     /// </summary>
-    /// <param name="attribute">The attribute to set the generatedValue for</param>
-    /// <param name="value">The generatedValue to set (as string)</param>
-    /// <param name="version">The version to set it with </param>
+    /// <param name="attribute">The attribute to set the value for</param>
+    /// <param name="value">The value to set, as text</param>
+    /// <param name="version">The version to set it with</param>
     /// <param name="isMarkedForDeletion">Whether this attribute is set for deletion/removal</param>
+    /// <param name="context">
+    ///     Where the text came from. Defaults to <see cref="ValueFormatContext.Display" /> because most callers are
+    ///     WinForms controls; that context also accepts invariant text, so machine-generated values still parse.
+    /// </param>
     public void SetAttributeValueAnyType(ElementAttribute attribute,
                                          string value,
                                          AttributeVersion version,
-                                         bool isMarkedForDeletion)
+                                         bool isMarkedForDeletion,
+                                         ValueFormatContext context = ValueFormatContext.Display)
     {
         Type typeOfAttribute = GetElementAttributesType(attributeToFind: attribute);
-        IConvertible writeValueConvertible;
+
         if (typeOfAttribute == typeof(string))
         {
             SetAttributeValue(attribute: attribute,
                 value: value,
                 version: version,
                 isMarkedForDeletion: isMarkedForDeletion);
+            return;
         }
-        else if (typeOfAttribute == typeof(double))
-        {
-            writeValueConvertible =
-                HelperGenericTypeOperations.TryParseNullableDouble(val: value) ??
-                FrmMainApp.NullDoubleEquivalent;
-            SetAttributeValue(attribute: attribute,
-                value: writeValueConvertible,
-                version: version,
-                isMarkedForDeletion: isMarkedForDeletion);
-        }
-        else if (typeOfAttribute == typeof(int))
-        {
-            writeValueConvertible =
-                HelperGenericTypeOperations.TryParseNullableInt(val: value) ??
-                FrmMainApp.NullIntEquivalent;
-            SetAttributeValue(attribute: attribute,
-                value: writeValueConvertible,
-                version: version,
-                isMarkedForDeletion: isMarkedForDeletion);
-        }
-        else if (typeOfAttribute == typeof(DateTime))
-        {
-            writeValueConvertible =
-                HelperGenericTypeOperations.TryParseNullableDateTime(val: value) ??
-                FrmMainApp.NullDateTimeEquivalent;
-            SetAttributeValue(attribute: attribute,
-                value: writeValueConvertible,
-                version: version,
-                isMarkedForDeletion: isMarkedForDeletion);
-        }
-        else
-        {
-            throw new ArgumentException(
-                message: $"Trying to get attribute name of unknown attribute with generatedValue {attribute}");
-        }
+
+        // Text that cannot be parsed is stored as the blank value for the type rather than rejected, matching
+        // long-standing behaviour: the write path decides what to emit from the deletion flag, not from the value.
+        _ = AttributeValueFormatter.TryParse(value: value,
+            targetType: typeOfAttribute,
+            context: context,
+            result: out IConvertible? parsedValue);
+
+        SetAttributeValue(attribute: attribute,
+            value: parsedValue ??
+                   AttributeValueContainer.CreateFor(attributeType: typeOfAttribute)
+                                          .BlankValue,
+            version: version,
+            isMarkedForDeletion: isMarkedForDeletion);
     }
 
     /// <summary>
-    ///     Sets the generatedValue for the given attribute.
+    ///     Sets the value for the given attribute.
     /// </summary>
-    /// <param name="attribute">The attribute to set the generatedValue for</param>
-    /// <param name="value">The generatedValue to set (as string)</param>
-    /// <param name="version">The version to set it with </param>
+    /// <param name="attribute">The attribute to set the value for</param>
+    /// <param name="value">The value to set; must match the declared type of the attribute</param>
+    /// <param name="version">The version to set it with</param>
     /// <param name="isMarkedForDeletion">Whether this attribute is set for deletion/removal</param>
+    /// <exception cref="ArgumentException">Thrown when the type of the value does not match the attribute.</exception>
     public void SetAttributeValue(ElementAttribute attribute,
                                   IConvertible value,
                                   AttributeVersion version,
                                   bool isMarkedForDeletion)
     {
         Type attributeType = GetElementAttributesType(attributeToFind: attribute);
+
         if (!isMarkedForDeletion &&
-            value != null)
+            value != null &&
+            attributeType != value.GetType())
         {
-            if (attributeType != value.GetType())
-            {
-                throw new ArgumentException(
-                    message:
-                    $"Error, while trying to set the attribute {GetElementAttributesName(attributeToFind: attribute)} of item '{ItemNameWithoutPath}'. The type '{value.GetType().Name}' of the generatedValue to set  does not contain match the expected type '{attributeType.Name}'.");
-            }
+            throw new ArgumentException(
+                message:
+                $"Error while trying to set the attribute {GetElementAttributesName(attributeToFind: attribute)} of item {ItemNameWithoutPath}. The type {value.GetType().Name} of the value to set does not match the expected type {attributeType.Name}.");
         }
 
-        // update attribute if it exists       
-        if (_Attributes.ContainsKey(key: attribute))
+        if (_Attributes.TryGetValue(key: attribute, value: out AttributeValueContainer existingContainer))
         {
-            bool setMarkedForDeletion = value == null ||
-                                        string.IsNullOrWhiteSpace(
-                                            value: value.ToString());
+            // An existing attribute that is being set to nothing keeps its slot but holds the blank sentinel, so
+            // that the write path can still see that this tag was touched via the version and the deletion flag.
+            bool valueIsBlank = value == null ||
+                                string.IsNullOrWhiteSpace(value: value.ToString());
 
-            _Attributes[key: attribute]
-                       .ValueDict[key: version] = attributeType == typeof(double)
-                ? setMarkedForDeletion
-                    ? new Tuple<double, bool>(
-                        item1: FrmMainApp.NullDoubleEquivalent,
-                        item2: isMarkedForDeletion)
-                    : new Tuple<double, bool>(item1: (double)value,
-                            item2: isMarkedForDeletion)
-                : attributeType == typeof(int)
-                    ? setMarkedForDeletion
-                    ? new Tuple<int, bool>(
-                        item1: FrmMainApp.NullIntEquivalent, item2: isMarkedForDeletion)
-                    : new Tuple<int, bool>(item1: (int)value,
-                            item2: isMarkedForDeletion)
-                    : attributeType == typeof(DateTime)
-                    ? setMarkedForDeletion
-                    ? new Tuple<DateTime, bool>(
-                        item1: FrmMainApp.NullDateTimeEquivalent,
-                        item2: isMarkedForDeletion)
-                    : new Tuple<DateTime, bool>(item1: (DateTime)value,
-                            item2: isMarkedForDeletion)
-                    : attributeType == typeof(string)
-                    ? (object)(setMarkedForDeletion
-                    ? new Tuple<string, bool>(
-                        item1: FrmMainApp.NullStringEquivalentGeneric,
-                        item2: isMarkedForDeletion)
-                    : new Tuple<string, bool>(item1: value.ToString(),
-                            item2: isMarkedForDeletion))
-                    : throw new ArgumentException(
-                    message:
-                    $"Trying to get attribute name of unknown attribute with generatedValue {attribute}");
-
+            existingContainer.SetValue(version: version,
+                value: valueIsBlank
+                    ? existingContainer.BlankValue
+                    : value,
+                isMarkedForDeletion: isMarkedForDeletion);
             return;
         }
 
-        // add new attribute if doesn't exist. this can happen when the file/attrib has been cleaned in the past or was empty to start with
-        AttributeValueContainer avc;
+        // Adding an attribute that was not there before. This happens when the tag was cleaned out in the past or
+        // was never present; a dummy value is acceptable because a blank is not written back anyway.
+        AttributeValueContainer newContainer =
+            AttributeValueContainer.CreateFor(attributeType: attributeType);
 
-        // regarding settings defaults: this is bit of a safety thing here. Value can be NULL when user presses "clear all" on something that already doesn't have a generatedValue and/or is marked for deletion
-        // in that case dummy values are acceptable because they won't be actually recorded anyway.
+        newContainer.SetValue(version: version,
+            value: value ?? newContainer.BlankValue,
+            isMarkedForDeletion: isMarkedForDeletion);
 
-        if (attributeType == typeof(double))
-        {
-            value ??= FrmMainApp.NullDoubleEquivalent;
-            avc = new AttributeValuesDouble(initialValue: (double)value,
-                initialVersion: version,
-                isMarkedForDeletion: isMarkedForDeletion);
-        }
-        else if (attributeType == typeof(int))
-        {
-            value ??= FrmMainApp.NullIntEquivalent;
-            avc = new AttributeValuesInt(initialValue: (int)value,
-                initialVersion: version,
-                isMarkedForDeletion: isMarkedForDeletion);
-        }
-        else if (attributeType == typeof(DateTime))
-        {
-            value ??= FrmMainApp.NullDateTimeEquivalent;
-            avc = new AttributeValuesDateTime(initialValue: (DateTime)value,
-                initialVersion: version,
-                isMarkedForDeletion: isMarkedForDeletion);
-        }
-        else
-        {
-            value ??= FrmMainApp.NullStringEquivalentGeneric;
-            avc = new AttributeValuesString(initialValue: (string)value,
-                initialVersion: version,
-                isMarkedForDeletion: isMarkedForDeletion);
-        }
-
-        _Attributes[key: attribute] = avc;
+        _Attributes[key: attribute] = newContainer;
     }
 
+    /// <summary>
+    ///     Discards a single version of an attribute, typically to drop a pending edit once it has been written.
+    /// </summary>
+    /// <param name="attribute">The attribute to modify.</param>
+    /// <param name="version">The version to discard. Absent versions are ignored.</param>
     public void RemoveAttributeValue(ElementAttribute attribute,
                                      AttributeVersion version)
     {
-        try
+        if (_Attributes.TryGetValue(key: attribute, value: out AttributeValueContainer avc))
         {
-            if (_Attributes.ContainsKey(key: attribute))
-            {
-                _Attributes[key: attribute]
-                   .ValueDict.Remove(key: version);
-            }
-        }
-        catch (Exception)
-        {
-            // ignore
+            avc.RemoveVersion(version: version);
         }
     }
 
@@ -1133,25 +928,23 @@ public class DirectoryElement
 
                 default:
 
+                    // No bespoke transformation for this attribute: convert the raw ExifTool text straight into the
+                    // declared type. Anything unparseable becomes the blank value for that type, which is what the
+                    // rest of the pipeline treats as "the file did not have this".
                     Type typeOfAttribute =
                         GetElementAttributesType(attributeToFind: attribute);
-                    resTyped = typeOfAttribute == typeof(string)
-                        ? parseResultStr
-                        : typeOfAttribute == typeof(double)
-                            ? HelperGenericTypeOperations.TryParseNullableDouble(
-                                val: parseResultStr) ??
-                            FrmMainApp.NullDoubleEquivalent
-                            : typeOfAttribute == typeof(int)
-                            ? HelperGenericTypeOperations
-                               .TryParseNullableInt(val: parseResultStr) ??
-                            FrmMainApp.NullIntEquivalent
-                            : typeOfAttribute == typeof(DateTime)
-                            ? (IConvertible)(HelperGenericTypeOperations.TryParseNullableDateTime(
-                                val: parseResultStr) ??
-                            FrmMainApp.NullDateTimeEquivalent)
-                            : throw new ArgumentException(
-                            message:
-                            $"Trying to get attribute name of unknown attribute with generatedValue {attribute}");
+
+                    _ = AttributeValueFormatter.TryParse(value: parseResultStr,
+                        targetType: typeOfAttribute,
+                        context: ValueFormatContext.ExifTool,
+                        result: out IConvertible? convertedValue);
+
+                    resTyped = convertedValue ??
+                               (typeOfAttribute == typeof(string)
+                                   ? parseResultStr
+                                   : AttributeValueContainer
+                                    .CreateFor(attributeType: typeOfAttribute)
+                                    .BlankValue);
 
                     break;
             }

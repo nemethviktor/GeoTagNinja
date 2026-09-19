@@ -105,9 +105,8 @@ internal static class DataPointInteractions
         //            frmEditFileDataInstance.lvw_FileListEditImages
         //                                   .SelectedItems[index: 0];
 
-        //        HelperNonStatic helperNonstatic = new();
-        //        IEnumerable<Control> cGbx_GPSData =
-        //            helperNonstatic.GetAllControls(
+        //        Helper        //        IEnumerable<Control> cGbx_GPSData =
+        //            ControlTraversal.GetAllControls(
         //                control: frmEditFileDataInstance.gbx_GPSData);
         //        foreach (Control cItem_cGbx_GPSData in cGbx_GPSData)
         //        {
@@ -125,7 +124,7 @@ internal static class DataPointInteractions
         //        }
 
         //        IEnumerable<Control> cGbx_LocationData =
-        //            helperNonstatic.GetAllControls(
+        //            ControlTraversal.GetAllControls(
         //                control: frmEditFileDataInstance.gbx_LocationData);
         //        foreach (Control cItem_cGbx_LocationData in cGbx_LocationData)
         //        {

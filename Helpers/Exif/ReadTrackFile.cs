@@ -1,8 +1,11 @@
 ﻿using ExCSS;
 using GeoTagNinja.Helpers.API;
-using GeoTagNinja.Helpers.Generic;
+using GeoTagNinja.Helpers.Data;
+using GeoTagNinja.Helpers.FileSystem;
+using GeoTagNinja.Helpers.UI;
 using GeoTagNinja.Model;
-using GeoTagNinja.View.ListView;
+using GeoTagNinja.View.FileList;
+using GeoTagNinja.View.Forms;
 using System;
 using System.Collections.Generic;
 using System.Data;
@@ -15,7 +18,6 @@ using System.Threading.Tasks;
 using System.Windows.Forms;
 using System.Xml.Serialization;
 using WinFormsDarkThemerNinja;
-using static GeoTagNinja.Helpers.Generic.HelperGenericAncillaryListsArrays;
 using static GeoTagNinja.Model.SourcesAndAttributes;
 using Color = System.Drawing.Color;
 using Point = System.Drawing.Point;
@@ -53,7 +55,7 @@ internal static class ReadTrackFile
         //HelperVariables._sErrorMsg = "";
         HelperVariables._sOutputAndErrorMsg = "";
         FrmMainApp frmMainAppInstance =
-            (FrmMainApp)Application.OpenForms[name: "FrmMainApp"];
+            FrmMainApp.Instance;
 
         Directory.CreateDirectory(path: $@"{HelperVariables.UserDataFolderPath}\tmpLocFiles");
         List<string> trackFileList = [];
@@ -71,7 +73,7 @@ internal static class ReadTrackFile
             {
                 trackFileList = Directory
                                .GetFiles(path: trackFileLocationVal)
-                               .Where(predicate: file => GpxExtensions()
+                               .Where(predicate: file => SupportedFileExtensions.GpxExtensions()
                                                         .Any(predicate: file.ToLower()
                                                             .EndsWith))
                                .ToList();
@@ -279,25 +281,25 @@ internal static class ReadTrackFile
                                                 toponomyOverwrites =
                                                 [
                                                     (ElementAttribute.CountryCode,
-                                                     dtToponomy.Rows[index: 0][columnName: DefaultEnglishNamesToColumnHeaders[
+                                                     dtToponomy.Rows[index: 0][columnName: ToponomyColumns.DefaultEnglishNamesToColumnHeaders[
                                                          ReadExifData.GetToponomyDataColumnName(
-                                                             HelperGenericAncillaryListsArrays.DefaultColumnNamesFromElementAttributesForFileEditing.CountryCode, true)]].ToString()),
+                                                             DefaultColumnNamesFromElementAttributesForFileEditing.CountryCode, true)]].ToString()),
                                                     (ElementAttribute.Country,
-                                                     dtToponomy.Rows[index: 0][columnName: DefaultEnglishNamesToColumnHeaders[
+                                                     dtToponomy.Rows[index: 0][columnName: ToponomyColumns.DefaultEnglishNamesToColumnHeaders[
                                                          ReadExifData.GetToponomyDataColumnName(
-                                                             HelperGenericAncillaryListsArrays.DefaultColumnNamesFromElementAttributesForFileEditing.Country, true)]].ToString()),
+                                                             DefaultColumnNamesFromElementAttributesForFileEditing.Country, true)]].ToString()),
                                                     (ElementAttribute.City,
-                                                     dtToponomy.Rows[index: 0][columnName: DefaultEnglishNamesToColumnHeaders[
+                                                     dtToponomy.Rows[index: 0][columnName: ToponomyColumns.DefaultEnglishNamesToColumnHeaders[
                                                          ReadExifData.GetToponomyDataColumnName(
-                                                             HelperGenericAncillaryListsArrays.DefaultColumnNamesFromElementAttributesForFileEditing.City, true)]].ToString()),
+                                                             DefaultColumnNamesFromElementAttributesForFileEditing.City, true)]].ToString()),
                                                     (ElementAttribute.State,
-                                                     dtToponomy.Rows[index: 0][columnName: DefaultEnglishNamesToColumnHeaders[
+                                                     dtToponomy.Rows[index: 0][columnName: ToponomyColumns.DefaultEnglishNamesToColumnHeaders[
                                                          ReadExifData.GetToponomyDataColumnName(
-                                                             HelperGenericAncillaryListsArrays.DefaultColumnNamesFromElementAttributesForFileEditing.State, true)]].ToString()),
+                                                             DefaultColumnNamesFromElementAttributesForFileEditing.State, true)]].ToString()),
                                                     (ElementAttribute.Sublocation,
-                                                     dtToponomy.Rows[index: 0][columnName: DefaultEnglishNamesToColumnHeaders[
+                                                     dtToponomy.Rows[index: 0][columnName: ToponomyColumns.DefaultEnglishNamesToColumnHeaders[
                                                          ReadExifData.GetToponomyDataColumnName(
-                                                             HelperGenericAncillaryListsArrays.DefaultColumnNamesFromElementAttributesForFileEditing.Sublocation, true)]].ToString()),
+                                                             DefaultColumnNamesFromElementAttributesForFileEditing.Sublocation, true)]].ToString()),
                                                 ];
 
                                             foreach ((ElementAttribute attribute, string
@@ -416,8 +418,8 @@ internal static class ReadTrackFile
                     attribute: attribute,
                     version: DirectoryElement.AttributeVersion.Original,
                     notFoundValue: FrmMainApp.NullStringEquivalentGeneric,
-                    nowSavingExif: false),
-                nowSavingExif: false);
+                    context: ValueFormatContext.Display),
+                context: ValueFormatContext.Display);
             return currentValue;
         }
 

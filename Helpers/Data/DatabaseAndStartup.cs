@@ -1,5 +1,6 @@
-﻿using GeoTagNinja.Helpers.Generic;
+﻿using GeoTagNinja.Helpers.FileSystem;
 using GeoTagNinja.Model;
+using GeoTagNinja.View.Forms;
 using System;
 using System.Collections.Generic;
 using System.Data;
@@ -8,7 +9,7 @@ using System.Diagnostics;
 using System.IO;
 using System.Linq;
 using System.Windows.Forms;
-using static GeoTagNinja.Helpers.HelperControlAndMessageBoxHandling;
+using static GeoTagNinja.Helpers.UI.HelperControlAndMessageBoxHandling;
 
 namespace GeoTagNinja.Helpers.Data;
 
@@ -177,7 +178,7 @@ internal static class DatabaseAndStartup
         foreach (string controlName in booleanTypeApplicationSettingsExtensionSpecificControlNames)
         {
             string settingTabPage = "tpg_FileOptions";
-            foreach (string ext in HelperGenericAncillaryListsArrays.AllCompatibleExtensions())
+            foreach (string ext in SupportedFileExtensions.AllCompatibleExtensions())
             {
                 string fileExtension = ext.Split('\t').FirstOrDefault();
                 string tmptmpCtrlName = $"{ext.Split('\t').FirstOrDefault()}_"; // 'tis ok as is
@@ -187,8 +188,7 @@ internal static class DatabaseAndStartup
 
                 if (controlName == "ckb_AddXMPSideCar")
                 {
-                    controlDefaultValue = HelperGenericAncillaryListsArrays
-                                         .FileExtensionsThatUseXMP()
+                    controlDefaultValue = SupportedFileExtensions.FileExtensionsThatUseXMP()
                                          .Contains(value: fileExtension)
                         ? "true"
                         : "false";

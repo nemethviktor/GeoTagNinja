@@ -1,6 +1,8 @@
 ﻿using GeoTagNinja.Helpers.Data;
-using GeoTagNinja.Helpers.Generic;
+using GeoTagNinja.Helpers.FileSystem;
+using GeoTagNinja.Helpers.UI;
 using GeoTagNinja.Model;
+using GeoTagNinja.View.Forms;
 using Microsoft.WindowsAPICodePack.Taskbar;
 using System;
 using System.Collections.Generic;
@@ -23,12 +25,12 @@ internal static class WriteSaveToFile
     {
         FrmMainApp.Log.Info(message: "Starting");
 
-        HelperGenericFileLocking.FilesAreBeingSaved = true;
+        FileLocking.FilesAreBeingSaved = true;
         string argsFile = Path.Combine(path1: HelperVariables.UserDataFolderPath, path2: "exifArgsToWrite.args");
         string exiftoolCmd =
             $" -charset utf8 -charset filename=utf8 -charset photoshop=utf8 -charset exif=utf8 -charset iptc=utf8 -@ {HelperVariables.DoubleQuoteStr}{argsFile}{HelperVariables.DoubleQuoteStr}";
 
-        FrmMainApp frmMainAppInstance = (FrmMainApp)Application.OpenForms[name: "FrmMainApp"];
+        FrmMainApp frmMainAppInstance = FrmMainApp.Instance;
 
         // if user switches folder in the process of writing this will keep it standard
         Debug.Assert(condition: frmMainAppInstance != null, message: $"{nameof(frmMainAppInstance)} != null");
@@ -193,7 +195,7 @@ internal static class WriteSaveToFile
                                         attribute: attribute,
                                         version: DirectoryElement.AttributeVersion
                                                                  .Stage3ReadyToWrite,
-                                        nowSavingExif: true)
+                                        context: ValueFormatContext.ExifTool)
                                 : "";
 
                             dtFileWriteQueue.Rows.Add(row: drFileDataRow);
@@ -391,24 +393,20 @@ internal static class WriteSaveToFile
                                         objectTagNameOut.EndsWith(value: "CreateDate") // CreateDate
                                        )
                                     {
-                                        if (objectTagNameOut.EndsWith(value: "DateTimeOriginal"))
-                                        {
-                                        }
-                                        else if (objectTagNameOut.EndsWith(value: "CreateDate"))
-                                        {
-                                        }
-
-                                        try
-                                        {
-                                            updateExifVal = DateTime
-                                               .Parse(s: settingValue)
-                                               .ToString(format: "yyyy-MM-dd HH:mm:ss",
-                                               provider: CultureInfo.InvariantCulture);
-                                        }
-                                        catch
-                                        {
-                                            updateExifVal = "";
-                                        }
+                                        // settingValue was rendered with ValueFormatContext.ExifTool, so it is
+                                        // already canonical; re-parsing it only guards against a value that
+                                        // reached the queue by some other route. Parsing it with the current
+                                        // culture (as this did) threw on any machine whose locale disagreed with
+                                        // that layout, and the catch then silently dropped the timestamp.
+                                        updateExifVal =
+                                            AttributeValueFormatter.TryParseDateTime(
+                                                value: settingValue,
+                                                context: ValueFormatContext.ExifTool,
+                                                result: out DateTime parsedTagDate)
+                                                ? AttributeValueFormatter.FormatDateTime(
+                                                    value: parsedTagDate,
+                                                    context: ValueFormatContext.ExifTool)
+                                                : "";
                                     }
 
                                     FrmMainApp.Log.Trace(
@@ -499,7 +497,7 @@ internal static class WriteSaveToFile
 
             await ExifToolOperator.RunExifTool(exiftoolCmd: exiftoolCmd,
                                                          frmMainAppInstance: frmMainAppInstance,
-                                                         initiator: HelperGenericAncillaryListsArrays.ExifToolInititators.ExifWriteExifToFile,
+                                                         initiator: ExifToolInititators.ExifWriteExifToFile,
                                                          processOriginalFile: processOriginalFile,
                                                          writeXmpSideCar: writeXMPSideCar
             );
@@ -528,7 +526,7 @@ internal static class WriteSaveToFile
         ///////////////
         FrmMainApp.TaskbarManagerInstance.SetProgressState(state: TaskbarProgressBarState.NoProgress);
         FrmMainApp.HandlerUpdateLabelText(label: frmMainAppInstance.lbl_ParseProgress, text: $"{HelperControlAndMessageBoxHandling.ReturnControlText("Generic_Ready", HelperControlAndMessageBoxHandling.FakeControlTypes.Generic)}.");
-        HelperGenericFileLocking.FilesAreBeingSaved = false;
+        FileLocking.FilesAreBeingSaved = false;
     }
 
     /// <summary>

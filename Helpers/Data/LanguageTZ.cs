@@ -1,4 +1,4 @@
-﻿using GeoTagNinja.Helpers.Generic;
+﻿using GeoTagNinja.Helpers.Localisation;
 using System.Data;
 using System.Threading.Tasks;
 
@@ -28,7 +28,7 @@ internal static class LanguageTZ
     internal static Task DataReadCountryCodeDataFromWikipediaData()
     {
         HelperVariables.DtIsoCountryCodeMapping =
-            HelperGenericAncillaryListsArrays.GetCountryDetailsToTable();
+            Countries.GetCountryDetailsToTable();
 
         return Task.CompletedTask;
     }

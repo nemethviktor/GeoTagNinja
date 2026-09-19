@@ -1,4 +1,4 @@
-﻿using GeoTagNinja.Helpers.Generic;
+﻿using GeoTagNinja.Helpers.Startup;
 using GeoTagNinja.Model;
 using System.Collections.Generic;
 using System.Data;
@@ -162,7 +162,7 @@ internal static class ApplicationSettings
         SQLiteTransaction.Commit();
 
         // refresh main datatables
-        _ = HelperGenericAppStartup.AppStartupReadSQLiteTables();
+        _ = AppStartup.AppStartupReadSQLiteTables();
     }
 
     #endregion

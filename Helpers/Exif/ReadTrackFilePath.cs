@@ -1,4 +1,5 @@
-﻿using GeoTagNinja.Helpers.Generic;
+﻿using GeoTagNinja.Helpers.UI;
+using GeoTagNinja.View.Forms;
 using System;
 using System.Collections.Generic;
 using System.Diagnostics;
@@ -26,7 +27,7 @@ internal class ReadTrackFilePath
     /// <param name="overlayDateList">List of dates (may be empty) that need to be included. If empty then include all.</param>
     /// <param name="TZVal">Timezone shift value</param>
     internal static async Task ExifReadTrackFileForMapping(List<string> trackFileList,
-        HelperGenericAncillaryListsArrays.TrackOverlaySetting overlayDateSetting,
+        TrackOverlaySetting overlayDateSetting,
         List<DateTime> overlayDateList,
         string TZVal
     )
@@ -40,7 +41,7 @@ internal class ReadTrackFilePath
         string exiftoolCmd =
             $" -charset utf8 -charset filename=utf8 -charset photoshop=utf8 -charset exif=utf8 -charset iptc=utf8 -@ {HelperVariables.DoubleQuoteStr}{argsFile}{HelperVariables.DoubleQuoteStr}";
 
-        FrmMainApp frmMainAppInstance = (FrmMainApp)Application.OpenForms[name: "FrmMainApp"];
+        FrmMainApp frmMainAppInstance = FrmMainApp.Instance;
 
         // if user switches folder in the process of writing this will keep it standard
         Debug.Assert(condition: frmMainAppInstance != null, message: $"{nameof(frmMainAppInstance)} != null");
@@ -65,7 +66,7 @@ internal class ReadTrackFilePath
         await ExifToolOperator.RunExifTool(exiftoolCmd: exiftoolCmd,
             frmMainAppInstance: null,
             initiator:
-            HelperGenericAncillaryListsArrays.ExifToolInititators
+            ExifToolInititators
                                              .ExifGetTrackSyncDataReadTrackPath);
 
         ///////////////
@@ -74,7 +75,7 @@ internal class ReadTrackFilePath
     }
 
     private static void ReplaceLstTrackPathContents(
-        HelperGenericAncillaryListsArrays.TrackOverlaySetting trackOverlayDateSetting,
+        TrackOverlaySetting trackOverlayDateSetting,
         List<DateTime> overlayDateList,
         string TZVal)
     {
@@ -152,12 +153,12 @@ internal class ReadTrackFilePath
                             double.TryParse(s: strLng, style: NumberStyles.Any,
                                 provider: CultureInfo.InvariantCulture, result: out double lngResult) &&
                             (trackOverlayDateSetting ==
-                             HelperGenericAncillaryListsArrays.TrackOverlaySetting.OverlayForAllDates ||
+                             TrackOverlaySetting.OverlayForAllDates ||
                              trackOverlayDateSetting ==
-                             HelperGenericAncillaryListsArrays.TrackOverlaySetting.OverlayForOverlappingDates
+                             TrackOverlaySetting.OverlayForOverlappingDates
                             ))
                         {
-                            if (trackOverlayDateSetting == HelperGenericAncillaryListsArrays.TrackOverlaySetting
+                            if (trackOverlayDateSetting == TrackOverlaySetting
                                    .OverlayForAllDates)
                             {
                                 HelperVariables.LstTrackPath.Add(item: (strLat, strLng));

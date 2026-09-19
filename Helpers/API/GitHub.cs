@@ -6,7 +6,7 @@
 //
 //    var gtnReleasesApiResponse = GtnReleasesApiResponse.FromJson(jsonString);
 
-namespace GeoTagNinja
+namespace GeoTagNinja.Helpers.API
 {
     using Newtonsoft.Json;
     using Newtonsoft.Json.Converters;

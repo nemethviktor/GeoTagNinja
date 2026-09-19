@@ -1,6 +1,7 @@
 ﻿using GeoTagNinja.Helpers.Exif;
-using GeoTagNinja.Helpers.Generic;
+using GeoTagNinja.Helpers.UI;
 using GeoTagNinja.Model;
+using GeoTagNinja.View.Forms;
 using System;
 using System.Collections.Generic;
 using System.IO;
@@ -70,7 +71,7 @@ internal static class Operators
 
             if (dialogResult == DialogResult.Yes)
             {
-                while (HelperGenericFileLocking.FileListBeingUpdated || HelperGenericFileLocking.FilesAreBeingSaved)
+                while (FileLocking.FileListBeingUpdated || FileLocking.FilesAreBeingSaved)
                 {
                     await Task.Delay(millisecondsDelay: 10);
                 }

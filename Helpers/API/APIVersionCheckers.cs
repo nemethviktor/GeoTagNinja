@@ -1,7 +1,8 @@
 ﻿using GeoTagNinja.Helpers.Data;
 using GeoTagNinja.Helpers.Exif;
-using GeoTagNinja.Helpers.Generic;
+using GeoTagNinja.Helpers.UI;
 using GeoTagNinja.Model;
+using GeoTagNinja.View.Forms;
 using Newtonsoft.Json;
 using RestSharp;
 using RestSharp.Authenticators;
@@ -16,7 +17,7 @@ using System.Text.RegularExpressions;
 using System.Threading.Tasks;
 using System.Windows.Forms;
 using WinFormsDarkThemerNinja;
-using static GeoTagNinja.GTNReleaseAPIResponse;
+using static GeoTagNinja.Helpers.API.GTNReleaseAPIResponse;
 
 namespace GeoTagNinja.Helpers.API;
 
@@ -192,7 +193,7 @@ internal static class APIVersionCheckers
         await ExifToolOperator.RunExifTool(exiftoolCmd: exiftoolCmd,
             frmMainAppInstance: null,
             initiator:
-            HelperGenericAncillaryListsArrays.ExifToolInititators
+            ExifToolInititators
                                              .GenericCheckForNewVersions);
 
         if (nowUnixTime > lastCheckUnixTime + checkUpdateVal ||

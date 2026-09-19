@@ -1,4 +1,5 @@
-﻿using GeoTagNinja.Helpers.Generic;
+﻿using GeoTagNinja.Helpers.UI;
+using GeoTagNinja.View.Forms;
 using System;
 using System.Collections.Generic;
 using System.Diagnostics;
@@ -46,7 +47,7 @@ internal class WriteTrackDataToTrackFile
             string exiftoolCmd =
                 $" -charset utf8 -charset filename=utf8 -charset photoshop=utf8 -charset exif=utf8 -charset iptc=utf8 -W+ {HelperVariables.DoubleQuoteStr}{outFilePath}{HelperVariables.DoubleQuoteStr}  -@ {HelperVariables.DoubleQuoteStr}{argsFile}{HelperVariables.DoubleQuoteStr}";
 
-            FrmMainApp frmMainAppInstance = (FrmMainApp)Application.OpenForms[name: "FrmMainApp"];
+            FrmMainApp frmMainAppInstance = FrmMainApp.Instance;
 
             // if user switches folder in the process of writing this will keep it standard
             Debug.Assert(condition: frmMainAppInstance != null, message: $"{nameof(frmMainAppInstance)} != null");
@@ -80,7 +81,7 @@ internal class WriteTrackDataToTrackFile
             await ExifToolOperator.RunExifTool(exiftoolCmd: exiftoolCmd,
                 frmMainAppInstance: null,
                 initiator:
-                HelperGenericAncillaryListsArrays.ExifToolInititators
+                ExifToolInititators
                                                  .ExifGetTrackSyncDataWriteTrackPath);
 
             ///////////////

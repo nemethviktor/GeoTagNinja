@@ -1,8 +1,8 @@
 ﻿using GeoTagNinja.Helpers;
 using GeoTagNinja.Helpers.Data;
 using GeoTagNinja.Helpers.FileSystem;
-using GeoTagNinja.Helpers.Generic;
-using GeoTagNinja.Helpers.NonStatic;
+using GeoTagNinja.Helpers.UI;
+using GeoTagNinja.View.Forms;
 using Microsoft.WindowsAPICodePack.Taskbar;
 using NLog;
 using System;
@@ -23,7 +23,6 @@ public class DirectoryElementCollection : List<DirectoryElement>
 
     private ExifTool _ExifTool;
     private FrmPleaseWaitBox _frmPleaseWaitBoxInstance;
-    private NonStatic _helperNonStatic = new();
 
     /// <summary>
     /// Provides access to the currently running metadata hydration task.
@@ -64,7 +63,7 @@ public class DirectoryElementCollection : List<DirectoryElement>
         foreach (DirectoryElement item in this)
         {
             if (item.GetAttributeValueAsString(attribute: SourcesAndAttributes.ElementAttribute.GUID,
-                    nowSavingExif: false) ==
+                    context: ValueFormatContext.Display) ==
                 GUID)
             {
                 return item;
@@ -111,7 +110,7 @@ public class DirectoryElementCollection : List<DirectoryElement>
                 _ = uids.Add(
                     item: directoryElement.GetAttributeValueAsString(
                         attribute: SourcesAndAttributes.ElementAttribute.GUID,
-                        nowSavingExif: false));
+                        context: ValueFormatContext.Display));
             }
         }
 
@@ -383,16 +382,16 @@ public class DirectoryElementCollection : List<DirectoryElement>
         #region Any Mode Files
 
         Log.Trace(message: "Loading allowedExtensions");
-        string[] allowedImageExtensions = HelperGenericAncillaryListsArrays.AllCompatibleExtensionsExt();
-        string[] allowedSidecarExtensions = HelperGenericAncillaryListsArrays.GetSideCarExtensionsArray();
+        string[] allowedImageExtensions = SupportedFileExtensions.AllCompatibleExtensionsExt();
+        string[] allowedSidecarExtensions = SupportedFileExtensions.GetSideCarExtensionsArray();
         Log.Trace(message: "Loading allowedExtensions - OK");
         // ******************************
         // list files that have supported extensions
         // separate these into sidecar and image files
         updateProgressHandler(obj: "Scanning folder: processing supported files ...");
         Log.Trace(message: "Files: Listing Files");
-        HashSet<FileInfo> imageFiles = _helperNonStatic.CreateHashSetWithComparer();
-        HashSet<FileInfo> sidecarFiles = _helperNonStatic.CreateHashSetWithComparer();
+        HashSet<FileInfo> imageFiles = FileEnumeration.CreateHashSetWithComparer();
+        HashSet<FileInfo> sidecarFiles = FileEnumeration.CreateHashSetWithComparer();
 
         IEnumerable<FileInfo> filesInDir = null;
         int filesThatExistWithinCollection = 0;
@@ -445,7 +444,7 @@ public class DirectoryElementCollection : List<DirectoryElement>
             {
                 await Task.Run(action: () =>
                 {
-                    filesInDir = _helperNonStatic.GetFilesFromAFolder(
+                    filesInDir = FileEnumeration.GetFilesFromAFolder(
                         folder: folderOrCollectionFileName,
                         filter: allowedImageExtensions.Concat(second: allowedSidecarExtensions).ToArray(),
                         recursive: processSubFolders,
@@ -510,7 +509,7 @@ public class DirectoryElementCollection : List<DirectoryElement>
         // ******************************
         // Map sidecar files to image file
         IDictionary<FileInfo, FileInfo> imageToSidecarFileMapping = new Dictionary<FileInfo, FileInfo>();
-        HashSet<FileInfo> overlappingXMPFileList = _helperNonStatic.CreateHashSetWithComparer();
+        HashSet<FileInfo> overlappingXMPFileList = FileEnumeration.CreateHashSetWithComparer();
 
         Log.Trace(message: $"Files: Checking sidecar files, count: {sidecarFiles.Count}");
         foreach (FileInfo sideCarFileInfoItem in sidecarFiles)

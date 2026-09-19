@@ -257,55 +257,69 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="FrmCustomiseFormControls.cs">
+    <Compile Include="View\Forms\FrmCustomiseFormControls.cs">
       <SubType>Form</SubType>
     </Compile>
-    <Compile Include="FrmCustomiseFormControls.Designer.cs">
+    <Compile Include="View\Forms\FrmCustomiseFormControls.Designer.cs">
       <DependentUpon>FrmCustomiseFormControls.cs</DependentUpon>
     </Compile>
-    <Compile Include="FrmMainApp.Startup.cs">
+    <Compile Include="View\Forms\FrmMainApp.Startup.cs">
       <SubType>Form</SubType>
     </Compile>
-    <Compile Include="FrmPleaseWaitBox.cs">
+    <Compile Include="View\Forms\FrmPleaseWaitBox.cs">
       <SubType>Form</SubType>
     </Compile>
-    <Compile Include="FrmPleaseWaitBox.Designer.cs">
+    <Compile Include="View\Forms\FrmPleaseWaitBox.Designer.cs">
       <DependentUpon>FrmPleaseWaitBox.cs</DependentUpon>
     </Compile>
-    <Compile Include="FrmSplashScreen.cs">
+    <Compile Include="View\Forms\FrmSplashScreen.cs">
       <SubType>Form</SubType>
     </Compile>
-    <Compile Include="FrmSplashScreen.Designer.cs">
+    <Compile Include="View\Forms\FrmSplashScreen.Designer.cs">
       <DependentUpon>FrmSplashScreen.cs</DependentUpon>
     </Compile>
     <Compile Include="Helpers\FileSystem\CloudFileHelpers.cs" />
-    <Compile Include="Helpers\HelperControlAndMessageBoxHandling.cs" />
+    <Compile Include="Helpers\UI\ControlTextAndMessageBoxes.cs" />
     <Compile Include="Helpers\Data\CacheManager.cs" />
+    <Compile Include="Helpers\Data\SettingsImportExportOptions.cs" />
     <Compile Include="Helpers\Data\SettingsExport.cs" />
     <Compile Include="Helpers\Data\SettingsImport.cs" />
     <Compile Include="Helpers\Exif\ReadTrackFilePath.cs" />
     <Compile Include="Helpers\Exif\WriteTrackDataToTrackFile.cs" />
     <Compile Include="Helpers\Exif\WriteTrackDataToSideCar.cs" />
+    <Compile Include="Helpers\Text\StringOperations.cs" />
+    <Compile Include="Helpers\UI\ControlTraversal.cs" />
+    <Compile Include="Helpers\UI\FormPositioning.cs" />
+    <Compile Include="Helpers\FileSystem\FileEnumeration.cs" />
+    <Compile Include="Helpers\Update\AutoUpdaterCallbacks.cs" />
     <Compile Include="Helpers\FileSystem\GetChecksum.cs" />
-    <Compile Include="Helpers\Generic\HelperGenericAppStartup.cs" />
-    <Compile Include="Helpers\Generic\HelperGenericAncillaryListsArrays.cs" />
-    <Compile Include="FrmAboutBox.cs">
+    <Compile Include="Helpers\Startup\AppStartup.cs" />
+    <Compile Include="Helpers\Localisation\LanguageLists.cs" />
+    <Compile Include="Helpers\Data\SettingsImportExportTables.cs" />
+    <Compile Include="Helpers\Exif\ExifToolInititators.cs" />
+    <Compile Include="Helpers\Localisation\TimeZones.cs" />
+    <Compile Include="Helpers\Data\ToponomyColumns.cs" />
+    <Compile Include="Helpers\Data\CustomRulesMetadata.cs" />
+    <Compile Include="Helpers\Localisation\Countries.cs" />
+    <Compile Include="Helpers\FileSystem\SupportedFileExtensions.cs" />
+    <Compile Include="Helpers\Exif\GpxImportOptions.cs" />
+    <Compile Include="Helpers\Exif\GpxExportOptions.cs" />
+    <Compile Include="Helpers\Exif\CopyPasteTags.cs" />
+    <Compile Include="Helpers\Map\MapLayers.cs" />
+    <Compile Include="View\Forms\FrmAboutBox.cs">
       <SubType>Form</SubType>
     </Compile>
-    <Compile Include="FrmAboutBox.Designer.cs">
+    <Compile Include="View\Forms\FrmAboutBox.Designer.cs">
       <DependentUpon>FrmAboutBox.cs</DependentUpon>
     </Compile>
-    <Compile Include="FrmManageFavourites.cs">
+    <Compile Include="View\Forms\FrmManageFavourites.cs">
       <SubType>Form</SubType>
     </Compile>
-    <Compile Include="FrmManageFavourites.designer.cs">
+    <Compile Include="View\Forms\FrmManageFavourites.designer.cs">
       <DependentUpon>FrmManageFavourites.cs</DependentUpon>
     </Compile>
-    <Compile Include="Helpers\Generic\HelperGenericCalculations.cs" />
-    <Compile Include="Helpers\NonStatic\FileInfo.cs" />
-    <Compile Include="Helpers\NonStatic\AutoUpdater.cs" />
+    <Compile Include="Helpers\Geo\GeoCalculations.cs" />
     <Compile Include="Helpers\Localisation\ResourceManager.cs" />
-    <Compile Include="Helpers\NonStatic\FileOperations.cs" />
     <Compile Include="Model\AppSettingContainer.cs" />
     <Compile Include="Model\Favourite.cs" />
     <Compile Include="Model\GeoSetterFavourite.cs" />
@@ -322,16 +336,16 @@
       <DependentUpon>Strings.resx</DependentUpon>
     </Compile>
     <Compile Include="SingleInstance_PipeServer.cs" />
-    <Compile Include="View\DialogAndMessageBoxes\RevolutQRBox.cs">
+    <Compile Include="View\Dialogs\RevolutQRBox.cs">
       <SubType>Form</SubType>
     </Compile>
-    <Compile Include="View\DialogAndMessageBoxes\RevolutQRBox.Designer.cs">
+    <Compile Include="View\Dialogs\RevolutQRBox.Designer.cs">
       <DependentUpon>RevolutQRBox.cs</DependentUpon>
     </Compile>
-    <Compile Include="View\ListView\FileListViewMapNavigation.cs" />
-    <Compile Include="View\ListView\FileListViewCopyPaste.cs" />
-    <Compile Include="View\ListView\FileListViewReadWrite.cs" />
-    <Compile Include="View\EditFileForm\EditFileFormGeneric.cs" />
+    <Compile Include="View\FileList\FileListViewMapNavigation.cs" />
+    <Compile Include="View\FileList\FileListViewCopyPaste.cs" />
+    <Compile Include="View\FileList\FileListViewReadWrite.cs" />
+    <Compile Include="View\Forms\EditFileFormLauncher.cs" />
     <Compile Include="Helpers\API\GeoNamesToponomyExtractor.cs" />
     <Compile Include="Helpers\API\APIVersionCheckers.cs">
       <SubType>Component</SubType>
@@ -343,7 +357,7 @@
     <Compile Include="Helpers\Data\DatabaseAndStartup.cs" />
     <Compile Include="Helpers\Data\Favourites.cs" />
     <Compile Include="Helpers\Data\LanguageTZ.cs" />
-    <Compile Include="Helpers\Data\OtherDataRelated.cs" />
+    <Compile Include="Helpers\Data\SessionDataTables.cs" />
     <Compile Include="Helpers\Exif\DataPointInteractions.cs" />
     <Compile Include="Helpers\Exif\ExifToolOperator.cs" />
     <Compile Include="Helpers\Exif\ReadExifData.cs" />
@@ -351,87 +365,85 @@
     <Compile Include="Helpers\Exif\ReadTrackFile.cs" />
     <Compile Include="Helpers\Exif\WriteSaveToFile.cs" />
     <Compile Include="Helpers\FileSystem\Operators.cs" />
-    <Compile Include="Helpers\Generic\HelperGenericFileLocking.cs" />
-    <Compile Include="Helpers\Generic\HelperGenericTypeOperations.cs" />
+    <Compile Include="Helpers\FileSystem\FileLocking.cs" />
     <Compile Include="Model\DirectoryElementCollection.cs" />
     <Compile Include="Model\DirectoryElement.cs" />
     <Compile Include="Model\ExifToolWrapper.cs" />
+    <Compile Include="Model\AttributeValueFormatter.cs" />
     <Compile Include="Model\SourcesAndAttributes.cs" />
     <Compile Include="Model\TagsToModelValueTransformations.cs" />
-    <Compile Include="View\FrmColumnSelection.cs">
+    <Compile Include="View\Forms\FrmColumnSelection.cs">
       <SubType>Form</SubType>
     </Compile>
-    <Compile Include="View\FrmColumnSelection.Designer.cs">
+    <Compile Include="View\Forms\FrmColumnSelection.Designer.cs">
       <DependentUpon>FrmColumnSelection.cs</DependentUpon>
     </Compile>
-    <Compile Include="FrmImportExportGpx.cs">
+    <Compile Include="View\Forms\FrmImportExportGpx.cs">
       <SubType>Form</SubType>
     </Compile>
-    <Compile Include="FrmImportExportGpx.Designer.cs">
+    <Compile Include="View\Forms\FrmImportExportGpx.Designer.cs">
       <DependentUpon>FrmImportExportGpx.cs</DependentUpon>
     </Compile>
-    <Compile Include="FrmPasteWhat.cs">
+    <Compile Include="View\Forms\FrmPasteWhat.cs">
       <SubType>Form</SubType>
     </Compile>
-    <Compile Include="FrmPasteWhat.Designer.cs">
+    <Compile Include="View\Forms\FrmPasteWhat.Designer.cs">
       <DependentUpon>FrmPasteWhat.cs</DependentUpon>
     </Compile>
-    <Compile Include="Helpers\NonStatic\NonStatic.cs" />
-    <Compile Include="Helpers\NonStatic\Generic.cs" />
     <Compile Include="Helpers\HelperVariables.cs" />
     <Compile Include="Helpers\API\GeoNamesToponomyJSONParser.cs" />
-    <Compile Include="FrmEditFileData.cs">
+    <Compile Include="View\Forms\FrmEditFileData.cs">
       <SubType>Form</SubType>
     </Compile>
-    <Compile Include="FrmEditFileData.Designer.cs">
+    <Compile Include="View\Forms\FrmEditFileData.Designer.cs">
       <DependentUpon>FrmEditFileData.cs</DependentUpon>
     </Compile>
-    <Compile Include="FrmMainApp.cs">
+    <Compile Include="View\Forms\FrmMainApp.cs">
       <SubType>Form</SubType>
     </Compile>
-    <Compile Include="FrmMainApp.Designer.cs">
+    <Compile Include="View\Forms\FrmMainApp.Designer.cs">
       <DependentUpon>FrmMainApp.cs</DependentUpon>
     </Compile>
-    <Compile Include="FrmSettings.cs">
+    <Compile Include="View\Forms\FrmSettings.cs">
       <SubType>Form</SubType>
     </Compile>
-    <Compile Include="FrmSettings.Designer.cs">
+    <Compile Include="View\Forms\FrmSettings.Designer.cs">
       <DependentUpon>FrmSettings.cs</DependentUpon>
     </Compile>
     <Compile Include="Helpers\API\GeoNamesGeoTagXMLParser.cs" />
     <Compile Include="Helpers\API\GitHub.cs" />
-    <Compile Include="View\ListView\ListViewColumnSorter.cs" />
+    <Compile Include="View\FileList\ListViewColumnSorter.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="View\ImagePreview.cs">
+    <Compile Include="View\Controls\ImagePreview.cs">
       <SubType>Component</SubType>
     </Compile>
-    <Compile Include="View\ImagePreview.Designer.cs">
+    <Compile Include="View\Controls\ImagePreview.Designer.cs">
       <DependentUpon>ImagePreview.cs</DependentUpon>
     </Compile>
-    <Compile Include="View\ListView\FileListView.cs">
+    <Compile Include="View\FileList\FileListView.cs">
       <SubType>Component</SubType>
     </Compile>
-    <Compile Include="View\ListView\FileListView.Designer.cs">
+    <Compile Include="View\FileList\FileListView.Designer.cs">
       <DependentUpon>FileListView.cs</DependentUpon>
     </Compile>
-    <Compile Include="View\ListView\ModelToColumnValueTransformations.cs" />
-    <Compile Include="View\DialogAndMessageBoxes\DialogWithOrWithoutCheckBox.cs" />
-    <EmbeddedResource Include="FrmAboutBox.resx">
+    <Compile Include="View\FileList\ModelToColumnValueTransformations.cs" />
+    <Compile Include="View\Dialogs\DialogWithOrWithoutCheckBox.cs" />
+    <EmbeddedResource Include="View\Forms\FrmAboutBox.resx">
       <DependentUpon>FrmAboutBox.cs</DependentUpon>
       <SubType>Designer</SubType>
     </EmbeddedResource>
-    <EmbeddedResource Include="FrmCustomiseFormControls.resx">
+    <EmbeddedResource Include="View\Forms\FrmCustomiseFormControls.resx">
       <DependentUpon>FrmCustomiseFormControls.cs</DependentUpon>
     </EmbeddedResource>
-    <EmbeddedResource Include="FrmManageFavourites.resx">
+    <EmbeddedResource Include="View\Forms\FrmManageFavourites.resx">
       <DependentUpon>FrmManageFavourites.cs</DependentUpon>
       <SubType>Designer</SubType>
     </EmbeddedResource>
-    <EmbeddedResource Include="FrmPleaseWaitBox.resx">
+    <EmbeddedResource Include="View\Forms\FrmPleaseWaitBox.resx">
       <DependentUpon>FrmPleaseWaitBox.cs</DependentUpon>
     </EmbeddedResource>
-    <EmbeddedResource Include="FrmSplashScreen.resx">
+    <EmbeddedResource Include="View\Forms\FrmSplashScreen.resx">
       <DependentUpon>FrmSplashScreen.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Properties\Resources.resx">
@@ -452,38 +464,38 @@
       <SubType>Designer</SubType>
       <LastGenOutput>Strings1.Designer.cs</LastGenOutput>
     </EmbeddedResource>
-    <EmbeddedResource Include="View\DialogAndMessageBoxes\RevolutQRBox.resx">
+    <EmbeddedResource Include="View\Dialogs\RevolutQRBox.resx">
       <DependentUpon>RevolutQRBox.cs</DependentUpon>
     </EmbeddedResource>
-    <EmbeddedResource Include="View\FrmColumnSelection.resx">
+    <EmbeddedResource Include="View\Forms\FrmColumnSelection.resx">
       <DependentUpon>FrmColumnSelection.cs</DependentUpon>
       <SubType>Designer</SubType>
     </EmbeddedResource>
-    <EmbeddedResource Include="FrmEditFileData.resx">
+    <EmbeddedResource Include="View\Forms\FrmEditFileData.resx">
       <DependentUpon>FrmEditFileData.cs</DependentUpon>
       <SubType>Designer</SubType>
     </EmbeddedResource>
-    <EmbeddedResource Include="FrmImportExportGpx.resx">
+    <EmbeddedResource Include="View\Forms\FrmImportExportGpx.resx">
       <DependentUpon>FrmImportExportGpx.cs</DependentUpon>
       <SubType>Designer</SubType>
     </EmbeddedResource>
-    <EmbeddedResource Include="FrmMainApp.resx">
+    <EmbeddedResource Include="View\Forms\FrmMainApp.resx">
       <DependentUpon>FrmMainApp.cs</DependentUpon>
       <SubType>Designer</SubType>
     </EmbeddedResource>
-    <EmbeddedResource Include="FrmPasteWhat.resx">
+    <EmbeddedResource Include="View\Forms\FrmPasteWhat.resx">
       <DependentUpon>FrmPasteWhat.cs</DependentUpon>
       <SubType>Designer</SubType>
     </EmbeddedResource>
-    <EmbeddedResource Include="FrmSettings.resx">
+    <EmbeddedResource Include="View\Forms\FrmSettings.resx">
       <DependentUpon>FrmSettings.cs</DependentUpon>
       <SubType>Designer</SubType>
     </EmbeddedResource>
-    <EmbeddedResource Include="View\ImagePreview.resx">
+    <EmbeddedResource Include="View\Controls\ImagePreview.resx">
       <DependentUpon>ImagePreview.cs</DependentUpon>
       <SubType>Designer</SubType>
     </EmbeddedResource>
-    <EmbeddedResource Include="View\ListView\FileListView.resx">
+    <EmbeddedResource Include="View\FileList\FileListView.resx">
       <DependentUpon>FileListView.cs</DependentUpon>
       <SubType>Designer</SubType>
     </EmbeddedResource>

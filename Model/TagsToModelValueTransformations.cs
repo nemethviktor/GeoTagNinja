@@ -1,4 +1,5 @@
 ﻿using GeoTagNinja.Helpers;
+using GeoTagNinja.View.Forms;
 using System;
 using System.Collections.Generic;
 using System.Globalization;
@@ -344,23 +345,26 @@ internal class TagsToModelValueTransformations
     }
 
     /// <summary>
-    ///     Ensure the value is an actual date-time...
+    ///     Converts an ExifTool timestamp into a real <see cref="DateTime" />.
     /// </summary>
+    /// <remarks>
+    ///     <para>
+    ///         This used to call <c>DateTime.TryParse</c> with the current culture, which only worked because the
+    ///         bundled <c>.ExifTool_config</c> rewrites ExifTool's native <c>YYYY:MM:DD hh:mm:ss</c> into a form the
+    ///         BCL happens to recognise. Whenever that config was not picked up, or the user's culture used a
+    ///         non-Gregorian calendar, every timestamp in the application silently went blank.
+    ///     </para>
+    ///     <para>
+    ///         <see cref="AttributeValueFormatter" /> now handles both layouts explicitly, so the outcome no longer
+    ///         depends on either the Perl config or the machine's locale. It also rejects the all-zero timestamp that
+    ///         ExifTool emits for a present-but-empty tag.
+    ///     </para>
+    /// </remarks>
+    /// <param name="parseResult">The raw tag value from ExifTool.</param>
+    /// <returns>The parsed timestamp, or <see langword="null" /> when the tag held no usable date.</returns>
     public static DateTime? T2M_TakenCreatedDate(string parseResult)
     {
-        if (parseResult == null)
-        {
-            return null; // not set
-        }
-
-        if (parseResult.Contains("0000"))
-        {
-            return null; // not set
-        }
-
-        //return outDateTime.ToString(format: CultureInfo.CurrentCulture.DateTimeFormat.ShortDatePattern + " " + CultureInfo.CurrentCulture.DateTimeFormat.LongTimePattern);
-        return DateTime.TryParse(s: parseResult, result: out DateTime outDateTime)
-            ? outDateTime
-            : null;
+        return AttributeValueFormatter.ParseDateTimeOrNull(value: parseResult,
+            context: ValueFormatContext.ExifTool);
     }
 }

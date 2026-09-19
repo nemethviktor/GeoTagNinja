@@ -1,0 +1,148 @@
+﻿using GeoTagNinja.Helpers;
+using GeoTagNinja.Helpers.UI;
+using System;
+using System.Collections.Generic;
+using System.Diagnostics;
+using System.Windows.Forms;
+using Themer = WinFormsDarkThemerNinja.Themer;
+
+namespace GeoTagNinja.View.Forms;
+
+public partial class FrmPleaseWaitBox : Form
+{
+    private FrmMainApp _frmMainAppInstance =
+        FrmMainApp.Instance;
+
+    public FrmPleaseWaitBox()
+    {
+        InitializeComponent();
+        Debug.Assert(condition: _frmMainAppInstance != null, message: $"{nameof(_frmMainAppInstance)} != null");
+        lbl_CancelPressed.Visible = false;
+
+        lbl_PleaseWaitBoxActionScanning.Visible = false;
+        lbl_PleaseWaitBoxActionParsing.Visible = false;
+        lbl_PleaseWaitBoxActionPopulatingListView.Visible = false;
+    }
+
+    private void btn_Cancel_Click(object sender, EventArgs e)
+    {
+        // Check if `_cts` is already disposed or null
+        if (_frmMainAppInstance._cts == null ||
+            _frmMainAppInstance._cts.Token.IsCancellationRequested)
+        {
+            Console.WriteLine(value: "Cancellation already requested or `_cts` disposed.");
+            return;
+        }
+
+        // Request cancellation
+        _frmMainAppInstance._cts.Cancel();
+        Enabled = false;
+        lbl_CancelPressed.Visible = true;
+    }
+
+    private void FrmPleaseWaitBox_Load(object sender, EventArgs e)
+    {
+        HelperControlAndMessageBoxHandling.ReturnControlText(control: this, senderForm: this);
+        _frmMainAppInstance.Enabled = false;
+        GetControlNames();
+
+        Themer.ApplyThemeToControl(
+            control: this,
+            themeStyle: HelperVariables.UserSettingUseDarkMode ?
+            Themer.ThemeStyle.Custom :
+            Themer.ThemeStyle.Default
+            );
+    }
+
+    /// <summary>
+    /// Provides the localised labels for the various Control names 
+    /// </summary>
+    private void GetControlNames()
+    {
+        IEnumerable<Control> controls = ControlTraversal.GetAllControls(control: this);
+        foreach (Control control in controls)
+        {
+            if (
+                control is Button or
+                CheckBox or
+                GroupBox or
+                Label or
+                RadioButton or
+                TabPage
+            )
+            {
+                // gets logged inside.
+                HelperControlAndMessageBoxHandling.FakeControlTypes fakeControlType = control switch
+                {
+                    Button => HelperControlAndMessageBoxHandling.FakeControlTypes.Button,
+                    CheckBox => HelperControlAndMessageBoxHandling.FakeControlTypes.CheckBox,
+                    GroupBox => HelperControlAndMessageBoxHandling.FakeControlTypes.GroupBox,
+                    Label => HelperControlAndMessageBoxHandling.FakeControlTypes.Label,
+                    RadioButton => HelperControlAndMessageBoxHandling.FakeControlTypes.RadioButton,
+                    TabPage => HelperControlAndMessageBoxHandling.FakeControlTypes.TabPage,
+                    _ => HelperControlAndMessageBoxHandling.FakeControlTypes.Undefined
+                };
+
+                control.Text = HelperControlAndMessageBoxHandling.ReturnControlText(
+                    controlName: control.Name,
+                    fakeControlType: fakeControlType);
+            }
+        }
+    }
+
+    private void FrmPleaseWaitBox_FormClosing(object sender, FormClosingEventArgs e)
+    {
+        _frmMainAppInstance.Enabled = true;
+    }
+
+    /// <summary>
+    /// Updates the individual Controls' visibilities depending on what stage/action we're on/at
+    /// </summary>
+    /// <param name="stage"></param>
+    internal void UpdateControlsVisibility(ActionStages stage)
+    {
+        if (stage == ActionStages.SCANNING)
+        {
+            lbl_ParsingFolders.Visible = false;
+            lbl_CancelPressed.Visible = false;
+            lbl_PleaseWaitBoxMessage.Visible = false;
+            lbl_PressCancelToStop.Visible = true;
+            btn_Cancel.Visible = true;
+            // lbl_PleaseWaitBoxActionScanning.Visible = true;
+            lbl_PleaseWaitBoxActionParsing.Visible = false;
+            lbl_PleaseWaitBoxActionPopulatingListView.Visible = false;
+        }
+        else if (stage == ActionStages.PARSING)
+        {
+            lbl_ParsingFolders.Visible = true;
+            lbl_CancelPressed.Visible = false;
+            lbl_PleaseWaitBoxMessage.Visible = true;
+            lbl_PressCancelToStop.Visible = false;
+            btn_Cancel.Visible = true;
+            lbl_PleaseWaitBoxActionScanning.Visible = false;
+            // lbl_PleaseWaitBoxActionParsing.Visible = true;
+            lbl_PleaseWaitBoxActionPopulatingListView.Visible = false;
+        }
+        //// No longer relevant. Has been obsoleted by streaming data capability intro
+        //else if (stage == ActionStages.POPULATING_LISTVIEW)
+        //{
+        //    lbl_ParsingFolders.Visible = false;
+        //    lbl_CancelPressed.Visible = false;
+        //    lbl_PleaseWaitBoxMessage.Visible = true;
+        //    lbl_PressCancelToStop.Visible = false;
+        //    btn_Cancel.Visible = false;
+        //    lbl_PleaseWaitBoxActionScanning.Visible = false;
+        //    lbl_PleaseWaitBoxActionParsing.Visible = false;
+        //    lbl_PleaseWaitBoxActionPopulatingListView.Visible = true;
+        //}
+
+        Application.DoEvents();
+    }
+
+    internal enum ActionStages
+    {
+        SCANNING,
+        PARSING,
+        //POPULATING_LISTVIEW
+    }
+}

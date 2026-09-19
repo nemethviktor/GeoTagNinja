@@ -1,4 +1,5 @@
-﻿using GeoTagNinja.Helpers.Generic;
+﻿using GeoTagNinja.Helpers.Localisation;
+using GeoTagNinja.View.Forms;
 using System;
 using System.Data;
 using System.Data.SQLite;
@@ -73,7 +74,7 @@ internal static class CustomCityAllocationRules
         if (!(Convert.ToInt32(value: SQLiteCommand.ExecuteScalar()) > 0))
         {
             string defaultCiltyAllocationLogic = "";
-            foreach (string countryCode in HelperGenericAncillaryListsArrays.GetCountryCodes())
+            foreach (string countryCode in Countries.GetCountryCodes())
             {
                 if (!string.IsNullOrEmpty(value: countryCode))
                 {

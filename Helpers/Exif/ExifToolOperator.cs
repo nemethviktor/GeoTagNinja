@@ -1,5 +1,6 @@
-﻿using GeoTagNinja.Helpers.Generic;
+﻿using GeoTagNinja.Helpers.UI;
 using GeoTagNinja.Model;
+using GeoTagNinja.View.Forms;
 using System;
 using System.Collections.Generic;
 using System.Diagnostics;
@@ -44,7 +45,7 @@ internal static class ExifToolOperator
     /// <returns>Empty Task</returns>
     internal static async Task RunExifTool(string exiftoolCmd,
                                            FrmMainApp frmMainAppInstance,
-                                           HelperGenericAncillaryListsArrays.ExifToolInititators initiator,
+                                           ExifToolInititators initiator,
                                            bool processOriginalFile = false,
                                            bool writeXmpSideCar = false)
     {
@@ -73,7 +74,7 @@ internal static class ExifToolOperator
 
             switch (initiator)
             {
-                case HelperGenericAncillaryListsArrays.ExifToolInititators.ExifWriteExifToFile:
+                case ExifToolInititators.ExifWriteExifToFile:
                     string fileNameWithPath = null;
                     string fileNameWithoutPath = null;
                     DirectoryElement dirElemFileToDrop = null;
@@ -242,7 +243,7 @@ internal static class ExifToolOperator
                         }
                     };
                     break;
-                case HelperGenericAncillaryListsArrays.ExifToolInititators.GenericCheckForNewVersions:
+                case ExifToolInititators.GenericCheckForNewVersions:
                     prcExifTool.OutputDataReceived += (_,
                                                        data) =>
                     {
@@ -264,7 +265,7 @@ internal static class ExifToolOperator
                     };
 
                     break;
-                case HelperGenericAncillaryListsArrays.ExifToolInititators.ExifGetTrackSyncDataReadSyncPhotos:
+                case ExifToolInititators.ExifGetTrackSyncDataReadSyncPhotos:
                     prcExifTool.OutputDataReceived += (_,
                                                        data) =>
                     {
@@ -291,8 +292,8 @@ internal static class ExifToolOperator
                         }
                     };
                     break;
-                case HelperGenericAncillaryListsArrays.ExifToolInititators.ExifGetTrackSyncDataReadTrackPath:
-                case HelperGenericAncillaryListsArrays.ExifToolInititators.ExifGetTrackSyncDataWriteTrackPath:
+                case ExifToolInititators.ExifGetTrackSyncDataReadTrackPath:
+                case ExifToolInititators.ExifGetTrackSyncDataWriteTrackPath:
                 default:
                     prcExifTool.OutputDataReceived += (_,
                                                        data) =>
@@ -375,7 +376,7 @@ internal static class ExifToolOperator
                                 attribute: attribute,
                                 version: DirectoryElement.AttributeVersion
                                                          .Stage3ReadyToWrite,
-                                nowSavingExif: false),
+                                context: ValueFormatContext.RoundTrip),
                             version: DirectoryElement.AttributeVersion.Original,
                             isMarkedForDeletion: dirElemToDrop.IsMarkedForDeletion(
                                 attribute: attribute,

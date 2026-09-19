@@ -1,4 +1,4 @@
-﻿using GeoTagNinja.Helpers.Generic;
+﻿using GeoTagNinja.Helpers.UI;
 using System;
 using System.Collections.Generic;
 using System.Data.SQLite;
@@ -33,7 +33,7 @@ internal static class SettingsExport
             if (settingsToExportList.Contains(item: settingName))
             {
                 settingsTablesToBeKeptList.Add(
-                    item: HelperGenericAncillaryListsArrays.GetSettingsImportExportTableName(settingName: settingName));
+                    item: SettingsImportExportTables.GetSettingsImportExportTableName(settingName: settingName));
             }
         }
 

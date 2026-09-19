@@ -1,5 +1,6 @@
-﻿using GeoTagNinja.Helpers.Generic;
+﻿using GeoTagNinja.Helpers.UI;
 using GeoTagNinja.Model;
+using GeoTagNinja.View.Forms;
 using ImageMagick;
 using Sdcb.LibRaw;
 using System;
@@ -86,7 +87,7 @@ internal static class ReadGetImagePreviews
         await ExifToolOperator.RunExifTool(exiftoolCmd: exiftoolCmd,
             frmMainAppInstance: null,
             initiator:
-            HelperGenericAncillaryListsArrays.ExifToolInititators
+            ExifToolInititators
                                              .ExifGetImagePreviews);
         ///////////////
         FrmMainApp.Log.Debug(message: "Done");
@@ -110,7 +111,7 @@ internal static class ReadGetImagePreviews
         string fileNameWithPath = directoryElement.FileNameWithPath;
         string fileNameWithoutPath = directoryElement.ItemNameWithoutPath;
 
-        FrmMainApp frmMainAppInstance = (FrmMainApp)Application.OpenForms[name: "FrmMainApp"];
+        FrmMainApp frmMainAppInstance = FrmMainApp.Instance;
         FrmEditFileData frmEditFileDataInstance = (FrmEditFileData)Application.OpenForms[name: "FrmEditFileData"];
         Image img = null;
         //FileInfo fi = new(fileName: directoryElement.FileNameWithPath);

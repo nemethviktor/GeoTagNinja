@@ -1,5 +1,5 @@
-﻿using GeoTagNinja.Helpers.Generic;
-using GeoTagNinja.Resources.Languages;
+﻿using GeoTagNinja.Resources.Languages;
+using GeoTagNinja.View.Forms;
 using System.Globalization;
 using System.Threading;
 using System.Windows.Forms;
@@ -18,7 +18,7 @@ internal static class ResourceManager
     {
         System.Resources.ResourceManager resourceManager = new(resourceSource: typeof(Strings));
         string resourceKeyInGenericMapping =
-            HelperGenericAncillaryListsArrays.GetGenericControlName(controlName: control.Name);
+            LanguageLists.GetGenericControlName(controlName: control.Name);
 
         // Attempt to get the resource value based on the control's name
         // This has been done a little oddly because items like btn_OK became btn_Generic_Ok and lbl_Generic_OK so we're taking whatever comes after the first underscore.
@@ -70,7 +70,7 @@ internal static class ResourceManager
     {
         string resourceKey = controlName; // bit lame but to keep in line with the above block.
         string resourceKeyInGenericMapping =
-            HelperGenericAncillaryListsArrays.GetGenericControlName(controlName: controlName);
+            LanguageLists.GetGenericControlName(controlName: controlName);
 
         string resourceValue = string.Empty;
 

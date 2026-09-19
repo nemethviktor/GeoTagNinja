@@ -1,5 +1,4 @@
-﻿using GeoTagNinja.Helpers.Generic;
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Data.SQLite;
 using System.IO;
@@ -43,7 +42,7 @@ namespace GeoTagNinja.Helpers.Data
                 if (settingsToImportList.Contains(item: settingName))
                 {
                     settingsTablesToBeImportedList.Add(
-                        item: HelperGenericAncillaryListsArrays.GetSettingsImportExportTableName(settingName: settingName));
+                        item: SettingsImportExportTables.GetSettingsImportExportTableName(settingName: settingName));
                 }
             }
 

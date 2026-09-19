@@ -1,4 +1,5 @@
 ﻿using CommandLine;
+using GeoTagNinja.View.Forms;
 using System;
 using System.IO;
 using System.IO.Pipes;

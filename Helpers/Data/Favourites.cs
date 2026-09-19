@@ -1,4 +1,6 @@
-﻿using GeoTagNinja.Model;
+﻿using GeoTagNinja.Helpers.UI;
+using GeoTagNinja.Model;
+using GeoTagNinja.View.Forms;
 using System;
 using System.Collections.Generic;
 using System.Data;
@@ -26,7 +28,7 @@ internal static class Favourites
         bool updateFavouritesInSQLiteAtTheEnd = true;
         int itemsImported = 0;
 
-        FrmMainApp frmMainAppInstance = (FrmMainApp)Application.OpenForms[name: "FrmMainApp"];
+        FrmMainApp frmMainAppInstance = FrmMainApp.Instance;
         HashSet<GeoSetterFavourite> geoSetterFavourites = [];
         try
         {

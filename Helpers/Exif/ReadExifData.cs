@@ -1,8 +1,9 @@
 ﻿using ExCSS;
 using GeoTagNinja.Helpers.API;
 using GeoTagNinja.Helpers.Data;
-using GeoTagNinja.Helpers.Generic;
+using GeoTagNinja.Helpers.UI;
 using GeoTagNinja.Model;
+using GeoTagNinja.View.Forms;
 using System;
 using System.Collections.Generic;
 using System.Data;
@@ -340,22 +341,22 @@ internal static class ReadExifData
         #endregion
             DataRow drSQLToponomyRow = dtSQLToponomyData.NewRow();
 
-            drSQLToponomyRow[columnName: HelperGenericAncillaryListsArrays.DefaultEnglishNamesToColumnHeaders[
-                GetToponomyDataColumnName(HelperGenericAncillaryListsArrays.DefaultColumnNamesFromElementAttributesForFileEditing.Distance, true)]] = Distance;
-            drSQLToponomyRow[columnName: HelperGenericAncillaryListsArrays.DefaultEnglishNamesToColumnHeaders[
-                GetToponomyDataColumnName(HelperGenericAncillaryListsArrays.DefaultColumnNamesFromElementAttributesForFileEditing.CountryCode, true)]] = CountryCode;
-            drSQLToponomyRow[columnName: HelperGenericAncillaryListsArrays.DefaultEnglishNamesToColumnHeaders[
-                GetToponomyDataColumnName(HelperGenericAncillaryListsArrays.DefaultColumnNamesFromElementAttributesForFileEditing.Country, true)]] = Country;
-            drSQLToponomyRow[columnName: HelperGenericAncillaryListsArrays.DefaultEnglishNamesToColumnHeaders[
-                GetToponomyDataColumnName(HelperGenericAncillaryListsArrays.DefaultColumnNamesFromElementAttributesForFileEditing.City, true)]] = City;
-            drSQLToponomyRow[columnName: HelperGenericAncillaryListsArrays.DefaultEnglishNamesToColumnHeaders[
-                GetToponomyDataColumnName(HelperGenericAncillaryListsArrays.DefaultColumnNamesFromElementAttributesForFileEditing.State, true)]] = State;
-            drSQLToponomyRow[columnName: HelperGenericAncillaryListsArrays.DefaultEnglishNamesToColumnHeaders[
-                GetToponomyDataColumnName(HelperGenericAncillaryListsArrays.DefaultColumnNamesFromElementAttributesForFileEditing.Sublocation, true)]] = Sublocation;
-            drSQLToponomyRow[columnName: HelperGenericAncillaryListsArrays.DefaultEnglishNamesToColumnHeaders[
-                GetToponomyDataColumnName(HelperGenericAncillaryListsArrays.DefaultColumnNamesFromElementAttributesForFileEditing.GPSAltitude, true)]] = Altitude;
-            drSQLToponomyRow[columnName: HelperGenericAncillaryListsArrays.DefaultEnglishNamesToColumnHeaders[
-                GetToponomyDataColumnName(HelperGenericAncillaryListsArrays.DefaultColumnNamesFromElementAttributesForFileEditing.timezoneId, true)]] = timezoneId;
+            drSQLToponomyRow[columnName: ToponomyColumns.DefaultEnglishNamesToColumnHeaders[
+                GetToponomyDataColumnName(DefaultColumnNamesFromElementAttributesForFileEditing.Distance, true)]] = Distance;
+            drSQLToponomyRow[columnName: ToponomyColumns.DefaultEnglishNamesToColumnHeaders[
+                GetToponomyDataColumnName(DefaultColumnNamesFromElementAttributesForFileEditing.CountryCode, true)]] = CountryCode;
+            drSQLToponomyRow[columnName: ToponomyColumns.DefaultEnglishNamesToColumnHeaders[
+                GetToponomyDataColumnName(DefaultColumnNamesFromElementAttributesForFileEditing.Country, true)]] = Country;
+            drSQLToponomyRow[columnName: ToponomyColumns.DefaultEnglishNamesToColumnHeaders[
+                GetToponomyDataColumnName(DefaultColumnNamesFromElementAttributesForFileEditing.City, true)]] = City;
+            drSQLToponomyRow[columnName: ToponomyColumns.DefaultEnglishNamesToColumnHeaders[
+                GetToponomyDataColumnName(DefaultColumnNamesFromElementAttributesForFileEditing.State, true)]] = State;
+            drSQLToponomyRow[columnName: ToponomyColumns.DefaultEnglishNamesToColumnHeaders[
+                GetToponomyDataColumnName(DefaultColumnNamesFromElementAttributesForFileEditing.Sublocation, true)]] = Sublocation;
+            drSQLToponomyRow[columnName: ToponomyColumns.DefaultEnglishNamesToColumnHeaders[
+                GetToponomyDataColumnName(DefaultColumnNamesFromElementAttributesForFileEditing.GPSAltitude, true)]] = Altitude;
+            drSQLToponomyRow[columnName: ToponomyColumns.DefaultEnglishNamesToColumnHeaders[
+                GetToponomyDataColumnName(DefaultColumnNamesFromElementAttributesForFileEditing.timezoneId, true)]] = timezoneId;
 
             dtSQLToponomyData.Rows.Add(row: drSQLToponomyRow);
         }
@@ -739,22 +740,22 @@ internal static class ReadExifData
 
                         // add to return-table to offer to user
 
-                        drAPIToponomyRow[columnName: HelperGenericAncillaryListsArrays.DefaultEnglishNamesToColumnHeaders[
-                            GetToponomyDataColumnName(HelperGenericAncillaryListsArrays.DefaultColumnNamesFromElementAttributesForFileEditing.Distance, true)]] = Distance;
-                        drAPIToponomyRow[columnName: HelperGenericAncillaryListsArrays.DefaultEnglishNamesToColumnHeaders[
-                            GetToponomyDataColumnName(HelperGenericAncillaryListsArrays.DefaultColumnNamesFromElementAttributesForFileEditing.CountryCode, true)]] = CountryCode;
-                        drAPIToponomyRow[columnName: HelperGenericAncillaryListsArrays.DefaultEnglishNamesToColumnHeaders[
-                            GetToponomyDataColumnName(HelperGenericAncillaryListsArrays.DefaultColumnNamesFromElementAttributesForFileEditing.Country, true)]] = Country;
-                        drAPIToponomyRow[columnName: HelperGenericAncillaryListsArrays.DefaultEnglishNamesToColumnHeaders[
-                            GetToponomyDataColumnName(HelperGenericAncillaryListsArrays.DefaultColumnNamesFromElementAttributesForFileEditing.City, true)]] = City;
-                        drAPIToponomyRow[columnName: HelperGenericAncillaryListsArrays.DefaultEnglishNamesToColumnHeaders[
-                            GetToponomyDataColumnName(HelperGenericAncillaryListsArrays.DefaultColumnNamesFromElementAttributesForFileEditing.State, true)]] = State;
-                        drAPIToponomyRow[columnName: HelperGenericAncillaryListsArrays.DefaultEnglishNamesToColumnHeaders[
-                            GetToponomyDataColumnName(HelperGenericAncillaryListsArrays.DefaultColumnNamesFromElementAttributesForFileEditing.Sublocation, true)]] = Sublocation;
-                        drAPIToponomyRow[columnName: HelperGenericAncillaryListsArrays.DefaultEnglishNamesToColumnHeaders[
-                            GetToponomyDataColumnName(HelperGenericAncillaryListsArrays.DefaultColumnNamesFromElementAttributesForFileEditing.GPSAltitude, true)]] = Altitude;
-                        drAPIToponomyRow[columnName: HelperGenericAncillaryListsArrays.DefaultEnglishNamesToColumnHeaders[
-                            GetToponomyDataColumnName(HelperGenericAncillaryListsArrays.DefaultColumnNamesFromElementAttributesForFileEditing.timezoneId, true)]] = timezoneId;
+                        drAPIToponomyRow[columnName: ToponomyColumns.DefaultEnglishNamesToColumnHeaders[
+                            GetToponomyDataColumnName(DefaultColumnNamesFromElementAttributesForFileEditing.Distance, true)]] = Distance;
+                        drAPIToponomyRow[columnName: ToponomyColumns.DefaultEnglishNamesToColumnHeaders[
+                            GetToponomyDataColumnName(DefaultColumnNamesFromElementAttributesForFileEditing.CountryCode, true)]] = CountryCode;
+                        drAPIToponomyRow[columnName: ToponomyColumns.DefaultEnglishNamesToColumnHeaders[
+                            GetToponomyDataColumnName(DefaultColumnNamesFromElementAttributesForFileEditing.Country, true)]] = Country;
+                        drAPIToponomyRow[columnName: ToponomyColumns.DefaultEnglishNamesToColumnHeaders[
+                            GetToponomyDataColumnName(DefaultColumnNamesFromElementAttributesForFileEditing.City, true)]] = City;
+                        drAPIToponomyRow[columnName: ToponomyColumns.DefaultEnglishNamesToColumnHeaders[
+                            GetToponomyDataColumnName(DefaultColumnNamesFromElementAttributesForFileEditing.State, true)]] = State;
+                        drAPIToponomyRow[columnName: ToponomyColumns.DefaultEnglishNamesToColumnHeaders[
+                            GetToponomyDataColumnName(DefaultColumnNamesFromElementAttributesForFileEditing.Sublocation, true)]] = Sublocation;
+                        drAPIToponomyRow[columnName: ToponomyColumns.DefaultEnglishNamesToColumnHeaders[
+                            GetToponomyDataColumnName(DefaultColumnNamesFromElementAttributesForFileEditing.GPSAltitude, true)]] = Altitude;
+                        drAPIToponomyRow[columnName: ToponomyColumns.DefaultEnglishNamesToColumnHeaders[
+                            GetToponomyDataColumnName(DefaultColumnNamesFromElementAttributesForFileEditing.timezoneId, true)]] = timezoneId;
 
                         dtSQLToponomyData.Rows.Add(row: drAPIToponomyRow);
 
@@ -783,7 +784,7 @@ internal static class ReadExifData
                     {
                         // not adding anything to dataTable because it has 1 row, and that's the one that will be returned.
 
-                        OtherDataRelated.UpdateAddToDataTableTopopnomy(
+                        SessionDataTables.UpdateAddToDataTableTopopnomy(
                             lat: $"{dtWriteToSQLite.Rows[index: 0][columnName: "lat"]}",
                             lng: $"{dtWriteToSQLite.Rows[index: 0][columnName: "lng"]}",
                             adminName1: $"{dtWriteToSQLite.Rows[index: 0][columnName: "AdminName1"]}",
@@ -798,7 +799,7 @@ internal static class ReadExifData
                     }
                     else
                     {
-                        FrmMainApp frmMainAppInstance = (FrmMainApp)Application.OpenForms[name: "FrmMainApp"];
+                        FrmMainApp frmMainAppInstance = FrmMainApp.Instance;
                         // scroll to the file in question and show the image of it...makes life a lot easier
                         if (!string.IsNullOrEmpty(value: fileNameWithoutPath))
                         {
@@ -828,7 +829,7 @@ internal static class ReadExifData
                                                          .CopyToDataTable();
 
                         // [0] because we just killed off the other rows above.
-                        OtherDataRelated.UpdateAddToDataTableTopopnomy(
+                        SessionDataTables.UpdateAddToDataTableTopopnomy(
                             lat: $"{dtWriteToSQLite.Rows[index: 0][columnName: "lat"]}",
                             lng: $"{dtWriteToSQLite.Rows[index: 0][columnName: "lng"]}",
                             adminName1: $"{dtWriteToSQLite.Rows[index: 0][columnName: "AdminName1"]}",
@@ -958,7 +959,7 @@ internal static class ReadExifData
                 else if (HelperVariables.OperationAPIReturnedOKResponse)
                 {
                     // write back empty
-                    OtherDataRelated.UpdateAddToDataTableTopopnomy(
+                    SessionDataTables.UpdateAddToDataTableTopopnomy(
                         lat: lat,
                         lng: lng,
                         adminName1: "",
@@ -1014,44 +1015,44 @@ internal static class ReadExifData
         Dictionary<string, string> columnsToAddList = new()
         {
             {
-                GetToponomyDataColumnName(HelperGenericAncillaryListsArrays.DefaultColumnNamesFromElementAttributesForFileEditing.Distance, true),
-                HelperGenericAncillaryListsArrays.DefaultEnglishNamesToColumnHeaders[
-                    GetToponomyDataColumnName(HelperGenericAncillaryListsArrays.DefaultColumnNamesFromElementAttributesForFileEditing.Distance, true)]
+                GetToponomyDataColumnName(DefaultColumnNamesFromElementAttributesForFileEditing.Distance, true),
+                ToponomyColumns.DefaultEnglishNamesToColumnHeaders[
+                    GetToponomyDataColumnName(DefaultColumnNamesFromElementAttributesForFileEditing.Distance, true)]
             },
             {
-                GetToponomyDataColumnName(HelperGenericAncillaryListsArrays.DefaultColumnNamesFromElementAttributesForFileEditing.CountryCode, true),
-                HelperGenericAncillaryListsArrays.DefaultEnglishNamesToColumnHeaders[
-                    GetToponomyDataColumnName(HelperGenericAncillaryListsArrays.DefaultColumnNamesFromElementAttributesForFileEditing.CountryCode, true)]
+                GetToponomyDataColumnName(DefaultColumnNamesFromElementAttributesForFileEditing.CountryCode, true),
+                ToponomyColumns.DefaultEnglishNamesToColumnHeaders[
+                    GetToponomyDataColumnName(DefaultColumnNamesFromElementAttributesForFileEditing.CountryCode, true)]
             },
             {
-                GetToponomyDataColumnName(HelperGenericAncillaryListsArrays.DefaultColumnNamesFromElementAttributesForFileEditing.Country, true),
-                HelperGenericAncillaryListsArrays.DefaultEnglishNamesToColumnHeaders[
-                    GetToponomyDataColumnName(HelperGenericAncillaryListsArrays.DefaultColumnNamesFromElementAttributesForFileEditing.Country, true)]
+                GetToponomyDataColumnName(DefaultColumnNamesFromElementAttributesForFileEditing.Country, true),
+                ToponomyColumns.DefaultEnglishNamesToColumnHeaders[
+                    GetToponomyDataColumnName(DefaultColumnNamesFromElementAttributesForFileEditing.Country, true)]
             },
             {
-                GetToponomyDataColumnName(HelperGenericAncillaryListsArrays.DefaultColumnNamesFromElementAttributesForFileEditing.City, true),
-                HelperGenericAncillaryListsArrays.DefaultEnglishNamesToColumnHeaders[
-                    GetToponomyDataColumnName(HelperGenericAncillaryListsArrays.DefaultColumnNamesFromElementAttributesForFileEditing.City, true)]
+                GetToponomyDataColumnName(DefaultColumnNamesFromElementAttributesForFileEditing.City, true),
+                ToponomyColumns.DefaultEnglishNamesToColumnHeaders[
+                    GetToponomyDataColumnName(DefaultColumnNamesFromElementAttributesForFileEditing.City, true)]
             },
             {
-                GetToponomyDataColumnName(HelperGenericAncillaryListsArrays.DefaultColumnNamesFromElementAttributesForFileEditing.State, true),
-                HelperGenericAncillaryListsArrays.DefaultEnglishNamesToColumnHeaders[
-                    GetToponomyDataColumnName(HelperGenericAncillaryListsArrays.DefaultColumnNamesFromElementAttributesForFileEditing.State, true)]
+                GetToponomyDataColumnName(DefaultColumnNamesFromElementAttributesForFileEditing.State, true),
+                ToponomyColumns.DefaultEnglishNamesToColumnHeaders[
+                    GetToponomyDataColumnName(DefaultColumnNamesFromElementAttributesForFileEditing.State, true)]
             },
             {
-                GetToponomyDataColumnName(HelperGenericAncillaryListsArrays.DefaultColumnNamesFromElementAttributesForFileEditing.Sublocation, true),
-                HelperGenericAncillaryListsArrays.DefaultEnglishNamesToColumnHeaders[
-                    GetToponomyDataColumnName(HelperGenericAncillaryListsArrays.DefaultColumnNamesFromElementAttributesForFileEditing.Sublocation, true)]
+                GetToponomyDataColumnName(DefaultColumnNamesFromElementAttributesForFileEditing.Sublocation, true),
+                ToponomyColumns.DefaultEnglishNamesToColumnHeaders[
+                    GetToponomyDataColumnName(DefaultColumnNamesFromElementAttributesForFileEditing.Sublocation, true)]
             },
             {
-                GetToponomyDataColumnName(HelperGenericAncillaryListsArrays.DefaultColumnNamesFromElementAttributesForFileEditing.GPSAltitude, true),
-                HelperGenericAncillaryListsArrays.DefaultEnglishNamesToColumnHeaders[
-                    GetToponomyDataColumnName(HelperGenericAncillaryListsArrays.DefaultColumnNamesFromElementAttributesForFileEditing.GPSAltitude, true)]
+                GetToponomyDataColumnName(DefaultColumnNamesFromElementAttributesForFileEditing.GPSAltitude, true),
+                ToponomyColumns.DefaultEnglishNamesToColumnHeaders[
+                    GetToponomyDataColumnName(DefaultColumnNamesFromElementAttributesForFileEditing.GPSAltitude, true)]
             },
             {
-                GetToponomyDataColumnName(HelperGenericAncillaryListsArrays.DefaultColumnNamesFromElementAttributesForFileEditing.timezoneId, true),
-                HelperGenericAncillaryListsArrays.DefaultEnglishNamesToColumnHeaders[
-                    GetToponomyDataColumnName(HelperGenericAncillaryListsArrays.DefaultColumnNamesFromElementAttributesForFileEditing.timezoneId, true)]
+                GetToponomyDataColumnName(DefaultColumnNamesFromElementAttributesForFileEditing.timezoneId, true),
+                ToponomyColumns.DefaultEnglishNamesToColumnHeaders[
+                    GetToponomyDataColumnName(DefaultColumnNamesFromElementAttributesForFileEditing.timezoneId, true)]
             },
         };
         return columnsToAddList;
@@ -1069,13 +1070,13 @@ internal static class ReadExifData
     /// the localized mapping.</param>
     /// <returns>A string containing the column name associated with the specified item name. If useDefaultHardcodedEnglishValues
     /// is true, the item name is returned as a string; otherwise, the localized column name is returned.</returns>
-    internal static string GetToponomyDataColumnName(HelperGenericAncillaryListsArrays.DefaultColumnNamesFromElementAttributesForFileEditing itemName, bool useDefaultHardcodedEnglishValues)
+    internal static string GetToponomyDataColumnName(DefaultColumnNamesFromElementAttributesForFileEditing itemName, bool useDefaultHardcodedEnglishValues)
     {
         return useDefaultHardcodedEnglishValues
                             ? $"{itemName}"
                             : HelperControlAndMessageBoxHandling.ReturnControlText(
                                 fakeControlType: HelperControlAndMessageBoxHandling.FakeControlTypes.ColumnHeader,
-                                controlName: HelperGenericAncillaryListsArrays.DefaultEnglishNamesToColumnHeaders[GetToponomyDataColumnName(itemName, true)]);
+                                controlName: ToponomyColumns.DefaultEnglishNamesToColumnHeaders[GetToponomyDataColumnName(itemName, true)]);
     }
 
     /// <summary>
@@ -1088,7 +1089,7 @@ internal static class ReadExifData
                                                 string settingValue)
     {
         string retStr = settingValue;
-        if (HelperGenericAncillaryListsArrays.ToponomyReplaces()
+        if (CustomRulesMetadata.ToponomyReplaces()
                                              .Contains(value: settingId) &&
             HelperVariables.ToponomyReplace &&
             settingValue.Length == 0)
@@ -1396,10 +1397,16 @@ internal static class ReadExifData
                 break;
             case /*"FileModifyDate" or */"TakenDate" or "CreateDate":
                 {
+                    // ConvertStringToDateTimeBackToString already reports failure with the null sentinel, so the
+                    // separate probing TryParse that used to guard this call was both redundant and, because it ran
+                    // against the current culture, inconsistent with the conversion it was guarding.
                     tryDataValue =
-                        DateTime.TryParse(s: tryDataValue, result: out _)
-                            ? HelperGenericTypeOperations.ConvertStringToDateTimeBackToString(
-                                dateTimeToConvert: tryDataValue)
+                        AttributeValueFormatter.TryParseDateTime(value: tryDataValue,
+                            context: ValueFormatContext.ExifTool,
+                            result: out DateTime parsedTakenOrCreateDate)
+                            ? AttributeValueFormatter.FormatDateTime(
+                                value: parsedTakenOrCreateDate,
+                                context: ValueFormatContext.Display)
                             : FrmMainApp.NullStringEquivalentGeneric;
 
                     break;
