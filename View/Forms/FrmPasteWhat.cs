@@ -1,4 +1,5 @@
 ﻿using GeoTagNinja.Helpers;
+using GeoTagNinja.Helpers.Exif;
 using GeoTagNinja.Helpers.FileSystem;
 using GeoTagNinja.Helpers.Localisation;
 using GeoTagNinja.Helpers.UI;
@@ -415,10 +416,6 @@ public partial class FrmPasteWhat : Form
                 if (frmEditFileDataInstance != null)
                 {
                     lvw = frmEditFileDataInstance.lvw_FileListEditImages;
-                    CultureInfo cultureInfoToUse = LanguageLists.CulturesWithCurrentCultureToUse()
-                       .Contains(item: CultureInfo.CurrentCulture)
-                        ? CultureInfo.CurrentCulture
-                        : CultureInfo.InvariantCulture;
 
                     // for each file
                     foreach (ListViewItem lvi in lvw.Items)
@@ -453,31 +450,14 @@ public partial class FrmPasteWhat : Form
                                     createShiftCopyPasteRequired = true;
                                 }
 
-                                if (typeofPaste == typeof(string))
-                                {
-                                    // remove value if blank
-                                    dirElemFileToModify.SetAttributeValueAnyType(
-                                        attribute: keyValuePair.Key,
-                                        value: Convert.ToString(
-                                                   value: keyValuePair.Value,
-                                                   provider: cultureInfoToUse) ??
-                                               string.Empty,
-                                        version: DirectoryElement.AttributeVersion
-                                                                 .Stage1EditFormIntraTabTransferQueue,
-                                        isMarkedForDeletion:
-                                        keyValuePair.Value.ToString() == "");
-                                }
-                                else
-                                {
-                                    dirElemFileToModify.SetAttributeValueAnyType(
-                                        attribute: keyValuePair.Key,
-                                        value: Convert.ToString(
-                                            value: keyValuePair.Value,
-                                            provider: cultureInfoToUse),
-                                        version: DirectoryElement.AttributeVersion
-                                                                 .Stage1EditFormIntraTabTransferQueue,
-                                        isMarkedForDeletion: false);
-                                }
+                                // The copy pool already holds typed values, so hand them over as-is rather than
+                                // rendering and re-parsing them. See CopyPasteTags.ApplyCopiedValue.
+                                CopyPasteTags.ApplyCopiedValue(
+                                    target: dirElemFileToModify,
+                                    attribute: keyValuePair.Key,
+                                    copiedValue: keyValuePair.Value,
+                                    version: DirectoryElement.AttributeVersion
+                                                             .Stage1EditFormIntraTabTransferQueue);
                             }
 
                             // this little bit of cluster f.k is needed because when pasting data the "Shift" values get correctly pasted into wherever they need to go but the "Actual"

@@ -119,6 +119,25 @@ public static class AttributeValueFormatter
     private const DateTimeStyles MachineDateTimeStyles =
         DateTimeStyles.AllowWhiteSpaces | DateTimeStyles.NoCurrentDateDefault;
 
+    /// <summary>
+    ///     Number styles for reading a machine-generated number invariantly.
+    /// </summary>
+    /// <remarks>
+    ///     <para>
+    ///         The important part is what is <b>missing</b>: <see cref="NumberStyles.AllowThousands" />. The obvious
+    ///         choice, <see cref="NumberStyles.Any" />, includes it, and the invariant group separator is a comma - so
+    ///         <c>double.Parse("5,4", NumberStyles.Any, InvariantCulture)</c> quietly returns <c>54</c> rather than
+    ///         failing. .NET does not validate group sizes, so even <c>-33,8688</c> is accepted, as -338688.
+    ///     </para>
+    ///     <para>
+    ///         That is how a coordinate typed by a user whose decimal separator is a comma ended up four orders of
+    ///         magnitude out, placing the photo in the wrong hemisphere. Excluding grouping means such a value fails
+    ///         the invariant parse instead, and falls through to being read in the user's own culture - which is what
+    ///         they meant. ExifTool never emits digit grouping, so nothing legitimate is lost.
+    ///     </para>
+    /// </remarks>
+    private const NumberStyles MachineNumberStyles = NumberStyles.Float;
+
     #region DateTime
 
     /// <summary>
@@ -273,16 +292,18 @@ public static class AttributeValueFormatter
             return false;
         }
 
+        // MachineNumberStyles deliberately excludes AllowThousands: see the constant's remarks. Without that,
+        // "5,4" parses invariantly as 54.
         if (double.TryParse(s: value,
-                            style: NumberStyles.Any,
+                            style: MachineNumberStyles,
                             provider: CultureInfo.InvariantCulture,
                             result: out result))
         {
             return true;
         }
 
-        // Only worth a second attempt when the text came from the user - machine-generated text is invariant by
-        // construction, and re-parsing that in the current culture can change its meaning entirely.
+        // The invariant attempt failed, so this is not machine-generated text. If it came from a human it may well
+        // be in their own notation - a Hungarian or Argentinian user typing 5,4 means five point four.
         return context == ValueFormatContext.Display &&
                double.TryParse(s: value,
                                style: NumberStyles.Any,
@@ -309,7 +330,7 @@ public static class AttributeValueFormatter
         }
 
         if (int.TryParse(s: value,
-                         style: NumberStyles.Any,
+                         style: NumberStyles.Integer,
                          provider: CultureInfo.InvariantCulture,
                          result: out result))
         {

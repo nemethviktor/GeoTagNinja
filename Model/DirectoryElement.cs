@@ -58,7 +58,6 @@ public class DirectoryElement
         FileNameWithPath = fileNameWithPath;
         Extension = Path.GetExtension(path: FileNameWithPath)
                         .Replace(oldValue: ".", newValue: "");
-        Thumbnail = Thumbnail;
         _Attributes = new Dictionary<ElementAttribute, AttributeValueContainer>();
 
         // Assign GUID at birth
@@ -325,9 +324,10 @@ public class DirectoryElement
         get;
         private set
         {
-            FrmMainApp frmMainAppInstance = FrmMainApp.Instance;
-
-            if (frmMainAppInstance.listViewDisplayMode == FrmMainApp.ListViewDisplayMode.LargeIcons)
+            // Thumbnails are only worth holding on to in the icon views. The main window may legitimately not be up
+            // yet (folder scanning starts early) or not exist at all (tests, and the WinForms designer), so a missing
+            // instance simply means "not in icon mode" rather than being an error.
+            if (FrmMainApp.Instance?.listViewDisplayMode == FrmMainApp.ListViewDisplayMode.LargeIcons)
             {
                 field = value;
             }

@@ -363,3 +363,7 @@ MigrationBackup/
 FodyWeavers.xsd
 /Resources/Languages/.sqlite
 /removeMOTW.ps1
+
+# test project build output
+GeoTagNinja.Tests/bin/
+GeoTagNinja.Tests/obj/

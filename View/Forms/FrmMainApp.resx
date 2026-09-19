@@ -160,7 +160,7 @@
     <value>lvw_FileList</value>
   </data>
   <data name="&gt;&gt;lvw_FileList.Type" xml:space="preserve">
-    <value>GeoTagNinja.View.FileList.FileListView, GeoTagNinja, Version=1.18.9758.21892, Culture=neutral, PublicKeyToken=null</value>
+    <value>GeoTagNinja.View.FileList.FileListView, GeoTagNinja, Version=1.18.9758.21993, Culture=neutral, PublicKeyToken=null</value>
   </data>
   <data name="&gt;&gt;lvw_FileList.Parent" xml:space="preserve">
     <value>splitContainerLeftTop.Panel1</value>
@@ -208,7 +208,7 @@
     <value>pbx_imagePreview</value>
   </data>
   <data name="&gt;&gt;pbx_imagePreview.Type" xml:space="preserve">
-    <value>GeoTagNinja.View.Controls.ImagePreview, GeoTagNinja, Version=1.18.9758.21892, Culture=neutral, PublicKeyToken=null</value>
+    <value>GeoTagNinja.View.Controls.ImagePreview, GeoTagNinja, Version=1.18.9758.21993, Culture=neutral, PublicKeyToken=null</value>
   </data>
   <data name="&gt;&gt;pbx_imagePreview.Parent" xml:space="preserve">
     <value>splitContainerLeftTop.Panel2</value>
@@ -916,7 +916,7 @@
         AAEAAAD/////AQAAAAAAAAAMAgAAAFdTeXN0ZW0uV2luZG93cy5Gb3JtcywgVmVyc2lvbj00LjAuMC4w
         LCBDdWx0dXJlPW5ldXRyYWwsIFB1YmxpY0tleVRva2VuPWI3N2E1YzU2MTkzNGUwODkFAQAAACZTeXN0
         ZW0uV2luZG93cy5Gb3Jtcy5JbWFnZUxpc3RTdHJlYW1lcgEAAAAERGF0YQcCAgAAAAkDAAAADwMAAAD8
-        CAAAAk1TRnQBSQFMAgEBAgEAAfgBAwH4AQMBEAEAARABAAT/AQkBAAj/AUIBTQE2AQQGAAE2AQQCAAEo
+        CAAAAk1TRnQBSQFMAgEBAgEAAQgBBAEIAQQBEAEAARABAAT/AQkBAAj/AUIBTQE2AQQGAAE2AQQCAAEo
         AwABQAMAARADAAEBAQABCAYAAQQYAAGAAgABgAMAAoABAAGAAwABgAEAAYABAAKAAgADwAEAAcAB3AHA
         AQAB8AHKAaYBAAEzBQABMwEAATMBAAEzAQACMwIAAxYBAAMcAQADIgEAAykBAANVAQADTQEAA0IBAAM5
         AQABgAF8Af8BAAJQAf8BAAGTAQAB1gEAAf8B7AHMAQABxgHWAe8BAAHWAucBAAGQAakBrQIAAf8BMwMA
