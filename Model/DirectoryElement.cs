@@ -240,23 +240,6 @@ public class DirectoryElement
 
     private readonly IDictionary<ElementAttribute, AttributeValueContainer> _Attributes;
 
-    private readonly List<ElementAttribute> _ignoreElementAttributes =
-    [
-        ElementAttribute.Coordinates,
-        ElementAttribute.DestCoordinates,
-        ElementAttribute.TakenDateDaysShift,
-        ElementAttribute.TakenDateHoursShift,
-        ElementAttribute.TakenDateMinutesShift,
-        ElementAttribute.TakenDateSecondsShift,
-        ElementAttribute.CreateDateDaysShift,
-        ElementAttribute.CreateDateHoursShift,
-        ElementAttribute.CreateDateMinutesShift,
-        ElementAttribute.CreateDateSecondsShift,
-        ElementAttribute.RemoveAllGPS,
-        ElementAttribute.GUID,
-        ElementAttribute.Folder
-    ];
-
     private string _Folder;
 
     #endregion
@@ -726,246 +709,26 @@ public class DirectoryElement
         }
     }
 
+    /// <summary>
+    ///     The value that stands in for "nothing" for the given attribute - what reading an attribute that was never
+    ///     set gives back.
+    /// </summary>
+    /// <remarks>
+    ///     Exposed because the readers need to store a blank without owning a <see cref="DirectoryElement" /> yet, and
+    ///     because the sentinels are not all the obvious ones: for strings it is
+    ///     <see cref="FrmMainApp.NullStringEquivalentGeneric" />, not the empty string.
+    /// </remarks>
+    /// <param name="attribute">The attribute whose blank value is wanted.</param>
+    public static IConvertible BlankValueFor(ElementAttribute attribute)
+    {
+        return AttributeValueContainer
+              .CreateFor(attributeType: GetElementAttributesType(attributeToFind: attribute))
+              .BlankValue;
+    }
+
     #endregion
 
     #region Members for Parsing attribute values out of a tag list
-
-    /// <summary>
-    ///     Searches the given tag list to yield the generatedValue for the given attribute.
-    ///     Hereby the TagsToAttributesIn list is used to determine which
-    ///     tags are taken in which priority for the attribute.
-    /// </summary>
-    /// <param name="attribute">The attribute to find the generatedValue for</param>
-    /// <param name="tags">The tag list to parse</param>
-    /// <returns>A touple (name of tag chosen, generatedValue)</returns>
-    private (string, string) GetDataPointFromTags(ElementAttribute attribute,
-                                                  IDictionary<string, string> tags)
-    {
-        Log.Trace(message:
-            $"Starting to parse dict for attribute: {GetElementAttributesName(attributeToFind: attribute)}");
-
-        if (!_ignoreElementAttributes.Contains(item: attribute))
-        {
-            List<string> tagsWithAttributesIn =
-                GetElementAttributesIn(attributeToFind: attribute);
-            for (int i = 0; i < tagsWithAttributesIn.Count; i++)
-            {
-                if (tags.ContainsKey(key: tagsWithAttributesIn[index: i]
-                       .ToUpper()))
-                {
-                    Log.Trace(
-                        message:
-                        $"Parse dict for attribute: '{GetElementAttributesName(attributeToFind: attribute)}' yielded generatedValue '{tags[key: tagsWithAttributesIn[index: i].ToUpper()]}'");
-                    return (tagsWithAttributesIn[index: i], tags[
-                                key: tagsWithAttributesIn[index: i]
-                                   .ToUpper()]);
-                }
-            }
-        }
-
-        Log.Trace(
-            message:
-            $"Parse dict for attribute: '{GetElementAttributesName(attributeToFind: attribute)}' yielded no generatedValue.");
-        return (null, null);
-    }
-
-    /// <summary>
-    ///     Handles retrieving the generatedValue for the given attribute into the
-    ///     temporary generatedValue list.
-    ///     If required (due to dependencies for conversion), another generatedValue
-    ///     retrieval is triggered. All results are put into the temporary
-    ///     lists.
-    ///     Transformations are done if needed - they are kept separately in TagsToModelValueTransformations.
-    /// </summary>
-    /// <param name="attribute">The attribute to retrieve the generatedValue for</param>
-    /// <param name="parsedValues">The list of already parsed values (in case another generatedValue is needed)</param>
-    /// <param name="parsedFails">The list of attributes, parsing failed for</param>
-    /// <param name="tags">The tags provided to retrieve the generatedValue from</param>
-    /// <param name="callDepth">The recursive call depth to allow for tracking of loops</param>
-    /// <returns>True if parsing succeeded (resulting values are put into the passed lists).</returns>
-    private bool ParseAttribute(ElementAttribute attribute,
-                                IDictionary<ElementAttribute, IConvertible> parsedValues,
-                                List<ElementAttribute> parsedFails,
-                                IDictionary<string, string> tags,
-                                int callDepth)
-    {
-        Log.Trace(
-            message:
-            $"Parse attribute '{GetElementAttributesName(attributeToFind: attribute)}' at depth {callDepth}...");
-        if (parsedFails.Contains(item: attribute))
-        {
-            return false;
-        }
-
-        if (callDepth > 10)
-        {
-            throw new InvalidOperationException(
-                message:
-                $"Reached max call depth of '{callDepth}' while parsing attribute '{GetElementAttributesName(attributeToFind: attribute)}'.");
-        }
-
-        callDepth++;
-        (string chosenTag, string parseResultStr) =
-            GetDataPointFromTags(attribute: attribute, tags: tags);
-
-        #region Create a history
-
-        // TakenDate & CreateDate have to be sent into their
-        // respective tables for querying later if user chooses time-shift.
-        // TODO: replace logic with AttributeVersion concept
-        try
-        {
-            if (parseResultStr != null)
-            {
-                switch (attribute)
-                {
-                    case ElementAttribute.TakenDate:
-                        if (parseResultStr.Contains(value: "0000"))
-                        {
-                            return false;
-                        }
-
-                        break;
-
-                    case ElementAttribute.CreateDate:
-                        if (parseResultStr.Contains(value: "0000"))
-                        {
-                            return false;
-                        }
-
-                        break;
-                }
-                // Not adding the xmp here because the current code logic would pull a "unified" data point.
-            }
-        }
-        catch
-        {
-            Log.Error(
-                message:
-                $"Parse attribute failed '{GetElementAttributesName(attributeToFind: attribute)}' at depth {callDepth}...");
-            return false; // be triple sure here.
-        }
-
-        #endregion
-
-        // If needed, transform the attribute
-        IConvertible? resTyped = null;
-        try
-        {
-            switch (attribute)
-            {
-                case ElementAttribute.GPSAltitude:
-                    resTyped =
-                        TagsToModelValueTransformations.T2M_GPSAltitude(
-                            parseResult: parseResultStr);
-                    break;
-
-                case ElementAttribute.GPSAltitudeRef:
-                    resTyped =
-                        TagsToModelValueTransformations.T2M_AltitudeRef(
-                            parseResult: parseResultStr);
-                    break;
-
-                case ElementAttribute.GPSLatitude:
-                case ElementAttribute.GPSDestLatitude:
-                case ElementAttribute.GPSLongitude:
-                case ElementAttribute.GPSDestLongitude:
-                    resTyped = TagsToModelValueTransformations.T2M_GPSLatLong(
-                        attribute: attribute,
-                        parseResult: parseResultStr,
-                        parsed_Values: parsedValues,
-                        ParseMissingAttribute: delegate (ElementAttribute atrb)
-                        {
-                            return ParseAttribute(attribute: atrb,
-                                parsedValues: parsedValues,
-                                parsedFails: parsedFails,
-                                tags: tags,
-                                callDepth: callDepth);
-                        });
-                    break;
-
-                case ElementAttribute.GPSImgDirection:
-                    resTyped =
-                        TagsToModelValueTransformations.T2M_GPSImgDirection(
-                            parseResult: parseResultStr);
-                    break;
-                case ElementAttribute.GPSImgDirectionRef:
-                    resTyped =
-                        TagsToModelValueTransformations.T2M_GPSImgDirectionRef(
-                            parseResult: parseResultStr);
-                    break;
-
-                case ElementAttribute.ExposureTime:
-                    resTyped =
-                        TagsToModelValueTransformations.T2M_ExposureTime(
-                            parseResult: parseResultStr);
-                    break;
-
-                case ElementAttribute.Fnumber:
-                case ElementAttribute.FocalLength:
-                case ElementAttribute.FocalLengthIn35mmFormat:
-                    resTyped =
-                        TagsToModelValueTransformations.T2M_F_FocalLength(
-                            attribute: attribute, parseResult: parseResultStr);
-                    break;
-                case ElementAttribute.GPSDOP:
-                    resTyped =
-                        TagsToModelValueTransformations.T2M_GPSDOP(
-                             parseResult: parseResultStr);
-                    break;
-                case ElementAttribute.ISO:
-                    resTyped =
-                        TagsToModelValueTransformations.T2M_F_ISO(
-                            attribute: attribute, parseResult: parseResultStr);
-                    break;
-
-                case ElementAttribute.TakenDate:
-                case ElementAttribute.CreateDate:
-                    resTyped =
-                        TagsToModelValueTransformations.T2M_TakenCreatedDate(
-                            parseResult: parseResultStr);
-                    break;
-
-                default:
-
-                    // No bespoke transformation for this attribute: convert the raw ExifTool text straight into the
-                    // declared type. Anything unparseable becomes the blank value for that type, which is what the
-                    // rest of the pipeline treats as "the file did not have this".
-                    Type typeOfAttribute =
-                        GetElementAttributesType(attributeToFind: attribute);
-
-                    _ = AttributeValueFormatter.TryParse(value: parseResultStr,
-                        targetType: typeOfAttribute,
-                        context: ValueFormatContext.ExifTool,
-                        result: out IConvertible? convertedValue);
-
-                    resTyped = convertedValue ??
-                               (typeOfAttribute == typeof(string)
-                                   ? parseResultStr
-                                   : AttributeValueContainer
-                                    .CreateFor(attributeType: typeOfAttribute)
-                                    .BlankValue);
-
-                    break;
-            }
-        }
-        catch
-        {
-            Log.Error(
-                message:
-                $"Parse error for attribute '{attribute}': parseResultStr: {parseResultStr}, parsedValues: {parsedValues}.");
-        }
-
-        // Add it to the lists
-        if (resTyped == null)
-        {
-            parsedFails.Add(item: attribute);
-            return false;
-        }
-
-        parsedValues[key: attribute] = resTyped;
-        return true;
-    }
 
     /// <summary>
     ///     Parses all attrbites of this DirectoryElement from the given tag list.
@@ -982,36 +745,14 @@ public class DirectoryElement
         // This prevents "Russian Doll" nesting of containers
         string currentGuid = GetAttributeValueAsString(attribute: ElementAttribute.GUID);
 
-        IEnumerable<ElementAttribute> possibleAttributes =
-            (IEnumerable<ElementAttribute>)Enum.GetValues(enumType: typeof(ElementAttribute));
-
-        // Create an upper-case capitalised version for case-insensitive lookup
-        IDictionary<string, string> tags = new Dictionary<string, string>();
-        foreach (KeyValuePair<string, string> kvp in dictTagsIn)
-        {
-            tags[key: kvp.Key.ToUpper()] = kvp.Value;
-        }
-
         // 2. Clear the deck so the parser starts with a clean slate
         _Attributes?.Clear();
 
-        // 3. Parse everything into the temporary store first
+        // 3. Parse everything into the temporary store first. The tag-to-typed-value work lives in
+        // ExifTagSetParser because the track-file overlay has to do exactly the same thing to the sidecar it
+        // gets back from ExifTool.
         IDictionary<ElementAttribute, IConvertible> parsedValues =
-            new Dictionary<ElementAttribute, IConvertible>();
-        List<ElementAttribute> parsedFails = [];
-
-        foreach (ElementAttribute attribute in possibleAttributes)
-        {
-            if (!parsedValues.ContainsKey(key: attribute))
-            {
-                _ = ParseAttribute(
-                    attribute: attribute,
-                    parsedValues: parsedValues,
-                    parsedFails: parsedFails,
-                    tags: tags,
-                    callDepth: 0);
-            }
-        }
+            ExifTagSetParser.ParseTagSet(dictTagsIn: dictTagsIn);
 
         // 4. Restore the GUID first (Identity)
         if (!string.IsNullOrEmpty(value: currentGuid))

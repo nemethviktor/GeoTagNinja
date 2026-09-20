@@ -172,6 +172,15 @@ internal static class ReadTrackFile
                                 ListView.ColumnHeaderCollection lvchs =
                                     frmMainAppInstance.ListViewColumnHeaders;
 
+                                ElementAttribute[] trackFileOverwrites =
+                                {
+                                    ElementAttribute.GPSLatitude,
+                                    ElementAttribute.GPSLongitude,
+                                    ElementAttribute.GPSAltitude,
+                                    ElementAttribute.GPSDOP,
+                                    ElementAttribute.GPSHPositioningError
+                                };
+
                                 ElementAttribute[] toponomyDeletes =
                                 {
                                     ElementAttribute.CountryCode,
@@ -195,21 +204,22 @@ internal static class ReadTrackFile
                                 string currentAltitude = GetCurrentValue(dirElemFileToModify: dirElemFileToModify,
                                     attribute: ElementAttribute.GPSAltitude);
 
+                                // The sidecar goes through the same reader as a photo does, so a coordinate
+                                // means the same thing whichever of the two it arrived in.
+                                IDictionary<ElementAttribute, IConvertible> valuesInTrackFile =
+                                    ExifTagSetParser.ParseTagSet(
+                                        dictTagsIn: ExifTagSetParser.TagsFromExifToolDataTable(
+                                            dtFileExif: dtDistinctFileExifTable));
+
                                 string strLatInTrackFile = GetValueInTrackFile(
-                                    dtDistinctFileExifTable: dtDistinctFileExifTable,
+                                    valuesInTrackFile: valuesInTrackFile,
                                     attribute: ElementAttribute.GPSLatitude);
                                 string strLngInTrackFile = GetValueInTrackFile(
-                                    dtDistinctFileExifTable: dtDistinctFileExifTable,
+                                    valuesInTrackFile: valuesInTrackFile,
                                     attribute: ElementAttribute.GPSLongitude);
                                 string altitudeInTrackFile = GetValueInTrackFile(
-                                    dtDistinctFileExifTable: dtDistinctFileExifTable,
+                                    valuesInTrackFile: valuesInTrackFile,
                                     attribute: ElementAttribute.GPSAltitude);
-                                string gpsDOPInTrackFile = GetValueInTrackFile(
-                                    dtDistinctFileExifTable: dtDistinctFileExifTable,
-                                    attribute: ElementAttribute.GPSDOP);
-                                string gpsHPositioningErrorInTrackFile = GetValueInTrackFile(
-                                    dtDistinctFileExifTable: dtDistinctFileExifTable,
-                                    attribute: ElementAttribute.GPSHPositioningError);
 
                                 bool coordinatesHaveChanged =
                                     !(currentLat == strLatInTrackFile &&
@@ -223,32 +233,13 @@ internal static class ReadTrackFile
                                     frmMainAppInstance.lvw_FileList.UpdateDirectoryElementItemColour(
                                         directoryElement: dirElemFileToModify, color: Color.Red);
 
-                                    dirElemFileToModify.SetAttributeValueAnyType(
-                                        attribute: ElementAttribute.GPSLatitude, value: strLatInTrackFile,
-                                        version: DirectoryElement.AttributeVersion.Stage3ReadyToWrite,
-                                        isMarkedForDeletion: false);
-
-                                    dirElemFileToModify.SetAttributeValueAnyType(
-                                        attribute: ElementAttribute.GPSLongitude, value: strLngInTrackFile,
-                                        version: DirectoryElement.AttributeVersion.Stage3ReadyToWrite,
-                                        isMarkedForDeletion: false);
-
-                                    dirElemFileToModify.SetAttributeValueAnyType(
-                                        attribute: ElementAttribute.GPSAltitude, value: altitudeInTrackFile,
-                                        version: DirectoryElement.AttributeVersion.Stage3ReadyToWrite,
-                                        isMarkedForDeletion: false);
-
-                                    dirElemFileToModify.SetAttributeValueAnyType(
-                                        attribute: ElementAttribute.GPSDOP,
-                                        value: gpsDOPInTrackFile,
-                                        version: DirectoryElement.AttributeVersion.Stage3ReadyToWrite,
-                                        isMarkedForDeletion: false);
-
-                                    dirElemFileToModify.SetAttributeValueAnyType(
-                                        attribute: ElementAttribute.GPSHPositioningError,
-                                        value: gpsHPositioningErrorInTrackFile,
-                                        version: DirectoryElement.AttributeVersion.Stage3ReadyToWrite,
-                                        isMarkedForDeletion: false);
+                                    foreach (ElementAttribute attribute in trackFileOverwrites)
+                                    {
+                                        SetValueFromTrackFile(
+                                            dirElemFileToModify: dirElemFileToModify,
+                                            valuesInTrackFile: valuesInTrackFile,
+                                            attribute: attribute);
+                                    }
 
                                     // clear city, state etc
                                     foreach (ElementAttribute attribute in
@@ -423,23 +414,38 @@ internal static class ReadTrackFile
             return currentValue;
         }
 
-        string GetValueInTrackFile(DataTable dtDistinctFileExifTable,
-                                   ElementAttribute attribute)
+        /// <summary>
+        ///     Copies a value read out of the track sidecar onto the file, ready to be written.
+        /// </summary>
+        /// <remarks>
+        ///     A value the track did not supply is still set, as the blank value for its type. The overlay replaces
+        ///     the file's GPS block rather than merging into it, and leaving the photo's own accuracy figures next to
+        ///     coordinates that now come from the track would claim more than the data supports.
+        /// </remarks>
+        static void SetValueFromTrackFile(DirectoryElement dirElemFileToModify,
+                                          IDictionary<ElementAttribute, IConvertible> valuesInTrackFile,
+                                          ElementAttribute attribute)
         {
-            string apiValue = FrmMainApp.NullStringEquivalentGeneric;
-            try
-            {
-                apiValue = ReadExifData.ExifGetStandardisedDataPointFromExifAsString(
-                    dtFileExif: dtDistinctFileExifTable,
-                    dataPoint: GetElementAttributesName(
-                        attributeToFind: attribute));
-            }
-            catch
-            {
-                // ignore
-            }
+            IConvertible value =
+                valuesInTrackFile.TryGetValue(key: attribute, value: out IConvertible parsedValue)
+                    ? parsedValue
+                    : DirectoryElement.BlankValueFor(attribute: attribute);
 
-            return apiValue;
+            dirElemFileToModify.SetAttributeValue(
+                attribute: attribute,
+                value: value,
+                version: DirectoryElement.AttributeVersion.Stage3ReadyToWrite,
+                isMarkedForDeletion: false);
+        }
+
+        static string GetValueInTrackFile(
+            IDictionary<ElementAttribute, IConvertible> valuesInTrackFile,
+            ElementAttribute attribute)
+        {
+            return valuesInTrackFile.TryGetValue(key: attribute, value: out IConvertible value)
+                ? AttributeValueFormatter.Format(value: value,
+                    context: ValueFormatContext.Display)
+                : FrmMainApp.NullStringEquivalentGeneric;
         }
     }
 }

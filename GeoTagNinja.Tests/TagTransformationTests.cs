@@ -1,6 +1,7 @@
 ﻿using GeoTagNinja.Model;
 using NUnit.Framework;
 using System;
+using System.Collections.Generic;
 using System.Globalization;
 using System.Threading;
 
@@ -53,12 +54,113 @@ public class TagTransformationTests
     /// <summary>GPSDOP is documented as numeric but is frequently written as a rational.</summary>
     [TestCase("4.3", 4.3)]
     [TestCase("2", 2.0)]
+    [TestCase("43/10", 4.3)]
     public void GpsDop_IsExtracted(string raw,
                                    double expected)
     {
         double? actual = TagsToModelValueTransformations.T2M_GPSDOP(parseResult: raw);
         Assert.That(actual: actual, expression: Is.Not.Null);
         Assert.That(actual: actual.Value, expression: Is.EqualTo(expected: expected).Within(amount: 0.01));
+    }
+
+    [TestCase("")]
+    [TestCase(null)]
+    [TestCase("not a number")]
+    public void GpsDop_IsNullWhenUnreadable(string raw)
+    {
+        Assert.That(actual: TagsToModelValueTransformations.T2M_GPSDOP(parseResult: raw),
+            expression: Is.Null);
+    }
+
+    /// <summary>
+    ///     The horizontal error is taken from the file when it has one, and otherwise estimated as three times the
+    ///     dilution of precision - the rule of thumb that used to live only in the track-file reader.
+    /// </summary>
+    [Test]
+    public void HPositioningError_FallsBackToThreeTimesDop()
+    {
+        Dictionary<SourcesAndAttributes.ElementAttribute, IConvertible> parsedValues = new()
+        {
+            { SourcesAndAttributes.ElementAttribute.GPSDOP, 4.3 }
+        };
+
+        string derived = TagsToModelValueTransformations.T2M_GPSHPositioningError(
+            parseResult: null,
+            parsed_Values: parsedValues,
+            ParseMissingAttribute: _ => true);
+
+        // Rendered invariantly, whatever the operator's decimal separator is.
+        Assert.That(actual: double.Parse(s: derived, provider: CultureInfo.InvariantCulture),
+            expression: Is.EqualTo(expected: 12.9).Within(amount: 0.0001),
+            message: $"'{derived}' in {_culture.Name}");
+    }
+
+    [Test]
+    public void HPositioningError_PrefersTheFilesOwnValue()
+    {
+        Dictionary<SourcesAndAttributes.ElementAttribute, IConvertible> parsedValues = new()
+        {
+            { SourcesAndAttributes.ElementAttribute.GPSDOP, 4.3 }
+        };
+
+        Assert.That(actual: TagsToModelValueTransformations.T2M_GPSHPositioningError(
+                parseResult: "7.5",
+                parsed_Values: parsedValues,
+                ParseMissingAttribute: _ => true),
+            expression: Is.EqualTo(expected: "7.5"));
+    }
+
+    [Test]
+    public void HPositioningError_IsNullWithoutADop()
+    {
+        Assert.That(actual: TagsToModelValueTransformations.T2M_GPSHPositioningError(
+                parseResult: null,
+                parsed_Values: new Dictionary<SourcesAndAttributes.ElementAttribute, IConvertible>(),
+                ParseMissingAttribute: _ => false),
+            expression: Is.Null);
+    }
+
+    /// <summary>
+    ///     The coordinate layouts ExifTool emits: a signed decimal, an unsigned one leaning on the Ref tag, and the
+    ///     degrees-and-minutes form only the track-file reader used to understand.
+    /// </summary>
+    [TestCase("47.497913", null, 47.497913)]
+    [TestCase("-33.868800", null, -33.868800)]
+    [TestCase("33.868800", "South", -33.868800)]
+    [TestCase("41,53.23922526N", null, 41.887320)]
+    public void Coordinate_IsExtracted(string raw,
+                                       string reference,
+                                       double expected)
+    {
+        Dictionary<SourcesAndAttributes.ElementAttribute, IConvertible> parsedValues = new();
+        if (reference != null)
+        {
+            parsedValues.Add(key: SourcesAndAttributes.ElementAttribute.GPSLatitudeRef, value: reference);
+        }
+
+        double? actual = TagsToModelValueTransformations.T2M_GPSLatLong(
+            attribute: SourcesAndAttributes.ElementAttribute.GPSLatitude,
+            parseResult: raw,
+            parsed_Values: parsedValues,
+            ParseMissingAttribute: _ => reference != null);
+
+        Assert.That(actual: actual, expression: Is.Not.Null, message: $"failed in {_culture.Name}");
+        Assert.That(actual: actual.Value, expression: Is.EqualTo(expected: expected).Within(amount: 0.00001),
+            message: $"failed in {_culture.Name}");
+    }
+
+    /// <summary>A tag that holds no coordinate must leave the attribute unset rather than place the file at zero.</summary>
+    [TestCase("")]
+    [TestCase(null)]
+    [TestCase("no fix")]
+    public void Coordinate_IsNullWhenUnreadable(string raw)
+    {
+        Assert.That(actual: TagsToModelValueTransformations.T2M_GPSLatLong(
+                attribute: SourcesAndAttributes.ElementAttribute.GPSLatitude,
+                parseResult: raw,
+                parsed_Values: new Dictionary<SourcesAndAttributes.ElementAttribute, IConvertible>(),
+                ParseMissingAttribute: _ => false),
+            expression: Is.Null);
     }
 
     /// <summary>The Canon 40D phrasing that prompted the 35mm-equivalent special case.</summary>

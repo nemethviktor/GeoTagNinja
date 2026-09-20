@@ -1,4 +1,5 @@
 ﻿using GeoTagNinja.Helpers;
+using GeoTagNinja.Helpers.Exif;
 using GeoTagNinja.View.Forms;
 using System;
 using System.Collections.Generic;
@@ -43,12 +44,12 @@ internal class TagsToModelValueTransformations
             _ => throw new ArgumentException(message: $"T2M_GPSLatLong does not support attribute '{SourcesAndAttributes.GetElementAttributesName(attributeToFind: attribute)}'")
         };
 
-        // 2. Parse the numeric coordinate.
-        if (!double.TryParse(
-            s: parseResult,
-            style: System.Globalization.NumberStyles.Any,
-            provider: System.Globalization.CultureInfo.InvariantCulture,
-            result: out double baseValue))
+        // 2. Parse the numeric coordinate. This goes through DataPointInteractions rather than double.TryParse
+        // because the track-file path used to, and ExifTool does emit WGS84 degrees-and-minutes ("41,53.239N")
+        // as well as plain signed decimals.
+        if (!DataPointInteractions.TryAdjustLatLongNegative(
+            point: parseResult,
+            coordinate: out double baseValue))
         {
             return null;
         }
@@ -326,20 +327,83 @@ internal class TagsToModelValueTransformations
             : 0;
     }
 
+    /// <summary>
+    ///     Extracts the dilution of precision.
+    /// </summary>
+    /// <remarks>
+    ///     It is documented as a plain number but is frequently written as a rational - "43/10" rather than "4.3" -
+    ///     so the rational form is accepted too. Only the track-file reader used to handle that.
+    /// </remarks>
     public static double? T2M_GPSDOP(string parseResult)
     {
-        if (parseResult == null)
+        return T2M_NumberOrRational(parseResult: parseResult);
+    }
+
+    /// <summary>
+    ///     Extracts the horizontal positioning error, falling back to GPSDOP * 3 when the tag itself is absent.
+    /// </summary>
+    /// <remarks>
+    ///     The fallback is the rule of thumb the track-file reader has always applied; it now applies to files read
+    ///     off disk as well, so the same tag set yields the same value whichever way it arrived.
+    /// </remarks>
+    /// <remarks>
+    ///     The attribute is declared as text, so a value the file does carry is passed through verbatim - only the
+    ///     derived one is rendered here, and then invariantly.
+    /// </remarks>
+    /// <param name="parseResult">The raw tag value from ExifTool, or null when the file has no such tag.</param>
+    /// <param name="parsed_Values">The dictionary of values already parsed in this pass.</param>
+    /// <param name="ParseMissingAttribute">A delegate to trigger parsing of a dependent attribute if not yet available.</param>
+    public static string T2M_GPSHPositioningError(
+        string parseResult,
+        IDictionary<ElementAttribute, IConvertible> parsed_Values,
+        Func<ElementAttribute, bool> ParseMissingAttribute)
+    {
+        if (!string.IsNullOrWhiteSpace(value: parseResult))
+        {
+            return parseResult;
+        }
+
+        if (!ParseMissingAttribute(arg: ElementAttribute.GPSDOP) ||
+            !parsed_Values.TryGetValue(key: ElementAttribute.GPSDOP, out IConvertible? dop) ||
+            dop is not double dopAsDouble)
+        {
+            return null;
+        }
+
+        return AttributeValueFormatter.FormatDouble(value: dopAsDouble * 3,
+            context: ValueFormatContext.ExifTool);
+    }
+
+    /// <summary>
+    ///     Reads a number that ExifTool may have written either plainly or as a rational ("43/10").
+    /// </summary>
+    private static double? T2M_NumberOrRational(string parseResult)
+    {
+        if (string.IsNullOrWhiteSpace(value: parseResult))
         {
             // not set
             return null;
         }
-        bool success = double.TryParse(
-            s: parseResult.ToString(CultureInfo.InvariantCulture),
+
+        if (parseResult.Contains(value: "/"))
+        {
+            string[] parts = parseResult.Split('/');
+            if (parts.Length != 2 ||
+                !double.TryParse(s: parts[0], style: NumberStyles.Any, provider: CultureInfo.InvariantCulture, result: out double numerator) ||
+                !double.TryParse(s: parts[1], style: NumberStyles.Any, provider: CultureInfo.InvariantCulture, result: out double denominator) ||
+                denominator == 0)
+            {
+                return null;
+            }
+
+            return Math.Round(value: numerator / denominator, digits: 2);
+        }
+
+        return double.TryParse(
+            s: parseResult,
             style: NumberStyles.Any,
             provider: CultureInfo.InvariantCulture,
-            result: out double returnVal
-        );
-        return success
+            result: out double returnVal)
             ? returnVal
             : null;
     }
@@ -366,5 +430,89 @@ internal class TagsToModelValueTransformations
     {
         return AttributeValueFormatter.ParseDateTimeOrNull(value: parseResult,
             context: ValueFormatContext.ExifTool);
+    }
+
+    /// <summary>
+    ///     Applies the clean-up an attribute needs to the raw text ExifTool produced for it, and returns the result
+    ///     as the CLR type <see cref="SourcesAndAttributes.GetElementAttributesType" /> declares for that attribute.
+    /// </summary>
+    /// <remarks>
+    ///     This is the single dispatch point for "which transformation belongs to which attribute". Both readers -
+    ///     the file read pass and the track-file overlay - go through it, so neither can drift from the other.
+    /// </remarks>
+    /// <param name="attribute">The attribute being parsed.</param>
+    /// <param name="parseResult">The raw tag value, or null when the tag set held nothing for this attribute.</param>
+    /// <param name="parsed_Values">The dictionary of values already parsed in this pass.</param>
+    /// <param name="ParseMissingAttribute">A delegate to trigger parsing of a dependent attribute if not yet available.</param>
+    /// <returns>The typed value, or null when the attribute could not be established.</returns>
+    public static IConvertible? TransformTagValue(
+        ElementAttribute attribute,
+        string parseResult,
+        IDictionary<ElementAttribute, IConvertible> parsed_Values,
+        Func<ElementAttribute, bool> ParseMissingAttribute)
+    {
+        switch (attribute)
+        {
+            case ElementAttribute.GPSAltitude:
+                return T2M_GPSAltitude(parseResult: parseResult);
+
+            case ElementAttribute.GPSAltitudeRef:
+                return T2M_AltitudeRef(parseResult: parseResult);
+
+            case ElementAttribute.GPSLatitude:
+            case ElementAttribute.GPSDestLatitude:
+            case ElementAttribute.GPSLongitude:
+            case ElementAttribute.GPSDestLongitude:
+                return T2M_GPSLatLong(attribute: attribute,
+                    parseResult: parseResult,
+                    parsed_Values: parsed_Values,
+                    ParseMissingAttribute: ParseMissingAttribute);
+
+            case ElementAttribute.GPSImgDirection:
+                return T2M_GPSImgDirection(parseResult: parseResult);
+
+            case ElementAttribute.GPSImgDirectionRef:
+                return T2M_GPSImgDirectionRef(parseResult: parseResult);
+
+            case ElementAttribute.ExposureTime:
+                return T2M_ExposureTime(parseResult: parseResult);
+
+            case ElementAttribute.Fnumber:
+            case ElementAttribute.FocalLength:
+            case ElementAttribute.FocalLengthIn35mmFormat:
+                return T2M_F_FocalLength(attribute: attribute, parseResult: parseResult);
+
+            case ElementAttribute.GPSDOP:
+                return T2M_GPSDOP(parseResult: parseResult);
+
+            case ElementAttribute.GPSHPositioningError:
+                return T2M_GPSHPositioningError(parseResult: parseResult,
+                    parsed_Values: parsed_Values,
+                    ParseMissingAttribute: ParseMissingAttribute);
+
+            case ElementAttribute.ISO:
+                return T2M_F_ISO(attribute: attribute, parseResult: parseResult);
+
+            case ElementAttribute.TakenDate:
+            case ElementAttribute.CreateDate:
+                return T2M_TakenCreatedDate(parseResult: parseResult);
+
+            default:
+
+                // No bespoke transformation for this attribute: convert the raw ExifTool text straight into the
+                // declared type. Anything unparseable becomes the blank value for that type, which is what the
+                // rest of the pipeline treats as "the file did not have this".
+                Type typeOfAttribute = GetElementAttributesType(attributeToFind: attribute);
+
+                _ = AttributeValueFormatter.TryParse(value: parseResult,
+                    targetType: typeOfAttribute,
+                    context: ValueFormatContext.ExifTool,
+                    result: out IConvertible? convertedValue);
+
+                return convertedValue ??
+                       (typeOfAttribute == typeof(string)
+                           ? parseResult
+                           : DirectoryElement.BlankValueFor(attribute: attribute));
+        }
     }
 }

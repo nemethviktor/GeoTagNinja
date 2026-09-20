@@ -13,6 +13,7 @@ Model/                         the domain: what a file's metadata is, independen
   DirectoryElementCollection   the folder being browsed; also drives the ExifTool read pass
   SourcesAndAttributes         which ExifTool tags feed which attribute, and with what type
   AttributeValueFormatter      the only place typed values become text - see architecture-values.md
+  ExifTagSetParser             raw ExifTool tags -> typed values; the only reader, see architecture-values.md
   TagsToModelValueTransformations  per-attribute clean-up of raw ExifTool output
   ExifToolWrapper              the stay_open ExifTool process
   Favourite / GeoSetterFavourite / MapWebMessage / AppSettingContainer   plain data carriers

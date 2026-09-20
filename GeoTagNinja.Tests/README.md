@@ -56,6 +56,7 @@ vs year-first dates, dot vs comma decimals, and lakh vs thousand grouping plus s
 | `NumericValueTests` | A decimal being misread. See below. |
 | `MetadataRoundTripTests` | The two reported field bugs, expressed end-to-end through `DirectoryElement`: an inserted create-date, and a typed coordinate/altitude, reaching ExifTool unchanged. |
 | `TagTransformationTests` | The per-tag clean-up of raw ExifTool output — rationals, units, the "35 mm equivalent" phrasing. |
+| `ReadPipelineParityTests` | The track-file reader drifting away from the file reader again. They were separate implementations of the same transformations until they were merged; these assert both entry points give the same typed values for the same tags. |
 
 ## The bug these found on day one
 

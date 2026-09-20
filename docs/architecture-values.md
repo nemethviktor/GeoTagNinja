@@ -8,12 +8,15 @@ been turned into text - usually a date, usually only on a non-English machine.
 ## The pipeline
 
 ```
-   file on disk
-        |  exiftool -args   (ExifTool.GetProperties)
-        v
+   file on disk                              track file (.gpx)
+        |  exiftool -args                         |  exiftool -geotag
+        |  (ExifTool.GetProperties)               v
+        |                                    sidecar .xmp -> DataTable
+        |                                         |  ExifTagSetParser.TagsFromExifToolDataTable
+        v                                         v
    raw tag strings          e.g. "EXIF:DateTimeOriginal" -> "2018-06-22 19:32:53"
-        |  DirectoryElement.ParseAttributesFromExifToolOutput
-        |    -> TagsToModelValueTransformations (per-attribute clean-up)
+        |  ExifTagSetParser.ParseTagSet
+        |    -> TagsToModelValueTransformations.TransformTagValue (per-attribute clean-up)
         |    -> AttributeValueFormatter.TryParse
         v
    typed value in memory    DateTime / double / int / string, held per AttributeVersion
@@ -21,6 +24,9 @@ been turned into text - usually a date, usually only on a non-English machine.
         v
    text at the edges        list view cell / text box / clipboard / ExifTool argument file
 ```
+
+Both sources converge before the transformations, not after: whether a coordinate came out of a photo or out
+of a GPX track, exactly one piece of code decides what it means.
 
 The important property is the middle box. Between parsing and writing, a value is **always** the CLR
 type that `SourcesAndAttributes.GetElementAttributesType` says it is. It is never a string that
@@ -81,6 +87,25 @@ product decision with consequences across the map bridge and every numeric input
 formatting tweak. If it is taken on, `AttributeValueFormatter.FormatDouble` is where it belongs - the
 `context` parameter is already threaded through for exactly that purpose.
 
+## Altitude is held in display units, never stored in them
+
+`GPSAltitude` is the one attribute whose in-memory value is not simply what the file said. The EXIF tag
+is defined in metres and only metres, so the file is always metres - but the model holds whatever unit
+the user asked to see. There are exactly two places that know this, and they are mirror images:
+
+- **Read** - `TagsToModelValueTransformations.T2M_Altitude` multiplies by `MetreToFeet` when
+  `UserSettingUseImperial` is set.
+- **Write** - `WriteSaveToFile` divides by `MetreToFeet` under the same condition, immediately before
+  the ExifTool argument is built.
+
+Nothing converts at display time; the list view and the altitude box render the model value as-is, and
+`lbl_Feet_Abbr` is only the unit label printed next to it. So an altitude that enters the model already
+in metres while imperial is selected is wrong twice over: shown as metres under a "ft" label, then
+divided by 3.28084 on the way back out, writing roughly a third of the real altitude into a tag that is
+still declared in metres.
+
+That is precisely what the track-file path used to do, which is what the merge below fixed.
+
 ## Known rough edges
 
 These are pre-existing and deliberately left alone so far, recorded here so they are not mistaken for
@@ -92,6 +117,32 @@ intended design:
 - **`SetAttributeValue` treats a blank differently on create and on update.** Creating an attribute
   with `""` stores `""`; updating an existing one to `""` stores the sentinel. Behaviour was preserved
   rather than unified, because unifying it changes what gets written to files.
-- **Two parallel read pipelines.** `ReadExifData.ExifGetStandardisedDataPointFromExifAsString` is a
-  string-based re-implementation of the transformations in `TagsToModelValueTransformations`, used by
-  the track-file path. The two must be kept in step by hand until they are merged.
+- **`GPSHPositioningError` is declared as text** while `GPSDOP`, which it is derived from, is a double.
+  So the one value on that screen that is arithmetic on another value is the one held as a string.
+- **The GeoNames altitude does not follow the unit convention above.** `ReadExifData` takes the API's
+  `srtm3` value, which is metres, and puts it into the model unconverted. With imperial units selected
+  that is the same mistake the track path used to make: the write path will still divide it by
+  `MetreToFeet`. Untouched here because it is a different pipeline (web lookup, not file read) and
+  fixing it belongs with that code.
+
+## The read pipelines were merged
+
+There used to be two. `ReadExifData.ExifGetStandardisedDataPointFromExifAsString` was a string-based
+re-implementation of the transformations, used only by the track-file path, and the note here said the two
+"must be kept in step by hand". They had not been: the string one read rationals (`43/10`) where the typed
+one did not, and skipped the metric-to-imperial altitude conversion the typed one applied, so overlaying a
+track onto a photo put metres into a model that was expected to hold feet.
+
+`ExifTagSetParser` is now the single reader. The track-file path flattens its sidecar into the same tag
+dictionary a photo produces and runs it through the same
+`TagsToModelValueTransformations.TransformTagValue`, which is also the only place that says which clean-up
+belongs to which attribute. `ReadPipelineParityTests` asserts the two entry points agree, so the split
+cannot quietly reopen.
+
+The merge settled three disagreements in favour of the better-behaved side, which does change behaviour:
+
+| Value | Was | Now |
+| --- | --- | --- |
+| Altitude from a track | Metres in the model even with imperial selected, so shown under a "ft" label and then divided again on write | Converted on read like any other altitude, so the model is in display units and the tag is written in metres |
+| `GPSDOP` from a photo | Rationals unreadable, attribute left unset | `43/10` reads as `4.3`, as it always did for tracks |
+| `GPSHPositioningError` from a photo | Only what the file carried | Falls back to `GPSDOP * 3`, as it always did for tracks |
