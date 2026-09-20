@@ -1,5 +1,4 @@
-﻿using GeoTagNinja.View.Forms;
-using System.Data;
+﻿using System.Data;
 using System.Data.SQLite;
 
 namespace GeoTagNinja.Helpers.Data;
@@ -8,9 +7,9 @@ namespace GeoTagNinja.Helpers.Data;
 ///     Provides static methods for managing custom rules in a SQLite database.
 /// </summary>
 /// <remarks>
-///     This class contains methods for reading, writing, and creating custom rules in a SQLite database.
-///     The custom rules are stored in a table named 'CustomRules' in the database.
-///     Each custom rule is represented as a row in the 'CustomRules' table.
+///     This class contains methods for reading and writing custom rules in a SQLite database.
+///     The custom rules are stored in a table named 'CustomRules' in the database, created by
+///     <see cref="DatabaseSchema" />. Each custom rule is represented as a row in that table.
 /// </remarks>
 internal static class CustomRules
 {
@@ -83,39 +82,8 @@ internal static class CustomRules
         _ = SQLiteCommand.ExecuteNonQuery();
     }
 
-    /// <summary>
-    ///     Creates a table for custom rules in the SQLite database if it doesn't exist.
-    /// </summary>
-    /// <remarks>
-    ///     The table 'customRules' is created with the following columns:
-    ///     'ruleId', 'CountryCode', 'DataPointName', 'DataPointConditionType', 'DataPointConditionValue',
-    ///     'TargetPointName', 'TargetPointOutcome', 'TargetPointOutcomeCustom'.
-    /// </remarks>
-    internal static void DataCreateSQLiteCustomRules()
-    {
-        FrmMainApp.Log.Info(message: "Starting");
-
-        using SQLiteConnection SQLiteDB = new(connectionString:
-            $"Data Source={HelperVariables.SettingsDatabaseFilePath}");
-        SQLiteDB.Open();
-
-        string commandText = @"
-                                CREATE TABLE IF NOT EXISTS customRules(
-                                        ruleId INTEGER PRIMARY KEY AUTOINCREMENT,
-                                        CountryCode NTEXT NOT NULL,
-                                        DataPointName NTEXT NOT NULL,
-                                        DataPointConditionType NTEXT NOT NULL,
-                                        DataPointConditionValue NTEXT NOT NULL,
-                                        TargetPointName NTEXT NOT NULL,
-                                        TargetPointOutcome NTEXT NOT NULL,
-                                        TargetPointOutcomeCustom NTEXT
-                                        )
-                                    ;
-                                "
-            ;
-
-        SQLiteCommand SQLiteCommand = new(commandText: commandText, connection: SQLiteDB);
-
-        _ = SQLiteCommand.ExecuteNonQuery();
-    }
+    // The "customRules" table used to be created here as well, from a second copy of the DDL in
+    // DatabaseAndStartup.DataCreateSQLiteDB. Both copies now live in DatabaseSchema, which creates the table.
+    // DataWriteSQLiteCustomRules above depends on that DDL keeping "ruleId INTEGER PRIMARY KEY AUTOINCREMENT":
+    // SQLiteCommandBuilder cannot generate an UPDATE for a table it can't find a key on.
 }

@@ -228,6 +228,7 @@
     <Compile Include="Helpers\Data\CustomCityAllocationRules.cs" />
     <Compile Include="Helpers\Data\CustomRules.cs" />
     <Compile Include="Helpers\Data\DatabaseAndStartup.cs" />
+    <Compile Include="Helpers\Data\DatabaseSchema.cs" />
     <Compile Include="Helpers\Data\Favourites.cs" />
     <Compile Include="Helpers\Data\LanguageTZ.cs" />
     <Compile Include="Helpers\Data\SessionDataTables.cs" />

@@ -3,10 +3,13 @@
 **Build 9xxx [20260xxx]** (upcoming release)
 - NEW & UPDATED:
 	- Added option ref #220 to disable downloading of Altitude data from the API. The default is to download Altitude data.
+	- Unleased Claude on the code. Cost me $100. I await bug reports.
+	- Added some Tests
 - BUGS & FIXES:
-	- Fix #215 GPSDOP/GPSHPositioningError not being processed.
+	- Fix #215 `GPSDOP`/`GPSHPositioningError` not being processed.
 	- Fix #221 OneDrive/Google Drive folders and files not being properly processed at all.
 	- Fix #222 OneDrive/Google Drive folders and files not being properly processed when set to online-only.
+	- Fixed an issue whereby importing data would fail due to nonexisting database
 
 **Build 9654 [20260607]**
 - NEW & UPDATED:

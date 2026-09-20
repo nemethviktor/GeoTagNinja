@@ -103,28 +103,7 @@ internal static class CustomCityAllocationRules
         }
     }
 
-    internal static void DataCreateSQLiteCustomCityAllocationLogic()
-    {
-        FrmMainApp.Log.Info(message: "Starting");
-
-        using SQLiteConnection SQLiteDB = new(connectionString:
-            $"Data Source={HelperVariables.SettingsDatabaseFilePath}");
-        SQLiteDB.Open();
-
-        string commandText = """
-                                    CREATE TABLE IF NOT EXISTS customCityAllocationLogic(
-                                        CountryCode TEXT(3) NOT NULL,
-                                        TargetPointNameCustomCityLogic TEXT(100) NOT NULL,
-                                        PRIMARY KEY(CountryCode, TargetPointNameCustomCityLogic)
-                                );
-                                """
-            ;
-
-        SQLiteCommand SQLiteCommand = new(commandText: commandText, connection: SQLiteDB);
-
-        _ = SQLiteCommand.ExecuteNonQuery();
-        SQLiteDB.Close();
-
-        DataWriteSQLiteCustomCityAllocationLogicDefaults();
-    }
+    // The "customCityAllocationLogic" table used to be created here as well, from a second copy of the DDL in
+    // DatabaseAndStartup.DataCreateSQLiteDB. Both copies now live in DatabaseSchema, which creates the table;
+    // DataCreateSQLiteDB then calls DataWriteSQLiteCustomCityAllocationLogicDefaults above to seed it.
 }

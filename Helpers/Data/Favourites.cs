@@ -355,41 +355,8 @@ internal static class Favourites
         }
     }
 
-    /// <summary>
-    ///     Creates a table for the user's "Favourites".
-    ///     This is a bit of a f...up because originally this was favouriteName and then I started using favouriteName, which
-    ///     lends itself better to what it is but the columnName now has been released so...
-    /// </summary>
-    internal static void DataCreateSQLiteFavourites()
-    {
-        FrmMainApp.Log.Info(message: "Starting");
-
-        using SQLiteConnection SQLiteDB = new(connectionString:
-            $"Data Source={HelperVariables.SettingsDatabaseFilePath}");
-        SQLiteDB.Open();
-
-        string commandText = @"
-                                CREATE TABLE IF NOT EXISTS Favourites(
-                                        favouriteName NTEXT NOT NULL PRIMARY KEY,
-                                        GPSLatitude NTEXT NOT NULL,
-                                        GPSLatitudeRef NTEXT NOT NULL,
-                                        GPSLongitude NTEXT NOT NULL,
-                                        GPSLongitudeRef NTEXT NOT NULL,
-                                        GPSAltitude NTEXT,
-                                        GPSAltitudeRef NTEXT,
-                                        Coordinates NTEXT NOT NULL,
-                                        City NTEXT,
-                                        CountryCode NTEXT,
-                                        Country NTEXT,
-                                        State NTEXT,
-                                        Sublocation NTEXT
-                                        )
-                                ;
-                                "
-            ;
-
-        SQLiteCommand SQLiteCommand = new(commandText: commandText, connection: SQLiteDB);
-
-        _ = SQLiteCommand.ExecuteNonQuery();
-    }
+    // The "Favourites" table used to be created here as well, from a second copy of the DDL in
+    // DatabaseAndStartup.DataCreateSQLiteDB. Both copies now live in DatabaseSchema, which creates the table.
+    // (The column is favouriteName rather than locationName because the original name was released before it got
+    // renamed; DatabaseAndStartup.DataCreateSQLiteDB migrates the old databases.)
 }

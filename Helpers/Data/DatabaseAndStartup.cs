@@ -18,103 +18,46 @@ internal static class DatabaseAndStartup
     private static readonly string DoubleQuote = @"""";
 
     /// <summary>
-    ///     Creates the SQLite DB if it doesn't yet exist
+    ///     Creates the SQLite DB if it doesn't yet exist, adds whatever tables a database written by an earlier
+    ///     version is missing, and runs the naming migrations.
     /// </summary>
+    /// <remarks>
+    ///     The schema itself lives in <see cref="DatabaseSchema" />, so that this and <see cref="SettingsImport" />
+    ///     cannot end up disagreeing about what a table looks like. It used to be spelled out here for a new file and
+    ///     a second time in <see cref="Favourites" />, <see cref="CustomRules" /> and
+    ///     <see cref="CustomCityAllocationRules" /> for an existing one.
+    /// </remarks>
     internal static void DataCreateSQLiteDB()
     {
         FrmMainApp.Log.Info(message: "Starting");
 
         try
         {
-            // create folder in Appdata if doesn't exist
             FrmMainApp.Log.Trace(message: $"SettingsDatabaseFilePath is {HelperVariables.SettingsDatabaseFilePath}");
             FileInfo userDataBaseFile = new(fileName: HelperVariables.SettingsDatabaseFilePath);
 
-            if (userDataBaseFile.Exists && userDataBaseFile.Length == 0)
-            {
-                FrmMainApp.Log.Trace(message: "SettingsDatabaseFilePath exists with 0 byes volume");
-                userDataBaseFile.Delete();
-                FrmMainApp.Log.Trace(message: "SettingsDatabaseFilePath deleted");
-            }
+            // a zero-byte file is an interrupted create rather than a database, and EnsureSettingsDatabaseExists
+            // starts it over, so it doesn't count as pre-existing here either.
+            bool userDataBaseFileAlreadyExisted = userDataBaseFile.Exists && userDataBaseFile.Length > 0;
+            FrmMainApp.Log.Trace(message: $"SettingsDatabaseFilePath already exists: {userDataBaseFileAlreadyExisted}");
 
-            if (!userDataBaseFile.Exists)
-            {
-                FrmMainApp.Log.Trace(message: $"Creating {HelperVariables.SettingsDatabaseFilePath}");
-                try
-                {
-                    SQLiteConnection.CreateFile(databaseFileName: Path.Combine(HelperVariables.SettingsDatabaseFilePath));
-                    SQLiteConnection SQLiteDB = new(connectionString:
-                        $@"Data Source={Path.Combine(HelperVariables.SettingsDatabaseFilePath)}; Version=3");
-                    SQLiteDB.Open();
+            DatabaseSchema.EnsureSettingsDatabaseExists();
 
-                    string commandText = """
-                                 CREATE TABLE settings(
-                                     settingTabPage TEXT(255)    NOT NULL,
-                                     settingId TEXT(255)         NOT NULL, 
-                                     settingValue NTEXT(2000)    DEFAULT "",
-                                     PRIMARY KEY(settingTabPage, settingId)
-                                 );
-                                 CREATE TABLE appLayout(
-                                     settingTabPage TEXT(255)    NOT NULL,
-                                     settingId TEXT(255)         NOT NULL, 
-                                     settingValue NTEXT(2000)    DEFAULT "",
-                                     PRIMARY KEY(settingTabPage, settingId)
-                                 );
-                                 CREATE TABLE Favourites(
-                                             favouriteName NTEXT NOT NULL PRIMARY KEY,
-                                             GPSLatitude NTEXT NOT NULL,
-                                             GPSLatitudeRef NTEXT NOT NULL,
-                                             GPSLongitude NTEXT NOT NULL,
-                                             GPSLongitudeRef NTEXT NOT NULL,
-                                             GPSAltitude NTEXT,
-                                             GPSAltitudeRef NTEXT,
-                                             Coordinates NTEXT NOT NULL,
-                                             City NTEXT,
-                                             CountryCode NTEXT,
-                                             Country NTEXT,
-                                             State NTEXT,
-                                             Sublocation NTEXT
-                                             )
-                                 ;
-                                 CREATE TABLE customRules(
-                                             ruleId INTEGER PRIMARY KEY AUTOINCREMENT,
-                                             CountryCode NTEXT NOT NULL,
-                                             DataPointName NTEXT NOT NULL,
-                                             DataPointConditionType NTEXT NOT NULL,
-                                             DataPointConditionValue NTEXT NOT NULL,
-                                             TargetPointName NTEXT NOT NULL,
-                                             TargetPointOutcome NTEXT NOT NULL,
-                                             TargetPointOutcomeCustom NTEXT
-                                             )
-                                 ;
-                                 CREATE TABLE IF NOT EXISTS customCityAllocationLogic(
-                                             CountryCode TEXT(3) NOT NULL,
-                                             TargetPointNameCustomCityLogic TEXT(100) NOT NULL,
-                                             PRIMARY KEY(CountryCode, TargetPointNameCustomCityLogic)
-                                             )
-                                 ;
-                                 """;
+            // this used to run only for a database that already existed, which meant a fresh installation spent its
+            // whole first session with an empty city allocation table and picked up the defaults on the next launch.
+            CustomCityAllocationRules.DataWriteSQLiteCustomCityAllocationLogicDefaults();
 
-                    SQLiteCommand SQLiteCommand = new(commandText: commandText, connection: SQLiteDB);
-                    _ = SQLiteCommand.ExecuteNonQuery();
-                    SQLiteDB.Close();
-                }
-                catch (Exception ex)
-                {
-                    FrmMainApp.Log.Fatal(message: $"Error: {ex.Message}");
-                    _ = MessageBox.Show(text: ex.Message);
-                }
-            }
-            else
+            if (userDataBaseFileAlreadyExisted)
             {
-                Favourites.DataCreateSQLiteFavourites();
-                CustomRules.DataCreateSQLiteCustomRules();
-                CustomCityAllocationRules.DataCreateSQLiteCustomCityAllocationLogic();
-                DataWriteSQLiteRenameColumn(tableName: "Favourites", columnNameFrom: "locationName",
+                // some of the naming logic has changed over time; patch up the databases that predate it.
+                DataWriteSQLiteRenameColumn(tableName: DatabaseSchema.TableNameFavourites,
+                    columnNameFrom: "locationName",
                     columnNameTo: "favouriteName");
-                DataWriteSQLiteRenameColumn(tableName: "Favourites", columnNameFrom: "Sub_location",
+                DataWriteSQLiteRenameColumn(tableName: DatabaseSchema.TableNameFavourites,
+                    columnNameFrom: "Sub_location",
                     columnNameTo: "Sublocation");
-                DataWriteSQLiteRenameDataInTable(tableName: "customRules", columnName: "TargetPointName",
+                DataWriteSQLiteRenameDataInTable(tableName: DatabaseSchema.TableNameCustomRules,
+                    columnName: "TargetPointName",
                     dataFrom: "Sub_location",
                     dataTo: "Sublocation");
             }

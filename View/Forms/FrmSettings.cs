@@ -1404,9 +1404,25 @@ public partial class FrmSettings : Form
             if (!ItemsToImport.Contains(item: "no") &&
                 ItemsToImport.Contains(item: "yes"))
             {
-                _importHasBeenProcessed = SettingsImport.DataImportSettings(
-                    settingsToImportList: ItemsToImport,
-                    importFilePath: databaseFileToImport);
+                try
+                {
+                    _importHasBeenProcessed = SettingsImport.DataImportSettings(
+                        settingsToImportList: ItemsToImport,
+                        importFilePath: databaseFileToImport);
+                }
+                catch (Exception ex)
+                {
+                    // the import rolls itself back, so the settings database is whatever it was beforehand. There
+                    // is no global exception handler, so without this a bad file takes the whole app down.
+                    FrmMainApp.Log.Error(message: $"Error: {ex.Message}");
+                    Themer.ShowMessageBox(
+                        message: HelperControlAndMessageBoxHandling.ReturnControlText(
+                                     controlName: "mbx_FrmSettings_ErrorImportFailed",
+                                     fakeControlType: HelperControlAndMessageBoxHandling.FakeControlTypes.MessageBox) +
+                                 ex.Message,
+                        icon: MessageBoxIcon.Error,
+                        buttons: MessageBoxButtons.OK);
+                }
 
                 // this is done so that the user doesn't end up clicking OK and then triggering a re-save of what they may have queued up against warnings.
                 // Cancel clears the write queue but since the database would have been overwritten that's a reasonable logical path to take.
