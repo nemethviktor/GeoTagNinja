@@ -54,7 +54,9 @@ internal static class Countries
     /// LanguageMappingQueryOrReturnWhat enumeration. The data is based on the ISO 3166-1 standard as published on
     /// Wikipedia and may not reflect the most current geopolitical changes.</remarks>
     /// <returns>A DataTable where each row represents a country and columns include country name, ISO codes, numeric code,
-    /// subdivision code, and UN membership status.</returns>
+    /// subdivision code, and UN membership status (these latter two are unused).
+    /// Also, don't replace this table with whatever is built into Windows because that appears to be shorter and also there is...
+    /// no migration from SQLite settings to a possibly changing list (ie the DataGrids will break if they try to load stuff they can't find here _and_ in the database.)</returns>
     internal static DataTable GetCountryDetailsToTable()
     {
         // from https://en.wikipedia.org/w/index.php?title=ISO_3166-1&oldid=1330165410#Codes
