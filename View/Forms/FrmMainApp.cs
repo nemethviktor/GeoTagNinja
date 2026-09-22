@@ -272,7 +272,12 @@ public partial class FrmMainApp : Form
     /// <returns></returns>
     private async Task<Task> InitialiseApplication()
     {
+        // Application.Run(mainForm) forces Visible = true regardless of what we set here,
+        // so Visible can't be used to hide the form while it's still untranslated. Opacity
+        // isn't touched by Application.Run, so it's the only reliable way to keep the raw,
+        // pre-translation control text off-screen until AppStartupAssignLabelsToObjects runs.
         Visible = false;
+        Opacity = 0;
         SuspendLayout();
         Task[] tasks =
         [
@@ -306,9 +311,14 @@ public partial class FrmMainApp : Form
                 close: remainingTasks.Count == 0);
         }
 
+        // All startup tasks (including AppStartupReadAppLanguage) have finished, so the
+        // translated strings are ready to assign before the form is ever revealed.
+        AppStartupAssignLabelsToObjects();
+
         FormClosing += FrmMainApp_FormClosing;
         ResumeLayout();
         Visible = true;
+        Opacity = 1;
 
         return Task.CompletedTask;
     }
@@ -346,9 +356,6 @@ public partial class FrmMainApp : Form
 
         // initialise webView2
         await InitialiseWebView();
-
-        // assign labels to objects
-        AppStartupAssignLabelsToObjects();
 
         // load lvwFileList
         _ = lvw_FileList_LoadOrUpdate();
