@@ -1710,29 +1710,65 @@ public partial class FileListView : System.Windows.Forms.ListView
     /// </summary>
     /// <param name="m">The Windows message being processed.</param>
     /// <remarks>
-    /// The X and Y coordinates are extracted from the 32-bit LParam by splitting
-    /// it into two 16-bit values using bit shifts and byte conversion. The
-    /// method converts the screen coordinates to client coordinates via
-    /// <see cref="PointToClient(Point)"/> before calling <see cref="ShowFilterMenu(Point)"/>.
+    /// The X and Y coordinates are decoded by <see cref="TryGetContextMenuScreenPoint(IntPtr, out Point)"/>
+    /// and converted to client coordinates via <see cref="PointToClient(Point)"/> before calling
+    /// <see cref="ShowFilterMenu(Point)"/>. When the menu is invoked from the keyboard Windows
+    /// sends LParam == -1 instead of coordinates; in that case the menu is anchored on the
+    /// focused item.
     /// </remarks>
     protected override void WndProc(ref Message m)
     {
         // WM_CONTEXTMENU
         if (m.Msg == 0x007B)
         {
-            // Safely extract coordinates as signed 16-bit integers (shorts) 
-            // to properly support negative values on secondary monitors.
-            short x = (short)((int)m.LParam & 0xFFFF);
-            short y = (short)(((int)m.LParam >> 16) & 0xFFFF);
+            Point clientPoint = TryGetContextMenuScreenPoint(lParam: m.LParam, screenPoint: out Point screenPoint)
+                ? PointToClient(p: screenPoint)
 
-            Point clientPoint = PointToClient(new Point(x, y));
+                // Keyboard (Shift+F10 or the context-menu key): there are no
+                // coordinates, so anchor on the focused item if there is one.
+                : FocusedItem != null
+                    ? new Point(x: FocusedItem.Bounds.Left, y: FocusedItem.Bounds.Bottom)
+                    : Point.Empty;
 
             // Handle coordinates that might be outside client area (like the header)
-            ShowFilterMenu(clientPoint);
+            ShowFilterMenu(location: clientPoint);
             return;
         }
 
         base.WndProc(ref m);
+    }
+
+    /// <summary>
+    /// Decodes the screen coordinates packed into the LParam of a WM_CONTEXTMENU message.
+    /// </summary>
+    /// <param name="lParam">The LParam of the message.</param>
+    /// <param name="screenPoint">The decoded screen coordinates, or <see cref="Point.Empty"/> when there are none.</param>
+    /// <returns><see langword="true"/> if the message carried coordinates; <see langword="false"/> if the menu was invoked from the keyboard.</returns>
+    /// <remarks>
+    /// LParam is a 64-bit value (the app is x64) and casting an IntPtr straight to int is a
+    /// *checked* conversion, so it throws OverflowException whenever the packed value doesn't
+    /// fit into an int. That is the case for every context menu opened at a negative screen
+    /// coordinate - i.e. on a monitor placed left of / above the primary one, where the low or
+    /// high word is 0xFFFF - and for LParam == -1, which Windows sends when the menu is invoked
+    /// from the keyboard. Going via Int64 and truncating explicitly avoids the exception.
+    /// </remarks>
+    internal static bool TryGetContextMenuScreenPoint(IntPtr lParam,
+        out Point screenPoint)
+    {
+        int packed = unchecked((int)lParam.ToInt64());
+
+        if (packed == -1)
+        {
+            screenPoint = Point.Empty;
+            return false;
+        }
+
+        // The two packed words are *signed* 16-bit values.
+        short x = unchecked((short)(packed & 0xFFFF));
+        short y = unchecked((short)((packed >> 16) & 0xFFFF));
+
+        screenPoint = new Point(x: x, y: y);
+        return true;
     }
 
     #endregion
