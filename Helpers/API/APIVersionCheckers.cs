@@ -209,23 +209,38 @@ internal static class APIVersionCheckers
             FrmMainApp.Log.Info(message: $"currentExifToolVersionLocal: {HelperVariables
                .CurrentExifToolVersionLocal} / newestExifToolVersionOnline: {HelperVariables.CurrentExifToolVersionCloud}");
 
-            // if cloud version is newer and there isn't an identically named file in Roaming then download
+            // if cloud version is newer, either arm an already-downloaded zip (e.g. left over from a
+            // prior run that never reached FormClosing) or download a fresh one and arm that instead.
             if (HelperVariables.CurrentExifToolVersionCloud >
-                HelperVariables.CurrentExifToolVersionLocal &&
-                !File.Exists(path: Path.Combine(path1: HelperVariables.UserDataFolderPath,
-                    path2:
-                    $"exiftool-{HelperVariables.CurrentExifToolVersionCloud}_{CPUBitness}.zip")))
+                HelperVariables.CurrentExifToolVersionLocal)
             {
-                FrmMainApp.Log.Info(
-                    message:
-                    $"Downloading newest exifTool version from the cloud. {HelperVariables.CurrentExifToolVersionCloud.ToString(
-                        provider: CultureInfo
-                           .InvariantCulture)}");
+                string existingZipPath = Path.Combine(path1: HelperVariables.UserDataFolderPath,
+                    path2:
+                    $"exiftool-{HelperVariables.CurrentExifToolVersionCloud}_{CPUBitness}.zip");
 
-                // get new version from online - it will get "armed" on app exit.
-                await DownloadCurrentExifToolVersion(
-                    version: HelperVariables.CurrentExifToolVersionCloud.ToString(
-                        provider: CultureInfo.InvariantCulture));
+                if (File.Exists(path: existingZipPath))
+                {
+                    FrmMainApp.Log.Info(
+                        message:
+                        $"Found already-downloaded exifTool version {HelperVariables.CurrentExifToolVersionCloud.ToString(
+                            provider: CultureInfo
+                               .InvariantCulture)}, arming it for extraction on close.");
+
+                    HelperVariables.ExifToolExePathRoamingTemp = existingZipPath;
+                }
+                else
+                {
+                    FrmMainApp.Log.Info(
+                        message:
+                        $"Downloading newest exifTool version from the cloud. {HelperVariables.CurrentExifToolVersionCloud.ToString(
+                            provider: CultureInfo
+                               .InvariantCulture)}");
+
+                    // get new version from online - it will get "armed" on app exit.
+                    await DownloadCurrentExifToolVersion(
+                        version: HelperVariables.CurrentExifToolVersionCloud.ToString(
+                            provider: CultureInfo.InvariantCulture));
+                }
             }
 
             FrmMainApp.Log.Info(message: "Checking for new GTN versions.");

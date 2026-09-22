@@ -136,7 +136,11 @@ internal static class Operators
         {
             if (file.Extension != ".sqlite" &&
                 !file.Name.StartsWith(value: "logfile") &&
-                !filesToKeep.Contains(item: file.Name))
+                !filesToKeep.Contains(item: file.Name) &&
+                // a staged ExifTool update zip (see APIVersionCheckers.DownloadCurrentExifToolVersion) -
+                // it must survive until FrmMainApp.PerformAppClosingProcedure extracts it on app close,
+                // otherwise the update is silently lost if this runs (e.g. on folder refresh) beforehand.
+                !(file.Name.StartsWith(value: "exiftool-") && file.Extension == ".zip"))
             {
                 try
                 {
