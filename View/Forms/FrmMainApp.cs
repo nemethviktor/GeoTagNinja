@@ -670,7 +670,7 @@ public partial class FrmMainApp : Form
 
         int? zoomLevel = mapWebMessage.zoomLevel; // apparently defaults to zero
         // don't merge with the above -> this is only non-null when the user has zoomed.
-        if (zoomLevel > 0)
+        if (zoomLevel > 0 && HelperVariables.UserSettingRetainMapZoom)
         {
             _lastZoomLevel = zoomLevel;
             _currentMapZoomLevel = zoomLevel;
@@ -1485,6 +1485,18 @@ public partial class FrmMainApp : Form
             // Full redraws still use the existing fitBounds behavior when a recenter is actually needed.
             if (shouldRecenterMap && mapHasRenderableCoordinates)
             {
+                // fitBounds always recalculates its own zoom to fit the markers, which would silently
+                // override the user's "retain zoom" preference every time the selection changes. When
+                // a zoom level has actually been captured, pan to the same center point instead but
+                // keep the current zoom.
+                int? retainedZoomLevel = _currentMapZoomLevel ?? _lastZoomLevel;
+                if (HelperVariables.UserSettingRetainMapZoom && retainedZoomLevel != null)
+                {
+                    double centerLat = (dblMinLat + dblMaxLat) / 2;
+                    double centerLng = (dblMinLng + dblMaxLng) / 2;
+                    return $"map.setView([{centerLat.ToString(provider: CultureInfo.InvariantCulture)}, {centerLng.ToString(provider: CultureInfo.InvariantCulture)}], {retainedZoomLevel.Value});";
+                }
+
                 char curlyOpen = '{';
                 char curlyClose = '}';
                 string fitBoundsScript = $"map.fitBounds([[{dblMinLat.ToString(provider: CultureInfo.InvariantCulture)}, {dblMinLng.ToString(provider: CultureInfo.InvariantCulture)}], [{dblMaxLat.ToString(provider: CultureInfo.InvariantCulture)}, {dblMaxLng.ToString(provider: CultureInfo.InvariantCulture)}]], {curlyOpen}padding: [50, 50]{curlyClose});";

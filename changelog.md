@@ -10,6 +10,9 @@
 	- Fix #221 OneDrive/Google Drive folders and files not being properly processed at all.
 	- Fix #222 OneDrive/Google Drive folders and files not being properly processed when set to online-only.
 	- Fixed an issue whereby importing data would fail due to nonexisting database
+	- Fix #217 Multimonitor right-click crashing the app
+	- Fix #224 `Retain Zoom` setting not respected
+	- Fixed untranslated strings showing up at startup
 
 **Build 9654 [20260607]**
 - NEW & UPDATED:
