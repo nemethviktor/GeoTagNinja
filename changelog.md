@@ -11,7 +11,7 @@
 	- Fix #222 OneDrive/Google Drive folders and files not being properly processed when set to online-only.
 	- Fixed an issue whereby importing data would fail due to nonexisting database
 	- Fix #217 Multimonitor right-click crashing the app
-	- Fix #224 `Retain Zoom` setting not respected
+	- Fix #224 `Retain Zoom` setting not respected + Fix map redrawing/reloading fully on every click even when the newly selected point is already in view
 	- Fixed untranslated strings showing up at startup
 
 **Build 9654 [20260607]**

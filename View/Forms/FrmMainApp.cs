@@ -118,6 +118,10 @@ public partial class FrmMainApp : Form
     private int? _currentMapZoomLevel;
     private bool _mapCanUpdateSelectionMarkersInPlace;
 
+    // The coordinate set behind the last in-place marker update. Lets a re-selection of the
+    // same point(s) skip touching the map entirely instead of re-plotting/recentering for no visible change.
+    private List<(double lat, double lng)> _lastSelectionMarkerCoordinates = [];
+
     private FrmSettings FrmSettings;
 
     internal FrmEditFileData FrmEditFileData;
@@ -1369,17 +1373,29 @@ public partial class FrmMainApp : Form
             TryQueueClearSelectionMarkersInPlace())
         {
             _mapCanUpdateSelectionMarkersInPlace = true;
+            _lastSelectionMarkerCoordinates = [];
             return;
         }
 
-        // When the selected images are already visible and there are no extra overlays to redraw,
-        // update only the selection marker layer instead of rebuilding the whole WebView document.
-        if (!shouldRecenterMap &&
-            _mapCanUpdateSelectionMarkersInPlace &&
+        // Re-selecting the exact same point(s) as last time (e.g. re-clicking the same row) changes
+        // nothing visible, whether or not a recenter would normally be triggered - fitBounds/setView
+        // would just recompute the same target view. Skip touching the map entirely.
+        if (_mapCanUpdateSelectionMarkersInPlace &&
+            currentRenderIsSelectionMarkersOnly &&
+            selectionMarkerCoordinates.SequenceEqual(second: _lastSelectionMarkerCoordinates))
+        {
+            return;
+        }
+
+        // When there are no extra overlays to redraw, update the selection marker layer (panning/zooming
+        // the existing map if a recenter is actually needed) instead of rebuilding the whole WebView
+        // document. This is what avoids the full-page reload flicker on every click.
+        if (_mapCanUpdateSelectionMarkersInPlace &&
             currentRenderIsSelectionMarkersOnly &&
             TryQueueSelectionMarkersUpdateInPlace(coordinates: selectionMarkerCoordinates))
         {
             _mapCanUpdateSelectionMarkersInPlace = true;
+            _lastSelectionMarkerCoordinates = selectionMarkerCoordinates;
             return;
         }
 
@@ -1414,6 +1430,7 @@ public partial class FrmMainApp : Form
 
         UpdateWebView(replacements: htmlReplacements);
         _mapCanUpdateSelectionMarkersInPlace = currentRenderIsSelectionMarkersOnly;
+        _lastSelectionMarkerCoordinates = currentRenderIsSelectionMarkersOnly ? selectionMarkerCoordinates : [];
         return;
 
         (bool hasSelectedItems, List<(double lat, double lng)> selectedCoordinates) GetSelectedCoordinateSet()
@@ -1480,28 +1497,32 @@ public partial class FrmMainApp : Form
                    coordinate.lng <= _currentMapBounds.Value.maxLng + Epsilon;
         }
 
+        // fitBounds always recalculates its own zoom to fit the markers, which would silently
+        // override the user's "retain zoom" preference every time the selection changes. When
+        // a zoom level has actually been captured, pan to the same center point instead but
+        // keep the current zoom. Shared by the full-page rebuild and the in-place update paths so
+        // both recenter identically.
+        string BuildRecenterMapScript()
+        {
+            int? retainedZoomLevel = _currentMapZoomLevel ?? _lastZoomLevel;
+            if (HelperVariables.UserSettingRetainMapZoom && retainedZoomLevel != null)
+            {
+                double centerLat = (dblMinLat + dblMaxLat) / 2;
+                double centerLng = (dblMinLng + dblMaxLng) / 2;
+                return $"map.setView([{centerLat.ToString(provider: CultureInfo.InvariantCulture)}, {centerLng.ToString(provider: CultureInfo.InvariantCulture)}], {retainedZoomLevel.Value});";
+            }
+
+            char curlyOpen = '{';
+            char curlyClose = '}';
+            return $"map.fitBounds([[{dblMinLat.ToString(provider: CultureInfo.InvariantCulture)}, {dblMinLng.ToString(provider: CultureInfo.InvariantCulture)}], [{dblMaxLat.ToString(provider: CultureInfo.InvariantCulture)}, {dblMaxLng.ToString(provider: CultureInfo.InvariantCulture)}]], {curlyOpen}padding: [50, 50]{curlyClose});";
+        }
+
         string BuildMapInitialViewScript()
         {
             // Full redraws still use the existing fitBounds behavior when a recenter is actually needed.
             if (shouldRecenterMap && mapHasRenderableCoordinates)
             {
-                // fitBounds always recalculates its own zoom to fit the markers, which would silently
-                // override the user's "retain zoom" preference every time the selection changes. When
-                // a zoom level has actually been captured, pan to the same center point instead but
-                // keep the current zoom.
-                int? retainedZoomLevel = _currentMapZoomLevel ?? _lastZoomLevel;
-                if (HelperVariables.UserSettingRetainMapZoom && retainedZoomLevel != null)
-                {
-                    double centerLat = (dblMinLat + dblMaxLat) / 2;
-                    double centerLng = (dblMinLng + dblMaxLng) / 2;
-                    return $"map.setView([{centerLat.ToString(provider: CultureInfo.InvariantCulture)}, {centerLng.ToString(provider: CultureInfo.InvariantCulture)}], {retainedZoomLevel.Value});";
-                }
-
-                char curlyOpen = '{';
-                char curlyClose = '}';
-                string fitBoundsScript = $"map.fitBounds([[{dblMinLat.ToString(provider: CultureInfo.InvariantCulture)}, {dblMinLng.ToString(provider: CultureInfo.InvariantCulture)}], [{dblMaxLat.ToString(provider: CultureInfo.InvariantCulture)}, {dblMaxLng.ToString(provider: CultureInfo.InvariantCulture)}]], {curlyOpen}padding: [50, 50]{curlyClose});";
-
-                return fitBoundsScript;
+                return BuildRecenterMapScript();
             }
 
             // If the map is being redrawn for non-location changes, restore the current viewport instead of
@@ -1564,6 +1585,12 @@ public partial class FrmMainApp : Form
                 return false;
             }
 
+            // Move the existing map instead of reloading the whole WebView document when a recenter
+            // is actually needed (e.g. the newly selected point is outside the current view).
+            string recenterScript = shouldRecenterMap && mapHasRenderableCoordinates
+                ? BuildRecenterMapScript()
+                : "";
+
             string coordinateArray = string.Join(separator: ", ",
                 values: coordinates.Select(selector: coordinate =>
                     $"[{coordinate.lat.ToString(provider: CultureInfo.InvariantCulture)}, {coordinate.lng.ToString(provider: CultureInfo.InvariantCulture)}]"));
@@ -1572,6 +1599,8 @@ public partial class FrmMainApp : Form
                                   if (typeof map === 'undefined' || !map) {
                                       return false;
                                   }
+
+                                  {{recenterScript}}
 
                                   if (typeof selectionMarkerLayer === 'undefined' || !selectionMarkerLayer) {
                                       selectionMarkerLayer = L.layerGroup().addTo(map);
