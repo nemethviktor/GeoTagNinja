@@ -13,6 +13,7 @@
 	- Fix #217 Multimonitor right-click crashing the app
 	- Fix #224 `Retain Zoom` setting not respected + Fix map redrawing/reloading fully on every click even when the newly selected point is already in view
 	- Fixed untranslated strings showing up at startup
+	- Fixed Destination path arrows missing on the in-app map (WebView2 couldn't resolve the relative script path for the polyline decorator plugin)
 
 **Build 9654 [20260607]**
 - NEW & UPDATED:

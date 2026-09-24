@@ -129,6 +129,7 @@ public partial class FrmMainApp : Form
     private FrmImportExportGpx FrmImportExportGpx;
 
     private string _mapHtmlTemplateCode = "";
+    private string _polylineDecoratorScriptCode = "";
 
     internal static bool RemoveGeoDataIsRunning;
     private static bool _StopProcessingRows;
@@ -1421,7 +1422,8 @@ public partial class FrmMainApp : Form
             ("{ HTMLShowPoints }", showPointsStr),
             ("{ HTMLShowFOVPolygon }", showFOVStr),
             ("{ HTMLShowPolyLine }", showDestinationPolyLineStr),
-            ("{ HTMLMapInitialView }", mapInitialViewScript)
+            ("{ HTMLMapInitialView }", mapInitialViewScript),
+            ("{ HTMLPolylineDecoratorScript }", _polylineDecoratorScriptCode)
         ];
         foreach ((string key, string value) in replacements)
         {
@@ -2009,6 +2011,31 @@ public partial class FrmMainApp : Form
         catch (Exception ex)
         {
             Log.Fatal(message: $"Read map.html file - Error: {ex.Message}");
+            Themer.ShowMessageBox(
+                message: HelperControlAndMessageBoxHandling.ReturnControlText(
+                    controlName: "mbx_FrmMainApp_ErrorInitializeWebViewReadHTMLFile",
+                    fakeControlType: HelperControlAndMessageBoxHandling.FakeControlTypes.MessageBox
+                    ) +
+                    Environment.NewLine + $"{ex.Message}",
+                icon: MessageBoxIcon.Error,
+                buttons: MessageBoxButtons.OK);
+        }
+
+        // read the "leaflet.polylineDecorator.js" file.
+        // NB: this is inlined into the HTML (rather than loaded via <script src>) because
+        // wbv_MapArea.NavigateToString() gives the document a null/about:blank origin, so a
+        // relative local file path never resolves and the script silently fails to load.
+        try
+        {
+            Log.Trace(message: "Read leaflet.polylineDecorator.js file");
+            _polylineDecoratorScriptCode = File.ReadAllText(
+                path: Path.Combine(path1: HelperVariables.ResourcesFolderPath,
+                    path2: "leaflet.polylineDecorator.js"));
+            Log.Trace(message: "Read leaflet.polylineDecorator.js file OK");
+        }
+        catch (Exception ex)
+        {
+            Log.Fatal(message: $"Read leaflet.polylineDecorator.js file - Error: {ex.Message}");
             Themer.ShowMessageBox(
                 message: HelperControlAndMessageBoxHandling.ReturnControlText(
                     controlName: "mbx_FrmMainApp_ErrorInitializeWebViewReadHTMLFile",

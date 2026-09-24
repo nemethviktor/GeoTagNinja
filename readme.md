@@ -153,17 +153,6 @@ As for code updates, I'm generally happy for anyone competent to add pull reques
 	- This means that if your file has Keywords/Subjects and you edit the geo-data the keywords will become out of sync with the changes.
 	- What's therefore likely to happen is that I'll attempt to replace existing `geo:` keywords with up-to-date values as required and ignore the rest.
 
-### Destinations/Possible Bug in WebView2
-
-TL; DR: the arrows are missing.
-Longer: Hypothetically the idea with Destinations is that if there are groups of images that have GPSDestLat/Long defined then the app draws a path on the map for each of these. Assume the following:
-- You have N groups of images (N>0) where GPSDestLat/Long is defined and is the same within each group
-- Each group has C (-> C>1) count of images where the GPSLat/Long is different. Basically, you have a bunch of photos from a path walked/driven/etc, and you want to map them.
-- The script parses these N groups, separates them and puts them independently on the map _with a bunch of arrows_.
-	- When viewing the HTML file out of GTN and open in Edge or Chrome there are the appropriate number of grouped paths and arrows show between the individual images, aka it works as expected.
-	- When viewing the same thing within GTN the arrows are missing. Upon inspection it is found that `Uncaught TypeError: Cannot read properties of undefined (reading 'arrowHead') ...` - so basically the arrowHead of the polylineDecorator breaks the WebView2 JS engine, something that isn't a problem in "real" Chrome or Edge.
-- For those better versed in JS I've put a try/catch block around this, but I still think there should be some way around the issue so any suggestions here pls shout.
-
 ## Possible Issues & Solutions
 
 - *Read/Save file process fails semi-randomly*: (yes this is a copy-paste from above but it seems not everyone's reading the _known issues_ section)
