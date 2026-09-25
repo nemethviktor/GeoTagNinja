@@ -8,6 +8,7 @@ using RestSharp;
 using RestSharp.Authenticators;
 using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Globalization;
 using System.IO;
 using System.Net;
@@ -43,13 +44,13 @@ public class TimedWebClient : WebClient
 internal static class APIVersionCheckers
 {
     /// <summary>
-    ///     Responsible for pulling the latest prod-version number of exifTool from exiftool.org
+    ///     Responsible for pulling the latest prod-version number of exifTool from ~~exiftool.org~~ sourceforge.
     /// </summary>
     /// <returns>The version number of the currently newest exifTool uploaded to exiftool.org or 0.0m if that fails.</returns>
     private static decimal API_ExifGetExifToolVersionFromWeb()
     {
         string onlineExifToolVer;
-        string URL = "http://exiftool.org/ver.txt";
+        string URL = "http://exiftool.org/ver.txt"; // this remains exiftool.org
         bool parsedResult;
         decimal returnVal;
         try
@@ -226,7 +227,7 @@ internal static class APIVersionCheckers
                             provider: CultureInfo
                                .InvariantCulture)}, arming it for extraction on close.");
 
-                    HelperVariables.ExifToolExePathRoamingTemp = existingZipPath;
+                    HelperVariables.ExifToolExeZippedPathRoamingTemp = existingZipPath;
                 }
                 else
                 {
@@ -312,7 +313,7 @@ internal static class APIVersionCheckers
     {
 
         int CPUBitness = Environment.Is64BitOperatingSystem ? 64 : 32;
-        string remoteUri = $"https://exiftool.org/exiftool-{version}_{CPUBitness}.zip";
+        string remoteUri = $"https://sourceforge.net/projects/exiftool/files/exiftool-{version}_{CPUBitness}.zip/download";
         string zipPath = Path.Combine(path1: HelperVariables.UserDataFolderPath,
             path2: $"exiftool-{version}_{CPUBitness}.zip");
         try
@@ -323,11 +324,11 @@ internal static class APIVersionCheckers
             await stream.CopyToAsync(destination: fileStream);
             fileStream.Flush();
             fileStream.Close();
-            HelperVariables.ExifToolExePathRoamingTemp = zipPath;
+            HelperVariables.ExifToolExeZippedPathRoamingTemp = zipPath;
         }
-        catch
+        catch (Exception ex)
         {
-            // ignore
+            Debug.Print($"Exiftool Download failed - {ex.Message}");
         }
     }
 

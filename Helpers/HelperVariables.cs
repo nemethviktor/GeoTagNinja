@@ -134,7 +134,7 @@ internal static class HelperVariables
     internal static List<string> LstCityNameIsAdminName4 = [];
     internal static List<string> LstCityNameIsUndefined = [];
 
-    internal static string ExifToolExePathRoamingTemp = string.Empty;
+    internal static string ExifToolExeZippedPathRoamingTemp = string.Empty;
 
     internal static readonly string ExifToolExePathRoamingPerm =
         GetExifToolExePathRoamingPerm();

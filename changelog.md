@@ -14,6 +14,7 @@
 	- Fix #224 `Retain Zoom` setting not respected + Fix map redrawing/reloading fully on every click even when the newly selected point is already in view
 	- Fixed untranslated strings showing up at startup
 	- Fixed Destination path arrows missing on the in-app map (WebView2 couldn't resolve the relative script path for the polyline decorator plugin)
+	- Fixed another ExifTool-update-related issue. Apparently the actual download source has been moved to SourceForge.
 
 **Build 9654 [20260607]**
 - NEW & UPDATED:
@@ -22,7 +23,7 @@
 	- As a direct outcome of the above now we have rename (`F2`) and delete (`del`) capabilities #206
 	- Version bump to `1.18` - well overdue.
 	- Merged PR #211 - opt-in to keep map visible without refreshing.
-	- Also ref #212 rewrote the exiftool wrapper/parser to only care about the tags we need. This speeds up parsing tremendously.
+	- Also ref #212 rewrote the ExifTool wrapper/parser to only care about the tags we need. This speeds up parsing tremendously.
 - BUGS & FIXES:
 	- Patch fractional text values not working in GPX import (#207)
 	- `Remove All Geodata` should remove `GPSDOP` and `GPSHPositioningError`
@@ -158,8 +159,8 @@
 - NEW & UPDATED:
 	- Paste coordinate-pair string from clipboard into Edit Form (see readme about this or the tooltip in the Edit Form) #100
 	- Added a button to the Edit Form to move to the next image when there's a multi-selection (Apply & Move to Next) [also #100]
-	- Bumped exifTool to v12.77
-	- Rewrote the logic of updating for exifTool, from now onwards, it should be automatic.
+	- Bumped ExifTool to v12.77
+	- Rewrote the logic of updating for ExifTool, from now onwards, it should be automatic.
 
 - BUGS & FIXES:
 	- Added an extra warning if the file-save fails for what's likely a UTF path error #98
@@ -173,7 +174,7 @@
 	- Added functionality as per #92 to drag the map marker and allow the user to add the new value to the selected image(s).
 	- Added toponomymName to the options within Custom City Allocation Rules
 	- Changed how file names with `[]` chars are handled for saving.
-	- Bumped exifTool to v12.72
+	- Bumped ExifTool to v12.72
 - BUGS & FIXES:
 	- Fixed an issue re #93 Open Coords in API misbehaving. 
 	- Fixed Custom Rules panel breaking because the object type was wrong due to an earlier logic-consolidation.
@@ -185,7 +186,7 @@
 - NEW & UPDATED:
 	- App Version Bump: 1.14
 	- Implemented an Export/Import functionality for Settings and Custom Rules
-	- Bumped exifTool to v12.67
+	- Bumped ExifTool to v12.67
 	- Streamlined a lot of code relating to the reusability of on-the-fly Form generation
 	- Same goes for generic reusability, messageboxes, enums, buttons, whatnots
 	- Various further Dark Mode changes/improvements
@@ -218,7 +219,7 @@
 		- Added some support for reading and displaying ImgDirection/Ref.
 		- Added a TaskbarProgressBarState indicator
 		- Update the update logic -> there's now a Setting that enables the user to update to pre-release [dev] releases or master-only. Master releases will no longer be marked as pre-release on github.
-	- Bumped exifTool to v12.65
+	- Bumped ExifTool to v12.65
 	- Changed the internal logic as to how the ListView coordinates get put on the map. Trying to fully move away from reading data from the ListView rather than from the DirectoryElement
 	- Changed internal logic re: (not) defaulting values to strings in certain cases
 - BUGS & FIXES:
@@ -231,7 +232,7 @@
 **Build 8610 [20230729]** [dev branch release]
 - NEW & UPDATED:
 	- Added an option to use Imperial instead of Metric. In practice this still saves data in Metric but shows as Imperial. #82
-	- Bumped exifTool to v12.64
+	- Bumped ExifTool to v12.64
 - BUGS & FIXES:
 	- Fixed a bug where the original file is set not to be overwritten but XMP is and ultimately the DE didn't get cleread properly, resulting in what appeared to be an unresponsive non-save.
 	- Fixed a bug pasting string values across files causing a crash
@@ -248,7 +249,7 @@
 	- Added a `Collections Mode`, in particular to work with Jeffrey Frield's LightRoom Classic Plugin `Run Any Command`. Details on how to use this are in the readme.
 	- Rewrote the sorting logic to account for the data type of the column being sorted (i.e. date, number, text etc)
 	- Added Country to Favourites
-	- Bumped exifTool to v12.62
+	- Bumped ExifTool to v12.62
 - BUGS & FIXES:
 	- Fixed a bug where the TZ dropdown in Import GPX could cause a crash if the user was in a TZ that wasn't on the dropdown.
 	- Paste-values logic minor revamp
@@ -286,7 +287,7 @@
 	- Updated Altitude-pull (from Web) logic. At the same time removed the separate button(s) to do that as it's now part of the Toponomy pull.
 	- Added an option for changing the API language. This won't affect countrynames though because they derive from the CountryCode so there might be little visibility of this change in practice.
 	- Added an option for GPX import to ignore reverse geocoding.
-	- Bumped exifTool to v12.55
+	- Bumped ExifTool to v12.55
 	- Made the installer look a tad prettier. (I know, right?!)
 	- Rewrote parts of the Settings Form and the underlying logic.
 - BUGS & FIXES:
@@ -313,7 +314,7 @@
 	- Updated logic so that map refreshes without markers when there are no files with coordinates selected (rather than leave markers on, which can be misleading)
 	- Updated Translations. (thanks pbranly)
 	- Updated City/Sublocation logic (thanks Clariden)
-	- Bumped exifTool to v12.52
+	- Bumped ExifTool to v12.52
 - BUGS & FIXES:
 	- Eliminate MD5 checks. Basically the bloody thing takes longer than re-parsing the whole folder.
 	- Removed the built-in webView2 installer because it was more of a pain in the backside than benefit. Updated the readme w/ instructions should this cause a problem.
@@ -328,7 +329,7 @@
 	- Added functionality to `Get Data from Other File` in the Edit File section.
 	- Changed logic around the addition of sidecar XMP files and (possibly) overwriting the source image file.
 	- Added this changeLog.md file to the project outputs. I don't expect anyone to read it locally but at least now it's possible.
-	- Bumped exifTool to v12.51
+	- Bumped ExifTool to v12.51
 	- Added some logic to the above to allow for `Original Files DateTime` to be reset to CreateDateTime by default for RAW images. (These can all be changed in Settings/File Specific)
 	- Rewrote the Excel macro that deals with exporting languages. It can now also import. (less relevant for the users but makes my life easier.)
 - BUGS & FIXES:
@@ -356,7 +357,7 @@
 	- Added sync/import GPS Track Files.
 	- Added the capability to resize the main elements. Their positions aren't saved for now.
 	- Added a button to the ToolStrip to _get all from the web_ (toponomy & altitude for selected items)
-	- Bumped exifTool to v12.50
+	- Bumped ExifTool to v12.50
 	- Updated the logic of language file creation
 	- Code refactoring
 	- Updates to nuGet packages
@@ -370,14 +371,14 @@
 
 **Build 8334 [20221026]**
 - NEW & UPDATED:
-	- Bumped exifTool to v12.49
+	- Bumped ExifTool to v12.49
 	- Added Multi-Select capability to the map. (i.e. multiple pins now show properly)
 	- Partial French translations added in (thanks to pbranly)
 	- Update checks will now only happen once a week. No need to spam the world with API requests.
 
 **Build 8333 [20221025]**
 - NEW & UPDATED:
-	- Changed the logic relating to checking the newest version of exifTool online. The original was querying an API that hadn't been updated for months.
+	- Changed the logic relating to checking the newest version of ExifTool online. The original was querying an API that hadn't been updated for months.
 
 **Build 8314 [20221006] + Build 8318 [20221010]**
 - NEW & UPDATED:
@@ -398,7 +399,7 @@
 
 **Build 8270 [20220823]**
 - NEW & UPDATED:
-	- Added check for exifTool version change tracking
+	- Added check for ExifTool version change tracking
 	- Added check for GeoTagNinja version change tracking
 	- Added (better) commentary to the code
 	- Changed Settings/Edit Forms' behaviour not to block other windows.

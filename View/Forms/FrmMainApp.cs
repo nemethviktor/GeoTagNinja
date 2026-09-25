@@ -527,12 +527,12 @@ public partial class FrmMainApp : Form
         _ExifTool.Dispose();
 
         // Unzip new exiftool version if there is one
-        if (File.Exists(path: HelperVariables.ExifToolExePathRoamingTemp) && extractNewExifTool)
+        if (File.Exists(path: HelperVariables.ExifToolExeZippedPathRoamingTemp) && extractNewExifTool)
         {
             try
             {
                 // okay this is a bit silly now but given that the ET distrib is no longer a single-file there's a lot of fuckery to be dealt with
-                // the zip file has a structure such as c:\Users\nemet\AppData\Roaming\GeoTagNinja\exiftool-12.89_64.zip\exiftool-12.89_64\exiftool(-k).exe 
+                // the zip file has a structure such as c:\Users\username\AppData\Roaming\GeoTagNinja\exiftool-12.89_64.zip\exiftool-12.89_64\exiftool(-k).exe 
                 // i swear to all the f...king gods this has been the most useless move i've seen with ET development in the last decade.
                 // so we do the following
                 // 1: delete exiftool
@@ -548,7 +548,7 @@ public partial class FrmMainApp : Form
 
                 // 2b: this shouldn't really happen but anyway:
                 string tempExtractDir = Path.Combine(path1: HelperVariables.UserDataFolderPath,
-                    path2: Path.GetFileNameWithoutExtension(path: HelperVariables.ExifToolExePathRoamingTemp));
+                    path2: Path.GetFileNameWithoutExtension(path: HelperVariables.ExifToolExeZippedPathRoamingTemp));
                 if (Directory.Exists(path: tempExtractDir))
                 {
                     Directory.Delete(path: tempExtractDir, recursive: true);
@@ -556,7 +556,7 @@ public partial class FrmMainApp : Form
 
                 // 3: unzip
                 ZipFile.ExtractToDirectory(
-                    sourceArchiveFileName: HelperVariables.ExifToolExePathRoamingTemp,
+                    sourceArchiveFileName: HelperVariables.ExifToolExeZippedPathRoamingTemp,
                     destinationDirectoryName: HelperVariables.UserDataFolderPath);
 
                 // 4: move to parent
@@ -566,6 +566,9 @@ public partial class FrmMainApp : Form
 
                 File.Move(sourceFileName: Path.Combine(path1: tempExtractDir, path2: "exiftool(-k).exe"),
                     destFileName: HelperVariables.ExifToolExePathRoamingPerm);
+
+                // 5: delete zip
+                File.Delete(path: HelperVariables.ExifToolExeZippedPathRoamingTemp);
             }
             catch
             {
