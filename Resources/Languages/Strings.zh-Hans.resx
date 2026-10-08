@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <root>
-  <xsd:schema id="root" xmlns="" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:msdata="urn:schemas-microsoft-com:xml-msdata">
+  <xsd:schema xmlns="" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:msdata="urn:schemas-microsoft-com:xml-msdata" id="root">
     <xsd:import namespace="http://www.w3.org/XML/1998/namespace" />
     <xsd:element name="root" msdata:IsDataSet="true">
       <xsd:complexType>
@@ -58,4 +58,1171 @@
   <resheader name="writer">
     <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </resheader>
+  <data name="btn_ApplyAndNext" xml:space="preserve">
+    <value>应用并移到下一个</value>
+  </data>
+  <data name="btn_InsertFromTakenDate" xml:space="preserve">
+    <value>使用拍摄日期</value>
+  </data>
+  <data name="btn_PullMostRecentPasteSettings" xml:space="preserve">
+    <value>获取“最新”的粘贴设置</value>
+  </data>
+  <data name="btn_PullMostRecentTrackSyncShift" xml:space="preserve">
+    <value>获取“最新”的偏移设置</value>
+  </data>
+  <data name="btn_RemoveGeoData" xml:space="preserve">
+    <value>移除 GPS 和位置数据</value>
+  </data>
+  <data name="btn_ResetToDefaults" xml:space="preserve">
+    <value>重置为默认值</value>
+  </data>
+  <data name="btn_RestartLater" xml:space="preserve">
+    <value>稍后重启</value>
+  </data>
+  <data name="btn_RestartNow" xml:space="preserve">
+    <value>立即重启</value>
+  </data>
+  <data name="btn_SetCurrentValues" xml:space="preserve">
+    <value>为所有选中编辑的图像设置当前值...</value>
+  </data>
+  <data name="ckb_AddXMPSideCar" xml:space="preserve">
+    <value>添加/覆盖 Sidecar XMP 文件</value>
+  </data>
+  <data name="ckb_DeSelectAll" xml:space="preserve">
+    <value>全选/取消全选</value>
+  </data>
+  <data name="ckb_DoNotQueryAPI" xml:space="preserve">
+    <value>不执行反向地理编码（仅获取坐标，不获取城市/州等）</value>
+  </data>
+  <data name="ckb_ExportTrackIncludeAltitude" xml:space="preserve">
+    <value>导出时包含海拔数据</value>
+  </data>
+  <data name="ckb_ImportExport_CityRulesSettings" xml:space="preserve">
+    <value>城市规则设置</value>
+  </data>
+  <data name="ckb_IncludePredeterminedCountries" xml:space="preserve">
+    <value>包含“预定”国家？（见上方链接及注意事项/警告）</value>
+  </data>
+  <data name="ckb_LoadTrackOntoMap" xml:space="preserve">
+    <value>将轨迹文件叠加到地图上</value>
+  </data>
+  <data name="ckb_OffsetTime" xml:space="preserve">
+    <value>时区偏移</value>
+  </data>
+  <data name="ckb_OverlayGPXForSelectedDatesOnly" xml:space="preserve">
+    <value>仅对落在所选文件最早和最晚日期范围内的日期生效</value>
+  </data>
+  <data name="ckb_OverwriteOriginal" xml:space="preserve">
+    <value>不创建 xxx_original 备份</value>
+  </data>
+  <data name="ckb_PopulatedPlacesOnly" xml:space="preserve">
+    <value>仅显示筛选为“有人居住地点”（fcode=PPL）的 API 数据 [不推荐]</value>
+  </data>
+  <data name="ckb_ProcessOriginalFile" xml:space="preserve">
+    <value>处理图像文件本身</value>
+  </data>
+  <data name="ckb_QuestionStopProcessingRows" xml:space="preserve">
+    <value>停止处理后续行？</value>
+  </data>
+  <data name="ckb_RemoveGeoDataRemovesTimeOffset" xml:space="preserve">
+    <value>“移除地理数据”功能也会移除时区偏移</value>
+  </data>
+  <data name="ckb_ReplaceBlankToponyms" xml:space="preserve">
+    <value>将空白的城市、州/省、子位置值替换为： </value>
+  </data>
+  <data name="ckb_ResetFileDateToCreated" xml:space="preserve">
+    <value>将图像文件日期时间重置为创建日期</value>
+  </data>
+  <data name="ckb_ResetMapToZero" xml:space="preserve">
+    <value>无地理数据时将地图设为 0/0</value>
+  </data>
+  <data name="ckb_StopProcessingRules" xml:space="preserve">
+    <value>首次匹配到国家+目标后停止处理规则</value>
+  </data>
+  <data name="ckb_UpdateCheckPreRelease" xml:space="preserve">
+    <value>也检查预发布 [beta] 更新？</value>
+  </data>
+  <data name="ckb_UseDarkMode" xml:space="preserve">
+    <value>在应用界面中使用深色模式？</value>
+  </data>
+  <data name="ckb_UseImperialNotMetric" xml:space="preserve">
+    <value>使用英制（英尺）表示海拔（而非公制 [米]）</value>
+  </data>
+  <data name="ckb_UseTimeZone" xml:space="preserve">
+    <value>使用此时区：</value>
+  </data>
+  <data name="clh_BlankOutTargetPoint" xml:space="preserve">
+    <value>清空？</value>
+  </data>
+  <data name="clh_DataPointConditionType" xml:space="preserve">
+    <value>如果</value>
+  </data>
+  <data name="clh_DataPointConditionValue" xml:space="preserve">
+    <value>值</value>
+  </data>
+  <data name="clh_DataPointName" xml:space="preserve">
+    <value>什么</value>
+  </data>
+  <data name="clh_ExifTag" xml:space="preserve">
+    <value>Exif（GTN 内部）标签</value>
+  </data>
+  <data name="clh_Folder" xml:space="preserve">
+    <value>文件夹</value>
+  </data>
+  <data name="clh_ModifiedValue" xml:space="preserve">
+    <value>修改（未保存）的值</value>
+  </data>
+  <data name="clh_OriginalValue" xml:space="preserve">
+    <value>原始（已保存）的值</value>
+  </data>
+  <data name="clh_TargetPointName" xml:space="preserve">
+    <value>那么</value>
+  </data>
+  <data name="clh_TargetPointNameCustomCityLogic" xml:space="preserve">
+    <value>读取城市来源</value>
+  </data>
+  <data name="clh_TargetPointOutcome" xml:space="preserve">
+    <value>变为</value>
+  </data>
+  <data name="clh_TargetPointOutcomeCustom" xml:space="preserve">
+    <value>自定义结果</value>
+  </data>
+  <data name="cmi_OpenCoordsInAPI" xml:space="preserve">
+    <value>在 API 中打开坐标</value>
+  </data>
+  <data name="cmi_RemoveCachedData" xml:space="preserve">
+    <value>移除缓存数据</value>
+  </data>
+  <data name="cmi_ShowHideCols" xml:space="preserve">
+    <value>显示或隐藏列</value>
+  </data>
+  <data name="fbd_StartupFolder" xml:space="preserve">
+    <value>浏览启动文件夹</value>
+  </data>
+  <data name="frm_FrmEditFileData" xml:space="preserve">
+    <value>编辑数据</value>
+  </data>
+  <data name="frm_FrmImportExportGpx" xml:space="preserve">
+    <value>导入 GPX/JSON 数据</value>
+  </data>
+  <data name="frm_FrmManageFavourites" xml:space="preserve">
+    <value>管理收藏</value>
+  </data>
+  <data name="frm_FrmPasteWhat" xml:space="preserve">
+    <value>粘贴…什么？</value>
+  </data>
+  <data name="frm_FrmPickDataFromAPIBox" xml:space="preserve">
+    <value>选择地名值</value>
+  </data>
+  <data name="frm_FrmPleaseWaitBox" xml:space="preserve">
+    <value>请稍候，正在加载文件夹。</value>
+  </data>
+  <data name="frm_FrmSettings" xml:space="preserve">
+    <value>设置</value>
+  </data>
+  <data name="gbx_AppSettings" xml:space="preserve">
+    <value>应用设置</value>
+  </data>
+  <data name="gbx_CreateDate" xml:space="preserve">
+    <value>创建日期</value>
+  </data>
+  <data name="gbx_Dates" xml:space="preserve">
+    <value>日期</value>
+  </data>
+  <data name="gbx_EditImageList" xml:space="preserve">
+    <value>选中用于编辑的图像</value>
+  </data>
+  <data name="gbx_GeoNamesLanguageSettings" xml:space="preserve">
+    <value>GeoNames 语言设置</value>
+  </data>
+  <data name="gbx_GeoNamesSettings" xml:space="preserve">
+    <value>GeoNames 设置</value>
+  </data>
+  <data name="gbx_GetAltitude" xml:space="preserve">
+    <value>获取海拔数据</value>
+  </data>
+  <data name="gbx_GetToponomy" xml:space="preserve">
+    <value>获取地名数据</value>
+  </data>
+  <data name="gbx_GPSData" xml:space="preserve">
+    <value>GPS 数据</value>
+  </data>
+  <data name="gbx_ImportExportGpxSource" xml:space="preserve">
+    <value>来源</value>
+  </data>
+  <data name="gbx_ImportExportGpxTimeSetting" xml:space="preserve">
+    <value>时间设置</value>
+  </data>
+  <data name="gbx_LocationData" xml:space="preserve">
+    <value>位置数据</value>
+  </data>
+  <data name="gbx_MapColourMode" xml:space="preserve">
+    <value>地图配色模式</value>
+  </data>
+  <data name="gbx_OtherSettings" xml:space="preserve">
+    <value>其他设置</value>
+  </data>
+  <data name="gbx_SaveTrackTo" xml:space="preserve">
+    <value>保存轨迹（选项）</value>
+  </data>
+  <data name="gbx_TakenDate" xml:space="preserve">
+    <value>拍摄日期</value>
+  </data>
+  <data name="Generic_All" xml:space="preserve">
+    <value>全部</value>
+  </data>
+  <data name="Generic_Cancel" xml:space="preserve">
+    <value>取消</value>
+  </data>
+  <data name="Generic_City" xml:space="preserve">
+    <value>城市</value>
+  </data>
+  <data name="Generic_Close" xml:space="preserve">
+    <value>关闭</value>
+  </data>
+  <data name="Generic_Coordinates" xml:space="preserve">
+    <value>坐标</value>
+  </data>
+  <data name="Generic_Country" xml:space="preserve">
+    <value>国家</value>
+  </data>
+  <data name="Generic_CountryCode" xml:space="preserve">
+    <value>国家代码</value>
+  </data>
+  <data name="Generic_CreateDate" xml:space="preserve">
+    <value>创建日期</value>
+  </data>
+  <data name="Generic_Days" xml:space="preserve">
+    <value>天</value>
+  </data>
+  <data name="Generic_Decimal" xml:space="preserve">
+    <value>十进制</value>
+  </data>
+  <data name="Generic_Delete" xml:space="preserve">
+    <value>删除</value>
+  </data>
+  <data name="Generic_DestCoordinates" xml:space="preserve">
+    <value>目标坐标</value>
+  </data>
+  <data name="Generic_Export" xml:space="preserve">
+    <value>导出</value>
+  </data>
+  <data name="Generic_ExportTrackTimeStampType" xml:space="preserve">
+    <value>时间戳值</value>
+  </data>
+  <data name="Generic_ExposureTime" xml:space="preserve">
+    <value>曝光时间</value>
+  </data>
+  <data name="Generic_Favourites" xml:space="preserve">
+    <value>收藏</value>
+  </data>
+  <data name="Generic_Feet" xml:space="preserve">
+    <value>英尺</value>
+  </data>
+  <data name="Generic_Feet_Abbr" xml:space="preserve">
+    <value>英尺</value>
+  </data>
+  <data name="Generic_FileModifyDate" xml:space="preserve">
+    <value>文件日期</value>
+  </data>
+  <data name="Generic_FileName" xml:space="preserve">
+    <value>文件名</value>
+  </data>
+  <data name="Generic_Fnumber" xml:space="preserve">
+    <value>光圈</value>
+  </data>
+  <data name="Generic_FocalLength" xml:space="preserve">
+    <value>焦距</value>
+  </data>
+  <data name="Generic_FocalLengthIn35mmFormat" xml:space="preserve">
+    <value>焦距（35mm 等效）</value>
+  </data>
+  <data name="Generic_ForAllImages" xml:space="preserve">
+    <value>应用于所有图像</value>
+  </data>
+  <data name="Generic_ForThisImage" xml:space="preserve">
+    <value>应用于此图像</value>
+  </data>
+  <data name="Generic_GPSAltitude" xml:space="preserve">
+    <value>海拔</value>
+  </data>
+  <data name="Generic_GPSAltitudeRef" xml:space="preserve">
+    <value>海拔参考</value>
+  </data>
+  <data name="Generic_GPSDateTime" xml:space="preserve">
+    <value>GPS 日期时间</value>
+  </data>
+  <data name="Generic_GPSDestLatitude" xml:space="preserve">
+    <value>目标纬度</value>
+  </data>
+  <data name="Generic_GPSDestLatitudeRef" xml:space="preserve">
+    <value>目标纬度参考</value>
+  </data>
+  <data name="Generic_GPSDestLongitude" xml:space="preserve">
+    <value>目标经度</value>
+  </data>
+  <data name="Generic_GPSDestLongitudeRef" xml:space="preserve">
+    <value>目标经度参考</value>
+  </data>
+  <data name="Generic_GPSImgDirection" xml:space="preserve">
+    <value>图像方向</value>
+  </data>
+  <data name="Generic_GPSImgDirectionRef" xml:space="preserve">
+    <value>图像方向参考</value>
+  </data>
+  <data name="Generic_GPSLatitude" xml:space="preserve">
+    <value>纬度</value>
+  </data>
+  <data name="Generic_GPSLatitudeRef" xml:space="preserve">
+    <value>纬度参考</value>
+  </data>
+  <data name="Generic_GPSLongitude" xml:space="preserve">
+    <value>经度</value>
+  </data>
+  <data name="Generic_GPSLongitudeRef" xml:space="preserve">
+    <value>经度参考</value>
+  </data>
+  <data name="Generic_GPSSpeed" xml:space="preserve">
+    <value>速度</value>
+  </data>
+  <data name="Generic_GPSSpeedRef" xml:space="preserve">
+    <value>速度参考</value>
+  </data>
+  <data name="Generic_GUID" xml:space="preserve">
+    <value>GUID</value>
+  </data>
+  <data name="Generic_Hours" xml:space="preserve">
+    <value>小时</value>
+  </data>
+  <data name="Generic_Import" xml:space="preserve">
+    <value>导入</value>
+  </data>
+  <data name="Generic_Insert" xml:space="preserve">
+    <value>插入</value>
+  </data>
+  <data name="Generic_IPTCKeywords" xml:space="preserve">
+    <value>IPTC 关键词</value>
+  </data>
+  <data name="Generic_ISO" xml:space="preserve">
+    <value>ISO 感光度</value>
+  </data>
+  <data name="Generic_LensSpec" xml:space="preserve">
+    <value>镜头</value>
+  </data>
+  <data name="Generic_Make" xml:space="preserve">
+    <value>制造商</value>
+  </data>
+  <data name="Generic_Metres" xml:space="preserve">
+    <value>米</value>
+  </data>
+  <data name="Generic_Metres_Abbr" xml:space="preserve">
+    <value>米</value>
+  </data>
+  <data name="Generic_Miles" xml:space="preserve">
+    <value>英里</value>
+  </data>
+  <data name="Generic_Minutes" xml:space="preserve">
+    <value>分钟</value>
+  </data>
+  <data name="Generic_Model" xml:space="preserve">
+    <value>型号</value>
+  </data>
+  <data name="Generic_No" xml:space="preserve">
+    <value>否</value>
+  </data>
+  <data name="Generic_None" xml:space="preserve">
+    <value>无</value>
+  </data>
+  <data name="Generic_OffsetTime" xml:space="preserve">
+    <value>时区偏移</value>
+  </data>
+  <data name="Generic_OK" xml:space="preserve">
+    <value>确定</value>
+  </data>
+  <data name="Generic_PleaseWait" xml:space="preserve">
+    <value>请稍候…</value>
+  </data>
+  <data name="Generic_QuestionDontAskAgain" xml:space="preserve">
+    <value>不再询问</value>
+  </data>
+  <data name="Generic_Rating" xml:space="preserve">
+    <value>评分</value>
+  </data>
+  <data name="Generic_Rename" xml:space="preserve">
+    <value>重命名</value>
+  </data>
+  <data name="Generic_Save" xml:space="preserve">
+    <value>保存当前更改</value>
+  </data>
+  <data name="Generic_Seconds" xml:space="preserve">
+    <value>秒</value>
+  </data>
+  <data name="Generic_ShowPassword" xml:space="preserve">
+    <value>显示密码</value>
+  </data>
+  <data name="Generic_State" xml:space="preserve">
+    <value>州/省</value>
+  </data>
+  <data name="Generic_Sublocation" xml:space="preserve">
+    <value>子位置</value>
+  </data>
+  <data name="Generic_TakenDate" xml:space="preserve">
+    <value>拍摄日期</value>
+  </data>
+  <data name="Generic_TZTime" xml:space="preserve">
+    <value>时区调整：</value>
+  </data>
+  <data name="Generic_UseDST" xml:space="preserve">
+    <value>使用夏令时？</value>
+  </data>
+  <data name="Generic_XMLSubjects" xml:space="preserve">
+    <value>XML 主题</value>
+  </data>
+  <data name="Generic_Yes" xml:space="preserve">
+    <value>是</value>
+  </data>
+  <data name="lbl_ARCGIS_APIKey" xml:space="preserve">
+    <value>ARCGIS API 密钥</value>
+  </data>
+  <data name="lbl_CameraTime" xml:space="preserve">
+    <value>相机日期/时间</value>
+  </data>
+  <data name="lbl_CameraTimeNote" xml:space="preserve">
+    <value>注意：仅当图像时间戳与 GPS 时间未正确同步时，才需要时间偏移。除非必要，请保持为 0 秒。</value>
+  </data>
+  <data name="lbl_CancelPressed" xml:space="preserve">
+    <value>已按取消。文件夹解析已停止，但已收集的文件仍会被解析。</value>
+  </data>
+  <data name="lbl_ChoiceOfferCount" xml:space="preserve">
+    <value>显示的地名选项数量</value>
+  </data>
+  <data name="lbl_ChoiceRadius" xml:space="preserve">
+    <value>半径范围内 [公里]</value>
+  </data>
+  <data name="lbl_ExportTrackOrderBy" xml:space="preserve">
+    <value>按以下方式排序轨迹点</value>
+  </data>
+  <data name="lbl_ExportTrackTimeStampType" xml:space="preserve">
+    <value>时间戳值</value>
+  </data>
+  <data name="lbl_ExportTrackTimeStampTypeNote" xml:space="preserve">
+    <value>如果选择 GPSDateTime，而你的文件没有该属性，导出将会失败。
+部分 HEIC 文件有该属性，但大多数其他格式没有。</value>
+  </data>
+  <data name="lbl_GeoMaxExtSecs" xml:space="preserve">
+    <value>最大外推时间（拍摄时间戳与轨迹点时间戳之间的时间差），单位为秒。</value>
+  </data>
+  <data name="lbl_GeoMaxIntSecs" xml:space="preserve">
+    <value>最大内插（“路径猜测”）时间，单位为秒。设为 0 可禁用。</value>
+  </data>
+  <data name="lbl_GeoNames_Pwd" xml:space="preserve">
+    <value>GeoNames 密码</value>
+  </data>
+  <data name="lbl_GeoNames_UserName" xml:space="preserve">
+    <value>GeoNames 用户名</value>
+  </data>
+  <data name="lbl_importFromAnotherFolder" xml:space="preserve">
+    <value>&lt;-- 点击此处设置导入来源文件夹</value>
+  </data>
+  <data name="lbl_importOneFile" xml:space="preserve">
+    <value>&lt;-- 点击此处设置导入来源文件</value>
+  </data>
+  <data name="lbl_ImportTimeAgainst" xml:space="preserve">
+    <value>将轨迹文件中的时间戳与以下项比较：</value>
+  </data>
+  <data name="lbl_Language" xml:space="preserve">
+    <value>语言</value>
+  </data>
+  <data name="lbl_OffsetTime" xml:space="preserve">
+    <value>时区</value>
+  </data>
+  <data name="lbl_ParseProgress_Normal" xml:space="preserve">
+    <value>就绪</value>
+  </data>
+  <data name="lbl_ParseProgress_Read" xml:space="preserve">
+    <value>正在读取：</value>
+  </data>
+  <data name="lbl_ParseProgress_Write" xml:space="preserve">
+    <value>正在写入：</value>
+  </data>
+  <data name="lbl_ParsingFolders" xml:space="preserve">
+    <value>正在解析文件和文件夹，请稍候。 </value>
+  </data>
+  <data name="lbl_PleaseWaitBoxActionParsing" xml:space="preserve">
+    <value>正在解析数据：</value>
+  </data>
+  <data name="lbl_PleaseWaitBoxActionPopulatingListView" xml:space="preserve">
+    <value>正在填充主网格（ListView）</value>
+  </data>
+  <data name="lbl_PleaseWaitBoxActionScanning" xml:space="preserve">
+    <value>正在扫描文件：</value>
+  </data>
+  <data name="lbl_PressCancelToStop" xml:space="preserve">
+    <value>按“取消”停止。</value>
+  </data>
+  <data name="lbl_QuestionAddToponomy" xml:space="preserve">
+    <value>是否还要同时分配海拔和地名值？
+如果选择“否”，你的经纬度数据可能会与已嵌入的地名数据不同步。
+如果点击“不再询问”，则会把答案视为“是”，且本次会话中不再询问。重启后可重置。</value>
+  </data>
+  <data name="lbl_SaveTrackTo" xml:space="preserve">
+    <value>输出保存到</value>
+  </data>
+  <data name="lbl_SelectColsTitle" xml:space="preserve">
+    <value>选择列</value>
+  </data>
+  <data name="lbl_ShiftTrackTimeBy" xml:space="preserve">
+    <value>将轨迹文件时间偏移：</value>
+  </data>
+  <data name="gbx_Startup_Folder" xml:space="preserve">
+    <value>启动文件夹</value>
+  </data>
+  <data name="lbl_TZNote" xml:space="preserve">
+    <value>注意：如果日期/时间标签不含时区，可以添加一个（见下方），否则将假定为本地系统时间。</value>
+  </data>
+  <data name="lbl_TZTime" xml:space="preserve">
+    <value>时区调整：</value>
+  </data>
+  <data name="mbc_Error" xml:space="preserve">
+    <value>错误</value>
+  </data>
+  <data name="mbc_Information" xml:space="preserve">
+    <value>信息</value>
+  </data>
+  <data name="mbc_Question" xml:space="preserve">
+    <value>问题</value>
+  </data>
+  <data name="mbc_Warning" xml:space="preserve">
+    <value>警告</value>
+  </data>
+  <data name="mbx_DirectoryElementCollection_ErrorParsing" xml:space="preserve">
+    <value>解析文件夹为 DirectoryElements 时出错</value>
+  </data>
+  <data name="mbx_FrmEditFileData_ErrorAPIError" xml:space="preserve">
+    <value>应用在与 API 通信时遇到错误。如果出现“未授权”错误，请在设置中设置用户名和密码。</value>
+  </data>
+  <data name="mbx_FrmEditFileData_ErrorInvalidSender" xml:space="preserve">
+    <value>这可能是一个程序错误。请在 GitHub 上提交 issue，并说明“sender”为： </value>
+  </data>
+  <data name="mbx_FrmEditFileData_InfoDataUpdated" xml:space="preserve">
+    <value>数据已更新。</value>
+  </data>
+  <data name="mbx_FrmEditFileData_WarningFileDisappeared" xml:space="preserve">
+    <value>你的文件似乎消失了。</value>
+  </data>
+  <data name="mbx_FrmEditFileData_WarningLatLongMustBeNumbers" xml:space="preserve">
+    <value>这里只能包含数字。将默认为零。</value>
+  </data>
+  <data name="mbx_FrmImportExportGpx_AskUserWantsReport" xml:space="preserve">
+    <value>是否查看导入过程的报告？</value>
+  </data>
+  <data name="mbx_FrmImportExportGpx_FileOrFolderDoesntExist" xml:space="preserve">
+    <value>你选择的文件或文件夹无效。</value>
+  </data>
+  <data name="mbx_FrmImportExportGpx_NoFileSelected" xml:space="preserve">
+    <value>没有选择要导入的文件。</value>
+  </data>
+  <data name="mbx_FrmImportExportGpx_TrackContainsNoData" xml:space="preserve">
+    <value>导入轨迹叠加失败 - 未找到看起来相关的数据。</value>
+  </data>
+  <data name="mbx_FrmImportNoStoredShiftValues" xml:space="preserve">
+    <value>没有存储“偏移”值。数据将保持为 0。</value>
+  </data>
+  <data name="mbx_FrmMainApp_ErrorCantCreateSQLiteDB" xml:space="preserve">
+    <value>无法创建 SQLite 数据库（请在 GitHub 上提交 issue）： </value>
+  </data>
+  <data name="mbx_FrmMainApp_ErrorCantLoadSQLiteDB" xml:space="preserve">
+    <value>从 SQL 加载数据失败（请在 GitHub 上提交 issue）： </value>
+  </data>
+  <data name="mbx_FrmMainApp_ErrorCantLoadWebView2" xml:space="preserve">
+    <value>加载 WebView2 出错 - 你是否已安装它？</value>
+  </data>
+  <data name="mbx_FrmMainApp_ErrorCantReadDefaultSQLiteDB" xml:space="preserve">
+    <value>从 SQL 读取默认值失败（请在 GitHub 上提交 issue）： </value>
+  </data>
+  <data name="mbx_FrmMainApp_ErrorCantWriteSQLiteDB" xml:space="preserve">
+    <value>已创建但无法写入 SQLite 数据库（请在 GitHub 上提交 issue）： </value>
+  </data>
+  <data name="mbx_FrmMainApp_ErrorClearingFileDataQTables" xml:space="preserve">
+    <value>清空 filedata-Q 表时出错（请在 GitHub 上提交 issue）： </value>
+  </data>
+  <data name="mbx_FrmMainApp_ErrorDoubleBuffer" xml:space="preserve">
+    <value>DoubleBuffer 错误（请在 GitHub 上提交 issue）： </value>
+  </data>
+  <data name="mbx_FrmMainApp_ErrorFileGoneMissing" xml:space="preserve">
+    <value>文件似乎已不存在： </value>
+  </data>
+  <data name="mbx_FrmMainApp_ErrorInitializeComponent" xml:space="preserve">
+    <value>FrmMainApp.InitializeComponent 出错（请在 GitHub 上提交 issue）： </value>
+  </data>
+  <data name="mbx_FrmMainApp_ErrorInitializeWebViewEnsureCoreWebView2Async" xml:space="preserve">
+    <value>FrmMainApp.InitialiseWebView 出错（await wbv_MapArea.EnsureCoreWebView2Async(c2wv)）（请在 GitHub 上提交 issue）： </value>
+  </data>
+  <data name="mbx_FrmMainApp_ErrorInitializeWebViewIsWebMessageEnabled" xml:space="preserve">
+    <value>FrmMainApp.InitialiseWebView 出错（IsWebMessageEnabled）（请在 GitHub 上提交 issue）： </value>
+  </data>
+  <data name="mbx_FrmMainApp_ErrorInitializeWebViewNavigateToStringInHTMLFile" xml:space="preserve">
+    <value>FrmMainApp.InitialiseWebView 出错（HTMLCode 文件中的 NavigateToString）（请在 GitHub 上提交 issue）： </value>
+  </data>
+  <data name="mbx_FrmMainApp_ErrorInitializeWebViewParseCoordsFromHTMLFile" xml:space="preserve">
+    <value>FrmMainApp.InitialiseWebView 出错（从 HTMLCode 文件解析坐标）（请在 GitHub 上提交 issue）： </value>
+  </data>
+  <data name="mbx_FrmMainApp_ErrorInitializeWebViewReadHTMLFile" xml:space="preserve">
+    <value>FrmMainApp.InitialiseWebView 出错（读取 HTMLCode 文件）（请在 GitHub 上提交 issue）： </value>
+  </data>
+  <data name="mbx_FrmMainApp_ErrorInitializeWebViewReplaceStringInHTMLFile" xml:space="preserve">
+    <value>FrmMainApp.InitialiseWebView 出错（在 HTMLCode 文件中替换常量）（请在 GitHub 上提交 issue）： </value>
+  </data>
+  <data name="mbx_FrmMainApp_ErrorInitializeWebViewWebMessageReceived" xml:space="preserve">
+    <value>执行 wbv_MapArea_WebMessageReceived 时出错（请在 GitHub 上提交 issue）： </value>
+  </data>
+  <data name="mbx_FrmMainApp_ErrorInvalidFolder" xml:space="preserve">
+    <value>你输入的文件夹似乎无效。是否回退到 C:\？</value>
+  </data>
+  <data name="mbx_FrmMainApp_ErrorLanguageFileColumnHeaders" xml:space="preserve">
+    <value>读取语言文件并分配列标题时出错（请在 GitHub 上提交 issue）： </value>
+  </data>
+  <data name="mbx_FrmMainApp_ErrorNavigateMapGoHTMLCode" xml:space="preserve">
+    <value>FrmMainApp.NavigateMapGo 出错（字符串 HTMLCode）（请在 GitHub 上提交 issue）： </value>
+  </data>
+  <data name="mbx_FrmMainApp_ErrorRemoveGeoDataFailed" xml:space="preserve">
+    <value>移除地理数据过程失败/返回错误。</value>
+  </data>
+  <data name="mbx_FrmMainApp_ErrorResizingColumns" xml:space="preserve">
+    <value>调整列宽失败（请在 GitHub 上提交 issue）： </value>
+  </data>
+  <data name="mbx_FrmMainApp_ErrorSettingStartupFolder" xml:space="preserve">
+    <value>设置默认启动文件夹失败（请在 GitHub 上提交 issue）： </value>
+  </data>
+  <data name="mbx_FrmMainApp_InfoCachedDataNotRemoved" xml:space="preserve">
+    <value>没有移除任何数据。要么你没有选择有效项目，要么所选项目没有缓存数据。</value>
+  </data>
+  <data name="mbx_FrmMainApp_InfoCachedDataRemoved" xml:space="preserve">
+    <value>所选项目的缓存数据（如果存在）已移除。</value>
+  </data>
+  <data name="mbx_FrmMainApp_InfoFavouriteNameCannotBeBlank" xml:space="preserve">
+    <value>名称不能为空/空白</value>
+  </data>
+  <data name="mbx_FrmMainApp_InfoFavouriteNotValid" xml:space="preserve">
+    <value>你选择的已保存项目无效</value>
+  </data>
+  <data name="mbx_FrmMainApp_InfoFavouriteSaved" xml:space="preserve">
+    <value>收藏已成功保存</value>
+  </data>
+  <data name="mbx_FrmMainApp_NoFavouritesDefined" xml:space="preserve">
+    <value>你还没有定义任何收藏。请使用地图下方的按钮添加。</value>
+  </data>
+  <data name="mbx_FrmMainApp_QuestionAddDraggedDataPointToFiles" xml:space="preserve">
+    <value>是否将坐标分配给所选文件？</value>
+  </data>
+  <data name="mbx_FrmMainApp_QuestionDisableFlatMode" xml:space="preserve">
+    <value>扁平模式已开启。是否关闭？</value>
+  </data>
+  <data name="mbx_FrmMainApp_QuestionNoRowsFromAPI" xml:space="preserve">
+    <value>API 查询未返回任何有效信息。是否清空地名值？</value>
+  </data>
+  <data name="mbx_FrmMainApp_QuestionRunImportExportInFlatMode" xml:space="preserve">
+    <value>在扁平模式下运行轨迹导入/导出并不理想，因为轨迹交互使用特殊逻辑，无法区分不同文件夹中可能同名的文件。确定要运行吗？</value>
+  </data>
+  <data name="mbx_FrmMainApp_WarningMultipleImageFilesForXMP" xml:space="preserve">
+    <value>警告：以下 sidecar 文件与多个图像文件同名 - 数据可能已被误读：</value>
+  </data>
+  <data name="mbx_FrmMainApp_WarningNoItemSelected" xml:space="preserve">
+    <value>未选择任何项目。</value>
+  </data>
+  <data name="mbx_FrmMainApp_WarningTooManyFilesSelected" xml:space="preserve">
+    <value>必须且只能选择一个文件。</value>
+  </data>
+  <data name="mbx_FrmPasteWhat_NoDateShiftToPaste" xml:space="preserve">
+    <value>复制池中没有为日期时间偏移指定值</value>
+  </data>
+  <data name="mbx_FrmSettings_dgv_CustomRules_ColumnCannotBeEmpty" xml:space="preserve">
+    <value>所有下拉列都必须有非空值，并且“如果”条件值也不能为空。</value>
+  </data>
+  <data name="mbx_FrmSettings_dgv_CustomRules_CustomOutcomeCannotBeEmpty" xml:space="preserve">
+    <value>如果为“结果”选择了“自定义”，则“自定义结果”列不能为空。如果关闭设置窗体时仍未修正，该行将被删除。</value>
+  </data>
+  <data name="mbx_FrmSettings_ErrorExportFailed" xml:space="preserve">
+    <value>导出失败： </value>
+  </data>
+  <data name="mbx_FrmSettings_ErrorImportFailed" xml:space="preserve">
+    <value>导入失败： </value>
+  </data>
+  <data name="mbx_FrmSettings_PleaseRestartApp" xml:space="preserve">
+    <value>请重启应用以使更改生效。</value>
+  </data>
+  <data name="mbx_FrmSettings_QuestionWhatToExport" xml:space="preserve">
+    <value>选择要导出的内容。请注意，导出功能导出的是数据库_中_的数据，也就是已保存的数据。如果你在设置中有未保存的更改，请先退出并保存（在设置窗体中点击确定），然后再回来。</value>
+  </data>
+  <data name="mbx_FrmSettings_QuestionWhatToImport" xml:space="preserve">
+    <value>选择要导入的内容。请注意，导入过程成功完成后，数据库的相关部分将被覆盖。如果出现问题，你的 AppData 文件夹中会保留数据库的备份文件。</value>
+  </data>
+  <data name="Generic_Done" xml:space="preserve">
+    <value>完成。</value>
+  </data>
+  <data name="mbx_GenericDoneRestartApp" xml:space="preserve">
+    <value>完成 - 你可能需要重启应用。</value>
+  </data>
+  <data name="mbx_GenericPathLikelyUTF" xml:space="preserve">
+    <value>文件路径可能包含 UTF（非标准，如亚洲、西里尔等）字符，这可能导致错误。请确保已启用“使用 Unicode UTF-8 提供全球语言支持”功能。（请参阅 Readme 中的“已知问题”）</value>
+  </data>
+  <data name="mbx_HelperStaticExifNoAPI" xml:space="preserve">
+    <value>无法连接到 API - 你是否可能处于离线状态？</value>
+  </data>
+  <data name="mbx_Helper_ErrorAsyncExifToolExecuteAsyncFailed" xml:space="preserve">
+    <value>asyncExifTool.ExecuteAsync 失败（请在 GitHub 上提交 issue）： </value>
+  </data>
+  <data name="mbx_Helper_ErrorCantReadDefaultSQLiteDB" xml:space="preserve">
+    <value>从 SQL 读取默认值失败（请在 GitHub 上提交 issue）： </value>
+  </data>
+  <data name="mbx_Helper_QuestionFileQIsNotEmpty" xml:space="preserve">
+    <value>一些数据已更改 - 是否保存？
+如果点击“否”，数据将被丢弃</value>
+  </data>
+  <data name="mbx_Helper_WarningExifToolVerAPIResponse" xml:space="preserve">
+    <value>ExifToolVerAPIResponse API 返回了以下响应： </value>
+  </data>
+  <data name="mbx_Helper_WarningFileDisappeared" xml:space="preserve">
+    <value>你的文件似乎消失了。</value>
+  </data>
+  <data name="mbx_Helper_WarningGeoNamesAPIResponse" xml:space="preserve">
+    <value>GeoNames API 返回了以下响应： </value>
+  </data>
+  <data name="mbx_Helper_WarningGTNVerAPIResponse" xml:space="preserve">
+    <value>GitHub API 返回了以下响应： </value>
+  </data>
+  <data name="mbx_Helper_WarningNoARCGISKey" xml:space="preserve">
+    <value>你需要在设置中提供 ArcGIS API 密钥，应用才能正常工作。</value>
+  </data>
+  <data name="mbx_Helper_WarningNothingInWriteQueue" xml:space="preserve">
+    <value>你的写入队列中没有任何内容。</value>
+  </data>
+  <data name="mbx_Helper_WarningNothingToPaste" xml:space="preserve">
+    <value>没有可粘贴的内容。</value>
+  </data>
+  <data name="mbx_Helper_WarningNoWriteSettingEnabled" xml:space="preserve">
+    <value>你已同时禁用了对原始文件的处理_和_ Sidecar XMP 的写入，因此没有可写入的目标。</value>
+  </data>
+  <data name="mbx_Helper_WarningTooManyFilesSelected" xml:space="preserve">
+    <value>仅当你且只选择一个文件时，此操作才有效。</value>
+  </data>
+  <data name="mns_File" xml:space="preserve">
+    <value>文件</value>
+  </data>
+  <data name="mns_Help" xml:space="preserve">
+    <value>帮助</value>
+  </data>
+  <data name="mns_Settings" xml:space="preserve">
+    <value>设置</value>
+  </data>
+  <data name="pbx_Browse_Startup_Folder" xml:space="preserve">
+    <value>浏览启动文件夹</value>
+  </data>
+  <data name="pbx_imagePreviewCouldNotRetrieve" xml:space="preserve">
+    <value>无法获取/生成图像预览</value>
+  </data>
+  <data name="pbx_imagePreviewEmptyText" xml:space="preserve">
+    <value>没有可显示的图像</value>
+  </data>
+  <data name="pbx_importFromAnotherFolder" xml:space="preserve">
+    <value>浏览轨迹文件夹</value>
+  </data>
+  <data name="pbx_importOneFile" xml:space="preserve">
+    <value>浏览轨迹文件</value>
+  </data>
+  <data name="rbt_CreateDateSetToFixedDate" xml:space="preserve">
+    <value>设为固定日期</value>
+  </data>
+  <data name="rbt_CreateDateTimeShift" xml:space="preserve">
+    <value>时间偏移</value>
+  </data>
+  <data name="rbt_importFromAnotherFolder" xml:space="preserve">
+    <value>从另一个文件夹导入</value>
+  </data>
+  <data name="rbt_importFromCurrentFolder" xml:space="preserve">
+    <value>从当前文件夹导入</value>
+  </data>
+  <data name="rbt_importOneFile" xml:space="preserve">
+    <value>从选定文件导入</value>
+  </data>
+  <data name="rbt_MapColourModeDarkInverse" xml:space="preserve">
+    <value>深色（反色）</value>
+  </data>
+  <data name="rbt_MapColourModeDarkPale" xml:space="preserve">
+    <value>深色（浅淡）</value>
+  </data>
+  <data name="rbt_MapColourModeNormal" xml:space="preserve">
+    <value>正常</value>
+  </data>
+  <data name="rbt_PasteCreateDateActual" xml:space="preserve">
+    <value>实际值（固定值）</value>
+  </data>
+  <data name="rbt_PasteCreateDateShift" xml:space="preserve">
+    <value>时间偏移</value>
+  </data>
+  <data name="rbt_PasteTakenDateActual" xml:space="preserve">
+    <value>实际值（固定值）</value>
+  </data>
+  <data name="rbt_PasteTakenDateShift" xml:space="preserve">
+    <value>时间偏移</value>
+  </data>
+  <data name="rbt_TakenDateSetToFixedDate" xml:space="preserve">
+    <value>设为固定日期</value>
+  </data>
+  <data name="rbt_TakenDateTimeShift" xml:space="preserve">
+    <value>时间偏移</value>
+  </data>
+  <data name="rbt_TryUseGeoNamesLanguage" xml:space="preserve">
+    <value>获取位置名称时尝试使用此语言：</value>
+  </data>
+  <data name="rbt_UseGeoNamesLocalLanguage" xml:space="preserve">
+    <value>获取位置名称时尝试使用“本地语言”</value>
+  </data>
+  <data name="rbx_CustomCityLogicExplanation" xml:space="preserve">
+    <value>这是一项高级功能。AdminName1-4 和 ToponymName 指代 API 输出，因此如果你不理解这些，可能最好不要改动。
+有关整体说明，请查看：https://github.com/nemethviktor/GeoTagNinja/issues/38#issuecomment-1356844255。
+此设置的作用是，你可以添加自己选择的国家，从而从某个特定的 AdminName 中获取“城市”值。</value>
+  </data>
+  <data name="rbx_CustomCityLogicExplanationBold" xml:space="preserve">
+    <value>请注意，对下方表格的更改会立即生效，而“确定/取消”按钮本身对它们没有影响。如果要在本次会话中拉取数据，你还需要右键点击并选择“重置缓存数据”来刷新可能受更改影响的文件（或者直接重启应用）。</value>
+  </data>
+  <data name="rbx_CustomRulesExplanation" xml:space="preserve">
+    <value>这是一项高级功能。AdminName1-4 和 ToponymName 指代 API 输出，因此如果你不理解这些，可能最好不要改动。
+关于“预定国家”（下方复选框）：请在这里阅读：https://github.com/nemethviktor/GeoTagNinja/issues/38#issuecomment-1356844255，并查看另一个选项卡 - 注意，如果禁用该设置，它会清空不属于相关分组的 CountryCode 单元格，但不会真正删除这些行。
+除“自定义”外，所有列都是必填的；但如果将“结果”设为“自定义”且“自定义”列为空，该行将被忽略。数据不区分大小写。对于每个数据点（如城市、州），最后一行的值会覆盖前面的行。基本要合理使用。添加的行越多，速度越慢。
+示例：API 对英国伦敦返回的默认数据不佳，因为该特定区域的 adminName2 为“Greater London”，它会被丢弃（城市通常来自“ToponymName”）。-&gt; 设置：“什么”=“adminName2”，“如果”=“是”，“条件值”=“Greater London”，“那么”=“城市”，“变为”=“adminName2”。在第二行重复整组设置，但“那么”=“Sub_Location”，“变为”=“ToponymName”。</value>
+  </data>
+  <data name="rbx_CustomRulesExplanationBold" xml:space="preserve">
+    <value>请注意，对下方表格的更改会立即生效，而“确定/取消”按钮本身对它们没有影响。如果要在本次会话中拉取数据，你还需要右键点击并选择“重置缓存数据”来刷新可能受更改影响的文件（或者直接重启应用）。</value>
+  </data>
+  <data name="rbx_Register_ArcGIS" xml:space="preserve">
+    <value>要使用地图搜索功能，你需要 ArcGIS API 密钥。
+ArcGIS 自 2024 年 6 月起更改了注册流程。请在[此处](https://location.arcgis.com/sign-up/)注册。
+现在你需要指定一个门户 URL，随便输入任何内容即可。
+滚动/转到 `Developer credential creator`
+然后 `New Item`
+然后 `Developer Credentials`
+选择 `API Key`（不是 OAuth）
+将过期日期设为尽可能远的未来（1 年）
+将 `Referrers` 留空
+在下一页选择 `Geocoding (not stored)`
+在下一页跳过 `Item Access`
+在下一页添加任意标题
+最后点击 `Generate the API key and go to item details page. I am ready to copy and save the key.`
+出现提示时保存 API 密钥。如果不及时保存，你将需要重新生成一个。</value>
+  </data>
+  <data name="rbx_Register_GeoNames" xml:space="preserve">
+    <value>要使用反向地理编码/搜索功能（经纬度 -&gt; 国家/城市/...），你需要 GeoNames 账户。请在此处注册：http://www.geonames.org/login，然后在 https://www.geonames.org/manageaccount 启用“Free Web Services”访问。</value>
+  </data>
+  <data name="tcr_EditData" xml:space="preserve">
+    <value>编辑数据</value>
+  </data>
+  <data name="tmi_File" xml:space="preserve">
+    <value>文件</value>
+  </data>
+  <data name="tmi_File_CopyGeoData" xml:space="preserve">
+    <value>复制所有地理数据</value>
+  </data>
+  <data name="tmi_File_EditFiles" xml:space="preserve">
+    <value>编辑文件...</value>
+  </data>
+  <data name="tmi_File_FlatMode" xml:space="preserve">
+    <value>扁平模式（解析子文件夹）</value>
+  </data>
+  <data name="tmi_File_ImportExportGPX" xml:space="preserve">
+    <value>导入/导出 GPX/JSON 轨迹文件...</value>
+  </data>
+  <data name="tmi_File_PasteGeoData" xml:space="preserve">
+    <value>粘贴所有地理数据...</value>
+  </data>
+  <data name="tmi_File_Quit" xml:space="preserve">
+    <value>退出</value>
+  </data>
+  <data name="tmi_File_SaveAll" xml:space="preserve">
+    <value>全部保存</value>
+  </data>
+  <data name="tmi_Help" xml:space="preserve">
+    <value>帮助</value>
+  </data>
+  <data name="tmi_Help_About" xml:space="preserve">
+    <value>关于...</value>
+  </data>
+  <data name="tmi_Help_BugReport" xml:space="preserve">
+    <value>提交错误报告（GitHub）</value>
+  </data>
+  <data name="tmi_Help_FeedbackFeatureRequest" xml:space="preserve">
+    <value>提交功能请求（GitHub）</value>
+  </data>
+  <data name="tmi_Settings" xml:space="preserve">
+    <value>设置</value>
+  </data>
+  <data name="tmi_Settings_Favourites" xml:space="preserve">
+    <value>管理收藏</value>
+  </data>
+  <data name="tmi_Settings_Settings" xml:space="preserve">
+    <value>设置</value>
+  </data>
+  <data name="tpg_Application" xml:space="preserve">
+    <value>应用</value>
+  </data>
+  <data name="tpg_CustomCityLogic" xml:space="preserve">
+    <value>自定义城市分配逻辑</value>
+  </data>
+  <data name="tpg_CustomRules" xml:space="preserve">
+    <value>自定义规则</value>
+  </data>
+  <data name="tpg_DateTime" xml:space="preserve">
+    <value>日期和时间</value>
+  </data>
+  <data name="tpg_Exif" xml:space="preserve">
+    <value>Exif</value>
+  </data>
+  <data name="tpg_FileOptions" xml:space="preserve">
+    <value>文件选项</value>
+  </data>
+  <data name="tpg_GeoNames" xml:space="preserve">
+    <value>GeoNames 设置</value>
+  </data>
+  <data name="tpg_ImportExport_Export" xml:space="preserve">
+    <value>导出轨迹</value>
+  </data>
+  <data name="tpg_ImportExport_Import" xml:space="preserve">
+    <value>导入轨迹</value>
+  </data>
+  <data name="tpg_Location" xml:space="preserve">
+    <value>位置</value>
+  </data>
+  <data name="tpg_Map" xml:space="preserve">
+    <value>地图</value>
+  </data>
+  <data name="tsb_BugReport" xml:space="preserve">
+    <value>提交错误报告（需要 GitHub 账户）</value>
+  </data>
+  <data name="tsb_EditFile" xml:space="preserve">
+    <value>编辑文件</value>
+  </data>
+  <data name="tsb_FeedbackFeatureRequest" xml:space="preserve">
+    <value>提交功能请求（需要 GitHub 账户）</value>
+  </data>
+  <data name="tsb_GetAllFromWeb" xml:space="preserve">
+    <value>获取所有选中文件的地名和海拔信息</value>
+  </data>
+  <data name="tsb_ImportExportGPX" xml:space="preserve">
+    <value>导入/导出 GPX/JSON 轨迹文件</value>
+  </data>
+  <data name="tsb_OneFolderUp" xml:space="preserve">
+    <value>父文件夹</value>
+  </data>
+  <data name="tsb_Refresh_lvwFileList" xml:space="preserve">
+    <value>刷新文件列表</value>
+  </data>
+  <data name="tsb_RemoveGeoData" xml:space="preserve">
+    <value>移除所有位置数据</value>
+  </data>
+  <data name="tsb_SaveFiles" xml:space="preserve">
+    <value>保存文件</value>
+  </data>
+  <data name="tsr_FolderControl" xml:space="preserve">
+    <value>文件夹控制</value>
+  </data>
+  <data name="tsr_MainAppToolStrip" xml:space="preserve">
+    <value>主</value>
+  </data>
+  <data name="ttp_GPSDataPaste" xml:space="preserve">
+    <value>按 CTRL+V 将一对有效小数粘贴到经纬度占位符。
+剪贴板应仅包含一对小数，最好采用“不变”（英语）格式，即整数-点-小数-逗号-整数-点-小数，例如 12.345, 56.897。
+不过代码_应该_能理解其他布局。注意，如果剪贴板包含上述内容以外的任何内容，操作将失败（不会发生任何事）。</value>
+  </data>
+  <data name="ttp_LoadFavourite" xml:space="preserve">
+    <value>从你的收藏中加载所选文件的元数据</value>
+  </data>
+  <data name="ttp_loctToFile" xml:space="preserve">
+    <value>将当前坐标保存到所选文件</value>
+  </data>
+  <data name="ttp_loctToFileDestination" xml:space="preserve">
+    <value>将当前坐标保存到所选文件的目标位置</value>
+  </data>
+  <data name="ttp_ManageFavourites" xml:space="preserve">
+    <value>管理收藏</value>
+  </data>
+  <data name="ttp_NavigateMapGo" xml:space="preserve">
+    <value>将所选文件的坐标放置到地图上</value>
+  </data>
+  <data name="ttp_OffsetTime" xml:space="preserve">
+    <value>无论存储的值是什么，时区在打开时都保持为空白。Exif 中没有时区标签，只有“偏移”，例如“+01:00”。由于无法单独判断时区或夏令时，我无法确定“+01:00”到底是 BST 还是 CET，其中一个是夏令时，另一个不是。请手动调整或从网络获取 - 坐标与创建日期的组合将明确告诉程序真实的时区值。只读文本框中的值将保存到文件中。</value>
+  </data>
+  <data name="ttp_SaveFavourite" xml:space="preserve">
+    <value>将当前所选文件的元数据保存（或覆盖）到你的收藏</value>
+  </data>
+  <data name="ckb_ImportExport_ApplicationSettings" xml:space="preserve">
+    <value>应用设置</value>
+  </data>
+  <data name="ckb_ImportExport_CustomRulesSettings" xml:space="preserve">
+    <value>自定义规则设置</value>
+  </data>
+  <data name="Generic_TimeZoneID" xml:space="preserve">
+    <value>时区 ID</value>
+  </data>
+  <data name="Generic_Distance" xml:space="preserve">
+    <value>距离</value>
+  </data>
+  <data name="cmi_OpenCoordsInBrowser" xml:space="preserve">
+    <value>在浏览器/地图中打开坐标</value>
+  </data>
+  <data name="cmi_OpenCoordsInBrowserBing" xml:space="preserve">
+    <value>Bing</value>
+  </data>
+  <data name="cmi_OpenCoordsInBrowserGeoNamesMaps" xml:space="preserve">
+    <value>GeoNames（地图）</value>
+  </data>
+  <data name="cmi_OpenCoordsInBrowserGoogle" xml:space="preserve">
+    <value>Google 地图</value>
+  </data>
+  <data name="cmi_OpenCoordsInBrowserWeGoHere" xml:space="preserve">
+    <value>WeGo/Here</value>
+  </data>
+  <data name="cmi_OpenCoordsInBrowserOpenStreetMap" xml:space="preserve">
+    <value>OpenStreetMap</value>
+  </data>
+  <data name="tmi_File_ImportFavouritesFromGeoSetter" xml:space="preserve">
+    <value>从 Geosetter 导入收藏...</value>
+  </data>
+  <data name="ofd_Settings_GetDatabaseFileToImport_SelectDatabaseFile" xml:space="preserve">
+    <value>选择数据库文件</value>
+  </data>
+  <data name="ofd_tmi_File_ImportFavouritesFromGeoSetter_SelectFile" xml:space="preserve">
+    <value>选择 GS 收藏导出文件</value>
+  </data>
+  <data name="mbx_FrmMainApp_ErrorImportGeoSetterFavourites" xml:space="preserve">
+    <value>导入 GeoSetter 收藏时出错。</value>
+  </data>
+  <data name="mbx_FrmMainApp_InfoImportGeoSetterFavouritesDone" xml:space="preserve">
+    <value>GeoSetter 收藏已导入。导入的项目数： </value>
+  </data>
+  <data name="ckb_ShowThumbnails" xml:space="preserve">
+    <value>显示图像缩略图而不是网格</value>
+  </data>
+  <data name="ttp_ShowThumbnails" xml:space="preserve">
+    <value>这会造成非常显著的性能损耗（据我测量最高约 7 倍），因此不推荐。</value>
+  </data>
+  <data name="Generic_SaveDefaults" xml:space="preserve">
+    <value>保存默认值</value>
+  </data>
+  <data name="ttp_FrmImportExport_SaveDefaults" xml:space="preserve">
+    <value>保存某些默认值。当前包括：导入来源位置、时区和夏令时设置、最大内插/外推时间。</value>
+  </data>
+  <data name="mbx_FrmImportExportGpx_ExportCompleted" xml:space="preserve">
+    <value>GPX 文件导出完成</value>
+  </data>
+  <data name="Generic_GPSDOP" xml:space="preserve">
+    <value>精度因子（DOP）</value>
+  </data>
+  <data name="Generic_GPSHPositioningError" xml:space="preserve">
+    <value>GPS 水平定位误差</value>
+  </data>
+  <data name="cmi_PasteGeoData" xml:space="preserve">
+    <value>粘贴所有地理数据...</value>
+  </data>
+  <data name="cmi_CopyGeoData" xml:space="preserve">
+    <value>复制所有地理数据</value>
+  </data>
+  <data name="tmi_Edit_SelectAll" xml:space="preserve">
+    <value>全选</value>
+  </data>
+  <data name="cmi_SelectAll" xml:space="preserve">
+    <value>全选</value>
+  </data>
+  <data name="tmi_Edit_SelectNone" xml:space="preserve">
+    <value>全部不选</value>
+  </data>
+  <data name="cmi_SelectNone" xml:space="preserve">
+    <value>全部不选</value>
+  </data>
+  <data name="tmi_Edit_InvertSelection" xml:space="preserve">
+    <value>反选</value>
+  </data>
+  <data name="cmi_InvertSelection" xml:space="preserve">
+    <value>反选</value>
+  </data>
+  <data name="tmi_Edit" xml:space="preserve">
+    <value>编辑</value>
+  </data>
+  <data name="tmi_Help_Donate" xml:space="preserve">
+    <value>捐赠</value>
+  </data>
+  <data name="tmi_Help_Donate_PayPal" xml:space="preserve">
+    <value>PayPal...</value>
+  </data>
+  <data name="tmi_Help_Donate_Revolut" xml:space="preserve">
+    <value>Revolut（二维码）...</value>
+  </data>
+  <data name="tmi_Help_Donate_BuyMeCoffee" xml:space="preserve">
+    <value>BuyMeACoffee...</value>
+  </data>
+  <data name="tmi_File_SaveSelected" xml:space="preserve">
+    <value>保存所选</value>
+  </data>
+  <data name="rbt_SetStartup_Folder" xml:space="preserve">
+    <value>设置启动文件夹</value>
+  </data>
+  <data name="rbt_UseLastUsedFolder" xml:space="preserve">
+    <value>使用上次使用的文件夹</value>
+  </data>
+  <data name="tmi_Debug" xml:space="preserve">
+    <value>调试</value>
+  </data>
+  <data name="tmi_Debug_CustomiseWinformControls" xml:space="preserve">
+    <value>自定义 Winform 控件</value>
+  </data>
+  <data name="frm_FrmCustomiseFormControls" xml:space="preserve">
+    <value>自定义 Winform 控件</value>
+  </data>
+  <data name="ckb_RetainMapZoom" xml:space="preserve">
+    <value>点击之间保留地图缩放级别</value>
+  </data>
+  <data name="mbx_FrmMainApp_ErrorNonHydratedItemsPresent" xml:space="preserve">
+    <value>你的选择中包含尚未解析的文件，这些文件不会被加载进行编辑。</value>
+  </data>
+  <data name="Generic_Ready" xml:space="preserve">
+    <value>就绪</value>
+  </data>
+  <data name="Generic_Total" xml:space="preserve">
+    <value>总计</value>
+  </data>
+  <data name="Generic_GeoData" xml:space="preserve">
+    <value>地理数据</value>
+  </data>
+  <data name="Generic_Files" xml:space="preserve">
+    <value>文件</value>
+  </data>
+  <data name="mbx_FrmMainApp_WarningDataParseStillInProgress" xml:space="preserve">
+    <value>数据解析仍在进行中 - 在完成之前，此操作无法继续。请稍后再试。</value>
+  </data>
+  <data name="Generic_IsEmpty" xml:space="preserve">
+    <value>为空</value>
+  </data>
+  <data name="Generic_IsNotEmpty" xml:space="preserve">
+    <value>不为空</value>
+  </data>
+  <data name="Generic_Is" xml:space="preserve">
+    <value>是</value>
+  </data>
+  <data name="Generic_IsNot" xml:space="preserve">
+    <value>不是</value>
+  </data>
+  <data name="Generic_Contains" xml:space="preserve">
+    <value>包含</value>
+  </data>
+  <data name="Generic_DoesntContain" xml:space="preserve">
+    <value>不包含</value>
+  </data>
+  <data name="Generic_ClearAll" xml:space="preserve">
+    <value>全部清除</value>
+  </data>
+  <data name="ckb_AlwaysRecenterMap" xml:space="preserve">
+    <value>总是重新居中地图？</value>
+  </data>
+  <data name="ckb_DoNotDownloadAltitude" xml:space="preserve">
+    <value>不从 API 下载海拔值</value>
+  </data>
 </root>
