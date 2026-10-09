@@ -4091,7 +4091,7 @@ context: ValueFormatContext.Display));
 
                     // also remove from hash dictionary
 
-                    _ = HelperVariables.FileChecksumDictionary.Remove(key: directoryElement.FileNameWithPath);
+                    _ = HelperVariables.FileChecksumDictionary.TryRemove(key: directoryElement.FileNameWithPath, value: out _);
                 }
 
                 catch

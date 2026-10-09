@@ -10,7 +10,6 @@ using System.Drawing;
 using System.Drawing.Drawing2D;
 using System.Drawing.Imaging;
 using System.IO;
-using System.Threading.Tasks;
 using static GeoTagNinja.Model.SourcesAndAttributes;
 
 #pragma warning disable CS8618, CS9264
@@ -867,26 +866,6 @@ public class DirectoryElement
         catch
         {
             //
-        }
-
-        if (!File.Exists(path: generatedFileName))
-        {
-            try
-            {
-                // Exiftool is acceptable speed and works most of the time but outputs a large file
-                Task task =
-                    ReadGetImagePreviews.UseExifToolToGeneratePreviewsOrThumbnails(
-                        fileNameWithPath: fileNameWithPath,
-                        initiator: ReadGetImagePreviews.Initiator.FrmMainAppListViewThumbnail,
-                        addSmallThumbnailToFileName: true
-                    );
-            }
-
-            catch
-
-            {
-                //
-            }
         }
 
         if (!File.Exists(path: generatedFileName))

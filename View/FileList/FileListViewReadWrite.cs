@@ -291,6 +291,15 @@ internal static class FileListViewReadWrite
             return;
         }
 
+        // Called from background hydration threads as well as the UI thread; the ListView's Items collection
+        // is not safe to enumerate off the UI thread, so marshal if needed (same pattern as FileListView's
+        // AddListItem/UpdateListItemData/SyncElementThumbnail).
+        if (frmMainAppInstance.lvw_FileList.InvokeRequired)
+        {
+            _ = frmMainAppInstance.lvw_FileList.Invoke(new Action(ListViewCountItemsWithGeoData));
+            return;
+        }
+
         int totalFileCount = 0;
         int filesWithGeoDataCount = 0;
 

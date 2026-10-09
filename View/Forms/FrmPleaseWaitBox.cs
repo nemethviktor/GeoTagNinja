@@ -101,6 +101,13 @@ public partial class FrmPleaseWaitBox : Form
     /// <param name="stage"></param>
     internal void UpdateControlsVisibility(ActionStages stage)
     {
+        // Can be called from a thread-pool continuation (ConfigureAwait(false) upstream)
+        if (InvokeRequired)
+        {
+            Invoke(method: () => UpdateControlsVisibility(stage: stage));
+            return;
+        }
+
         if (stage == ActionStages.SCANNING)
         {
             lbl_ParsingFolders.Visible = false;

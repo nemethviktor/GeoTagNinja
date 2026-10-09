@@ -444,14 +444,17 @@ public class DirectoryElementCollection : List<DirectoryElement>
             {
                 await Task.Run(action: () =>
                 {
+                    // .ToList() actually forces enumeration here, inside the background thread: GetFilesFromAFolder
+                    // is a yield-return iterator, so merely assigning it to filesInDir (without enumerating it)
+                    // does not run any of its body - it would otherwise run lazily in the continuation below.
                     filesInDir = FileEnumeration.GetFilesFromAFolder(
                         folder: folderOrCollectionFileName,
                         filter: allowedImageExtensions.Concat(second: allowedSidecarExtensions).ToArray(),
                         recursive: processSubFolders,
                         updateProgressHandler: updateProgressHandler,
                         cancellationToken: cancellationToken
-                    ); // Force enumeration to ensure all files are processed
-                });
+                    ).ToList();
+                }).ConfigureAwait(continueOnCapturedContext: false);
             }
             catch (OperationCanceledException)
             {
@@ -587,6 +590,10 @@ public class DirectoryElementCollection : List<DirectoryElement>
                 cancellationToken: cancellationToken,
                 onElementFound: onElementFound);
         });
+        // Not .ConfigureAwait(false): the code right after this await (TaskbarManagerInstance.SetProgressState)
+        // is a COM taskbar call that needs the UI/STA thread. ParseImagesToDirectoryElements itself already runs
+        // on a thread-pool thread regardless (it's the Task.Run delegate), and parallelizes its own checksum work
+        // internally, so nothing is lost by resuming the continuation here on the UI thread.
 
         FrmMainApp.TaskbarManagerInstance.SetProgressState(state: TaskbarProgressBarState.NoProgress);
 
@@ -676,7 +683,7 @@ public class DirectoryElementCollection : List<DirectoryElement>
                     }
 
                     ExifTool.GetProperties(fileToRead, props);
-                }, ct);
+                }, ct).ConfigureAwait(continueOnCapturedContext: false);
 
                 if (props.Count > 0 && !ct.IsCancellationRequested)
                 {
@@ -718,6 +725,11 @@ public class DirectoryElementCollection : List<DirectoryElement>
                                                 CancellationToken cancellationToken,
                                                 Action<DirectoryElement> onElementFound = null)
     {
+        // Pass 1: find-or-create each element and map its sidecar, sequentially. List<T>.Add (this collection
+        // is a List<DirectoryElement>) is not thread-safe, but this part is cheap - the expensive part (full-file
+        // checksums below) is what benefits from running in parallel.
+        List<(DirectoryElement de, FileInfo imageFile, bool isNew)> workItems = [];
+
         foreach (FileInfo imagefileFileInfoItem in imageFiles)
         {
             if (cancellationToken.IsCancellationRequested)
@@ -744,15 +756,32 @@ public class DirectoryElementCollection : List<DirectoryElement>
             de.SidecarFile = sidecarFiles.FirstOrDefault(x =>
                 x.Name.Equals(baseName + ".xmp", StringComparison.InvariantCultureIgnoreCase));
 
+            workItems.Add(item: (de: de, imageFile: imagefileFileInfoItem, isNew: isNew));
+        }
+
+        // Pass 2: checksum every image/sidecar pair in parallel. Full-content hashing of every file, every scan,
+        // is deliberate (see comment below) and embarrassingly parallel per file, so this is where the wall-clock
+        // time was going. onElementFound ends up calling into Control.Invoke, which is safe to call concurrently
+        // from multiple threads, so rows can still stream into the UI as each checksum finishes.
+        _ = Parallel.ForEach(source: workItems, body: (workItem, loopState) =>
+        {
+            if (cancellationToken.IsCancellationRequested)
+            {
+                loopState.Stop();
+                return;
+            }
+
+            DirectoryElement de = workItem.de;
+
             // 3. Checksum Logic
-            bool fileNeedsReDEing = isNew;
+            bool fileNeedsReDEing = workItem.isNew;
             bool checksumChanged = false;
 
             for (int i = 0; i <= 1; i++)
             {
                 string thisCheckSum = string.Empty;
                 string storedChecksum = string.Empty;
-                FileInfo fileNameWithPathToCheck = i == 0 ? imagefileFileInfoItem : de.SidecarFile;
+                FileInfo fileNameWithPathToCheck = i == 0 ? workItem.imageFile : de.SidecarFile;
 
                 // note to self: jpgs have no sidecars.
                 if (fileNameWithPathToCheck != null && File.Exists(path: fileNameWithPathToCheck.FullName))
@@ -771,7 +800,7 @@ public class DirectoryElementCollection : List<DirectoryElement>
 
                     // before anyone points out, yes we could store/check filesizes and match those two but the problem is that particularly
                     // xmp files can be modified within a single byte and then saved and have their datetime stamp changed to takendatetime
-                    // so basically we could have two files that look identical on the surface but differ in content. 
+                    // so basically we could have two files that look identical on the surface but differ in content.
                     // as such we do need to do the checksum test regardless of what the files appear like.
                     // Safe to run checksum on local files
                     thisCheckSum = Helpers.FileSystem.GetChecksum.GetFileChecksum(fileNameWithPath: fileNameWithPathToCheck.FullName);
@@ -791,6 +820,6 @@ public class DirectoryElementCollection : List<DirectoryElement>
 
             // 4. Notify UI
             onElementFound?.Invoke(de);
-        }
+        });
     }
 }

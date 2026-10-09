@@ -62,7 +62,7 @@ namespace GeoTagNinja.Model;
 /// hh:mm:ss").</remarks>
 public class ExifTool : IDisposable
 {
-    private const string c_arguments = @"-stay_open 1 -@ - -common_args -api ""Filter=s/\r|\n/ /g "" -a -s -s -struct -G -ee -charset UTF8 -charset filename=utf8 -args";
+    private const string c_argumentsTemplate = @"-stay_open 1 -@ - -common_args -api ""Filter=s/\r|\n/ /g "" -a -s -s -struct -G -ee -charset UTF8 -charset filename=utf8 -args{0}";
 
     private const string c_exitCommand = "-stay_open\nFalse\n";
     private const int c_timeout = 30000; // in milliseconds
@@ -91,9 +91,19 @@ public class ExifTool : IDisposable
     /// Win32Exception.</exception>
     public ExifTool()
     {
+        // The tag list never changes for the life of the process, so it's folded into -common_args here (applied
+        // automatically to every -execute block below) instead of being resent on every single GetProperties call.
+        string tagArguments = string.Join(
+            separator: " ",
+            values: Model.SourcesAndAttributes.GetAllRequiredInAttributes().Select(selector: tag => $"-{tag}"));
+
+        string arguments = string.Format(
+            format: c_argumentsTemplate,
+            arg0: tagArguments.Length > 0 ? $" {tagArguments}" : string.Empty);
+
         // Prepare process start
         ProcessStartInfo psi = new(fileName: HelperVariables.ExifToolExePathToUse,
-                                   arguments: c_arguments)
+                                   arguments: arguments)
         {
             UseShellExecute = false,
             CreateNoWindow = true,
@@ -122,8 +132,8 @@ public class ExifTool : IDisposable
     }
 
     /// <summary>
-    ///     Retrieves specific predefined tag properties for a target file. 
-    ///     Dynamically configures the extraction arguments to strip out unneeded attributes.
+    ///     Retrieves specific predefined tag properties for a target file. The tag list itself is fixed for the life
+    ///     of the process - see the -common_args section built in the constructor.
     /// </summary>
     /// <param name="filename">The absolute path of the target file to scan.</param>
     /// <param name="propertiesRead">The collection to hold the extracted metadata properties.</param>
@@ -135,24 +145,17 @@ public class ExifTool : IDisposable
             return;
         }
 
-        // 1. Send the primary target filename block
+        // 1. Send the primary target filename block.
+        // The required tag list (previously resent here on every call) is now part of -common_args, set once at
+        // process construction, and applies automatically to every -execute block.
         m_in.Write(value: filename);
         m_in.Write(value: "\n");
 
-        // 2. DYNAMIC PRE-FILTER: Feed the specific parameters required
-        // This instructs ExifTool to ignore anything not registered inside the Mapping profiles.
-        IEnumerable<string> targetedTags = Model.SourcesAndAttributes.GetAllRequiredInAttributes();
-        foreach (string tag in targetedTags)
-        {
-            // Format as an explicit extraction target argument (e.g., "-XMP:GPSAltitude")
-            m_in.Write(value: $"-{tag}\n");
-        }
-
-        // 3. Fire the execution sequence
+        // 2. Fire the execution sequence
         m_in.Write(value: "-execute\n");
         m_in.Flush();
 
-        // 4. Safe sequential parsing loop...
+        // 3. Safe sequential parsing loop...
         for (; ; )
         {
             string? line = m_out.ReadLine();

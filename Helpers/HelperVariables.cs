@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Concurrent;
 using System.Collections.Generic;
 using System.Data;
 using System.IO;
@@ -146,7 +147,8 @@ internal static class HelperVariables
     internal static readonly string ExifToolExePathToUse = GetExifToolExePathToUse();
 
     internal static string UOMAbbreviated = "";
-    internal static Dictionary<string, string> FileChecksumDictionary = [];
+    // ConcurrentDictionary: populated/read from multiple threads at once during the parallelized folder-scan checksum pass.
+    internal static ConcurrentDictionary<string, string> FileChecksumDictionary = [];
 
     internal static HashSet<string> errorsAlreadyShownHashSet = [];
 

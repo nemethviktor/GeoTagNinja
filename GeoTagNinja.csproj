@@ -521,6 +521,9 @@
     <PackageReference Include="System.Data.SQLite">
       <Version>1.0.119</Version>
     </PackageReference>
+    <PackageReference Include="System.IO.Hashing">
+      <Version>10.0.12</Version>
+    </PackageReference>
     <PackageReference Include="System.Text.Encoding.CodePages">
       <Version>10.0.12</Version>
     </PackageReference>
