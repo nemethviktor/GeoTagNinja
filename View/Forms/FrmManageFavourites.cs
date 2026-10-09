@@ -64,12 +64,7 @@ public partial class FrmManageFavourites : Form
         RefreshCbxFavouritesItems();
         cbx_Favourites.SelectedIndex = 0;
 
-        Themer.ApplyThemeToControl(
-            control: this,
-            themeStyle: HelperVariables.UserSettingUseDarkMode ?
-            Themer.ThemeStyle.Custom :
-            Themer.ThemeStyle.Default
-            );
+        ThemeHelper.ApplyTo(control: this);
     }
 
     private void cbx_favouriteName_SelectedIndexChanged(object sender,

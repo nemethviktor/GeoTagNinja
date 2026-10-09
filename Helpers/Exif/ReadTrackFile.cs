@@ -231,7 +231,7 @@ internal static class ReadTrackFile
                                         text: $"Processing: {fileNameWithoutPath}");
 
                                     frmMainAppInstance.lvw_FileList.UpdateDirectoryElementItemColour(
-                                        directoryElement: dirElemFileToModify, color: Color.Red);
+                                        directoryElement: dirElemFileToModify, color: ThemeHelper.ErrorColour);
 
                                     foreach (ElementAttribute attribute in trackFileOverwrites)
                                     {
@@ -390,12 +390,7 @@ internal static class ReadTrackFile
             reportBox.ShowInTaskbar = false;
 
             reportBox.StartPosition = FormStartPosition.CenterScreen;
-            Themer.ApplyThemeToControl(
-                control: reportBox,
-                themeStyle: HelperVariables.UserSettingUseDarkMode ?
-                Themer.ThemeStyle.Custom :
-                Themer.ThemeStyle.Default
-                );
+            ThemeHelper.ApplyTo(control: reportBox);
             reportBox.ShowDialog();
         }
 

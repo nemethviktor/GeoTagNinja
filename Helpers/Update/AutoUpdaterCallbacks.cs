@@ -1,4 +1,5 @@
 ﻿using AutoUpdaterDotNET;
+using GeoTagNinja.Helpers.UI;
 using Newtonsoft.Json;
 using System;
 using System.Windows.Forms;
@@ -63,7 +64,7 @@ internal static class AutoUpdaterCallbacks
         }
         catch (Exception exception)
         {
-            _ = MessageBox.Show(text: exception.Message,
+            ThemeHelper.ShowMessageBox(message: exception.Message,
                 caption: exception.GetType().ToString(),
                 buttons: MessageBoxButtons.OK,
                 icon: MessageBoxIcon.Error);

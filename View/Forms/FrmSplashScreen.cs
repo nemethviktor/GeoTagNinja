@@ -25,6 +25,7 @@ public partial class FrmSplashScreen : Form
     private void FrmSplashScreen_Load(object sender,
                                       EventArgs e)
     {
+        ThemeHelper.ApplyTo(control: this);
         FormPositioning.CenterForm(frm: this);
         _ = SetForegroundWindow(hWnd: Handle);
         stopWatch.Start();

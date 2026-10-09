@@ -1,7 +1,6 @@
-﻿using GeoTagNinja.Helpers;
+﻿using GeoTagNinja.Helpers.UI;
 using System;
 using System.Windows.Forms;
-using WinFormsDarkThemerNinja;
 
 namespace GeoTagNinja.View.Dialogs
 {
@@ -19,12 +18,7 @@ namespace GeoTagNinja.View.Dialogs
 
         private void RevolutQRBox_Load(object sender, EventArgs e)
         {
-            Themer.ApplyThemeToControl(
-                control: this,
-                themeStyle: HelperVariables.UserSettingUseDarkMode ?
-                Themer.ThemeStyle.Custom :
-                Themer.ThemeStyle.Default
-                );
+            ThemeHelper.ApplyTo(control: this);
         }
 
         private void btn_OK_Click(object sender, EventArgs e)

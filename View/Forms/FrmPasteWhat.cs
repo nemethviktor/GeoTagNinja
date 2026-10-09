@@ -175,12 +175,7 @@ public partial class FrmPasteWhat : Form
 
         btn_PullMostRecentPasteSettings.Enabled = LastCheckedCheckBoxes.Count > 0;
 
-        Themer.ApplyThemeToControl(
-            control: this,
-            themeStyle: HelperVariables.UserSettingUseDarkMode ?
-            Themer.ThemeStyle.Custom :
-            Themer.ThemeStyle.Default
-            );
+        ThemeHelper.ApplyTo(control: this);
     }
 
     /// <summary>

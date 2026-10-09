@@ -188,12 +188,6 @@ internal partial class FrmAboutBox : Form
 
     private void FrmAboutBox_Load(object sender, EventArgs e)
     {
-
-        Themer.ApplyThemeToControl(
-            control: this,
-            themeStyle: HelperVariables.UserSettingUseDarkMode ?
-            Themer.ThemeStyle.Custom :
-            Themer.ThemeStyle.Default
-            );
+        ThemeHelper.ApplyTo(control: this);
     }
 }

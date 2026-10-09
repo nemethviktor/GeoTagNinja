@@ -21,7 +21,6 @@ public partial class FileListView : System.Windows.Forms.ListView
 {
     // Default values to set for entries
     private const string UNKNOWN_VALUE_FILE = "-";
-    public static Color DarkColor = ColorTranslator.FromHtml("#1C1D23");
 
     // Special value for coordinates as they are a pair.
     private const string UNKNOWN_VALUE_FILE_COORDINATES = "-;-";
@@ -568,7 +567,7 @@ public partial class FileListView : System.Windows.Forms.ListView
         // 5. Apply "Dirty" state (Red colour)
         if (directoryElement.HasDirtyAttributes())
         {
-            lvi.ForeColor = Color.Red;
+            lvi.ForeColor = ThemeHelper.ErrorColour;
         }
 
         // 6. Finalise
@@ -1170,7 +1169,7 @@ public partial class FileListView : System.Windows.Forms.ListView
         catch (Exception ex)
         {
             Log.Error(exception: ex, message: $"Rename failed for {de.ItemNameWithoutPath}");
-            _ = MessageBox.Show(text: ex.Message, caption: "Rename Error", buttons: MessageBoxButtons.OK, icon: MessageBoxIcon.Error);
+            ThemeHelper.ShowMessageBox(message: ex.Message, caption: "Rename Error", buttons: MessageBoxButtons.OK, icon: MessageBoxIcon.Error);
 
             // Revert UI to safety
             lvi.Text = de.ItemNameWithoutPath;
@@ -1205,8 +1204,8 @@ public partial class FileListView : System.Windows.Forms.ListView
             : Microsoft.VisualBasic.FileIO.RecycleOption.SendToRecycleBin;
 
         string actionVerb = isShiftPressed ? "PERMANENTLY delete" : "recycle";
-        DialogResult result = MessageBox.Show(
-            text: $"Are you sure you want to {actionVerb} {deletableItems.Count} item(s)?",
+        DialogResult result = ThemeHelper.ShowMessageBoxWithResult(
+            message: $"Are you sure you want to {actionVerb} {deletableItems.Count} item(s)?",
             caption: "Confirm Deletion",
             buttons: MessageBoxButtons.YesNo,
             icon: isShiftPressed ? MessageBoxIcon.Stop : MessageBoxIcon.Question);
@@ -1385,7 +1384,7 @@ public partial class FileListView : System.Windows.Forms.ListView
                 // If the element has unsaved changes, make it red again.
                 if (de.HasDirtyAttributes())
                 {
-                    lvi.ForeColor = Color.Red;
+                    lvi.ForeColor = ThemeHelper.ErrorColour;
                 }
             }
         }
@@ -1437,7 +1436,7 @@ public partial class FileListView : System.Windows.Forms.ListView
                 // This is the missing piece for Clear All
                 if (de.HasDirtyAttributes())
                 {
-                    lvi.ForeColor = Color.Red;
+                    lvi.ForeColor = ThemeHelper.ErrorColour;
                 }
             }
         }
@@ -1634,7 +1633,7 @@ public partial class FileListView : System.Windows.Forms.ListView
         }
 
         ListViewItem lvi = FindItemByDirectoryElement(directoryElement: directoryElement);
-        _ = (lvi?.ForeColor = color);
+        _ = (lvi?.ForeColor = ThemeHelper.MapItemColour(color: color));
     }
 
     /// <summary>
@@ -1802,11 +1801,6 @@ public partial class FileListView : System.Windows.Forms.ListView
 
             // 1. Create the Filter Sub-Menu
             ToolStripMenuItem filterSubMenu = new(text: $"Filter: {colName}") { Name = "cmi_Filter_SubMenu" };
-            if (HelperVariables.UserSettingUseDarkMode)
-            {
-                filterSubMenu.BackColor = DarkColor;
-                filterSubMenu.ForeColor = Color.White;
-            }
 
             // --- LOCAL HELPER ---
             void AddFilterItem(FilterOperator op, string? value)
@@ -1819,7 +1813,7 @@ public partial class FileListView : System.Windows.Forms.ListView
                 string displayText = string.IsNullOrEmpty(value: capturedValue) && capturedOp != FilterOperator.IsEmpty && capturedOp != FilterOperator.IsNotEmpty
                     ? $"{opText}..."
                     : string.IsNullOrEmpty(value: capturedValue) ? $"{opText}" : $"{opText} \"{capturedValue}\"";
-                ToolStripItem tsi = filterSubMenu.DropDownItems.Add(text: displayText, image: null, onClick: (s, ev) =>
+                _ = filterSubMenu.DropDownItems.Add(text: displayText, image: null, onClick: (s, ev) =>
                 {
                     string finalSearchValue = capturedValue ?? "";
 
@@ -1846,11 +1840,6 @@ public partial class FileListView : System.Windows.Forms.ListView
                         operatorValue: capturedOp,
                         searchValue: finalSearchValue);
                 });
-                if (HelperVariables.UserSettingUseDarkMode)
-                {
-                    tsi.BackColor = DarkColor;
-                    tsi.ForeColor = Color.White;
-                }
             }
 
             // 2. Is Empty / Is Not Empty
@@ -1882,28 +1871,18 @@ public partial class FileListView : System.Windows.Forms.ListView
                 AddFilterItem(op: op, value: null);
             }
 
-            tss = new ToolStripSeparator();
-            if (HelperVariables.UserSettingUseDarkMode)
-            {
-                tss.BackColor = DarkColor;
-                tss.ForeColor = DarkColor;
-            }
+            tss = CreateNewToolStripSeparator();
             _ = filterSubMenu.DropDownItems.Add(tss);
 
             // 5. Clear Logic
             string clearText = HelperControlAndMessageBoxHandling.ReturnControlText("Generic_ClearAll", HelperControlAndMessageBoxHandling.FakeControlTypes.Generic);
-            ToolStripItem clearItem = filterSubMenu.DropDownItems.Add(text: clearText ?? "Clear All Filters", image: null, onClick: (s, ev) =>
+            _ = filterSubMenu.DropDownItems.Add(text: clearText ?? "Clear All Filters", image: null, onClick: (s, ev) =>
             {
                 if (_masterCollection != null)
                 {
                     ReloadFromDEs(_masterCollection);
                 }
             });
-            if (HelperVariables.UserSettingUseDarkMode)
-            {
-                clearItem.BackColor = DarkColor;
-                clearItem.ForeColor = Color.White;
-            }
 
             _ = menu.Items.Add(filterSubMenu);
             tss = CreateNewToolStripSeparator();
@@ -1928,26 +1907,16 @@ public partial class FileListView : System.Windows.Forms.ListView
         }
 
         LocaliseDynamicMenu(menu: menu);
-        if (HelperVariables.UserSettingUseDarkMode)
-        {
-            menu.BackColor = DarkColor;
-            menu.ForeColor = Color.White;
-        }
+        // styles the whole tree (submenus, separators, arrows) in one go; no-op in light mode.
+        ThemeHelper.StyleMenu(menu: menu);
         menu.ShowImageMargin = false;
         menu.Show(control: this, location);
     }
 
     private static ToolStripSeparator CreateNewToolStripSeparator()
     {
-        ToolStripSeparator tss = new ToolStripSeparator();
-        if (HelperVariables.UserSettingUseDarkMode)
-        {
-            // Technically, separators don't have a ForeColor, but we set it anyway for consistency.
-            tss.BackColor = DarkColor;
-            tss.ForeColor = DarkColor;
-        }
-
-        return tss;
+        // colours (dark mode) come from ThemeHelper.StyleMenu once the item is in a menu.
+        return new ToolStripSeparator();
     }
 
     private ToolStripMenuItem CloneToolStripItem(ToolStripMenuItem source)
@@ -1959,8 +1928,8 @@ public partial class FileListView : System.Windows.Forms.ListView
             Image = source.Image,
             Enabled = source.Enabled,
             Tag = source.Tag,
-            BackColor = HelperVariables.UserSettingUseDarkMode ? DarkColor : source.BackColor,
-            ForeColor = HelperVariables.UserSettingUseDarkMode ? Color.White : source.ForeColor,
+            BackColor = source.BackColor,
+            ForeColor = source.ForeColor,
         };
 
         // Manually hook into the original's click event logic

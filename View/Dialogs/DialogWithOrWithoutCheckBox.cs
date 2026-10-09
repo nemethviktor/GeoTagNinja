@@ -1,9 +1,8 @@
-﻿using GeoTagNinja.Helpers;
+﻿using GeoTagNinja.Helpers.UI;
 using System.Collections.Generic;
 using System.Drawing;
 using System.Linq;
 using System.Windows.Forms;
-using WinFormsDarkThemerNinja;
 
 namespace GeoTagNinja.View.Dialogs;
 
@@ -51,14 +50,6 @@ internal class DialogWithOrWithoutCheckBox
             flowLayoutPanel.FlowDirection = FlowDirection.TopDown;
         }
 
-        // apply theme
-        Themer.ApplyThemeToControl(
-            control: promptBoxForm,
-            themeStyle: HelperVariables.UserSettingUseDarkMode ?
-            Themer.ThemeStyle.Custom :
-            Themer.ThemeStyle.Default
-            );
-
         Label lblText = new()
         {
             Text = labelText,
@@ -91,6 +82,9 @@ internal class DialogWithOrWithoutCheckBox
         promptBoxForm.ShowInTaskbar = false;
 
         promptBoxForm.StartPosition = FormStartPosition.CenterScreen;
+
+        // theme only once every control exists, otherwise the later ones are skipped.
+        ThemeHelper.ApplyTo(control: promptBoxForm);
         _ = promptBoxForm.ShowDialog();
 
         // in case of idiots break glass -- basically if someone ALT+F4s then we reset stuff to "no".

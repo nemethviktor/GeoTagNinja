@@ -1,4 +1,5 @@
 ﻿using GeoTagNinja.Helpers.FileSystem;
+using GeoTagNinja.Helpers.UI;
 using GeoTagNinja.Model;
 using GeoTagNinja.View.Forms;
 using System;
@@ -65,7 +66,7 @@ internal static class DatabaseAndStartup
         catch (Exception ex)
         {
             FrmMainApp.Log.Fatal(message: $"Error: {ex.Message}");
-            _ = MessageBox.Show(text: ex.Message);
+            ThemeHelper.ShowMessageBox(message: ex.Message);
         }
     }
 

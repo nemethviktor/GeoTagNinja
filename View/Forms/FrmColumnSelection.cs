@@ -38,6 +38,8 @@ public partial class FrmColumnSelection : Form
             _ = clb_ColList.Items.Add(item: col.Text, isChecked: col.Width > 0);
         }
 
+        ThemeHelper.ApplyTo(control: this);
+
         _ = clb_ColList.Focus();
     }
 

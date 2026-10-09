@@ -40,10 +40,6 @@ public partial class FrmImportExportGpx : Form
     public FrmImportExportGpx()
     {
         InitializeComponent();
-        if (!HelperVariables.UserSettingUseDarkMode)
-        {
-            tcr_ImportExport.DrawMode = TabDrawMode.Normal;
-        }
 
         ReturnControlText(control: this, senderForm: this);
 
@@ -323,19 +319,7 @@ public partial class FrmImportExportGpx : Form
 
     private void FrmImportExportGpx_Load(object sender, EventArgs e)
     {
-
-        Themer.ApplyThemeToControl(
-            control: this,
-            themeStyle: HelperVariables.UserSettingUseDarkMode ?
-            Themer.ThemeStyle.Custom :
-            Themer.ThemeStyle.Default
-            );
-
-        // Since we are setting these to True in the Designer when not-themed these would look off.
-        if (!HelperVariables.UserSettingUseDarkMode)
-        {
-            tcr_ImportExport.DrawMode = System.Windows.Forms.TabDrawMode.Normal;
-        }
+        ThemeHelper.ApplyTo(control: this);
     }
 
     /// <summary>

@@ -2424,7 +2424,7 @@ public partial class FrmMainApp : Form
         {
             if (!string.IsNullOrEmpty(value: exceptionMessage))
             {
-                _ = MessageBox.Show(text: exceptionMessage);
+                ThemeHelper.ShowMessageBox(message: exceptionMessage);
             }
 
             string CurrentFoldersParent;

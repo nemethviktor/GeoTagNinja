@@ -61,9 +61,6 @@ public partial class FrmSettings : Form
     {
         InitializeComponent();
 
-        // the custom logic is ugly af so no need to be pushy about it in light mode.
-        SetFormTheme();
-
         // this one is largely responsible for disabling the detection of "new" (changed) data. (ie when going from "noting" to "something")
         _nowLoadingSettingsData = true;
         AssignControlLabelsAndValues();
@@ -177,14 +174,6 @@ public partial class FrmSettings : Form
                         parentNameToUse: parentNameToUse);
                 }
             }
-        }
-    }
-
-    private void SetFormTheme()
-    {
-        if (!HelperVariables.UserSettingUseDarkMode)
-        {
-            tcr_Settings.DrawMode = TabDrawMode.Normal;
         }
     }
 
@@ -381,18 +370,7 @@ public partial class FrmSettings : Form
         tbx_ARCGIS_APIKey.UseSystemPasswordChar = !ckb_ShowPassword_ARCGIS_APIKey.Checked;
         tbx_GeoNames_Pwd.UseSystemPasswordChar = !ckb_ShowPassword_GeoNames.Checked;
 
-        Themer.ApplyThemeToControl(
-            control: this,
-            themeStyle: HelperVariables.UserSettingUseDarkMode ?
-            Themer.ThemeStyle.Custom :
-            Themer.ThemeStyle.Default
-            );
-
-        // Since we are setting these to True in the Designer when not-themed these would look off.
-        if (!HelperVariables.UserSettingUseDarkMode)
-        {
-            tcr_Settings.DrawMode = System.Windows.Forms.TabDrawMode.Normal;
-        }
+        ThemeHelper.ApplyTo(control: this);
     }
 
     /// <summary>

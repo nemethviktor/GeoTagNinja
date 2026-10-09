@@ -164,6 +164,7 @@
     <Compile Include="Helpers\Text\StringOperations.cs" />
     <Compile Include="Helpers\UI\ControlTraversal.cs" />
     <Compile Include="Helpers\UI\FormPositioning.cs" />
+    <Compile Include="Helpers\UI\ThemeHelper.cs" />
     <Compile Include="Helpers\FileSystem\FileEnumeration.cs" />
     <Compile Include="Helpers\Update\AutoUpdaterCallbacks.cs" />
     <Compile Include="Helpers\FileSystem\GetChecksum.cs" />

@@ -1,4 +1,5 @@
 ﻿using CommandLine;
+using GeoTagNinja.Helpers.UI;
 using GeoTagNinja.View.Forms;
 using System;
 using System.IO;
@@ -118,29 +119,29 @@ internal static class Program
         }
         catch (TimeoutException ex)
         {
-            _ = MessageBox.Show(text: PipeErrorConnectionTimeout + ex.Message);
+            ThemeHelper.ShowMessageBox(message: PipeErrorConnectionTimeout + ex.Message);
             return;
         }
         catch (IOException ex)
         {
-            _ = MessageBox.Show(text: PipeErrorIoError + ex.Message);
+            ThemeHelper.ShowMessageBox(message: PipeErrorIoError + ex.Message);
             return;
         }
         catch (UnauthorizedAccessException ex)
         {
-            _ = MessageBox.Show(text: PipeErrorAccessDenied + ex.Message);
+            ThemeHelper.ShowMessageBox(message: PipeErrorAccessDenied + ex.Message);
             return;
         }
         catch (Exception ex)
         {
-            _ = MessageBox.Show(text: PipeErrorUnexpectedError + ex.Message);
+            ThemeHelper.ShowMessageBox(message: PipeErrorUnexpectedError + ex.Message);
             return;
         }
 
         // Could not get hold of server - abort
         if (!pipeClient.IsConnected)
         {
-            _ = MessageBox.Show(text: PipeErrorCouldNotConnect);
+            ThemeHelper.ShowMessageBox(message: PipeErrorCouldNotConnect);
             return;
         }
 
@@ -153,11 +154,11 @@ internal static class Program
         }
         catch (IOException ex)
         {
-            _ = MessageBox.Show(text: PipeErrorIoError + ex.Message);
+            ThemeHelper.ShowMessageBox(message: PipeErrorIoError + ex.Message);
         }
         catch (Exception ex)
         {
-            _ = MessageBox.Show(text: PipeErrorUnexpectedError + ex.Message);
+            ThemeHelper.ShowMessageBox(message: PipeErrorUnexpectedError + ex.Message);
         }
         finally
         {

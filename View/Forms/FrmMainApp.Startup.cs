@@ -267,19 +267,13 @@ public partial class FrmMainApp
     /// </remarks>
     private Task AppStartupSetAppTheme()
     {
-        Themer.ApplyThemeToControl(
-            control: this,
-            themeStyle: HelperVariables.UserSettingUseDarkMode ?
-            Themer.ThemeStyle.Custom :
-            Themer.ThemeStyle.Default
-            );
+        // Also undoes the designer's owner-draw settings when not themed, and styles the title bar/scrollbars when dark.
+        ThemeHelper.ApplyTo(control: this);
 
-        // Since we are setting these to True in the Designer when not-themed these would look off.
-        if (!HelperVariables.UserSettingUseDarkMode)
+        // avoids a white flash before the map loads
+        if (ThemeHelper.IsDark)
         {
-            lvw_FileList.OwnerDraw = false;
-            lvw_ExifData.OwnerDraw = false;
-            tcr_Main.DrawMode = System.Windows.Forms.TabDrawMode.Normal;
+            wbv_MapArea.DefaultBackgroundColor = ThemeHelper.BackDark;
         }
 
         return Task.CompletedTask;

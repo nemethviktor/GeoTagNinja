@@ -46,12 +46,6 @@ public partial class FrmEditFileData : Form
         KeyPreview = true; // send keypress to the Form first
 
         InitializeComponent();
-        // the custom logic is ugly af so no need to be pushy about it in light mode.
-        if (!HelperVariables.UserSettingUseDarkMode)
-        {
-            tcr_EditData.DrawMode = TabDrawMode.Normal;
-            lvw_FileListEditImages.OwnerDraw = false;
-        }
 
         Log.Trace(message: "InitializeComponent OK");
 
@@ -94,12 +88,7 @@ public partial class FrmEditFileData : Form
             Log.Trace(message: "ListViewSelect Done");
         }
 
-        Themer.ApplyThemeToControl(
-            control: this,
-            themeStyle: HelperVariables.UserSettingUseDarkMode ?
-            Themer.ThemeStyle.Custom :
-            Themer.ThemeStyle.Default
-            );
+        ThemeHelper.ApplyTo(control: this);
 
         _frmEditFileDataNowLoadingFileData = false; // techinically this is redundant here
         Log.Info(message: "Done");
@@ -859,7 +848,7 @@ public partial class FrmEditFileData : Form
                         dirElementIsTheCurrentlySelectedDE: lvi == lvw_FileListEditImages.SelectedItems[0]
                         );
 
-                    lvi.ForeColor = Color.Red;
+                    lvi.ForeColor = ThemeHelper.ErrorColour;
                 }
 
                 break;

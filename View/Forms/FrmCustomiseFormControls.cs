@@ -12,12 +12,7 @@ namespace GeoTagNinja.View.Forms
         public FrmCustomiseFormControls()
         {
             InitializeComponent();
-            Themer.ApplyThemeToControl(
-                control: this,
-                themeStyle: HelperVariables.UserSettingUseDarkMode ?
-                Themer.ThemeStyle.Custom :
-                Themer.ThemeStyle.Default
-                );
+            ThemeHelper.ApplyTo(control: this);
         }
 
         public void SetCustomiseControl(Control control)
@@ -47,9 +42,14 @@ namespace GeoTagNinja.View.Forms
 
         private void cbx_ControlItem_DropDown(object sender, EventArgs e)
         {
+            if (!ThemeHelper.IsDark)
+            {
+                return;
+            }
+
             cbx_ControlItem.FlatStyle = FlatStyle.Popup;
 
-            cbx_ControlItem.ForeColor = Color.White;
+            cbx_ControlItem.ForeColor = ThemeHelper.ForeDark;
         }
 
         private void FrmCustomiseFormControls_Load(object sender, EventArgs e)

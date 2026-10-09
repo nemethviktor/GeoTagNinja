@@ -212,7 +212,7 @@ internal static class ExifToolOperator
                                             length: fileNameWithoutPath.LastIndexOf(value: '.'))))
                                 {
                                     bool pathIsLikelyUTF = fileNameWithPath.Any(predicate: c => c > 127);
-                                    _ = MessageBox.Show(text: data.Data +
+                                    ThemeHelper.ShowMessageBox(message: data.Data +
                                                           (pathIsLikelyUTF
                                                               ? Environment.NewLine + Environment.NewLine +
                                                                 HelperControlAndMessageBoxHandling
@@ -238,7 +238,7 @@ internal static class ExifToolOperator
 
                             if (!hideWarning)
                             {
-                                _ = MessageBox.Show(text: data.Data);
+                                ThemeHelper.ShowMessageBox(message: data.Data);
                             }
                         }
                     };

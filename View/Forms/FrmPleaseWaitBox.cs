@@ -46,12 +46,7 @@ public partial class FrmPleaseWaitBox : Form
         _frmMainAppInstance.Enabled = false;
         GetControlNames();
 
-        Themer.ApplyThemeToControl(
-            control: this,
-            themeStyle: HelperVariables.UserSettingUseDarkMode ?
-            Themer.ThemeStyle.Custom :
-            Themer.ThemeStyle.Default
-            );
+        ThemeHelper.ApplyTo(control: this);
     }
 
     /// <summary>
