@@ -305,6 +305,7 @@
     </Compile>
     <Compile Include="View\FileList\ModelToColumnValueTransformations.cs" />
     <Compile Include="View\Dialogs\DialogWithOrWithoutCheckBox.cs" />
+    <EmbeddedResource Include="Resources\Languages\Strings.zh-Hans.resx" />
     <EmbeddedResource Include="View\Forms\FrmAboutBox.resx">
       <DependentUpon>FrmAboutBox.cs</DependentUpon>
       <SubType>Designer</SubType>

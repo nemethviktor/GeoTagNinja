@@ -1,6 +1,12 @@
 ﻿# GeoTagNinja Changelog
 
-**Build 9xxx [20260xxx]** (upcoming release)
+**Build 9xxx [202xxxxx]** (upcoming release)
+- NEW & UPDATED:
+	- Added Chinese translations via weblate
+- BUGS & FIXES:
+	- TBA
+
+**Build 9778 [20261009]**
 - NEW & UPDATED:
 	- Added option ref #220 to disable downloading of Altitude data from the API. The default is to download Altitude data.
 	- Unleased Claude on the code. Cost me $100. I await bug reports.
