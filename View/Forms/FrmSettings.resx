@@ -156,6 +156,36 @@
   <data name="&gt;&gt;ckb_DoNotDownloadAltitude.ZOrder" xml:space="preserve">
     <value>0</value>
   </data>
+  <data name="ckb_PreserveFileModifiedDate.AutoSize" type="System.Boolean, mscorlib">
+    <value>True</value>
+  </data>
+  <data name="ckb_PreserveFileModifiedDate.ImeMode" type="System.Windows.Forms.ImeMode, System.Windows.Forms">
+    <value>NoControl</value>
+  </data>
+  <data name="ckb_PreserveFileModifiedDate.Location" type="System.Drawing.Point, System.Drawing">
+    <value>15, 381</value>
+  </data>
+  <data name="ckb_PreserveFileModifiedDate.Size" type="System.Drawing.Size, System.Drawing">
+    <value>164, 17</value>
+  </data>
+  <data name="ckb_PreserveFileModifiedDate.TabIndex" type="System.Int32, mscorlib">
+    <value>62</value>
+  </data>
+  <data name="ckb_PreserveFileModifiedDate.Text" xml:space="preserve">
+    <value>ckb_PreserveFileModifiedDate</value>
+  </data>
+  <data name="&gt;&gt;ckb_PreserveFileModifiedDate.Name" xml:space="preserve">
+    <value>ckb_PreserveFileModifiedDate</value>
+  </data>
+  <data name="&gt;&gt;ckb_PreserveFileModifiedDate.Type" xml:space="preserve">
+    <value>System.Windows.Forms.CheckBox, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </data>
+  <data name="&gt;&gt;ckb_PreserveFileModifiedDate.Parent" xml:space="preserve">
+    <value>gbx_AppSettings</value>
+  </data>
+  <data name="&gt;&gt;ckb_PreserveFileModifiedDate.ZOrder" xml:space="preserve">
+    <value>16</value>
+  </data>
   <data name="ckb_AlwaysRecenterMap.AutoSize" type="System.Boolean, mscorlib">
     <value>True</value>
   </data>
@@ -537,7 +567,7 @@
     <value>2</value>
   </data>
   <data name="gbx_MapColourMode.Location" type="System.Drawing.Point, System.Drawing">
-    <value>15, 379</value>
+    <value>15, 402</value>
   </data>
   <data name="gbx_MapColourMode.Size" type="System.Drawing.Size, System.Drawing">
     <value>548, 55</value>
@@ -786,10 +816,10 @@
     <value>15</value>
   </data>
   <data name="gbx_AppSettings.Location" type="System.Drawing.Point, System.Drawing">
-    <value>16, 20</value>
+    <value>16, 10</value>
   </data>
   <data name="gbx_AppSettings.Size" type="System.Drawing.Size, System.Drawing">
-    <value>852, 447</value>
+    <value>852, 470</value>
   </data>
   <data name="gbx_AppSettings.TabIndex" type="System.Int32, mscorlib">
     <value>32</value>

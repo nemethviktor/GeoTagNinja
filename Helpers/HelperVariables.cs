@@ -68,6 +68,12 @@ internal static class HelperVariables
 
     internal static bool UserSettingDoNotDownloadAltitude = false;
 
+    /// <summary>
+    ///     When true, saving to a file keeps the file's existing modification date (ExifTool's <c>-P</c>) instead of
+    ///     stamping it with the time of the save. Off by default.
+    /// </summary>
+    internal static bool UserSettingPreserveFileModifiedDate = false;
+
     internal static bool UserSettingImportGPXUseParticularTimeZone;
     internal static bool UserSettingImportGPXUseDST;
 

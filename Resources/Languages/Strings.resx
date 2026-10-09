@@ -1555,4 +1555,8 @@ That said the code _should_ be able to comprehend other layouts. Note if the cli
     <value>Do Not Download Altitude Values from API</value>
     <comment>This is ref ticket #220, user requested an option to opt out of cloud-download of altitude values</comment>
   </data>
+  <data name="ckb_PreserveFileModifiedDate" xml:space="preserve">
+    <value>Do Not Change File's Modified Date When Saving</value>
+    <comment>Settings - When ticked, saving data (e.g. adding a location) leaves the file's modification date as it was, so File Explorer keeps showing when the photo was taken rather than when it was last saved. Off by default. Has no effect on a file type whose "Reset Image File DateTime to CreateDate" option is ticked.</comment>
+  </data>
 </root>

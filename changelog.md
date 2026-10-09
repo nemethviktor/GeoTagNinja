@@ -3,6 +3,8 @@
 **Build 9xxx [202xxxxx]** (upcoming release)
 - NEW & UPDATED:
 	- Added Chinese translations via weblate
+	- Added a `Settings` > `Application` option, `Do Not Change File's Modified Date When Saving` (off by default), so adding a location to a photo no longer makes File Explorer show the date of the save instead of the date the photo was taken. It uses ExifTool's `-P`. It does not apply to a file type that has `Reset Image File DateTime to CreateDate` ticked, as that is an explicit request for a particular date.
+	- The `Application` settings tab scrolls rather than the form growing when more options are added.
 	- Docs: `docs/` and the readme now cover the ThemeHelper, the test project and Release-build test gate, and the readme's feature list now covers features added since the original release.
 - BUGS & FIXES:
 	- TBA

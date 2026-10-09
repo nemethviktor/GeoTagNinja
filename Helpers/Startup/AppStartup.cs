@@ -288,7 +288,8 @@ internal static class AppStartup
                 { "UserSettingUseImperial", "ckb_UseImperialNotMetric" },
                 { "UserSettingShowThumbnails", "ckb_ShowThumbnails" },
                 { "UserSettingRetainMapZoom", "ckb_RetainMapZoom" },
-                { "UserSettingDoNotDownloadAltitude", "ckb_DoNotDownloadAltitude" }
+                { "UserSettingDoNotDownloadAltitude", "ckb_DoNotDownloadAltitude" },
+                { "UserSettingPreserveFileModifiedDate", "ckb_PreserveFileModifiedDate" }
             },
             [key: "tpg_ImportExport_Import"] = new Dictionary<string, string>
             {

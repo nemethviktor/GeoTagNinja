@@ -72,6 +72,26 @@ $asm.GetManifestResourceNames() | Where-Object { $_ -match 'Frm' }
 
 Each name must equal `<type FullName>.resources`.
 
+## Adding a setting to the Application tab
+
+A checkbox on `FrmSettings`' `gbx_AppSettings` needs four things, and the form never needs to be taught
+about it in code:
+
+1. The control in `FrmSettings.Designer.cs` and `FrmSettings.resx`, wired to `Any_ckb_CheckStateChanged`
+   (that is what bolds it and queues it for saving).
+2. A caption in `Resources/Languages/Strings.resx` under the control's name. The form's own `.resx`
+   text is only a placeholder.
+3. A `UserSetting...` static in `HelperVariables`, mapped to the control name in
+   `AppStartup.AppStartupApplyDefaults` (`boolSettingsWithFalseDefaults` or `...TrueDefaults`).
+   A checkbox that should default to ticked must also be listed in `_checkBoxesWithTrueDefaultValue`
+   in `FrmSettings`.
+4. Whatever reads the static.
+
+`tpg_Application` has `AutoScroll` on, so when `gbx_AppSettings` outgrows the tab the page scrolls and
+the form does not need to get bigger. Grow `gbx_AppSettings` by the height of the new row and shift the
+controls below it down; keep the group box's bottom within the tab to avoid a scrollbar until it is
+actually needed.
+
 ## Still outstanding
 
 - **`Helpers/HelperVariables.cs`** is the last loose file at the `Helpers/` root, and deliberately so:

@@ -106,6 +106,7 @@ namespace GeoTagNinja.View.Forms
             this.btn_ImportSettings = new System.Windows.Forms.Button();
             this.ttp_ShowThumbnails = new System.Windows.Forms.ToolTip(this.components);
             this.ckb_DoNotDownloadAltitude = new System.Windows.Forms.CheckBox();
+            this.ckb_PreserveFileModifiedDate = new System.Windows.Forms.CheckBox();
             this.tcr_Settings.SuspendLayout();
             this.tpg_Application.SuspendLayout();
             this.gbx_AppSettings.SuspendLayout();
@@ -163,6 +164,7 @@ namespace GeoTagNinja.View.Forms
             this.gbx_AppSettings.Controls.Add(this.ckb_ResetMapToZero);
             this.gbx_AppSettings.Controls.Add(this.cbx_Language);
             this.gbx_AppSettings.Controls.Add(this.lbl_Language);
+            this.gbx_AppSettings.Controls.Add(this.ckb_PreserveFileModifiedDate);
             resources.ApplyResources(this.gbx_AppSettings, "gbx_AppSettings");
             this.gbx_AppSettings.Name = "gbx_AppSettings";
             this.gbx_AppSettings.TabStop = false;
@@ -721,6 +723,13 @@ namespace GeoTagNinja.View.Forms
             this.ckb_DoNotDownloadAltitude.UseVisualStyleBackColor = true;
             this.ckb_DoNotDownloadAltitude.CheckedChanged += new System.EventHandler(this.Any_ckb_CheckStateChanged);
             // 
+            // ckb_PreserveFileModifiedDate
+            // 
+            resources.ApplyResources(this.ckb_PreserveFileModifiedDate, "ckb_PreserveFileModifiedDate");
+            this.ckb_PreserveFileModifiedDate.Name = "ckb_PreserveFileModifiedDate";
+            this.ckb_PreserveFileModifiedDate.UseVisualStyleBackColor = true;
+            this.ckb_PreserveFileModifiedDate.CheckedChanged += new System.EventHandler(this.Any_ckb_CheckStateChanged);
+            // 
             // FrmSettings
             // 
             this.AcceptButton = this.btn_Generic_OK;
@@ -841,5 +850,6 @@ namespace GeoTagNinja.View.Forms
         private System.Windows.Forms.CheckBox ckb_RetainMapZoom;
         private System.Windows.Forms.CheckBox ckb_AlwaysRecenterMap;
         private System.Windows.Forms.CheckBox ckb_DoNotDownloadAltitude;
+        private System.Windows.Forms.CheckBox ckb_PreserveFileModifiedDate;
     }
 }

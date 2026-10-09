@@ -432,6 +432,17 @@ internal static class WriteSaveToFile
                         exifArgsForOriginalFile: ref exifArgsForOriginalFile,
                         exifArgsForSidecar: ref exifArgsForSidecar);
 
+                    // -P keeps the file's existing modification date, so a location added to an old photo doesn't make
+                    // it look newly modified in File Explorer. The per-extension "reset to CreateDate" option below
+                    // is an explicit request for a particular date, so it takes precedence and -P is not sent.
+                    // This is appended directly rather than via UpdateArgsFile, whose "already contains" check would
+                    // skip "-P" whenever a file path happened to contain it (e.g. a "Trip-Paris" folder).
+                    if (HelperVariables.UserSettingPreserveFileModifiedDate && !resetFileDateToCreated)
+                    {
+                        exifArgsForOriginalFile += $"-P{Environment.NewLine}";
+                        exifArgsForSidecar += $"-P{Environment.NewLine}";
+                    }
+
                     if (resetFileDateToCreated)
                     {
                         UpdateArgsFile(argfileToUpdate: ArgfileToUpdate.Orig,
