@@ -22,4 +22,11 @@
     <ProjectReference Include="..\GeoTagNinja.csproj" />
   </ItemGroup>
 
+  <!-- Release builds only succeed if the tests pass. Debug builds are left alone so the
+       edit-build loop stays fast; run the tests explicitly there. A failing test makes
+       Exec return a non-zero exit code, which fails the build. -->
+  <Target Name="RunTestsOnRelease" AfterTargets="Build" Condition="'$(Configuration)' == 'Release'">
+    <Exec Command="dotnet test &quot;$(TargetPath)&quot; --nologo" />
+  </Target>
+
 </Project>
