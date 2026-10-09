@@ -3139,7 +3139,31 @@ public partial class FrmMainApp : Form
                     // Action B: Re-calculate the global counts for the status label
                     FileListViewReadWrite.ListViewCountItemsWithGeoData();
                 },
-                ct: _token
+                ct: _token,
+                onProgress: (int completed, int total) =>
+                {
+                    // Hydration continues off the UI thread; the taskbar COM call must run on it.
+                    void Report()
+                    {
+                        if (total == 0)
+                        {
+                            TaskbarManagerInstance.SetProgressState(state: TaskbarProgressBarState.NoProgress);
+                            return;
+                        }
+
+                        TaskbarManagerInstance.SetProgressState(state: TaskbarProgressBarState.Normal);
+                        TaskbarManagerInstance.SetProgressValue(currentValue: completed, maximumValue: total);
+                    }
+
+                    if (InvokeRequired)
+                    {
+                        _ = BeginInvoke(method: Report);
+                    }
+                    else
+                    {
+                        Report();
+                    }
+                }
             );
 
             lvw_FileList.EndUpdate();

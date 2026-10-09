@@ -613,11 +613,20 @@ public class DirectoryElementCollection : List<DirectoryElement>
     /// <param name="onUpdated">Callback invoked when a DirectoryElement is updated during hydration.</param>
     /// <param name="ct">Cancellation token that can be used to cancel the background read operation.</param>
     /// <returns>A task that represents the asynchronous operation.</returns>
-    public async Task StartBackgroundMetadataRead(Action<DirectoryElement> onUpdated, CancellationToken ct)
+    public async Task StartBackgroundMetadataRead(Action<DirectoryElement> onUpdated, CancellationToken ct,
+                                                  Action<int, int> onProgress = null)
     {
         // Capture the task so the UI can monitor it
-        HydrationTask = RunHydrationInternal(onUpdated: onUpdated, ct: ct);
-        await HydrationTask;
+        HydrationTask = RunHydrationInternal(onUpdated: onUpdated, ct: ct, onProgress: onProgress);
+        try
+        {
+            await HydrationTask;
+        }
+        finally
+        {
+            // (0, 0) signals "finished or canceled" so the caller can clear its progress display.
+            onProgress?.Invoke(0, 0);
+        }
     }
 
     /// <summary>
@@ -632,7 +641,8 @@ public class DirectoryElementCollection : List<DirectoryElement>
     /// read; may be null.</param>
     /// <param name="ct">Cancellation token used to cancel the background processing; checked between files.</param>
     /// <returns>A Task that completes when the background metadata read finishes or is canceled.</returns>
-    public async Task RunHydrationInternal(Action<DirectoryElement> onUpdated, CancellationToken ct)
+    public async Task RunHydrationInternal(Action<DirectoryElement> onUpdated, CancellationToken ct,
+                                           Action<int, int> onProgress = null)
     {
         Log.Info("Metadata Hydration: Task Started");
 
@@ -640,12 +650,17 @@ public class DirectoryElementCollection : List<DirectoryElement>
         List<DirectoryElement> workList;
         lock (this) { workList = this.Where(x => x.Type == DirectoryElement.ElementType.File).ToList(); }
 
+        int completedCount = 0;
         foreach (DirectoryElement de in workList)
         {
             if (ct.IsCancellationRequested)
             {
                 return;
             }
+
+            // Reports files finished so far (before this one), so the final 100% is never shown; the caller
+            // clears the progress state when hydration ends.
+            onProgress?.Invoke(completedCount++, workList.Count);
 
             // We only skip if:
             // 1. It already HAS attributes (HasAttributes is true)
