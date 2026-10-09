@@ -136,7 +136,7 @@ track onto a photo put metres into a model that was expected to hold feet.
 `ExifTagSetParser` is now the single reader. The track-file path flattens its sidecar into the same tag
 dictionary a photo produces and runs it through the same
 `TagsToModelValueTransformations.TransformTagValue`, which is also the only place that says which clean-up
-belongs to which attribute. `ReadPipelineParityTests` asserts the two entry points agree, so the split
+belongs to which attribute. `ReadPipelineParityTests` (see `GeoTagNinja.Tests/README.md`) asserts the two entry points agree, so the split
 cannot quietly reopen.
 
 The merge settled three disagreements in favour of the better-behaved side, which does change behaviour:

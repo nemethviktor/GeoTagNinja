@@ -34,9 +34,12 @@ Helpers/
   Map/           the Leaflet layer list
   Startup/       first-run and per-launch setup
   Text/          string odds and ends
-  UI/            control-tree walking, form placement, localised control text
+  UI/            control-tree walking, form placement, localised control text, and ThemeHelper
+                 (the single entry point for dark mode - call it rather than styling controls by hand)
   Update/        AutoUpdater.NET callbacks
   HelperVariables.cs   application-wide mutable state (see below)
+
+GeoTagNinja.Tests/             NUnit tests for the value-handling logic; see its README.md
 ```
 
 ## Rules of thumb

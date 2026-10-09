@@ -3,6 +3,7 @@
 **Build 9xxx [202xxxxx]** (upcoming release)
 - NEW & UPDATED:
 	- Added Chinese translations via weblate
+	- Docs: `docs/` and the readme now cover the ThemeHelper, the test project and Release-build test gate, and the readme's feature list now covers features added since the original release.
 - BUGS & FIXES:
 	- TBA
 

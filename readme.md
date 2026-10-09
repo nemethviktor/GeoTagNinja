@@ -42,6 +42,20 @@ There is a "short" (15 mins) demo on [YouTube](https://youtu.be/ulP1ZG7mH-I) if 
 - Import Track (GPX etc) files and associate them with the photos
 - Export coordinate tracks of photos to GPX
 - Ability to define custom rules/logic wrt naming of places at country level
+- Get place names (country, state, city, etc.) and altitude from GeoNames for the selected location (altitude lookup can be disabled in `Settings`)
+- Drag the map marker, or long-press a point on the map, to apply a location to the selected photos
+- Overlay GPX tracks on the map before deciding whether to import them
+- Show the direction a photo was taken in (`GPSImgDirection`) and its destination on the map
+- Read and edit `GPSDOP` and `GPSHPositioningError`, and see `GPSDateTime` (read-only)
+- Filter list columns, rename (`F2`) and delete (`Del`) files from the list, and copy/paste tags between files
+- Remove all geodata from files in one go
+- Flat Mode: load all subfolders of the current folder at once
+- Thumbnail View, plus previews for common image types including RAW, HEIC, PNG and WEBP
+- Streaming folder load with progress on the taskbar button; loading a folder can be cancelled
+- Dark Mode (including a dark map option) and a choice of map layers
+- Export and import Settings and Custom Rules
+- Translatable via Weblate; currently available in several languages (see [Translation Progress](#translation-progress))
+- Automatic ExifTool updates and in-app update checks
 
 ## Parameters
 
@@ -123,6 +137,14 @@ The repo includes VS Code workspace files under `.vscode/` for the main app:
 - `Restore GeoTagNinja packages`
 - `Build GeoTagNinja (Debug x64)`
 - `Run GeoTagNinja (Debug x64)`
+
+### Tests
+
+`GeoTagNinja.Tests` holds pure-logic NUnit tests (no ExifTool, no files, no UI) that run every value-handling test across a dozen cultures. They are not run automatically in Debug builds, but a **Release build runs them and fails if any test fails**. See [`GeoTagNinja.Tests/README.md`](GeoTagNinja.Tests/README.md) for how to run them from a shell (a plain `dotnet test` won't work with this project type).
+
+### Where things live
+
+Notes for contributors are in [`docs/`](docs/): [`project-layout.md`](docs/project-layout.md) (folder/namespace conventions, moving forms, keeping the designer loadable) and [`architecture-values.md`](docs/architecture-values.md) (how a metadata value travels between file, memory and screen, and why formatting is culture-aware).
 
 There is currently no preset release cycle. I don't expect one to happen in a systematic way.
 
