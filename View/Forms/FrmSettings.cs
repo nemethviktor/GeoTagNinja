@@ -860,70 +860,54 @@ public partial class FrmSettings : Form
                                            .Split('\t')
                                            .FirstOrDefault()}_{subctrl.Name}";
 
-                CheckBox txt = box;
-                txt.Font = new Font(prototype: txt.Font, newStyle: FontStyle.Regular);
-                // see if it's in the settings-change-queue
-                string tmpCtrlVal = ApplicationSettings.DataReadSQLiteSettings(
-                    dataTable: HelperVariables.DtHelperDataApplicationSettings,
-                    settingTabPage: ((Control)sender).Parent.Name,
+                string settingTabPage = ((Control)sender).Parent.Name;
+
+                // a value waiting in the pre-queue is a genuine unsaved change -> bold.
+                string pendingVal = ApplicationSettings.DataReadSQLiteSettings(
+                    dataTable: HelperVariables.DtHelperDataApplicationSettingsPreQueue,
+                    settingTabPage: settingTabPage,
                     settingId: tmpCtrlName
                 );
 
-                if (tmpCtrlVal != null)
+                if (pendingVal != null)
                 {
-                    box.Checked = bool.Parse(value: tmpCtrlVal);
-                    txt.Font = new Font(prototype: txt.Font, newStyle: FontStyle.Bold);
+                    box.Checked = bool.Parse(value: pendingVal);
+                    box.Font = new Font(prototype: box.Font, newStyle: FontStyle.Bold);
                 }
-                else // nonesuch
+                else
                 {
-                    // if not....
-                    try
+                    // otherwise show the saved value (or the extension's default) as unchanged.
+                    string savedVal = ApplicationSettings.DataReadSQLiteSettings(
+                        dataTable: HelperVariables.DtHelperDataApplicationSettings,
+                        settingTabPage: settingTabPage,
+                        settingId: tmpCtrlName
+                    );
+
+                    if (savedVal != null)
                     {
-                        tmpCtrlVal = ApplicationSettings.DataReadSQLiteSettings(
-                            dataTable: HelperVariables.DtHelperDataApplicationSettings,
-                            settingTabPage: ((Control)sender).Parent.Name,
-                            settingId: tmpCtrlName
-                        );
-
-                        box.Checked = bool.Parse(value: tmpCtrlVal);
+                        box.Checked = bool.Parse(value: savedVal);
                     }
-                    catch (InvalidOperationException) // nonesuch
+                    else if (box == ckb_OverwriteOriginal)
                     {
-                        if (box == ckb_OverwriteOriginal)
-                        {
-                            box.Checked = true;
-                        }
-                        else if (box == ckb_AddXMPSideCar)
-                        {
-                            string tmpCtrlGroup = lbi.ToString()
-                                                     .Split('\t')
-                                                     .Last()
-                                                     .ToLower();
-
-                            box.Checked = tmpCtrlGroup.Contains(value: "raw") ||
-                                tmpCtrlGroup.Contains(value: "tiff") ||
-                                tmpCtrlGroup.Contains(value: "dng");
-                        }
-                        else // shouldn't be any at this point
-                        {
-                            box.Checked = false;
-                        }
-
-                        tmpCtrlVal = box.Checked.ToString()
-                                        .ToLower();
-
-                        List<AppSettingContainer> settingsToWrite =
-                        [
-                            new AppSettingContainer
-                            {
-                                TableName = "settings",
-                                SettingTabPage = ((Control)sender).Parent.Name,
-                                SettingId = "onlineVersionCheckDate",
-                                SettingValue = tmpCtrlVal
-                            }
-                        ];
-                        ApplicationSettings.DataWriteSQLiteSettings(settingsToWrite: settingsToWrite);
+                        box.Checked = true;
                     }
+                    else if (box == ckb_AddXMPSideCar)
+                    {
+                        string tmpCtrlGroup = lbi.ToString()
+                                                 .Split('\t')
+                                                 .Last()
+                                                 .ToLower();
+
+                        box.Checked = tmpCtrlGroup.Contains(value: "raw") ||
+                            tmpCtrlGroup.Contains(value: "tiff") ||
+                            tmpCtrlGroup.Contains(value: "dng");
+                    }
+                    else // shouldn't be any at this point
+                    {
+                        box.Checked = false;
+                    }
+
+                    box.Font = new Font(prototype: box.Font, newStyle: FontStyle.Regular);
                 }
 
                 if (tmpCtrlName.Contains(value: "ckb_ProcessOriginalFile"))
@@ -1043,14 +1027,10 @@ public partial class FrmSettings : Form
     {
         if (!_nowLoadingSettingsData)
         {
-            FrmSettings frmSettingsInstance =
-                (FrmSettings)Application.OpenForms[name: "FrmSettings"];
-
             CheckBox ckb = (CheckBox)sender;
             ckb.Font = new Font(prototype: ckb.Font, newStyle: FontStyle.Bold);
             object lbi = null;
-            if (frmSettingsInstance != null &&
-                frmSettingsInstance.tcr_Settings.SelectedTab == tpg_FileOptions)
+            if (ckb.Parent == tpg_FileOptions)
             {
                 lbi = lbx_fileExtensions.SelectedItem;
             }
