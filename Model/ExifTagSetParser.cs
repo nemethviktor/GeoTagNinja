@@ -19,7 +19,7 @@ namespace GeoTagNinja.Model;
 ///     </para>
 ///     <para>
 ///         The output is always the CLR type <see cref="GetElementAttributesType" /> declares for the attribute -
-///         never text that happens to look like a number or a date. See <c>docs/architecture-values.md</c>.
+///         never text that happens to look like a number or a date. See <c>architecture-values.md</c>.
 ///     </para>
 /// </remarks>
 internal static class ExifTagSetParser

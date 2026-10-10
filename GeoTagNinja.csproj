@@ -384,8 +384,7 @@
     <None Include="contributors.md">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
-    <None Include="docs\architecture-values.md" />
-    <None Include="docs\project-layout.md" />
+    <None Include="development-notes.md" />
     <None Include="project-layout.md" />
     <None Include="Properties\Settings.settings">
       <Generator>SettingsSingleFileGenerator</Generator>

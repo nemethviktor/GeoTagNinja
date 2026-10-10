@@ -145,7 +145,7 @@ The repo includes VS Code workspace files under `.vscode/` for the main app:
 
 ### Where things live
 
-Notes for contributors are in [`docs/`](docs/): [`project-layout.md`](docs/project-layout.md) (folder/namespace conventions, moving forms, keeping the designer loadable) and [`architecture-values.md`](docs/architecture-values.md) (how a metadata value travels between file, memory and screen, and why formatting is culture-aware).
+Notes for contributors are in the repository root: [`project-layout.md`](project-layout.md) (folder/namespace conventions, moving forms) and [`development-notes.md`](development-notes.md) (adding settings, keeping the designer loadable) and [`architecture-values.md`](architecture-values.md) (how a metadata value travels between file, memory and screen, and why formatting is culture-aware).
 
 There is currently no preset release cycle. I don't expect one to happen in a systematic way.
 

@@ -222,6 +222,12 @@ internal static class WriteSaveToFile
                             string settingValue = dataRow[columnName: "settingValue"]
                                .ToString();
 
+                            // the display sentinel means "blank"; it must delete the tag, never be written into the file as a literal "-"
+                            if (settingValue == FrmMainApp.NullStringEquivalentGeneric)
+                            {
+                                settingValue = FrmMainApp.NullStringEquivalentBlank;
+                            }
+
                             ElementAttribute attribute = GetElementAttributesElementAttribute(attributeToFind: settingId);
                             List<string> orderedTags = [];
                             try

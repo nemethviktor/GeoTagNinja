@@ -112,8 +112,9 @@ These are pre-existing and deliberately left alone so far, recorded here so they
 intended design:
 
 - **The blank sentinel for strings is `"-"`**, not the empty string (`FrmMainApp.NullStringEquivalentGeneric`).
-  That is a *display* sentinel being used as a *data* value, so a string attribute that is blanked but
-  not flagged for deletion can reach the write path as a literal `-`.
+  That is a *display* sentinel being used as a *data* value. It must never reach a file: `WriteSaveToFile`
+  maps it to the empty string before building ExifTool arguments, so a blanked attribute deletes the tag instead of
+  writing a literal `-`. Replacing the sentinel with a real blank throughout the model is still outstanding.
 - **`SetAttributeValue` treats a blank differently on create and on update.** Creating an attribute
   with `""` stores `""`; updating an existing one to `""` stores the sentinel. Behaviour was preserved
   rather than unified, because unifying it changes what gets written to files.
