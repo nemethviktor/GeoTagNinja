@@ -8,6 +8,7 @@
 	- Docs: the contributor docs and the readme now cover the ThemeHelper, the test project and Release-build test gate, and the readme's feature list now covers features added since the original release.
 - BUGS & FIXES:
 	- A string attribute that was blanked could be written into the file as a literal `-` instead of deleting the tag; the save now treats the display placeholder as a blank.
+	- Build output (`bin\` and `obj\`) now goes to `%LOCALAPPDATA%\build\GeoTagNinja\<project>\` via a new `Directory.Build.props`, so rebuilding no longer churns the synced repository folder. The setup project's two hardcoded native-DLL paths were updated to match.
 	- Docs: moved `docs/` to the repository root, and split the non-layout notes out of `project-layout.md` into `development-notes.md`.
 
 **Build 9778 [20261009]**

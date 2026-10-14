@@ -60,7 +60,7 @@ namespace together and the two stay aligned; change one without the other and th
 `MissingManifestResourceException` at runtime, with a clean build. After moving a form, check with:
 
 ```powershell
-$asm = [Reflection.Assembly]::LoadFrom("bin\Debug\GeoTagNinja.exe")
+$asm = [Reflection.Assembly]::LoadFrom("$env:LOCALAPPDATA\build\GeoTagNinja\GeoTagNinja\bin\Debug\GeoTagNinja.exe")
 $asm.GetManifestResourceNames() | Where-Object { $_ -match 'Frm' }
 ```
 

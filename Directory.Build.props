@@ -1,0 +1,10 @@
+﻿<Project>
+  <!-- Build output lives outside the repo: the repo is synced to Google Drive, and every rebuild
+       would otherwise re-sync ~1300 files. Each project gets its own bin\ and obj\ underneath. -->
+  <PropertyGroup>
+    <BuildRoot>$(LOCALAPPDATA)\build\GeoTagNinja\$(MSBuildProjectName)\</BuildRoot>
+    <BaseIntermediateOutputPath>$(BuildRoot)obj\</BaseIntermediateOutputPath>
+    <BaseOutputPath>$(BuildRoot)bin\</BaseOutputPath>
+    <MSBuildProjectExtensionsPath>$(BaseIntermediateOutputPath)</MSBuildProjectExtensionsPath>
+  </PropertyGroup>
+</Project>
