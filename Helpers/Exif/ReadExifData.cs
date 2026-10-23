@@ -462,8 +462,7 @@ internal static class ReadExifData
                             );
                         }
 
-                        _ = double.TryParse(s: readJsonToponomy.Geonames[index]
-                                                                   .Srtm3.ToString(), result: out double tmpAlt);
+                        double tmpAlt = readJsonToponomy.Geonames[index].Srtm3;
                         try
                         {
                             // can return 32768 or -32768 in some cases. this is the API's "fault" (not that of the code.)
@@ -471,7 +470,10 @@ internal static class ReadExifData
                             {
                                 if (!string.IsNullOrEmpty(value: HelperVariables.CurrentAltitudeAsString))
                                 {
-                                    _ = double.TryParse(s: HelperVariables.CurrentAltitudeAsString, result: out tmpAlt);
+                                    // CurrentAltitudeAsString is invariant text (numbers are invariant in every context).
+                                    _ = AttributeValueFormatter.TryParseDouble(value: HelperVariables.CurrentAltitudeAsString,
+                                                                               context: ValueFormatContext.RoundTrip,
+                                                                               result: out tmpAlt);
                                 }
                                 else
                                 {
@@ -484,7 +486,8 @@ internal static class ReadExifData
                             tmpAlt = 0.0;
                         }
 
-                        Altitude = $"{tmpAlt}";
+                        // Invariant: the consumer (FrmEditFileData) reads this back invariantly; "135,41" would become 13541.
+                        Altitude = AttributeValueFormatter.FormatDouble(value: tmpAlt, context: ValueFormatContext.RoundTrip);
 
                         // this is already String.
                         timezoneId = readJsonToponomy.Geonames[index]

@@ -913,7 +913,7 @@ public partial class FrmEditFileData : Form
                 strGPSLatitude = nud_GPSLatitude.Value.ToString(provider: CultureInfo.InvariantCulture);
                 strGPSLongitude = nud_GPSLongitude.Value.ToString(provider: CultureInfo.InvariantCulture);
 
-                HelperVariables.CurrentAltitudeAsString = nud_GPSAltitude.Text.ToString(provider: CultureInfo.InvariantCulture);
+                HelperVariables.CurrentAltitudeAsString = nud_GPSAltitude.Value.ToString(provider: CultureInfo.InvariantCulture);
             }
         }
         else
