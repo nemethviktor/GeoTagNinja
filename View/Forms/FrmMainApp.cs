@@ -277,6 +277,69 @@ public partial class FrmMainApp : Form
     /// <returns></returns>
     private async Task<Task> InitialiseApplication()
     {
+        try
+        {
+            return await InitialiseApplicationCore();
+        }
+        catch (Exception ex)
+        {
+            // Called fire-and-forget from the constructor, so without this an exception is silently
+            // swallowed and the user is left with an invisible form (Opacity 0) and a splash screen
+            // that never closes - an unkillable zombie. Fail loudly and exit instead.
+            AbortStartup(ex: ex);
+            return Task.CompletedTask;
+        }
+    }
+
+    /// <summary>
+    ///     Reports a fatal startup failure (e.g. a broken SQLite native library after a package update) to the user
+    ///     and terminates the process, rather than leaving a half-initialised app running.
+    /// </summary>
+    /// <param name="ex">The exception that stopped startup.</param>
+    private void AbortStartup(Exception ex)
+    {
+        try
+        {
+            Log.Fatal(exception: ex, message: "Startup failed");
+            // NLog is only configured further down the constructor, so an early failure never reaches
+            // the log; write the file directly so the message below tells the truth.
+            File.AppendAllText(
+                path: Path.Combine(path1: HelperVariables.UserDataFolderPath, path2: "logfile.txt"),
+                contents: DateTime.Now + "|FATAL|Startup failed|" + ex + Environment.NewLine);
+        }
+        catch
+        {
+            // Logging must never stop us from exiting.
+        }
+
+        try
+        {
+            frmSplashScreen?.Close();
+        }
+        catch
+        {
+            // Splash may already be disposed.
+        }
+
+        // Plain MessageBox on purpose: ThemeHelper and the localised strings depend on the very
+        // settings database that may be what failed.
+        Exception root = ex.GetBaseException();
+        _ = MessageBox.Show(
+            text: "GeoTagNinja could not start and will now close." + Environment.NewLine + Environment.NewLine +
+                  root.GetType().Name + ": " + root.Message + Environment.NewLine + Environment.NewLine +
+                  "If you have just updated the SQLite package, check that SQLite.Interop.dll matches the package version." +
+                  Environment.NewLine + "Details are in logfile.txt in the user data folder.",
+            caption: "GeoTagNinja - startup error",
+            buttons: MessageBoxButtons.OK,
+            icon: MessageBoxIcon.Error);
+
+        // Environment.Exit rather than Application.Exit: the message loop may not be running yet,
+        // and background tasks must not be able to keep the process alive.
+        Environment.Exit(exitCode: 1);
+    }
+
+    private async Task<Task> InitialiseApplicationCore()
+    {
         // Application.Run(mainForm) forces Visible = true regardless of what we set here,
         // so Visible can't be used to hide the form while it's still untranslated. Opacity
         // isn't touched by Application.Run, so it's the only reliable way to keep the raw,
@@ -310,6 +373,8 @@ public partial class FrmMainApp : Form
         {
             Task completedTask = await Task.WhenAny(tasks: remainingTasks);
             _ = remainingTasks.Remove(item: completedTask);
+            // WhenAny doesn't throw for a faulted task; awaiting it surfaces the exception.
+            await completedTask;
 
             frmSplashScreen.UpdateProgress(
                 amount: eachTasksPointValue,

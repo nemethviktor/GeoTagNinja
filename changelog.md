@@ -7,6 +7,9 @@
 	- The `Application` settings tab scrolls rather than the form growing when more options are added.
 	- Docs: the contributor docs and the readme now cover the ThemeHelper, the test project and Release-build test gate, and the readme's feature list now covers features added since the original release.
 - BUGS & FIXES:
+	- The one-off custom-rules rename in the settings database now binds its values as SQL parameters instead of double-quoted literals, which newer SQLite builds may reject.
+	- Updating to `System.Data.SQLite` 2.x broke startup with `Unable to load DLL 'e_sqlite3'`: that version no longer bundles its native library. `SQLitePCLRaw.lib.e_sqlite3` is now referenced and its x64 `e_sqlite3.dll` copied next to the exe.
+	- A failure during startup (e.g. SQLite failing to load) used to be swallowed, leaving an invisible, unkillable process. The app now shows an error message, logs it and exits.
 	- With `Do Not Download Altitude` ticked, pulling toponomy data in a comma-decimal locale (e.g. `de-DE`) multiplied the existing altitude by 100 (`135,41` became `13541`). The fallback altitude was rendered with the current culture and then read back invariantly; it is now invariant end to end, and the Edit dialog passes the numeric control's value instead of its culture-formatted text.
 	- A string attribute that was blanked could be written into the file as a literal `-` instead of deleting the tag; the save now treats the display placeholder as a blank.
 	- Build output (`bin\` and `obj\`) now goes to `%LOCALAPPDATA%\build\GeoTagNinja\<project>\` via a new `Directory.Build.props`, so rebuilding no longer churns the synced repository folder. The setup project's two hardcoded native-DLL paths were updated to match.

@@ -323,10 +323,14 @@ internal static class DatabaseAndStartup
             // Get the schema for the columns in the database.
             DataTable colsTable = SQLiteDB.GetSchema(collectionName: "Columns");
 
+            // Values are bound as parameters: the old "{value}" form used double quotes, which SQLite only
+            // treats as a string literal when the engine is built with the legacy DQS quirk enabled.
             string commandText =
-                $"""UPDATE {tableName} SET {columnName} = "{dataTo}" WHERE {columnName} = "{dataFrom}" """;
+                $"UPDATE {tableName} SET {columnName} = @dataTo WHERE {columnName} = @dataFrom";
 
             SQLiteCommand SQLiteCommand = new(commandText: commandText, connection: SQLiteDB);
+            _ = SQLiteCommand.Parameters.AddWithValue(parameterName: "@dataTo", value: dataTo);
+            _ = SQLiteCommand.Parameters.AddWithValue(parameterName: "@dataFrom", value: dataFrom);
 
             _ = SQLiteCommand.ExecuteNonQuery();
 

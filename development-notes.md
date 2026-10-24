@@ -59,3 +59,7 @@ anything reachable from a control constructor.
 To check a control is design-time safe without opening Visual Studio, construct it in a process that
 has a plain `Form` named `FrmMainApp` in `Application.OpenForms` — that is precisely the designer's
 state.
+
+## SQLite native library
+
+`System.Data.SQLite` 2.x P/Invokes `e_sqlite3` but ships no native binary. `GeoTagNinja.csproj` references `SQLitePCLRaw.lib.e_sqlite3` with its build assets excluded (they reject AnyCPU and copy to a subfolder .NET Framework never probes) and copies the win-x64 DLL flat via a `Content` item. Bump the version in both places together. If the DLL is missing, startup now shows an error and exits (`FrmMainApp.AbortStartup`) instead of hanging.
