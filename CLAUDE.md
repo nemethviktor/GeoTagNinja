@@ -54,6 +54,7 @@ ExifTool raw tag strings go through `ExifTagSetParser`, then `TagsToModelValueTr
 - Source files are **UTF-8 with BOM and CRLF**. `sed -i` and most heredocs write LF, so re-encode after editing that way.
 - Adding a checkbox to `FrmSettings` touches four places: the control in the designer and resx, a caption in `Resources/Languages/Strings.resx`, a `UserSetting…` static plus its mapping in `AppStartup.AppStartupApplyDefaults`, and the code that reads it. See `development-notes.md`.
 - Every change also updates `changelog.md`, the relevant root-level docs (`*.md`), and the code comments. Skim `readme.md` and fix or flag anything badly stale.
+- **`.vscode/` is part of the build contract.** `tasks.json`, `launch.json` and `.vscode/msbuild.ps1` hard-code the MSBuild lookup, the `%LOCALAPPDATA%\build\...` exe path, the x64 platform and the test command. Any change to the build setup (output paths in `Directory.Build.props` or the csproj, platforms or configurations, restore or test commands, target framework, new projects) must update them in the same change. Verify by running the scripts: `powershell -File .vscode\msbuild.ps1 -Action Restore`, then `Build`, then `Test`. Also keep the `readme.md` "Building the main app in VS Code" task list in step.
 
 ## Traps that build cleanly and fail at runtime
 

@@ -5,7 +5,7 @@
       "name": ".NET Framework Launch GeoTagNinja",
       "type": "clr",
       "request": "launch",
-      "program": "${workspaceFolder}\\bin\\x64\\Debug\\GeoTagNinja.exe",
+      "program": "${env:LOCALAPPDATA}\\build\\GeoTagNinja\\GeoTagNinja\\bin\\Debug\\GeoTagNinja.exe",
       "args": [],
       "cwd": "${workspaceFolder}",
       "stopAtEntry": false,

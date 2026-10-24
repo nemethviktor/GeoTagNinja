@@ -7,6 +7,7 @@
 	- The `Application` settings tab scrolls rather than the form growing when more options are added.
 	- Docs: the contributor docs and the readme now cover the ThemeHelper, the test project and Release-build test gate, and the readme's feature list now covers features added since the original release.
 - BUGS & FIXES:
+	- The VS Code tasks and launch configuration were stale: F5 looked for the exe in the old in-repo `bin\x64\Debug`. They now use the `%LOCALAPPDATA%` build output, find MSBuild through `vswhere` (so VS 18 Insiders works) via `.vscode/msbuild.ps1`, restore with full-framework MSBuild, and gained a `Test GeoTagNinja` task.
 	- The `x64` build configurations now write to the same `bin\Debug` / `bin\Release` folders as `Any CPU` (previously `bin\x64\...`), and the setup project's source paths were updated to match, so the installer packages the current build whichever platform is selected.
 	- The one-off custom-rules rename in the settings database now binds its values as SQL parameters instead of double-quoted literals, which newer SQLite builds may reject.
 	- Updating to `System.Data.SQLite` 2.x broke startup with `Unable to load DLL 'e_sqlite3'`: that version no longer bundles its native library. `SQLitePCLRaw.lib.e_sqlite3` is now referenced and its x64 `e_sqlite3.dll` copied next to the exe.

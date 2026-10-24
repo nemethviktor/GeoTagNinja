@@ -138,6 +138,9 @@ The repo includes VS Code workspace files under `.vscode/` for the main app:
 - `Restore GeoTagNinja packages`
 - `Build GeoTagNinja (Debug x64)`
 - `Run GeoTagNinja (Debug x64)`
+- `Test GeoTagNinja` (runs the NUnit tests against the Debug build)
+
+The tasks call `.vscode\msbuild.ps1`, which finds MSBuild through `vswhere`. F5 launches the exe from `%LOCALAPPDATA%\build\GeoTagNinja\`.
 
 ### Tests
 
