@@ -74,7 +74,10 @@
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Debug|x64'">
     <DebugSymbols>true</DebugSymbols>
-    <OutputPath>$(BaseOutputPath)x64\Debug\</OutputPath>
+    <!-- Same folders as the AnyCPU configurations (which are x64 too), so GeoTagNinja_Setup.vdproj, whose
+         SourcePaths cannot use properties, finds the output whichever platform is active. -->
+    <OutputPath>$(BaseOutputPath)Debug\</OutputPath>
+    <IntermediateOutputPath>$(BaseIntermediateOutputPath)Debug\</IntermediateOutputPath>
     <DefineConstants>DEBUG;TRACE</DefineConstants>
     <DebugType>full</DebugType>
     <PlatformTarget>x64</PlatformTarget>
@@ -82,7 +85,8 @@
     <ErrorReport>prompt</ErrorReport>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Release|x64'">
-    <OutputPath>$(BaseOutputPath)x64\Release\</OutputPath>
+    <OutputPath>$(BaseOutputPath)Release\</OutputPath>
+    <IntermediateOutputPath>$(BaseIntermediateOutputPath)Release\</IntermediateOutputPath>
     <DefineConstants>TRACE</DefineConstants>
     <Optimize>true</Optimize>
     <DebugType>pdbonly</DebugType>
