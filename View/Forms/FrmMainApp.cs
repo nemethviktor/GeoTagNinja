@@ -1131,16 +1131,16 @@ public partial class FrmMainApp : Form
     {
         string htmlCode = _mapHtmlTemplateCode;
 
-        // If set, replace arcgis key
-        if (HelperVariables.UserSettingArcGisApiKey != null)
-        {
-            htmlCode = htmlCode.Replace(oldValue: "yourApiKey",
-                newValue: HelperVariables
-                   .UserSettingArcGisApiKey);
-        }
+        // Hand the place-search credentials to the page as JSON string literals, so a stray quote in a
+        // username or key can't break out of the script. The GeoNames username is what the map search tries first.
+        // The ArcGIS key is only used if the (currently disabled) ArcGIS provider in map.html is re-enabled.
+        htmlCode = htmlCode.Replace(oldValue: "replaceGeoNamesUserName",
+            newValue: JsonSerializer.Serialize(value: HelperVariables.UserSettingGeoNamesUserName ?? ""));
+        htmlCode = htmlCode.Replace(oldValue: "replaceArcGisApiKey",
+            newValue: JsonSerializer.Serialize(value: HelperVariables.UserSettingArcGisApiKey ?? ""));
 
         Log.Trace(message:
-            $"HelperStatic.UserSettingArcGisApiKey == null: {HelperVariables.UserSettingArcGisApiKey == null}");
+            $"Map search - GeoNames username set: {!string.IsNullOrEmpty(value: HelperVariables.UserSettingGeoNamesUserName)}, ArcGIS key set: {!string.IsNullOrEmpty(value: HelperVariables.UserSettingArcGisApiKey)}");
 
         foreach (KeyValuePair<string, string> replacement in replacements)
         {
@@ -2058,6 +2058,19 @@ public partial class FrmMainApp : Form
                 uri: "https://*.tile.openstreetmap.org/*",
                 Microsoft.Web.WebView2.Core.CoreWebView2WebResourceContext.Image
             );
+            // ... and the OSM-run search services used by the map's search box. Their usage policies ask for
+            // an identifying Referer, and a page loaded via NavigateToString has none.
+            foreach (string searchUri in new[]
+                     {
+                         "https://nominatim.openstreetmap.org/*",
+                         "https://photon.komoot.io/*"
+                     })
+            {
+                wbv_MapArea.CoreWebView2.AddWebResourceRequestedFilter(
+                    uri: searchUri,
+                    Microsoft.Web.WebView2.Core.CoreWebView2WebResourceContext.All
+                );
+            }
 
             // 2. Handle the request
             wbv_MapArea.CoreWebView2.WebResourceRequested += (object sender, CoreWebView2WebResourceRequestedEventArgs args) =>
@@ -2148,21 +2161,28 @@ public partial class FrmMainApp : Form
                 buttons: MessageBoxButtons.OK);
         }
 
-        // Get the ArcGis API Key
+        // Get the GeoNames username (the map search tries GeoNames first)
+        if (string.IsNullOrEmpty(value: HelperVariables.UserSettingGeoNamesUserName))
+        {
+            HelperVariables.UserSettingGeoNamesUserName =
+                ApplicationSettings.DataReadSQLiteSettings(
+                    dataTable: HelperVariables.DtHelperDataApplicationSettings,
+                    settingTabPage: "tpg_Application",
+                    settingId: "tbx_GeoNames_UserName",
+                    returnBlankIfNull: true);
+            Log.Trace(message: "UserSettingGeoNamesUserName obtained from SQLite OK");
+        }
+
+        // Get the ArcGis API Key (dormant - only used if the ArcGIS provider in map.html is re-enabled)
         if (string.IsNullOrEmpty(value: HelperVariables.UserSettingArcGisApiKey))
         {
-            Log.Trace(
-                message:
-                "Replace hard-coded values in the html code - UserSettingArcGisApiKey is null");
             HelperVariables.UserSettingArcGisApiKey =
                 ApplicationSettings.DataReadSQLiteSettings(
                     dataTable: HelperVariables.DtHelperDataApplicationSettings,
                     settingTabPage: "tpg_Application",
                     settingId: "tbx_ARCGIS_APIKey",
                     returnBlankIfNull: true);
-            Log.Trace(
-                message:
-                "Replace hard-coded values in the html code - UserSettingArcGisApiKey obtained from SQLite OK");
+            Log.Trace(message: "UserSettingArcGisApiKey obtained from SQLite OK");
         }
 
         // Parse coords from lat/lng text box

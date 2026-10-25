@@ -3,6 +3,7 @@
 **Build 9xxx [202xxxxx]** (upcoming release)
 - NEW & UPDATED:
 	- Added Chinese translations via weblate
+	- The map's search box no longer needs an ArcGIS API key. It now tries GeoNames first (reusing your GeoNames username), then Photon (suggestions as you type), then Nominatim (on Enter only). The ArcGIS controls are hidden in `Settings` (not deleted, in case it returns) and a previously saved key is kept but unused.
 	- Added a `Settings` > `Application` option, `Do Not Change File's Modified Date When Saving` (off by default), so adding a location to a photo no longer makes File Explorer show the date of the save instead of the date the photo was taken. It uses ExifTool's `-P`. It does not apply to a file type that has `Reset Image File DateTime to CreateDate` ticked, as that is an explicit request for a particular date.
 	- The `Application` settings tab scrolls rather than the form growing when more options are added.
 	- Updated `WinFormsDarkThemerNinja.Official` to 1.0.3. The package is now unsigned, so the setup project's assembly reference was updated to match (version and public key token). Nothing in the app needed changing: the `Themer` calls we use (`ApplyThemeToControl`, `ShowMessageBox`, `ShowMessageBoxWithResult`, `ThemeStyle`) are unchanged.

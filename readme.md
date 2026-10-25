@@ -44,6 +44,7 @@ There is a "short" (15 mins) demo on [YouTube](https://youtu.be/ulP1ZG7mH-I) if 
 - Ability to define custom rules/logic wrt naming of places at country level
 - Get place names (country, state, city, etc.) and altitude from GeoNames for the selected location (altitude lookup can be disabled in `Settings`)
 - Drag the map marker, or long-press a point on the map, to apply a location to the selected photos
+- Search for a place or address from the map (no API key needed: GeoNames, then Photon, then Nominatim)
 - Overlay GPX tracks on the map before deciding whether to import them
 - Show the direction a photo was taken in (`GPSImgDirection`) and its destination on the map
 - Read and edit `GPSDOP` and `GPSHPositioningError`, and see `GPSDateTime` (read-only)
@@ -224,20 +225,7 @@ The current .NET Framework 4.8 is a little obsolete. I haven't switched to 4.8.1
 ## System Requirements
 
 - Windows 7+ x64 is needed. As I mentioned in the Roadmap it's likely that support for pre-Win10 OSs will eventually be dropped.
-- You'll need an ArcGIS API key to use the map search functionality. 
-	- ArcGIS have changed their registration process as of June 2024. Register [here](https://location.arcgis.com/sign-up/)
-	- You now need to specify a portal url. Just input anything you want.
-	- Scroll/Go to `Developer credential creator`
-	- Then `New Item`
-	- Then `Developer Credentials`
-	- Pick `API Key` (not OAuth)
-	- Set your expiration date to as far into the future as you can (1 year)
-	- Leave `Referrers` blank
-	- On the next page pick `Geocoding (not stored)`
-	- On the next page skip `Item Access`
-	- On the next page add any title
-	- Eventually click `Generate the API key and go to item details page. I am ready to copy and save the key.`
-	- Save the API key when prompted. If you don't do it at the time you'll have to generate another one.
-- You'll need a GeoNames username and password to use toponym search. Register for free [here](https://www.geonames.org/)
+- The map's search box needs no registration of its own. It tries [GeoNames](https://www.geonames.org/) first (using the username you've entered in `Settings`, place names only), then [Photon](https://photon.komoot.io/) (OpenStreetMap data, suggestions as you type), and finally [Nominatim](https://nominatim.openstreetmap.org/) (OpenStreetMap data, only when you press Enter). Street addresses are found by Photon and Nominatim. The old ArcGIS API key is no longer needed or offered in `Settings`.
+- You'll need a GeoNames username and password to use toponym search (the username is also used first by the map's search box). Register for free [here](https://www.geonames.org/)
     - Copypaste from above: I've been told that by default the GeoNames API usage is disabled for (some?) new accounts. In that case you have to activate the free web service ---> After registering and clicking the link in the activation email, you still need to activate your account for using web services. To do so, go to your `Manage Account` page [ [http://www.geonames.org/manageaccount](http://www.geonames.org/manageaccount) ] make sure your email shows up correctly. From here, click the `Free Webservice` activation link.
 - WebView2 is required but should come with your OS most likely. If not, get it from [here](https://go.microsoft.com/fwlink/p/?LinkId=2124703)

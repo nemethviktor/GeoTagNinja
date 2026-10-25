@@ -879,7 +879,7 @@
     <value>NoControl</value>
   </data>
   <data name="ckb_ShowPassword_GeoNames.Location" type="System.Drawing.Point, System.Drawing">
-    <value>373, 181</value>
+    <value>373, 100</value>
   </data>
   <data name="ckb_ShowPassword_GeoNames.Size" type="System.Drawing.Size, System.Drawing">
     <value>182, 17</value>
@@ -933,7 +933,7 @@
     <value>True</value>
   </data>
   <data name="lbl_Generic_Miles.Location" type="System.Drawing.Point, System.Drawing">
-    <value>569, 342</value>
+    <value>569, 261</value>
   </data>
   <data name="lbl_Generic_Miles.Margin" type="System.Windows.Forms.Padding, System.Windows.Forms">
     <value>2, 0, 2, 0</value>
@@ -963,7 +963,7 @@
     <value>True</value>
   </data>
   <data name="ckb_PopulatedPlacesOnly.Location" type="System.Drawing.Point, System.Drawing">
-    <value>12, 397</value>
+    <value>12, 316</value>
   </data>
   <data name="ckb_PopulatedPlacesOnly.Size" type="System.Drawing.Size, System.Drawing">
     <value>151, 17</value>
@@ -1062,7 +1062,7 @@
     <value>2</value>
   </data>
   <data name="gbx_GeoNamesLanguageSettings.Location" type="System.Drawing.Point, System.Drawing">
-    <value>15, 215</value>
+    <value>15, 134</value>
   </data>
   <data name="gbx_GeoNamesLanguageSettings.Size" type="System.Drawing.Size, System.Drawing">
     <value>812, 117</value>
@@ -1089,7 +1089,7 @@
     <value>True</value>
   </data>
   <data name="ckb_ReplaceBlankToponyms.Location" type="System.Drawing.Point, System.Drawing">
-    <value>12, 374</value>
+    <value>12, 293</value>
   </data>
   <data name="ckb_ReplaceBlankToponyms.Size" type="System.Drawing.Size, System.Drawing">
     <value>166, 17</value>
@@ -1113,7 +1113,7 @@
     <value>5</value>
   </data>
   <data name="tbx_ReplaceBlankToponyms.Location" type="System.Drawing.Point, System.Drawing">
-    <value>510, 371</value>
+    <value>510, 290</value>
   </data>
   <data name="tbx_ReplaceBlankToponyms.Margin" type="System.Windows.Forms.Padding, System.Windows.Forms">
     <value>2, 2, 2, 2</value>
@@ -1140,7 +1140,7 @@
     <value>True</value>
   </data>
   <data name="lbl_ChoiceRadius.Location" type="System.Drawing.Point, System.Drawing">
-    <value>379, 340</value>
+    <value>379, 259</value>
   </data>
   <data name="lbl_ChoiceRadius.Margin" type="System.Windows.Forms.Padding, System.Windows.Forms">
     <value>2, 0, 2, 0</value>
@@ -1170,7 +1170,7 @@
     <value>True</value>
   </data>
   <data name="lbl_ChoiceOfferCount.Location" type="System.Drawing.Point, System.Drawing">
-    <value>12, 340</value>
+    <value>12, 259</value>
   </data>
   <data name="lbl_ChoiceOfferCount.Margin" type="System.Windows.Forms.Padding, System.Windows.Forms">
     <value>2, 0, 2, 0</value>
@@ -1197,7 +1197,7 @@
     <value>8</value>
   </data>
   <data name="nud_ChoiceRadius.Location" type="System.Drawing.Point, System.Drawing">
-    <value>512, 340</value>
+    <value>512, 259</value>
   </data>
   <data name="nud_ChoiceRadius.Size" type="System.Drawing.Size, System.Drawing">
     <value>43, 20</value>
@@ -1218,7 +1218,7 @@
     <value>9</value>
   </data>
   <data name="nud_ChoiceOfferCount.Location" type="System.Drawing.Point, System.Drawing">
-    <value>309, 338</value>
+    <value>309, 257</value>
   </data>
   <data name="nud_ChoiceOfferCount.Size" type="System.Drawing.Size, System.Drawing">
     <value>43, 20</value>
@@ -1263,7 +1263,7 @@
     <value>11</value>
   </data>
   <data name="rbx_Register_GeoNames.Location" type="System.Drawing.Point, System.Drawing">
-    <value>12, 100</value>
+    <value>12, 19</value>
   </data>
   <data name="rbx_Register_GeoNames.Size" type="System.Drawing.Size, System.Drawing">
     <value>815, 42</value>
@@ -1290,7 +1290,7 @@
     <value>True</value>
   </data>
   <data name="lbl_GeoNames_Pwd.Location" type="System.Drawing.Point, System.Drawing">
-    <value>12, 181</value>
+    <value>12, 100</value>
   </data>
   <data name="lbl_GeoNames_Pwd.Margin" type="System.Windows.Forms.Padding, System.Windows.Forms">
     <value>2, 0, 2, 0</value>
@@ -1320,7 +1320,7 @@
     <value>True</value>
   </data>
   <data name="lbl_GeoNames_UserName.Location" type="System.Drawing.Point, System.Drawing">
-    <value>12, 150</value>
+    <value>12, 69</value>
   </data>
   <data name="lbl_GeoNames_UserName.Margin" type="System.Windows.Forms.Padding, System.Windows.Forms">
     <value>2, 0, 2, 0</value>
@@ -1374,7 +1374,7 @@
     <value>15</value>
   </data>
   <data name="tbx_GeoNames_Pwd.Location" type="System.Drawing.Point, System.Drawing">
-    <value>186, 178</value>
+    <value>186, 97</value>
   </data>
   <data name="tbx_GeoNames_Pwd.Margin" type="System.Windows.Forms.Padding, System.Windows.Forms">
     <value>2, 2, 2, 2</value>
@@ -1398,7 +1398,7 @@
     <value>16</value>
   </data>
   <data name="tbx_GeoNames_UserName.Location" type="System.Drawing.Point, System.Drawing">
-    <value>186, 147</value>
+    <value>186, 66</value>
   </data>
   <data name="tbx_GeoNames_UserName.Margin" type="System.Windows.Forms.Padding, System.Windows.Forms">
     <value>2, 2, 2, 2</value>

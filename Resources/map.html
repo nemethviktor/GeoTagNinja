@@ -8,22 +8,22 @@
     <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" crossorigin="" />
     <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js" crossorigin=""></script>
 
-    <!-- Load Esri Leaflet from CDN -->
-    <script src="https://unpkg.com/esri-leaflet/dist/esri-leaflet.js"></script>
-    <script src="https://unpkg.com/esri-leaflet-vector/dist/esri-leaflet-vector.js"></script>
+    <!-- No Esri Leaflet scripts any more: the place search below is a small self-contained control,
+         and the ArcGIS geocoder (if ever re-enabled) is called via plain REST. -->
 
-	<!-- Load Esri Leaflet Geocoder from CDN -->
-	<link rel="stylesheet" href="https://unpkg.com/esri-leaflet-geocoder/dist/esri-leaflet-geocoder.css" crossorigin="" />
-    <script src="https://unpkg.com/esri-leaflet-geocoder/dist/esri-leaflet-geocoder.js" crossorigin=""></script>
-    
 	<script>{ HTMLPolylineDecoratorScript }</script>
-	
+
 	<style>
 		{ HTMLMapStyleCSS }
 
-		.geocoder-control-expanded { width: 400px !important; }
-
-		.geocoder-control-suggestions { width: 400px !important; }
+		.gtn-search { width: 400px; background: #fff; border-radius: 4px; box-shadow: 0 1px 5px rgba(0,0,0,.65); font: 13px/1.4 Arial, sans-serif; }
+		.gtn-search input { box-sizing: border-box; width: 100%; padding: 6px 10px; border: 0; border-radius: 4px; outline: none; font: inherit; }
+		.gtn-search ul { margin: 0; padding: 0; list-style: none; border-top: 1px solid #ddd; max-height: 260px; overflow-y: auto; }
+		.gtn-search li { padding: 5px 10px; cursor: pointer; color: #222; }
+		.gtn-search li:hover, .gtn-search li.gtn-active { background: #e8f0fe; }
+		.gtn-search li.gtn-status { cursor: default; color: #777; font-style: italic; }
+		.gtn-search li.gtn-status:hover { background: none; }
+		.gtn-search li small { color: #777; }
 	</style>
 
 </head>
@@ -125,28 +125,257 @@
         { HTMLShowPolyLine }
 
         var popup = L.popup();
-        var searchControl = L.esri.Geocoding.geosearch({
-            position: 'topright',
-            placeholder: 'Enter an address or place e.g. 1 York St',
-            useMapBounds: false,
-            providers: [L.esri.Geocoding.arcgisOnlineProvider({
-                apikey: "yourApiKey", // replace with your api key - https://developers.arcgis.com
-                nearby: {
-                    lat: replaceLat,
-                    lng: replaceLng
+
+        // ---- Place search -------------------------------------------------------------------------
+        // Providers are tried in order. The first one that returns anything wins; one that fails
+        // (bad username, rate limit, offline) is skipped. Each returns [{ label, lat, lng }].
+        //   GeoNames  - uses the username already needed for toponyms. Place names only, no street addresses.
+        //   Photon    - OpenStreetMap data, built for search-as-you-type, no key.
+        //   Nominatim - OpenStreetMap data, no key. Its usage policy forbids autocomplete, so it only runs on Enter.
+        //   ArcGIS    - DORMANT (its Settings controls are hidden). Needs an API key. It is not in the list below;
+        //               to bring it back add arcGisProvider to searchProviders and unhide the Settings controls.
+        const geoNamesUserName = replaceGeoNamesUserName;
+        const arcGisApiKey = replaceArcGisApiKey;
+        const searchResultLimit = 6;
+
+        async function fetchJson(url, signal) {
+            const response = await fetch(url, { signal: signal });
+            if (!response.ok) {
+                throw new Error('HTTP ' + response.status);
+            }
+            return response.json();
+        }
+
+        function joinLabel(parts) {
+            // drop blanks and repeats ("Sydney, Sydney, Australia")
+            return parts.filter(function (part, index) {
+                return part && parts.indexOf(part) === index;
+            }).join(', ');
+        }
+
+        const geoNamesProvider = {
+            name: 'GeoNames',
+            typeAhead: true,
+            enabled: function () { return geoNamesUserName.length > 0; },
+            search: async function (query, signal) {
+                const data = await fetchJson('https://secure.geonames.org/searchJSON?style=MEDIUM&maxRows=' + searchResultLimit +
+                    '&q=' + encodeURIComponent(query) + '&username=' + encodeURIComponent(geoNamesUserName), signal);
+                if (data.status) {
+                    // GeoNames reports errors (invalid user, credits exhausted...) as HTTP 200 with a status object
+                    throw new Error(data.status.message);
                 }
-            })]
-        }).addTo(map);
+                return (data.geonames || []).map(function (g) {
+                    return { label: joinLabel([g.name, g.adminName1, g.countryName]), lat: parseFloat(g.lat), lng: parseFloat(g.lng) };
+                });
+            }
+        };
+
+        const photonProvider = {
+            name: 'Photon',
+            typeAhead: true,
+            enabled: function () { return true; },
+            search: async function (query, signal) {
+                const centre = map.getCenter(); // Photon uses this to rank nearer matches higher
+                const data = await fetchJson('https://photon.komoot.io/api/?limit=' + searchResultLimit +
+                    '&lat=' + centre.lat + '&lon=' + centre.lng + '&q=' + encodeURIComponent(query), signal);
+                return (data.features || []).map(function (f) {
+                    const p = f.properties || {};
+                    const street = [p.housenumber, p.street].filter(Boolean).join(' ');
+                    return {
+                        label: joinLabel([p.name, street, p.district, p.city, p.state, p.country]),
+                        lat: f.geometry.coordinates[1],
+                        lng: f.geometry.coordinates[0]
+                    };
+                });
+            }
+        };
+
+        const nominatimProvider = {
+            name: 'Nominatim',
+            typeAhead: false,
+            enabled: function () { return true; },
+            search: async function (query, signal) {
+                const data = await fetchJson('https://nominatim.openstreetmap.org/search?format=jsonv2&limit=' + searchResultLimit +
+                    '&q=' + encodeURIComponent(query), signal);
+                return data.map(function (r) {
+                    return { label: r.display_name, lat: parseFloat(r.lat), lng: parseFloat(r.lon) };
+                });
+            }
+        };
+
+        // Not in use, and not tested since the move off the esri-leaflet-geocoder widget.
+        const arcGisProvider = {
+            name: 'ArcGIS',
+            typeAhead: true,
+            enabled: function () { return arcGisApiKey.length > 0; },
+            search: async function (query, signal) {
+                const data = await fetchJson('https://geocode-api.arcgis.com/arcgis/rest/services/World/GeocodeServer/findAddressCandidates?f=json&maxLocations=' +
+                    searchResultLimit + '&singleLine=' + encodeURIComponent(query) + '&token=' + encodeURIComponent(arcGisApiKey), signal);
+                if (data.error) {
+                    throw new Error(data.error.message);
+                }
+                return (data.candidates || []).map(function (c) {
+                    return { label: c.address, lat: c.location.y, lng: c.location.x };
+                });
+            }
+        };
+
+        const searchProviders = [geoNamesProvider, photonProvider, nominatimProvider];
+
+        var searchSequence = 0;
+        var searchAbort = null;
+
+        // Runs the providers in order; isSubmit (Enter pressed) also allows the providers that are not type-ahead safe.
+        async function runPlaceSearch(query, isSubmit) {
+            const sequence = ++searchSequence;
+            if (searchAbort) {
+                searchAbort.abort();
+            }
+            searchAbort = new AbortController();
+            for (const provider of searchProviders) {
+                if (!provider.enabled() || (!isSubmit && !provider.typeAhead)) {
+                    continue;
+                }
+                try {
+                    const found = await provider.search(query, searchAbort.signal);
+                    const valid = found.filter(function (r) { return isFinite(r.lat) && isFinite(r.lng); });
+                    if (valid.length > 0) {
+                        return { sequence: sequence, items: valid };
+                    }
+                } catch (err) {
+                    if (err.name === 'AbortError') {
+                        break; // superseded by a newer search
+                    }
+                    console.warn('Place search: ' + provider.name + ' failed - ' + err.message);
+                }
+            }
+            return { sequence: sequence, items: [] };
+        }
 
         var results = L.layerGroup().addTo(map);
 
-        searchControl.on('results', function (data) {
+        function showSearchResult(item) {
+            var latLng = L.latLng(item.lat, item.lng);
             results.clearLayers();
-            for (var i = data.results.length - 1; i >= 0; i--) {
-                results.addLayer(L.marker(data.results[i].latlng))
-                window.chrome.webview.postMessage({ "lat": data.results[i].latlng.lat, "lng": data.results[i].latlng.lng });
+            results.addLayer(L.marker(latLng));
+            map.setView(latLng, Math.max(map.getZoom(), 13));
+            window.chrome.webview.postMessage({ "lat": item.lat, "lng": item.lng });
+        }
+
+        var SearchControl = L.Control.extend({
+            options: { position: 'topright' },
+
+            onAdd: function () {
+                var container = L.DomUtil.create('div', 'gtn-search');
+                var input = L.DomUtil.create('input', '', container);
+                var list = L.DomUtil.create('ul', '', container);
+                var items = [];
+                var activeIndex = -1;
+                var debounceTimer = null;
+
+                input.type = 'text';
+                input.placeholder = 'Enter an address or place e.g. 1 York St';
+                input.autocomplete = 'off';
+                list.style.display = 'none';
+
+                L.DomEvent.disableClickPropagation(container);
+                L.DomEvent.disableScrollPropagation(container);
+
+                function hideList() {
+                    list.style.display = 'none';
+                    items = [];
+                    activeIndex = -1;
+                }
+
+                function showStatus(text) {
+                    list.innerHTML = '';
+                    var li = L.DomUtil.create('li', 'gtn-status', list);
+                    li.textContent = text;
+                    list.style.display = 'block';
+                    items = [];
+                    activeIndex = -1;
+                }
+
+                function setActive(index) {
+                    activeIndex = index;
+                    for (var i = 0; i < list.children.length; i++) {
+                        list.children[i].className = i === index ? 'gtn-active' : '';
+                    }
+                }
+
+                function choose(item) {
+                    input.value = item.label;
+                    hideList();
+                    showSearchResult(item);
+                }
+
+                function showItems(found) {
+                    list.innerHTML = '';
+                    items = found;
+                    found.forEach(function (item) {
+                        var li = L.DomUtil.create('li', '', list);
+                        li.textContent = item.label;
+                        li.addEventListener('click', function () { choose(item); });
+                    });
+                    list.style.display = 'block';
+                    setActive(-1);
+                }
+
+                async function search(query, isSubmit) {
+                    if (isSubmit || list.style.display === 'none') {
+                        showStatus('Searching...');
+                    }
+                    var outcome = await runPlaceSearch(query, isSubmit);
+                    if (outcome.sequence !== searchSequence) {
+                        return; // a newer search is already running
+                    }
+                    if (outcome.items.length === 0) {
+                        showStatus(isSubmit ? 'No results found.' : 'No suggestions - press Enter to search more widely.');
+                    } else if (isSubmit) {
+                        showItems(outcome.items);
+                        choose(outcome.items[0]);
+                    } else {
+                        showItems(outcome.items);
+                    }
+                }
+
+                input.addEventListener('input', function () {
+                    clearTimeout(debounceTimer);
+                    var query = input.value.trim();
+                    if (query.length < 3) {
+                        searchSequence++; // discard anything still in flight
+                        hideList();
+                        return;
+                    }
+                    debounceTimer = setTimeout(function () { search(query, false); }, 400);
+                });
+
+                input.addEventListener('keydown', function (e) {
+                    if (e.key === 'ArrowDown' && items.length > 0) {
+                        setActive((activeIndex + 1) % items.length);
+                        e.preventDefault();
+                    } else if (e.key === 'ArrowUp' && items.length > 0) {
+                        setActive((activeIndex - 1 + items.length) % items.length);
+                        e.preventDefault();
+                    } else if (e.key === 'Escape') {
+                        hideList();
+                    } else if (e.key === 'Enter') {
+                        clearTimeout(debounceTimer);
+                        var query = input.value.trim();
+                        if (activeIndex >= 0) {
+                            choose(items[activeIndex]);
+                        } else if (query.length > 0) {
+                            search(query, true);
+                        }
+                        e.preventDefault();
+                    }
+                });
+
+                return container;
             }
         });
+
+        new SearchControl().addTo(map);
 
         map.on('baselayerchange', function (e) {
             window.chrome.webview.postMessage({ "layer": e.name.toString() });

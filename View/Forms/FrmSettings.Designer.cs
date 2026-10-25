@@ -369,6 +369,7 @@ namespace GeoTagNinja.View.Forms
             // 
             resources.ApplyResources(this.ckb_ShowPassword_ARCGIS_APIKey, "ckb_ShowPassword_ARCGIS_APIKey");
             this.ckb_ShowPassword_ARCGIS_APIKey.Name = "ckb_ShowPassword_ARCGIS_APIKey";
+            this.ckb_ShowPassword_ARCGIS_APIKey.Visible = false;
             this.ckb_ShowPassword_ARCGIS_APIKey.UseVisualStyleBackColor = true;
             this.ckb_ShowPassword_ARCGIS_APIKey.CheckedChanged += new System.EventHandler(this.ckb_ShowPassword_ARCGIS_APIKey_CheckedChanged);
             // 
@@ -486,6 +487,7 @@ namespace GeoTagNinja.View.Forms
             this.rbx_Register_ArcGIS.BorderStyle = System.Windows.Forms.BorderStyle.None;
             resources.ApplyResources(this.rbx_Register_ArcGIS, "rbx_Register_ArcGIS");
             this.rbx_Register_ArcGIS.Name = "rbx_Register_ArcGIS";
+            this.rbx_Register_ArcGIS.Visible = false;
             this.rbx_Register_ArcGIS.ReadOnly = true;
             // 
             // rbx_Register_GeoNames
@@ -509,6 +511,8 @@ namespace GeoTagNinja.View.Forms
             // 
             resources.ApplyResources(this.lbl_ARCGIS_APIKey, "lbl_ARCGIS_APIKey");
             this.lbl_ARCGIS_APIKey.Name = "lbl_ARCGIS_APIKey";
+            // ArcGIS is no longer offered: the map search tries GeoNames, Photon and Nominatim instead. Kept (hidden) in case it returns.
+            this.lbl_ARCGIS_APIKey.Visible = false;
             // 
             // tbx_GeoNames_Pwd
             // 
@@ -527,6 +531,7 @@ namespace GeoTagNinja.View.Forms
             // 
             resources.ApplyResources(this.tbx_ARCGIS_APIKey, "tbx_ARCGIS_APIKey");
             this.tbx_ARCGIS_APIKey.Name = "tbx_ARCGIS_APIKey";
+            this.tbx_ARCGIS_APIKey.Visible = false;
             this.tbx_ARCGIS_APIKey.TextChanged += new System.EventHandler(this.Any_tbx_TextChanged);
             // 
             // tpg_FileOptions
