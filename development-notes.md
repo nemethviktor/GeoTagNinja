@@ -22,6 +22,18 @@ the form does not need to get bigger. Grow `gbx_AppSettings` by the height of th
 controls below it down; keep the group box's bottom within the tab to avoid a scrollbar until it is
 actually needed.
 
+## Telling upgrading users about a change
+
+`Helpers/Startup/UpgradeNotices.cs` shows a one-off message to users who upgrade from an older build. The app stores the build it last ran (just `Version.Build`, e.g. `9778`, as `generic` / `lastRunBuild` in the settings table) and compares it with `UpgradeNotices.Registry` at startup.
+
+To announce something, add an entry to `Registry` with the build to compare against and the English text. The text is deliberately in code, not `Strings.resx`: a build can go public before translators catch up.
+
+- `showIfLastRunBuildAtMost` is the last build released *without* the change, so it must be lower than the build that ships the notice. A user whose stored build is `<=` it sees the message.
+- It shows once: right after the box is dismissed the stored build is raised to the current one. Several due notices share one box.
+- New users never see one. A fresh install is recognised by an empty `settings` table, which is why `UpgradeNotices.EvaluateAtStartup` has to run before the default settings are written (`AppStartup.AppStartupWriteDefaultSettings`).
+- Users from before the tracking existed have no stored build and count as `LastBuildBeforeTracking` (9778).
+- The stored build is never lowered, so running an older build doesn't make a notice reappear.
+
 ## Still outstanding
 
 - **`Helpers/HelperVariables.cs`** is the last loose file at the `Helpers/` root, and deliberately so:

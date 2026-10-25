@@ -65,6 +65,8 @@ internal static class AppStartup
         try
         {
             _ = AppStartupReadSQLiteTables();
+            // must come before the defaults are written: an empty settings table is what identifies a new user
+            UpgradeNotices.EvaluateAtStartup();
             DatabaseAndStartup.DataWriteSQLiteSettingsDefaultSettings();
         }
         catch (Exception ex)

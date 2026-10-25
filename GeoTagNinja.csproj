@@ -173,6 +173,7 @@
     <Compile Include="Helpers\Update\AutoUpdaterCallbacks.cs" />
     <Compile Include="Helpers\FileSystem\GetChecksum.cs" />
     <Compile Include="Helpers\Startup\AppStartup.cs" />
+    <Compile Include="Helpers\Startup\UpgradeNotices.cs" />
     <Compile Include="Helpers\Localisation\LanguageLists.cs" />
     <Compile Include="Helpers\Data\SettingsImportExportTables.cs" />
     <Compile Include="Helpers\Exif\ExifToolInititators.cs" />

@@ -454,6 +454,9 @@ public partial class FrmMainApp : Form
         // {
         //     await Task.Delay(500);
         // }
+        // one-off "this changed" messages for users upgrading from older builds
+        UpgradeNotices.ShowPendingNotices();
+
         await APIVersionCheckers.CheckForNewVersions();
 
         LaunchAutoUpdater();
