@@ -123,7 +123,7 @@ Things to note:
 
 If you want to build the project, Visual Studio is the most straightforward option. That said, the main project can also be built from VS Code.
 
-There are 2 parts to the project. One is the "main" app, the other is the installer. You'll generally have problems w/ the installer bcs it hasn't been pushed to git so it's going to be missing that half.
+There are 2 parts to the project. One is the "main" app, the other is the installer. The installer is a Visual Studio Installer Projects (`.vdproj`) project in `GeoTagNinja_Setup/`, part of `GeoTagNinja.sln`. It needs the "Microsoft Visual Studio Installer Projects" extension, and MSBuild can't build it, so build it from the VS IDE (Release). It packages the Release build output, and some of its source paths are absolute (`C:\Users\<you>\AppData\Localuild\...`), so on another machine re-point those in the IDE. The `.msi` it produces is git-ignored.
 
 For the "main" project you should be okay without anything separate once the proper toolchain is installed. This repo is an older-style .NET Framework 4.8 WinForms project, so VS Code is fine as an editor/task runner but it still relies on the Visual Studio/MSBuild toolchain underneath.
 
@@ -141,6 +141,8 @@ The repo includes VS Code workspace files under `.vscode/` for the main app:
 - `Test GeoTagNinja` (runs the NUnit tests against the Debug build)
 
 The tasks call `.vscode\msbuild.ps1`, which finds MSBuild through `vswhere`. F5 launches the exe from `%LOCALAPPDATA%\build\GeoTagNinja\`.
+
+`GeoTagNinja_Setup/` (the installer) is deliberately **not** part of the VS Code workflow. It is a Visual Studio Installer Projects `.vdproj`, which MSBuild skips with warning `MSB4078` (harmless, it appears in every solution build) and which only builds from the Visual Studio IDE. The `.vscode` tasks build, run and test the app only.
 
 ### Tests
 

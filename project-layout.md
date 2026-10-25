@@ -40,6 +40,7 @@ Helpers/
   HelperVariables.cs   application-wide mutable state (see below)
 
 GeoTagNinja.Tests/             NUnit tests for the value-handling logic; see its README.md
+GeoTagNinja_Setup/             Visual Studio installer project (.vdproj, IDE-built only; the .msi output is git-ignored)
 
 ```
 

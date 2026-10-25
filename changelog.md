@@ -7,6 +7,8 @@
 	- The `Application` settings tab scrolls rather than the form growing when more options are added.
 	- Docs: the contributor docs and the readme now cover the ThemeHelper, the test project and Release-build test gate, and the readme's feature list now covers features added since the original release.
 - BUGS & FIXES:
+	- The VS Code `tasks.json` was stale: its Run task still looked in the old `bin\x64\Debug`, it had no Test task and it didn't use `.vscode/msbuild.ps1`. All four tasks (restore, build, run, test) now go through the script.
+	- The installer project (`GeoTagNinja_Setup.vdproj`) now lives in the repo under `GeoTagNinja_Setup/` and is referenced from `GeoTagNinja.sln`, so it is version-controlled. Only the project file is tracked; the built `.msi` is git-ignored.
 	- The repo no longer carries its own copy of `WebView2Loader.dll` (it was an old 1.0.3124 build). The loader now comes only from the `Microsoft.Web.WebView2` NuGet package, and a build step copies it next to the exe, so it follows package updates and the installer needs no manual refresh. The WebView2 *runtime* was never bundled: the app has always used the newest one installed on the machine.
 	- The VS Code tasks and launch configuration were stale: F5 looked for the exe in the old in-repo `bin\x64\Debug`. They now use the `%LOCALAPPDATA%` build output, find MSBuild through `vswhere` (so VS 18 Insiders works) via `.vscode/msbuild.ps1`, restore with full-framework MSBuild, and gained a `Test GeoTagNinja` task.
 	- The `x64` build configurations now write to the same `bin\Debug` / `bin\Release` folders as `Any CPU` (previously `bin\x64\...`), and the setup project's source paths were updated to match, so the installer packages the current build whichever platform is selected.
