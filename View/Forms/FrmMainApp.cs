@@ -211,9 +211,6 @@ public partial class FrmMainApp : Form
     /// </summary>
     public FrmMainApp()
     {
-        frmSplashScreen.Show();
-        _ = InitialiseApplication();
-
         #region Define Logging Config
 
         // Set up logging
@@ -245,6 +242,11 @@ public partial class FrmMainApp : Form
         LogManager.Configuration = config;
 
         #endregion
+
+        // Logging has to be configured first: InitialiseApplication() runs the startup tasks (settings database,
+        // defaults, ...) synchronously, and anything they log before the configuration exists is dropped.
+        frmSplashScreen.Show();
+        _ = InitialiseApplication();
 
         int procID = Process.GetCurrentProcess()
                             .Id;
