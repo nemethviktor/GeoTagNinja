@@ -459,9 +459,6 @@
       <Link>e_sqlite3.dll</Link>
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
-    <Content Include="WebView2Loader.dll">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </Content>
     <None Include="Resources\.ExifTool_config">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
@@ -564,4 +561,9 @@ ative, which a
     </PackageReference>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
+  <!-- The Microsoft.Web.WebView2 package only drops the loader under runtimes\win-x64\native. The setup project and the app expect it next to the exe,
+       so copy whatever version the package supplied. Version-independent on purpose: no hand-maintained copy of the DLL. -->
+  <Target Name="CopyWebView2LoaderToOutputRoot" AfterTargets="Build">
+    <Copy SourceFiles="$(OutDir)runtimes\win-x64\native\WebView2Loader.dll" DestinationFolder="$(OutDir)" SkipUnchangedFiles="true" />
+  </Target>
 </Project>
