@@ -38,6 +38,7 @@ internal static class AppStartup
         }
         catch (Exception ex)
         {
+            FrmMainApp.Log.Fatal(message: $"Could not create the settings database: {ex}");
             Themer.ShowMessageBox(
                 message: HelperControlAndMessageBoxHandling.ReturnControlText(
                     controlName: "mbx_FrmMainApp_ErrorCantCreateSQLiteDB",
@@ -68,6 +69,7 @@ internal static class AppStartup
         }
         catch (Exception ex)
         {
+            FrmMainApp.Log.Fatal(message: $"Could not write the default settings: {ex}");
             Themer.ShowMessageBox(
                 message: HelperControlAndMessageBoxHandling.ReturnControlText(
                     controlName: "mbx_FrmMainApp_ErrorCantWriteSQLiteDB",

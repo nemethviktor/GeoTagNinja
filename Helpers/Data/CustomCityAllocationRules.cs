@@ -73,7 +73,10 @@ internal static class CustomCityAllocationRules
         // fill w defaults if empty
         if (!(Convert.ToInt32(value: SQLiteCommand.ExecuteScalar()) > 0))
         {
-            string defaultCiltyAllocationLogic = "";
+            // The values are bound as parameters. They used to be spliced in as double-quoted "literals", which newer
+            // SQLite builds read as column names ("no such column: ZWE") and which broke seeding on a fresh install.
+            using SQLiteTransaction seedTransaction = SQLiteDB.BeginTransaction();
+            int seededRows = 0;
             foreach (string countryCode in Countries.GetCountryCodes())
             {
                 if (!string.IsNullOrEmpty(value: countryCode))
@@ -83,23 +86,20 @@ internal static class CustomCityAllocationRules
                         : defaultCityNameIsAdminName2Arr.Contains(value: countryCode)
                             ? "AdminName2" : defaultCityNameIsAdminName3Arr.Contains(value: countryCode)
                             ? "AdminName3" : defaultCityNameIsAdminName4Arr.Contains(value: countryCode) ? "AdminName4" : "Undefined";
-                    defaultCiltyAllocationLogic +=
-                        $"({HelperVariables.DoubleQuoteStr}{countryCode}{HelperVariables.DoubleQuoteStr},{HelperVariables.DoubleQuoteStr}{countryCodeAllocation}{HelperVariables.DoubleQuoteStr}),{Environment.NewLine}";
+
+                    using SQLiteCommand insertCommand = new(
+                        commandText: "INSERT INTO customCityAllocationLogic (CountryCode,TargetPointNameCustomCityLogic) VALUES (@countryCode, @allocation);",
+                        connection: SQLiteDB,
+                        transaction: seedTransaction);
+                    _ = insertCommand.Parameters.AddWithValue(parameterName: "@countryCode", value: countryCode);
+                    _ = insertCommand.Parameters.AddWithValue(parameterName: "@allocation", value: countryCodeAllocation);
+                    _ = insertCommand.ExecuteNonQuery();
+                    seededRows++;
                 }
             }
 
-            // remove last ","
-            defaultCiltyAllocationLogic = defaultCiltyAllocationLogic.Substring(startIndex: 0, length: defaultCiltyAllocationLogic.LastIndexOf(value: ','));
-
-            commandText = $@"
-                                INSERT INTO customCityAllocationLogic
-                                        (CountryCode,TargetPointNameCustomCityLogic)
-                                        VALUES{Environment.NewLine}{defaultCiltyAllocationLogic}{Environment.NewLine};"
-                ;
-
-            SQLiteCommand = new SQLiteCommand(commandText: commandText, connection: SQLiteDB);
-
-            _ = SQLiteCommand.ExecuteNonQuery();
+            seedTransaction.Commit();
+            FrmMainApp.Log.Info(message: $"Seeded customCityAllocationLogic with {seededRows} default rows");
         }
     }
 
