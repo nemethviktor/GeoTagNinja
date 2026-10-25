@@ -385,7 +385,6 @@ public partial class FrmMainApp : Form
         // translated strings are ready to assign before the form is ever revealed.
         AppStartupAssignLabelsToObjects();
 
-        FormClosing += FrmMainApp_FormClosing;
         ResumeLayout();
         Visible = true;
         Opacity = 1;
@@ -551,21 +550,56 @@ public partial class FrmMainApp : Form
     /// <summary>
     ///     When the app closes we want to make sure there's nothing in the write-queue.
     ///     ...once that's dealt with we write the details of the app layout (e.g. column widths) to SQLite.
+    ///     The unsaved-data question (Yes/No/Cancel) is asked before anything is torn down, so Cancel can abort the
+    ///     shutdown. The handler is async, so the close is always cancelled first and re-issued with
+    ///     <see cref="_closeConfirmed" /> set once the user has answered and any save has finished.
     /// </summary>
     /// <param name="sender">Unused</param>
-    /// <param name="e">Unused</param>
+    /// <param name="e">Used to cancel the close while the question/save is pending, or when the user picks Cancel</param>
     private async void FrmMainApp_FormClosing(object sender,
                                               FormClosingEventArgs e)
     {
-        Log.Debug(message: "OnClose: Starting");
+        if (_closeConfirmed)
+        {
+            Log.Debug(message: "OnClose: Starting");
+            NamedPipeServer.stopServing();
+            PerformAppClosingProcedure();
+            return;
+        }
 
-        NamedPipeServer.stopServing();
+        // Always hold the close: we can't await inside this event and let it proceed.
+        e.Cancel = true;
+        if (_closeCheckInProgress)
+        {
+            return;
+        }
 
-        // this will trigger a write-to-file question/process
-        await Operators.FsoCheckOutstandingFileDataOkayToChangeFolderAsync(isTheAppClosing: true);
+        _closeCheckInProgress = true;
+        try
+        {
+            // this will trigger a write-to-file question/process
+            await Operators.FsoCheckOutstandingFileDataOkayToChangeFolderAsync(isTheAppClosing: true);
+        }
+        finally
+        {
+            _closeCheckInProgress = false;
+        }
 
-        PerformAppClosingProcedure();
+        if (HelperVariables.OperationChangeFolderIsOkay)
+        {
+            _closeConfirmed = true;
+            Close();
+        }
+        else
+        {
+            // User picked Cancel: stay open, and allow the question again on the next close attempt.
+            Log.Debug(message: "OnClose: Cancelled by user");
+            HelperVariables.AppIsClosingAndWriteFileQuestionHasBeenAsked = false;
+        }
     }
+
+    private bool _closeConfirmed;
+    private bool _closeCheckInProgress;
 
     // ReSharper disable once MemberCanBePrivate.Global
     /// <summary>
