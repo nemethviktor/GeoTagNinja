@@ -35,6 +35,25 @@ internal static class ThemeHelper
     internal static bool IsDark => HelperVariables.UserSettingUseDarkMode;
 
     /// <summary>
+    ///     Whether Windows is set to dark mode for apps (Settings > Personalisation > Colours). Used only to pick the
+    ///     starting value for a brand-new user; after that the app's own setting rules. Light when the value can't be
+    ///     read (Windows versions without the setting, locked-down registry).
+    /// </summary>
+    internal static bool WindowsPrefersDarkApps()
+    {
+        try
+        {
+            using Microsoft.Win32.RegistryKey key = Microsoft.Win32.Registry.CurrentUser.OpenSubKey(
+                name: @"Software\Microsoft\Windows\CurrentVersion\Themes\Personalize");
+            return key?.GetValue(name: "AppsUseLightTheme") is int appsUseLightTheme && appsUseLightTheme == 0;
+        }
+        catch
+        {
+            return false;
+        }
+    }
+
+    /// <summary>
     ///     Colour for items flagged as errored/changed. Plain red in light mode (unchanged), a lighter red in dark mode
     ///     where pure red on near-black is hard to read.
     /// </summary>

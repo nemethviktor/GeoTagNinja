@@ -1,4 +1,5 @@
 ﻿using GeoTagNinja.Helpers.FileSystem;
+using GeoTagNinja.Helpers.Startup;
 using GeoTagNinja.Helpers.UI;
 using GeoTagNinja.Model;
 using GeoTagNinja.View.Forms;
@@ -199,6 +200,42 @@ internal static class DatabaseAndStartup
                     SettingId = controlName.Key,
                     SettingValue = controlName.Value
                 }));
+        }
+
+        // A brand-new user starts in whichever mode Windows is in. Existing users are deliberately left out: most of
+        // them have no row for this yet, and writing one would flip their theme on the next start.
+        if (UpgradeNotices.IsFreshInstall)
+        {
+            bool windowsIsDark = ThemeHelper.WindowsPrefersDarkApps();
+            FrmMainApp.Log.Info(message: $"New install - starting in {(windowsIsDark ? "dark" : "light")} mode to match Windows");
+            settingsToWriteTmp.Add(item: new AppSettingContainer
+            {
+                TableName = "settings",
+                SettingTabPage = "tpg_Application",
+                SettingId = "ckb_UseDarkMode",
+                SettingValue = windowsIsDark ? "true" : "false"
+            });
+
+            // ... and a dark app gets the pale dark map rather than a glaring white one. The map colour mode is a radio
+            // group (the first one stored as "true" wins), so the "Normal" default written above has to be replaced, not added to.
+            if (windowsIsDark)
+            {
+                _ = settingsToWriteTmp.RemoveAll(match: setting => setting.SettingId == "rbt_MapColourModeNormal");
+                foreach ((string settingId, string settingValue) in new[]
+                         {
+                             ("rbt_MapColourModeNormal", "false"),
+                             ("rbt_MapColourModeDarkPale", "true")
+                         })
+                {
+                    settingsToWriteTmp.Add(item: new AppSettingContainer
+                    {
+                        TableName = "settings",
+                        SettingTabPage = "tpg_Application",
+                        SettingId = settingId,
+                        SettingValue = settingValue
+                    });
+                }
+            }
         }
 
         // language -> Add "English" as default if there isn't one defined.

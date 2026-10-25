@@ -69,6 +69,24 @@ internal static class UpgradeNotices
     private static int _buildToStoreAfterShowing;
 
     /// <summary>
+    ///     True for the run in which the settings database was brand new (set by <see cref="EvaluateAtStartup" />).
+    ///     Lets first-run-only defaults, such as following Windows's light/dark mode, leave existing users alone.
+    /// </summary>
+    internal static bool IsFreshInstall { get; private set; }
+
+    /// <summary>
+    ///     A new user has neither a stored build nor any settings. Existing users from before the build was tracked
+    ///     have settings but no stored build.
+    /// </summary>
+    internal static bool IsNewInstall(string storedBuild,
+                                      bool settingsAlreadyExist)
+    {
+        return !int.TryParse(s: storedBuild, style: NumberStyles.Integer, provider: CultureInfo.InvariantCulture,
+                   result: out _) &&
+               !settingsAlreadyExist;
+    }
+
+    /// <summary>
     ///     The decision itself, kept free of SQLite and UI so it can be tested.
     /// </summary>
     /// <param name="storedBuild">The stored build setting, or null/blank if there is none (or it is garbage).</param>
@@ -84,8 +102,7 @@ internal static class UpgradeNotices
         bool hasStoredBuild = int.TryParse(s: storedBuild, style: NumberStyles.Integer,
             provider: CultureInfo.InvariantCulture, result: out int lastRunBuild);
 
-        if (!hasStoredBuild &&
-            !settingsAlreadyExist)
+        if (IsNewInstall(storedBuild: storedBuild, settingsAlreadyExist: settingsAlreadyExist))
         {
             return ([], currentBuild); // brand new user: nothing to announce
         }
@@ -114,9 +131,12 @@ internal static class UpgradeNotices
                 settingTabPage: SettingTabPage,
                 settingId: SettingId);
 
+            bool settingsAlreadyExist = HelperVariables.DtHelperDataApplicationSettings.Rows.Count > 0;
+            IsFreshInstall = IsNewInstall(storedBuild: storedBuild, settingsAlreadyExist: settingsAlreadyExist);
+
             (List<UpgradeNotice> pending, int buildToStore) = Evaluate(
                 storedBuild: storedBuild,
-                settingsAlreadyExist: HelperVariables.DtHelperDataApplicationSettings.Rows.Count > 0,
+                settingsAlreadyExist: settingsAlreadyExist,
                 currentBuild: CurrentBuild(),
                 notices: Registry);
 
