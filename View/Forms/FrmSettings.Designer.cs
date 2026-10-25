@@ -60,6 +60,7 @@ namespace GeoTagNinja.View.Forms
             this.tpg_GeoNames = new System.Windows.Forms.TabPage();
             this.gbx_GeoNamesSettings = new System.Windows.Forms.GroupBox();
             this.ckb_ShowPassword_GeoNames = new System.Windows.Forms.CheckBox();
+            this.ckb_ShowUserName_GeoNames = new System.Windows.Forms.CheckBox();
             this.ckb_ShowPassword_ARCGIS_APIKey = new System.Windows.Forms.CheckBox();
             this.lbl_Generic_Miles = new System.Windows.Forms.Label();
             this.ckb_PopulatedPlacesOnly = new System.Windows.Forms.CheckBox();
@@ -336,6 +337,7 @@ namespace GeoTagNinja.View.Forms
             // gbx_GeoNamesSettings
             // 
             this.gbx_GeoNamesSettings.Controls.Add(this.ckb_ShowPassword_GeoNames);
+            this.gbx_GeoNamesSettings.Controls.Add(this.ckb_ShowUserName_GeoNames);
             this.gbx_GeoNamesSettings.Controls.Add(this.ckb_ShowPassword_ARCGIS_APIKey);
             this.gbx_GeoNamesSettings.Controls.Add(this.lbl_Generic_Miles);
             this.gbx_GeoNamesSettings.Controls.Add(this.ckb_PopulatedPlacesOnly);
@@ -364,6 +366,13 @@ namespace GeoTagNinja.View.Forms
             this.ckb_ShowPassword_GeoNames.Name = "ckb_ShowPassword_GeoNames";
             this.ckb_ShowPassword_GeoNames.UseVisualStyleBackColor = true;
             this.ckb_ShowPassword_GeoNames.CheckedChanged += new System.EventHandler(this.ckb_ShowPassword_GeoNames_CheckedChanged);
+            // 
+            // ckb_ShowUserName_GeoNames
+            // 
+            resources.ApplyResources(this.ckb_ShowUserName_GeoNames, "ckb_ShowUserName_GeoNames");
+            this.ckb_ShowUserName_GeoNames.Name = "ckb_ShowUserName_GeoNames";
+            this.ckb_ShowUserName_GeoNames.UseVisualStyleBackColor = true;
+            this.ckb_ShowUserName_GeoNames.CheckedChanged += new System.EventHandler(this.ckb_ShowUserName_GeoNames_CheckedChanged);
             // 
             // ckb_ShowPassword_ARCGIS_APIKey
             // 
@@ -525,6 +534,7 @@ namespace GeoTagNinja.View.Forms
             // 
             resources.ApplyResources(this.tbx_GeoNames_UserName, "tbx_GeoNames_UserName");
             this.tbx_GeoNames_UserName.Name = "tbx_GeoNames_UserName";
+            this.tbx_GeoNames_UserName.UseSystemPasswordChar = true;
             this.tbx_GeoNames_UserName.TextChanged += new System.EventHandler(this.Any_tbx_TextChanged);
             // 
             // tbx_ARCGIS_APIKey
@@ -846,6 +856,7 @@ namespace GeoTagNinja.View.Forms
         private System.Windows.Forms.Button btn_ImportSettings;
         private System.Windows.Forms.CheckBox ckb_ShowPassword_ARCGIS_APIKey;
         private System.Windows.Forms.CheckBox ckb_ShowPassword_GeoNames;
+        private System.Windows.Forms.CheckBox ckb_ShowUserName_GeoNames;
         private System.Windows.Forms.CheckBox ckb_ShowThumbnails;
         private System.Windows.Forms.PictureBox pbx_ShowThumbnails;
         private System.Windows.Forms.ToolTip ttp_ShowThumbnails;

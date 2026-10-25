@@ -100,6 +100,7 @@ internal static class LanguageLists
             { "ckb_QuestionDontAskAgain", "Generic_QuestionDontAskAgain" },
             { "ckb_ShowPassword_ARCGIS_APIKey", "Generic_ShowPassword" },
             { "ckb_ShowPassword_GeoNames", "Generic_ShowPassword" },
+            { "ckb_ShowUserName_GeoNames", "Generic_ShowUserName" },
             { "ckb_State", "Generic_State" },
             { "ckb_Sublocation", "Generic_Sublocation" },
             { "ckb_TakenDate", "Generic_TakenDate" },

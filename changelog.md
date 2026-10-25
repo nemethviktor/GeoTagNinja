@@ -3,6 +3,7 @@
 **Build 9xxx [202xxxxx]** (upcoming release)
 - NEW & UPDATED:
 	- Added Chinese translations via weblate
+	- The GeoNames username in `Settings` is now masked like a password, with a `Show Username` checkbox to reveal it. (GeoNames only looks at the username.)
 	- New users now start in dark or light mode to match Windows's "app mode" setting and, if dark, use the pale dark map (`Settings` > `Application` > `Use Dark Mode` and the map colour mode can still be changed afterwards). Existing users keep whatever they had.
 	- Users upgrading from build 9778 or older get a one-time message about the map search change. The app now remembers the last build it ran (`Version.Build`) so future changes can be announced the same way; new users never see these. See `development-notes.md`.
 	- The map's search box no longer needs an ArcGIS API key. It now tries GeoNames first (reusing your GeoNames username), then Photon (suggestions as you type), then Nominatim (on Enter only). The ArcGIS controls are hidden in `Settings` (not deleted, in case it returns) and a previously saved key is kept but unused.

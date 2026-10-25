@@ -369,6 +369,7 @@ public partial class FrmSettings : Form
 
         tbx_ARCGIS_APIKey.UseSystemPasswordChar = !ckb_ShowPassword_ARCGIS_APIKey.Checked;
         tbx_GeoNames_Pwd.UseSystemPasswordChar = !ckb_ShowPassword_GeoNames.Checked;
+        tbx_GeoNames_UserName.UseSystemPasswordChar = !ckb_ShowUserName_GeoNames.Checked;
 
         ThemeHelper.ApplyTo(control: this);
     }
@@ -1238,6 +1239,15 @@ public partial class FrmSettings : Form
                                                           EventArgs e)
     {
         tbx_GeoNames_Pwd.UseSystemPasswordChar = !ckb_ShowPassword_GeoNames.Checked;
+    }
+
+    /// <summary>
+    ///     Shows or hides the GeoNames username. GeoNames only looks at the username, so it is masked like a secret.
+    /// </summary>
+    private void ckb_ShowUserName_GeoNames_CheckedChanged(object sender,
+                                                          EventArgs e)
+    {
+        tbx_GeoNames_UserName.UseSystemPasswordChar = !ckb_ShowUserName_GeoNames.Checked;
     }
 
     private void pbx_ShowThumbnails_MouseHover(object sender,

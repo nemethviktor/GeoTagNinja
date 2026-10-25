@@ -604,6 +604,9 @@
   <data name="Generic_ShowPassword" xml:space="preserve">
     <value>Show Password</value>
   </data>
+  <data name="Generic_ShowUserName" xml:space="preserve">
+    <value>Show Username</value>
+  </data>
   <data name="Generic_State" xml:space="preserve">
     <value>State/Province</value>
   </data>

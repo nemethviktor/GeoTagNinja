@@ -902,6 +902,36 @@
   <data name="&gt;&gt;ckb_ShowPassword_GeoNames.ZOrder" xml:space="preserve">
     <value>0</value>
   </data>
+  <data name="ckb_ShowUserName_GeoNames.AutoSize" type="System.Boolean, mscorlib">
+    <value>True</value>
+  </data>
+  <data name="ckb_ShowUserName_GeoNames.ImeMode" type="System.Windows.Forms.ImeMode, System.Windows.Forms">
+    <value>NoControl</value>
+  </data>
+  <data name="ckb_ShowUserName_GeoNames.Location" type="System.Drawing.Point, System.Drawing">
+    <value>373, 69</value>
+  </data>
+  <data name="ckb_ShowUserName_GeoNames.Size" type="System.Drawing.Size, System.Drawing">
+    <value>182, 17</value>
+  </data>
+  <data name="ckb_ShowUserName_GeoNames.TabIndex" type="System.Int32, mscorlib">
+    <value>63</value>
+  </data>
+  <data name="ckb_ShowUserName_GeoNames.Text" xml:space="preserve">
+    <value>ckb_ShowUserName_GeoNames</value>
+  </data>
+  <data name="&gt;&gt;ckb_ShowUserName_GeoNames.Name" xml:space="preserve">
+    <value>ckb_ShowUserName_GeoNames</value>
+  </data>
+  <data name="&gt;&gt;ckb_ShowUserName_GeoNames.Type" xml:space="preserve">
+    <value>System.Windows.Forms.CheckBox, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </data>
+  <data name="&gt;&gt;ckb_ShowUserName_GeoNames.Parent" xml:space="preserve">
+    <value>gbx_GeoNamesSettings</value>
+  </data>
+  <data name="&gt;&gt;ckb_ShowUserName_GeoNames.ZOrder" xml:space="preserve">
+    <value>0</value>
+  </data>
   <data name="ckb_ShowPassword_ARCGIS_APIKey.AutoSize" type="System.Boolean, mscorlib">
     <value>True</value>
   </data>

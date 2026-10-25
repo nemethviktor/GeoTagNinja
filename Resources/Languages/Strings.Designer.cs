@@ -1438,6 +1438,15 @@ namespace GeoTagNinja.Resources.Languages {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Show Username.
+        /// </summary>
+        public static string Generic_ShowUserName {
+            get {
+                return ResourceManager.GetString("Generic_ShowUserName", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to State/Province.
         /// </summary>
         public static string Generic_State {
