@@ -381,6 +381,12 @@
         }
         "Entry"
         {
+        "MsmKey" = "8:_36915BA66620D2CD67DFBD7179ADC3D7"
+        "OwnerKey" = "8:_F8E8F286C06D4F93955EFD8FA7A0ADFC"
+        "MsmSig" = "8:_UNDEFINED"
+        }
+        "Entry"
+        {
         "MsmKey" = "8:_36E4C43557FCFDA7B6E1CF1D97FCE710"
         "OwnerKey" = "8:_F8E8F286C06D4F93955EFD8FA7A0ADFC"
         "MsmSig" = "8:_UNDEFINED"
@@ -1029,12 +1035,6 @@
         }
         "Entry"
         {
-        "MsmKey" = "8:_AD7E5BC6E3CB008ED0C4BE87143B39D5"
-        "OwnerKey" = "8:_F8E8F286C06D4F93955EFD8FA7A0ADFC"
-        "MsmSig" = "8:_UNDEFINED"
-        }
-        "Entry"
-        {
         "MsmKey" = "8:_ADEE9AA39BE47B95A5C765116690CCC4"
         "OwnerKey" = "8:_4E0AAA55284A016D03C8CFABBB8682DC"
         "MsmSig" = "8:_UNDEFINED"
@@ -1384,7 +1384,7 @@
         "Entry"
         {
         "MsmKey" = "8:_UNDEFINED"
-        "OwnerKey" = "8:_AD7E5BC6E3CB008ED0C4BE87143B39D5"
+        "OwnerKey" = "8:_36915BA66620D2CD67DFBD7179ADC3D7"
         "MsmSig" = "8:_UNDEFINED"
         }
         "Entry"
@@ -3318,6 +3318,37 @@
                     }
                 }
             "SourcePath" = "8:System.Text.Encoding.Extensions.dll"
+            "TargetName" = "8:"
+            "Tag" = "8:"
+            "Folder" = "8:_5C38588AFAE143409B41A6F28E88ADC9"
+            "Condition" = "8:"
+            "Transitive" = "11:FALSE"
+            "Vital" = "11:TRUE"
+            "ReadOnly" = "11:FALSE"
+            "Hidden" = "11:FALSE"
+            "System" = "11:FALSE"
+            "Permanent" = "11:FALSE"
+            "SharedLegacy" = "11:FALSE"
+            "PackageAs" = "3:1"
+            "Register" = "3:1"
+            "Exclude" = "11:FALSE"
+            "IsDependency" = "11:TRUE"
+            "IsolateTo" = "8:"
+            }
+            "{9F6F8455-1EF1-4B85-886A-4223BCC8E7F7}:_36915BA66620D2CD67DFBD7179ADC3D7"
+            {
+            "AssemblyRegister" = "3:1"
+            "AssemblyIsInGAC" = "11:FALSE"
+            "AssemblyAsmDisplayName" = "8:WinFormsDarkThemerNinja, Version=1.0.3.0, Culture=neutral, processorArchitecture=MSIL"
+                "ScatterAssemblies"
+                {
+                    "_36915BA66620D2CD67DFBD7179ADC3D7"
+                    {
+                    "Name" = "8:WinFormsDarkThemerNinja.dll"
+                    "Attributes" = "3:512"
+                    }
+                }
+            "SourcePath" = "8:WinFormsDarkThemerNinja.dll"
             "TargetName" = "8:"
             "Tag" = "8:"
             "Folder" = "8:_5C38588AFAE143409B41A6F28E88ADC9"
@@ -5791,37 +5822,6 @@
             "IsDependency" = "11:TRUE"
             "IsolateTo" = "8:"
             }
-            "{9F6F8455-1EF1-4B85-886A-4223BCC8E7F7}:_AD7E5BC6E3CB008ED0C4BE87143B39D5"
-            {
-            "AssemblyRegister" = "3:1"
-            "AssemblyIsInGAC" = "11:FALSE"
-            "AssemblyAsmDisplayName" = "8:WinFormsDarkThemerNinja, Version=1.0.3.0, Culture=neutral, PublicKeyToken=null, processorArchitecture=MSIL"
-                "ScatterAssemblies"
-                {
-                    "_AD7E5BC6E3CB008ED0C4BE87143B39D5"
-                    {
-                    "Name" = "8:WinFormsDarkThemerNinja.dll"
-                    "Attributes" = "3:512"
-                    }
-                }
-            "SourcePath" = "8:WinFormsDarkThemerNinja.dll"
-            "TargetName" = "8:"
-            "Tag" = "8:"
-            "Folder" = "8:_5C38588AFAE143409B41A6F28E88ADC9"
-            "Condition" = "8:"
-            "Transitive" = "11:FALSE"
-            "Vital" = "11:TRUE"
-            "ReadOnly" = "11:FALSE"
-            "Hidden" = "11:FALSE"
-            "System" = "11:FALSE"
-            "Permanent" = "11:FALSE"
-            "SharedLegacy" = "11:FALSE"
-            "PackageAs" = "3:1"
-            "Register" = "3:1"
-            "Exclude" = "11:FALSE"
-            "IsDependency" = "11:TRUE"
-            "IsolateTo" = "8:"
-            }
             "{9F6F8455-1EF1-4B85-886A-4223BCC8E7F7}:_ADEE9AA39BE47B95A5C765116690CCC4"
             {
             "AssemblyRegister" = "3:1"
@@ -7369,15 +7369,15 @@
         {
         "Name" = "8:Microsoft Visual Studio"
         "ProductName" = "8:GeoTagNinja"
-        "ProductCode" = "8:{A8DE0AC8-F0A4-4312-B9F6-5E3E4A5B7AE5}"
-        "PackageCode" = "8:{A20C3591-9728-4A7C-B78B-15CCCFE04446}"
+        "ProductCode" = "8:{53E31764-2681-4821-B564-E64540AFC220}"
+        "PackageCode" = "8:{59241AA8-C889-4194-8529-8ED9FEE19FD3}"
         "UpgradeCode" = "8:{BC5D781B-8C8A-448F-959D-1278E90D092E}"
         "AspNetVersion" = "8:"
         "RestartWWWService" = "11:FALSE"
         "RemovePreviousVersions" = "11:TRUE"
         "DetectNewerInstalledVersion" = "11:FALSE"
         "InstallAllUsers" = "11:FALSE"
-        "ProductVersion" = "8:1.18.9793"
+        "ProductVersion" = "8:1.19.9794"
         "Manufacturer" = "8:Viktor Nemeth"
         "ARPHELPTELEPHONE" = "8:"
         "ARPHELPLINK" = "8:https://github.com/nemethviktor/GeoTagNinja"

@@ -2,6 +2,11 @@
 
 **Build 9xxx [202xxxxx]** (upcoming release)
 - NEW & UPDATED:
+- BUGS & FIXES:
+
+**Build 9794 [20261025]**
+- NEW & UPDATED:
+	- Version bump to `1.19`. The installer project (`GeoTagNinja_Setup.vdproj`) was brought in line: its product version is `1.19.9794` and it has new product and package codes (same upgrade code, so it still replaces older installs).
 	- Added Chinese translations via weblate
 	- The GeoNames username in `Settings` is now masked like a password, with a `Show Username` checkbox to reveal it. (GeoNames only looks at the username.)
 	- New users now start in dark or light mode to match Windows's "app mode" setting and, if dark, use the pale dark map (`Settings` > `Application` > `Use Dark Mode` and the map colour mode can still be changed afterwards). Existing users keep whatever they had.
