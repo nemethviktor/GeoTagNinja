@@ -5,6 +5,7 @@
 	- Added Chinese translations via weblate
 	- Added a `Settings` > `Application` option, `Do Not Change File's Modified Date When Saving` (off by default), so adding a location to a photo no longer makes File Explorer show the date of the save instead of the date the photo was taken. It uses ExifTool's `-P`. It does not apply to a file type that has `Reset Image File DateTime to CreateDate` ticked, as that is an explicit request for a particular date.
 	- The `Application` settings tab scrolls rather than the form growing when more options are added.
+	- Updated `WinFormsDarkThemerNinja.Official` to 1.0.3. The package is now unsigned, so the setup project's assembly reference was updated to match (version and public key token). Nothing in the app needed changing: the `Themer` calls we use (`ApplyThemeToControl`, `ShowMessageBox`, `ShowMessageBoxWithResult`, `ThemeStyle`) are unchanged.
 	- Docs: the contributor docs and the readme now cover the ThemeHelper, the test project and Release-build test gate, and the readme's feature list now covers features added since the original release.
 - BUGS & FIXES:
 	- The VS Code `tasks.json` was stale: its Run task still looked in the old `bin\x64\Debug`, it had no Test task and it didn't use `.vscode/msbuild.ps1`. All four tasks (restore, build, run, test) now go through the script.

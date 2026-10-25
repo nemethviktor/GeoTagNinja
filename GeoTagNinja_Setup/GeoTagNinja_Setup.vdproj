@@ -5795,7 +5795,7 @@
             {
             "AssemblyRegister" = "3:1"
             "AssemblyIsInGAC" = "11:FALSE"
-            "AssemblyAsmDisplayName" = "8:WinFormsDarkThemerNinja, Version=1.0.2.0, Culture=neutral, PublicKeyToken=ee327da898767e76, processorArchitecture=MSIL"
+            "AssemblyAsmDisplayName" = "8:WinFormsDarkThemerNinja, Version=1.0.3.0, Culture=neutral, PublicKeyToken=null, processorArchitecture=MSIL"
                 "ScatterAssemblies"
                 {
                     "_AD7E5BC6E3CB008ED0C4BE87143B39D5"
