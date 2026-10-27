@@ -42,8 +42,6 @@ namespace GeoTagNinja.View.Forms
             this.rbt_SetStartup_Folder = new System.Windows.Forms.RadioButton();
             this.tbx_Startup_Folder = new System.Windows.Forms.TextBox();
             this.pbx_Browse_Startup_Folder = new System.Windows.Forms.PictureBox();
-            this.pbx_ShowThumbnails = new System.Windows.Forms.PictureBox();
-            this.ckb_ShowThumbnails = new System.Windows.Forms.CheckBox();
             this.ckb_UseDarkMode = new System.Windows.Forms.CheckBox();
             this.gbx_MapColourMode = new System.Windows.Forms.GroupBox();
             this.rbt_MapColourModeDarkPale = new System.Windows.Forms.RadioButton();
@@ -105,7 +103,6 @@ namespace GeoTagNinja.View.Forms
             this.fbd_StartupFolder = new System.Windows.Forms.FolderBrowserDialog();
             this.btn_ExportSettings = new System.Windows.Forms.Button();
             this.btn_ImportSettings = new System.Windows.Forms.Button();
-            this.ttp_ShowThumbnails = new System.Windows.Forms.ToolTip(this.components);
             this.ckb_DoNotDownloadAltitude = new System.Windows.Forms.CheckBox();
             this.ckb_PreserveFileModifiedDate = new System.Windows.Forms.CheckBox();
             this.tcr_Settings.SuspendLayout();
@@ -113,7 +110,6 @@ namespace GeoTagNinja.View.Forms
             this.gbx_AppSettings.SuspendLayout();
             this.gbx_Startup_Folder.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.pbx_Browse_Startup_Folder)).BeginInit();
-            ((System.ComponentModel.ISupportInitialize)(this.pbx_ShowThumbnails)).BeginInit();
             this.gbx_MapColourMode.SuspendLayout();
             this.tpg_GeoNames.SuspendLayout();
             this.gbx_GeoNamesSettings.SuspendLayout();
@@ -153,8 +149,6 @@ namespace GeoTagNinja.View.Forms
             this.gbx_AppSettings.Controls.Add(this.ckb_AlwaysRecenterMap);
             this.gbx_AppSettings.Controls.Add(this.ckb_RetainMapZoom);
             this.gbx_AppSettings.Controls.Add(this.gbx_Startup_Folder);
-            this.gbx_AppSettings.Controls.Add(this.pbx_ShowThumbnails);
-            this.gbx_AppSettings.Controls.Add(this.ckb_ShowThumbnails);
             this.gbx_AppSettings.Controls.Add(this.ckb_UseDarkMode);
             this.gbx_AppSettings.Controls.Add(this.gbx_MapColourMode);
             this.gbx_AppSettings.Controls.Add(this.ckb_UpdateCheckPreRelease);
@@ -221,20 +215,6 @@ namespace GeoTagNinja.View.Forms
             this.pbx_Browse_Startup_Folder.Name = "pbx_Browse_Startup_Folder";
             this.pbx_Browse_Startup_Folder.TabStop = false;
             this.pbx_Browse_Startup_Folder.Click += new System.EventHandler(this.Pbx_Browse_Startup_Folder_Click);
-            // 
-            // pbx_ShowThumbnails
-            // 
-            resources.ApplyResources(this.pbx_ShowThumbnails, "pbx_ShowThumbnails");
-            this.pbx_ShowThumbnails.Name = "pbx_ShowThumbnails";
-            this.pbx_ShowThumbnails.TabStop = false;
-            this.pbx_ShowThumbnails.MouseHover += new System.EventHandler(this.pbx_ShowThumbnails_MouseHover);
-            // 
-            // ckb_ShowThumbnails
-            // 
-            resources.ApplyResources(this.ckb_ShowThumbnails, "ckb_ShowThumbnails");
-            this.ckb_ShowThumbnails.Name = "ckb_ShowThumbnails";
-            this.ckb_ShowThumbnails.UseVisualStyleBackColor = true;
-            this.ckb_ShowThumbnails.CheckStateChanged += new System.EventHandler(this.Any_ckb_CheckStateChanged);
             // 
             // ckb_UseDarkMode
             // 
@@ -727,10 +707,6 @@ namespace GeoTagNinja.View.Forms
             this.btn_ImportSettings.UseVisualStyleBackColor = true;
             this.btn_ImportSettings.Click += new System.EventHandler(this.btn_ImportSettings_Click);
             // 
-            // ttp_ShowThumbnails
-            // 
-            this.ttp_ShowThumbnails.ToolTipIcon = System.Windows.Forms.ToolTipIcon.Info;
-            // 
             // ckb_DoNotDownloadAltitude
             // 
             resources.ApplyResources(this.ckb_DoNotDownloadAltitude, "ckb_DoNotDownloadAltitude");
@@ -769,7 +745,6 @@ namespace GeoTagNinja.View.Forms
             this.gbx_Startup_Folder.ResumeLayout(false);
             this.gbx_Startup_Folder.PerformLayout();
             ((System.ComponentModel.ISupportInitialize)(this.pbx_Browse_Startup_Folder)).EndInit();
-            ((System.ComponentModel.ISupportInitialize)(this.pbx_ShowThumbnails)).EndInit();
             this.gbx_MapColourMode.ResumeLayout(false);
             this.gbx_MapColourMode.PerformLayout();
             this.tpg_GeoNames.ResumeLayout(false);
@@ -857,9 +832,6 @@ namespace GeoTagNinja.View.Forms
         private System.Windows.Forms.CheckBox ckb_ShowPassword_ARCGIS_APIKey;
         private System.Windows.Forms.CheckBox ckb_ShowPassword_GeoNames;
         private System.Windows.Forms.CheckBox ckb_ShowUserName_GeoNames;
-        private System.Windows.Forms.CheckBox ckb_ShowThumbnails;
-        private System.Windows.Forms.PictureBox pbx_ShowThumbnails;
-        private System.Windows.Forms.ToolTip ttp_ShowThumbnails;
         private System.Windows.Forms.GroupBox gbx_Startup_Folder;
         private System.Windows.Forms.RadioButton rbt_UseLastUsedFolder;
         private System.Windows.Forms.RadioButton rbt_SetStartup_Folder;

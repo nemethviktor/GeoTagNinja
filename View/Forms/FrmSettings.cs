@@ -711,8 +711,7 @@ public partial class FrmSettings : Form
                         {
                             // strictly speaking for ckb_UseDarkMode we don't need to restart the app and the checker could be called here but it'd need another loop.
                             if (ckb == ckb_UseImperialNotMetric ||
-                                ckb == ckb_UseDarkMode ||
-                                ckb == ckb_ShowThumbnails
+                                ckb == ckb_UseDarkMode
                                )
                             {
                                 if (!_ignoreRestartWarnings)
@@ -1248,17 +1247,6 @@ public partial class FrmSettings : Form
                                                           EventArgs e)
     {
         tbx_GeoNames_UserName.UseSystemPasswordChar = !ckb_ShowUserName_GeoNames.Checked;
-    }
-
-    private void pbx_ShowThumbnails_MouseHover(object sender,
-                                               EventArgs e)
-    {
-        ToolTip ttp = new();
-        ttp.SetToolTip(control: pbx_ShowThumbnails,
-            caption: ReturnControlText(
-                fakeControlType: FakeControlTypes.ToolTip,
-                controlName: "ttp_ShowThumbnails"
-            ));
     }
 
     #endregion

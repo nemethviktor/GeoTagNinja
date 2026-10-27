@@ -133,7 +133,7 @@
   </data>
   <assembly alias="System.Drawing" name="System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a" />
   <data name="ckb_DoNotDownloadAltitude.Location" type="System.Drawing.Point, System.Drawing">
-    <value>15, 358</value>
+    <value>15, 335</value>
   </data>
   <data name="ckb_DoNotDownloadAltitude.Size" type="System.Drawing.Size, System.Drawing">
     <value>164, 17</value>
@@ -163,7 +163,7 @@
     <value>NoControl</value>
   </data>
   <data name="ckb_PreserveFileModifiedDate.Location" type="System.Drawing.Point, System.Drawing">
-    <value>15, 381</value>
+    <value>15, 358</value>
   </data>
   <data name="ckb_PreserveFileModifiedDate.Size" type="System.Drawing.Size, System.Drawing">
     <value>164, 17</value>
@@ -193,7 +193,7 @@
     <value>NoControl</value>
   </data>
   <data name="ckb_AlwaysRecenterMap.Location" type="System.Drawing.Point, System.Drawing">
-    <value>15, 335</value>
+    <value>15, 312</value>
   </data>
   <data name="ckb_AlwaysRecenterMap.Size" type="System.Drawing.Size, System.Drawing">
     <value>148, 17</value>
@@ -223,7 +223,7 @@
     <value>NoControl</value>
   </data>
   <data name="ckb_RetainMapZoom.Location" type="System.Drawing.Point, System.Drawing">
-    <value>15, 312</value>
+    <value>15, 289</value>
   </data>
   <data name="ckb_RetainMapZoom.Size" type="System.Drawing.Size, System.Drawing">
     <value>129, 17</value>
@@ -392,72 +392,6 @@
   <data name="&gt;&gt;gbx_Startup_Folder.ZOrder" xml:space="preserve">
     <value>3</value>
   </data>
-  <data name="pbx_ShowThumbnails.Image" type="System.Drawing.Bitmap, System.Drawing" mimetype="application/x-microsoft.net.object.bytearray.base64">
-    <value>
-        iVBORw0KGgoAAAANSUhEUgAAABAAAAAQCAYAAAAf8/9hAAAABGdBTUEAALGPC/xhBQAAACBjSFJNAAB6
-        JgAAgIQAAPoAAACA6AAAdTAAAOpgAAA6mAAAF3CculE8AAAACXBIWXMAAA68AAAOvAGVvHJJAAABH0lE
-        QVQ4T2NgoDqI3m7LELNrBUPszqcMsbt+MsTsfMIQu2s5Q+xuG3SlqMB+PwtDzM7pDLG7/uPEMbumgtVh
-        BWiaOZL2/NeuOAamMQzBAHE77ZAVqZQc+X/92Zf/Wy+8/n/1yZf/SsWHUQ2J32mNakDszpXICqbvffw/
-        YuolMDtk0sX/U/c8QjUgducydANAAYamCIIz5l/7P3HnQ3Txx2gG7PqJrhGELRpP/r/y5PN/iZwDqHIx
-        u36gGYDdBafufvyvXnYUQxybC5ZjUfQ/bd41DDEoXoJqQPQuC4bYnf/QFaqVHkHXCMEYsQACoPhF0wwC
-        qhiG7JyMrhUCwCkR1RCsmnGmRBgAOQ8Uz6CAgsTOY4aYnUsZYnZYoSsdHAAAf4w36PElpjAAAAAASUVO
-        RK5CYII=
-</value>
-  </data>
-  <data name="pbx_ShowThumbnails.ImeMode" type="System.Windows.Forms.ImeMode, System.Windows.Forms">
-    <value>NoControl</value>
-  </data>
-  <data name="pbx_ShowThumbnails.Location" type="System.Drawing.Point, System.Drawing">
-    <value>327, 290</value>
-  </data>
-  <data name="pbx_ShowThumbnails.Size" type="System.Drawing.Size, System.Drawing">
-    <value>16, 16</value>
-  </data>
-  <data name="pbx_ShowThumbnails.TabIndex" type="System.Int32, mscorlib">
-    <value>23</value>
-  </data>
-  <data name="&gt;&gt;pbx_ShowThumbnails.Name" xml:space="preserve">
-    <value>pbx_ShowThumbnails</value>
-  </data>
-  <data name="&gt;&gt;pbx_ShowThumbnails.Type" xml:space="preserve">
-    <value>System.Windows.Forms.PictureBox, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
-  </data>
-  <data name="&gt;&gt;pbx_ShowThumbnails.Parent" xml:space="preserve">
-    <value>gbx_AppSettings</value>
-  </data>
-  <data name="&gt;&gt;pbx_ShowThumbnails.ZOrder" xml:space="preserve">
-    <value>4</value>
-  </data>
-  <data name="ckb_ShowThumbnails.AutoSize" type="System.Boolean, mscorlib">
-    <value>True</value>
-  </data>
-  <data name="ckb_ShowThumbnails.ImeMode" type="System.Windows.Forms.ImeMode, System.Windows.Forms">
-    <value>NoControl</value>
-  </data>
-  <data name="ckb_ShowThumbnails.Location" type="System.Drawing.Point, System.Drawing">
-    <value>15, 289</value>
-  </data>
-  <data name="ckb_ShowThumbnails.Size" type="System.Drawing.Size, System.Drawing">
-    <value>131, 17</value>
-  </data>
-  <data name="ckb_ShowThumbnails.TabIndex" type="System.Int32, mscorlib">
-    <value>57</value>
-  </data>
-  <data name="ckb_ShowThumbnails.Text" xml:space="preserve">
-    <value>ckb_ShowThumbnails</value>
-  </data>
-  <data name="&gt;&gt;ckb_ShowThumbnails.Name" xml:space="preserve">
-    <value>ckb_ShowThumbnails</value>
-  </data>
-  <data name="&gt;&gt;ckb_ShowThumbnails.Type" xml:space="preserve">
-    <value>System.Windows.Forms.CheckBox, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
-  </data>
-  <data name="&gt;&gt;ckb_ShowThumbnails.Parent" xml:space="preserve">
-    <value>gbx_AppSettings</value>
-  </data>
-  <data name="&gt;&gt;ckb_ShowThumbnails.ZOrder" xml:space="preserve">
-    <value>5</value>
-  </data>
   <data name="ckb_UseDarkMode.AutoSize" type="System.Boolean, mscorlib">
     <value>True</value>
   </data>
@@ -567,7 +501,7 @@
     <value>2</value>
   </data>
   <data name="gbx_MapColourMode.Location" type="System.Drawing.Point, System.Drawing">
-    <value>15, 402</value>
+    <value>15, 379</value>
   </data>
   <data name="gbx_MapColourMode.Size" type="System.Drawing.Size, System.Drawing">
     <value>548, 55</value>
@@ -2202,9 +2136,6 @@
   <data name="&gt;&gt;btn_ImportSettings.ZOrder" xml:space="preserve">
     <value>1</value>
   </data>
-  <metadata name="ttp_ShowThumbnails.TrayLocation" type="System.Drawing.Point, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a">
-    <value>417, 17</value>
-  </metadata>
   <metadata name="$this.Localizable" type="System.Boolean, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089">
     <value>True</value>
   </metadata>
@@ -2237,12 +2168,6 @@
   </data>
   <data name="&gt;&gt;fbd_StartupFolder.Type" xml:space="preserve">
     <value>System.Windows.Forms.FolderBrowserDialog, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
-  </data>
-  <data name="&gt;&gt;ttp_ShowThumbnails.Name" xml:space="preserve">
-    <value>ttp_ShowThumbnails</value>
-  </data>
-  <data name="&gt;&gt;ttp_ShowThumbnails.Type" xml:space="preserve">
-    <value>System.Windows.Forms.ToolTip, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </data>
   <data name="&gt;&gt;$this.Name" xml:space="preserve">
     <value>FrmSettings</value>
