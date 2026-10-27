@@ -38,6 +38,12 @@ internal static class ThumbnailGenerator
 
     private static readonly HashSet<string> MagickOnlyExtensions = ["heic", "heif", "webp"];
 
+    /// <summary>True for formats GDI+ reads natively (lower-case extension without the dot).</summary>
+    internal static bool IsGdiPlusFormat(string extension) => GdiPlusExtensions.Contains(item: extension);
+
+    /// <summary>True for formats only Magick reads (HEIC, WebP, ...).</summary>
+    internal static bool IsMagickOnlyFormat(string extension) => MagickOnlyExtensions.Contains(item: extension);
+
     /// <summary>
     ///     Builds a <paramref name="size" /> x <paramref name="size" /> thumbnail (letterboxed, orientation applied).
     /// </summary>
@@ -51,7 +57,7 @@ internal static class ThumbnailGenerator
 
         Image? result = null;
 
-        if (GdiPlusExtensions.Contains(item: extension))
+        if (IsGdiPlusFormat(extension: extension))
         {
             result = TryExifThumbnail(fileNameWithPath: fileNameWithPath, size: size);
 
@@ -63,7 +69,7 @@ internal static class ThumbnailGenerator
 
             result ??= TryGdiPlusFullDecode(fileNameWithPath: fileNameWithPath, size: size);
         }
-        else if (MagickOnlyExtensions.Contains(item: extension))
+        else if (IsMagickOnlyFormat(extension: extension))
         {
             result = TryMagick(fileNameWithPath: fileNameWithPath, size: size, jpegScaledDecode: false);
         }
@@ -204,15 +210,14 @@ internal static class ThumbnailGenerator
         try
         {
             using RawContext raw = RawContext.OpenFile(filePath: fileNameWithPath);
+            int exifOrientation = RawPreview.TryGetExifOrientation(raw: raw);
 
             for (int index = 0; index <= MaxLibRawThumbnailIndex; index++)
             {
                 try
                 {
                     using ProcessedImage thumb = raw.ExportThumbnail(thumbnailIndex: index);
-                    using MemoryStream stream = new(buffer: thumb.AsSpan<byte>().ToArray());
-                    using Image decoded = Image.FromStream(stream: stream);
-                    decoded.ExifRotate();
+                    using Image decoded = RawPreview.DecodeOriented(jpeg: thumb.AsSpan<byte>().ToArray(), exifOrientation: exifOrientation);
                     return FitToSquare(source: decoded, size: size);
                 }
                 catch

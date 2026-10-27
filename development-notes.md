@@ -44,14 +44,18 @@ To announce something, add an entry to `Registry` with the build to compare agai
   `.NullStringEquivalentGeneric` and friends are reached from `Model/` and `Helpers/`, so those layers
   now carry a `using GeoTagNinja.View.Forms;`. That dependency was always there; moving the forms into
   their own namespace merely made it visible. Extracting the shared state is the fix.
-- **Thumbnails and previews are only partly reworked.** Icon-view thumbnails are built in memory by
-  `Helpers/Exif/ThumbnailGenerator` on `Helpers/UI/ThumbnailWorker` threads. Thumbnails are also held in an in-memory
-  `Helpers/Data/ThumbnailCache` (path + mtime + size, 512 MB cap) that is not persisted between sessions; a
-  persistent store would only matter for cold starts. Still to do: the preview pane
-  (`ReadGetImagePreviews.GenericCreateImagePreview`) still full-decodes JPEGs on the UI thread and spawns
-  `cmd.exe` + a fresh `exiftool.exe` per RAW; the worker does not yet prioritise visible rows;
-  `FileListView.FindItemByGuid` is a linear scan per thumbnail; and `DirectoryElement.Thumbnail` is a live `Image`
-  that the `ImageList` copies again.
+- **Thumbnails and previews: what is left.** Icon-view thumbnails are built in memory by
+  `Helpers/Exif/ThumbnailGenerator` on `Helpers/UI/ThumbnailWorker` threads and held in `Helpers/Data/ThumbnailCache`; the
+  preview pane (`ReadGetImagePreviews.GenericCreateImagePreview`) decodes off the UI thread, cancels superseded requests,
+  and uses `Helpers/Exif/RawPreview` (LibRaw) plus `PreviewCache`. Both caches are in-memory only
+  (`Helpers/Data/FileKeyedCache`: path + mtime + size), so a cold start regenerates; a persistent store would only
+  matter for that. Still to do: the worker does not yet prioritise visible rows; `FileListView.FindItemByGuid` is a
+  linear scan per thumbnail; `DirectoryElement.Thumbnail` is a live `Image` that the `ImageList` copies again; the
+  JPEG/PNG/TIFF preview is still a full-resolution decode (fine, but a scaled decode would be quicker for big files).
+  `ExifTool.TryGetEmbeddedPreview` sends `-json -b` so binary data travels as base64 over the text pipe. The wrapper's
+  common `Filter` (which flattens newlines in text values) deliberately skips values starting with the JPEG marker,
+  because it otherwise rewrites 0x0A/0x0D bytes inside the image and corrupts it. `RawContext.RawData` is protected in
+  Sdcb.LibRaw, so `RawPreview` reads it by reflection.
 - **`HelperControlAndMessageBoxHandling`** kept its name while moving to `Helpers/UI/`. Renaming it
   touches 253 references and is pure churn on top of an already large diff; worth doing on its own.
 

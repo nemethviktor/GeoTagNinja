@@ -3,7 +3,10 @@
 **Build 9xxx [202xxxxx]** (upcoming release)
 - NEW & UPDATED:
 	- Much faster icon-view thumbnails. They are now built in memory by `ThumbnailGenerator` instead of via temporary JPEG files: the JPEG already inside the file (EXIF thumbnail, or the RAW's embedded preview) is used where there is one, otherwise the image is decoded at reduced size, and a full decode is the last resort. They are also generated on a few background threads (`ThumbnailWorker`), so they no longer hold up the metadata read of the next file.
+	- Much faster preview pane. The preview is now produced off the UI thread, so the window no longer freezes while a large JPEG is decoded, and a newer selection cancels an older one instead of queueing behind it. RAW previews are read in-process (the largest JPEG embedded in the file, via LibRaw), HEIC/WebP via Magick, and recently shown ones are cached in memory (256 MB cap). ExifTool is only asked as a last resort, and then through the ExifTool process that is already running, rather than starting `cmd.exe` and a new `exiftool.exe` for every preview as before.
+	- ExifTool requests now take turns on the shared process (a lock), so a preview request can't interleave with the metadata read.
 - BUGS & FIXES:
+	- RAW previews and thumbnails could show portrait shots sideways: embedded RAW previews usually carry no orientation of their own, so the file's orientation is now applied.
 	- Icon-view thumbnails of RAW files that needed a full decode showed the top-left corner of the picture instead of the whole picture.
 	- Icon-view thumbnails were cached on disk by file name only, so two folders containing a file with the same name could show each other's thumbnail. Thumbnails are no longer cached on disk. Instead there is now an in-memory cache (capped at 512 MB) keyed by full path, size and modified date, so revisiting a folder is fast and an edited file gets a fresh thumbnail. It is not kept between sessions.
 

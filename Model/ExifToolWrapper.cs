@@ -48,6 +48,7 @@ using System.Diagnostics;
 using System.IO;
 using System.Linq;
 using System.Text;
+using Newtonsoft.Json.Linq;
 
 namespace GeoTagNinja.Model;
 
@@ -56,13 +57,16 @@ namespace GeoTagNinja.Model;
 /// protocol, handling process I/O and lifecycle.
 /// </summary>
 /// <remarks>Constructor launches the ExifTool executable (using HelperVariables.ExifToolExePathToUse) and throws
-/// an ApplicationException on failure. Communication uses UTF-8 without BOM and configured timeouts. Not thread-safe;
-/// call Dispose to terminate the external process cleanly (sends the stay_open exit command, waits for exit, and
+/// an ApplicationException on failure. Communication uses UTF-8 without BOM and configured timeouts. Requests are
+/// serialised with a lock because they share one pipe pair; call Dispose to terminate the external process cleanly (sends the stay_open exit command, waits for exit, and
 /// disposes streams). Includes a static TryParseDate helper for ExifTool date strings (format "YYYY:MM:DD
 /// hh:mm:ss").</remarks>
 public class ExifTool : IDisposable
 {
-    private const string c_argumentsTemplate = @"-stay_open 1 -@ - -common_args -api ""Filter=s/\r|\n/ /g "" -a -s -s -struct -G -ee -charset UTF8 -charset filename=utf8 -args{0}";
+    // The Filter flattens CR/LF in text values so each tag stays on one output line. It must not touch binary JPEG data
+    // (embedded previews, see TryGetEmbeddedPreview), where 0x0A/0x0D bytes are legitimate and rewriting them corrupts the
+    // image; hence "unless /^\xFF\xD8/" (JPEG start-of-image marker).
+    private const string c_argumentsTemplate = @"-stay_open 1 -@ - -common_args -api ""Filter=s/\r|\n/ /g unless /^\xFF\xD8/"" -a -s -s -struct -G -ee -charset UTF8 -charset filename=utf8 -args{0}";
 
     private const string c_exitCommand = "-stay_open\nFalse\n";
     private const int c_timeout = 30000; // in milliseconds
@@ -75,6 +79,9 @@ public class ExifTool : IDisposable
     private Process m_exifTool;
     private StreamWriter m_in;
     private StreamReader m_out;
+
+    /// <summary>The process has one stdin/stdout pair, so only one request may be in flight at a time.</summary>
+    private readonly object m_sync = new();
 
     private static readonly Logger Log = LogManager.GetCurrentClassLogger();
 
@@ -139,6 +146,127 @@ public class ExifTool : IDisposable
     /// <param name="propertiesRead">The collection to hold the extracted metadata properties.</param>
     public void GetProperties(string filename,
                               ICollection<KeyValuePair<string, string>> propertiesRead)
+    {
+        lock (m_sync)
+        {
+            GetPropertiesUnlocked(filename: filename, propertiesRead: propertiesRead);
+        }
+    }
+
+    /// <summary>
+    ///     Asks the running process for the largest JPEG embedded in a file (RAW PreviewImage / JpgFromRaw, EXIF
+    ///     ThumbnailImage, ...) and the file's EXIF orientation. This reuses the long-lived process instead of
+    ///     launching a new ExifTool per preview. The binary data travels as base64 inside JSON (<c>-json -b</c>), which
+    ///     keeps the text-based pipe intact; <c>-json</c> given per request overrides the <c>-args</c> format in the
+    ///     common arguments.
+    /// </summary>
+    /// <param name="filename">The absolute path of the file.</param>
+    /// <param name="jpeg">The largest embedded JPEG found.</param>
+    /// <param name="exifOrientation">The file's EXIF orientation (1-8), or 0 if it has none.</param>
+    /// <returns>True if an embedded JPEG was found. False if there is none, or the process is gone.</returns>
+    public bool TryGetEmbeddedPreview(string filename,
+                                      out byte[] jpeg,
+                                      out int exifOrientation)
+    {
+        jpeg = null;
+        exifOrientation = 0;
+
+        if (Helpers.HelperVariables.ApplicationIsClosing == true)
+        {
+            return false;
+        }
+
+        try
+        {
+            string output;
+            lock (m_sync)
+            {
+                if (m_in == null ||
+                    m_out == null)
+                {
+                    return false;
+                }
+
+                // Per-request arguments; the common ones (set at construction) still apply.
+                m_in.Write(value: "-json\n-b\n-PreviewImage\n-JpgFromRaw\n-ThumbnailImage\n-OtherImage\n-Orientation#\n");
+                m_in.Write(value: filename);
+                m_in.Write(value: "\n-execute\n");
+                m_in.Flush();
+
+                StringBuilder sb = new();
+                for (; ; )
+                {
+                    string line = m_out.ReadLine();
+                    if (line == null ||
+                        line.StartsWith(value: "{ready"))
+                    {
+                        break;
+                    }
+
+                    _ = sb.Append(value: line).Append(value: '\n');
+                }
+
+                output = sb.ToString();
+            }
+
+            if (string.IsNullOrWhiteSpace(value: output))
+            {
+                return false;
+            }
+
+            if (JArray.Parse(json: output).FirstOrDefault() is not JObject fileInfo)
+            {
+                return false;
+            }
+
+            foreach (JProperty property in fileInfo.Properties())
+            {
+                // keys look like "EXIF:ThumbnailImage" (family-1 group prefix from -G)
+                string tag = property.Name.Substring(startIndex: property.Name.LastIndexOf(value: ':') + 1);
+
+                if (tag == "Orientation")
+                {
+                    if (exifOrientation == 0 &&
+                        property.Value.Type == JTokenType.Integer)
+                    {
+                        exifOrientation = (int)property.Value;
+                    }
+
+                    continue;
+                }
+
+                string text = property.Value.Type == JTokenType.String
+                    ? (string)property.Value
+                    : null;
+
+                if (text == null ||
+                    !text.StartsWith(value: "base64:"))
+                {
+                    continue;
+                }
+
+                byte[] candidate = Convert.FromBase64String(s: text.Substring(startIndex: "base64:".Length));
+                if (candidate.Length > 2 &&
+                    candidate[0] == 0xFF &&
+                    candidate[1] == 0xD8 &&
+                    (jpeg == null || candidate.Length > jpeg.Length))
+                {
+                    jpeg = candidate;
+                }
+            }
+
+            return jpeg != null;
+        }
+        catch (Exception ex)
+        {
+            Log.Warn(exception: ex, message: $"Could not get an embedded preview via ExifTool for '{filename}'");
+            jpeg = null;
+            return false;
+        }
+    }
+
+    private void GetPropertiesUnlocked(string filename,
+                                       ICollection<KeyValuePair<string, string>> propertiesRead)
     {
         if (Helpers.HelperVariables.ApplicationIsClosing == true)
         {

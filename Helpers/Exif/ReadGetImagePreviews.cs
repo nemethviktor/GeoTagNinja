@@ -1,5 +1,7 @@
-﻿using GeoTagNinja.Helpers.UI;
+﻿using GeoTagNinja.Helpers.Data;
+using GeoTagNinja.Helpers.UI;
 using GeoTagNinja.Model;
+using GeoTagNinja.View.Controls;
 using GeoTagNinja.View.Forms;
 using ImageMagick;
 using Sdcb.LibRaw;
@@ -10,8 +12,10 @@ using System.Drawing;
 using System.Drawing.Imaging;
 using System.IO;
 using System.Linq;
+using System.Runtime.CompilerServices;
 using System.Text;
 using System.Text.RegularExpressions;
+using System.Threading;
 using System.Threading.Tasks;
 using System.Windows.Forms;
 using Encoder = System.Drawing.Imaging.Encoder;
@@ -21,80 +25,24 @@ namespace GeoTagNinja.Helpers.Exif;
 internal static class ReadGetImagePreviews
 {
 
-    // EXIF Orientation property ID
-    private const int OrientationPropertyId = 0x0112;
+    /// <summary>The newest request per picture box, so an older one can be cancelled when it is superseded.</summary>
+    private static readonly ConditionalWeakTable<PictureBox, CancellationTokenSource> PendingRequests = new();
+
+    /// <summary>Limits concurrent preview decodes.</summary>
+    private static readonly SemaphoreSlim DecodeGate = new(initialCount: 2);
 
     internal enum Initiator
     {
         FrmMainAppPictureBox,
         FrmMainAppAPIDataSelection,
-        FrmMainAppListViewThumbnail,
         FrmEditFileData
     }
 
-    private static readonly List<string> MagickExtensionList =
-    [
-        "heic",
-        "heif",
-        "webp"
-    ];
-
     /// <summary>
-    ///     This generates (technically, extracts) the image previews from files for the
-    ///     user when they click on a filename in whichever listview.
-    /// </summary>
-    /// <param name="fileNameWithPath">Path of file for which the preview needs creating</param>
-    /// <param name="initiator">The source of the caller. This can drives whether we're asking for a preview or a thumbnail</param>
-    /// <param name="addSmallThumbnailToFileName">Whether to add "_small_thumbnail" to the filename. (defaults to false)</param>
-    /// <returns>Realistically nothing but the process generates the bitmap if possible</returns>
-    internal static async Task UseExifToolToGeneratePreviewsOrThumbnails(string fileNameWithPath,
-                                                                         Initiator initiator,
-                                                                         bool addSmallThumbnailToFileName = false)
-    {
-        FrmMainApp.Log.Info(message: "Starting");
-
-        #region ExifToolConfiguration
-
-        // want to give this a different name from the usual exifArgs.args just in case that's still being accessed (as much as it shouldn't be)
-        Regex rgx = new(pattern: "[^a-zA-Z0-9]");
-        string folderName = Path.GetDirectoryName(path: fileNameWithPath);
-        string fileNameReplaced =
-            rgx.Replace(
-                input: fileNameWithPath.Replace(oldValue: folderName, newValue: ""),
-                replacement: "_");
-        string argsFile = Path.Combine(path1: HelperVariables.UserDataFolderPath,
-            path2: $"exifArgs_getPreview_{fileNameReplaced}.args");
-        string exiftoolCmd =
-            $@" -charset utf8 -charset filename=utf8 -b -preview:{(initiator == Initiator.FrmMainAppListViewThumbnail ? "GTNPreviewThumb" : "GTNPreview")} -w! {HelperVariables.DoubleQuoteStr}{HelperVariables.UserDataFolderPath}\%F{(addSmallThumbnailToFileName ? "_small_thumbnail" : "")}.jpg{HelperVariables.DoubleQuoteStr} -@ {HelperVariables.DoubleQuoteStr}{argsFile}{HelperVariables.DoubleQuoteStr}";
-
-        File.Delete(path: argsFile);
-
-        #endregion
-
-        // add required tags
-
-        if (File.Exists(path: fileNameWithPath))
-        {
-            File.AppendAllText(path: argsFile,
-                contents: fileNameWithPath + Environment.NewLine,
-                encoding: Encoding.UTF8);
-            File.AppendAllText(path: argsFile,
-                contents: $"-execute{Environment.NewLine}");
-        }
-
-        FrmMainApp.Log.Trace(message: "Starting ExifTool");
-        ///////////////
-        await ExifToolOperator.RunExifTool(exiftoolCmd: exiftoolCmd,
-            frmMainAppInstance: null,
-            initiator:
-            ExifToolInititators
-                                             .ExifGetImagePreviews);
-        ///////////////
-        FrmMainApp.Log.Debug(message: "Done");
-    }
-
-    /// <summary>
-    ///     Triggers ExifTool's preview creation/extraction for the DirectoryElement selected
+    ///     Loads and shows the preview of the DirectoryElement selected. The image is produced off the UI thread, in
+    ///     memory (see <see cref="LoadPreviewInMemory" />); only if that fails is the already-running ExifTool asked.
+    ///     A newer request for the same picture box supersedes (and discards the result of) an older one, so arrowing
+    ///     quickly through files never shows a stale preview or queues up work.
     /// </summary>
     /// <param name="directoryElement">The DE for which the preview should be created</param>
     /// <param name="initiator">The source of the request</param>
@@ -108,147 +56,173 @@ internal static class ReadGetImagePreviews
             return;
         }
 
+        PictureBox? target = initiator switch
+        {
+            Initiator.FrmMainAppPictureBox or Initiator.FrmMainAppAPIDataSelection => FrmMainApp.Instance?.pbx_imagePreview,
+            Initiator.FrmEditFileData => (Application.OpenForms[name: "FrmEditFileData"] as FrmEditFileData)?.pbx_imagePreview,
+            _ => null
+        };
+
+        if (target == null)
+        {
+            return;
+        }
+
+        CancellationTokenSource request = new();
+        CancellationTokenSource? superseded;
+        lock (PendingRequests)
+        {
+            if (PendingRequests.TryGetValue(key: target, value: out superseded))
+            {
+                _ = PendingRequests.Remove(key: target);
+            }
+
+            PendingRequests.Add(key: target, value: request);
+        }
+
+        superseded?.Cancel();
+
+        // dispose what we're replacing; it is ours (created below), and the control no longer holds it afterwards.
+        Image? previous = target.Image;
+        target.Image = null;
+        previous?.Dispose();
+
         string fileNameWithPath = directoryElement.FileNameWithPath;
-        string fileNameWithoutPath = directoryElement.ItemNameWithoutPath;
+        string extension = directoryElement.Extension.TrimStart('.').ToLowerInvariant();
+        Image? img = null;
 
-        FrmMainApp frmMainAppInstance = FrmMainApp.Instance;
-        FrmEditFileData frmEditFileDataInstance = (FrmEditFileData)Application.OpenForms[name: "FrmEditFileData"];
-        Image img = null;
-        //FileInfo fi = new(fileName: directoryElement.FileNameWithPath);
-        string generatedFileName = null;
-
-        if ((initiator == Initiator.FrmMainAppPictureBox || initiator == Initiator.FrmMainAppAPIDataSelection) &&
-            frmMainAppInstance != null)
+        try
         {
-            frmMainAppInstance.pbx_imagePreview.Image = null;
-            generatedFileName = Path.Combine(path1: HelperVariables.UserDataFolderPath,
-                path2: $"{fileNameWithoutPath}.jpg");
-        }
-        else if (initiator == Initiator.FrmMainAppListViewThumbnail &&
-                 frmMainAppInstance != null)
-        {
-            generatedFileName = Path.Combine(path1: HelperVariables.UserDataFolderPath,
-                path2: $"{fileNameWithoutPath}.jpg");
-        }
-
-        else if (initiator == Initiator.FrmEditFileData &&
-                 frmEditFileDataInstance != null)
-        {
-            frmEditFileDataInstance.pbx_imagePreview.Image = null;
-            generatedFileName = Path.Combine(path1: HelperVariables.UserDataFolderPath,
-                path2: $"{fileNameWithoutPath}.jpg");
-        }
-
-        // sometimes the file doesn't get created. (ie exiftool may fail to extract a preview.)
-        string pbxErrorMsg = HelperControlAndMessageBoxHandling.ReturnControlText(
-            controlName: "pbx_imagePreviewCouldNotRetrieve",
-            fakeControlType: HelperControlAndMessageBoxHandling.FakeControlTypes.PictureBox
-        );
-
-        if (!File.Exists(path: generatedFileName))
-        {
+            // Only a couple of decodes at a time; requests superseded while waiting here never start.
+            await DecodeGate.WaitAsync(cancellationToken: request.Token);
             try
             {
-                // currently: heic, heif, webp
-                if (MagickExtensionList.Contains(item: directoryElement.Extension.TrimStart('.').ToLower()))
-                {
-                    // actually the reason i'm not using this for _every_ file is that it's just f...ing slow with NEF files(which is what I have plenty of), so it's prohibitive to run on RAW files. 
-                    //  since i don't have a better way to deal with HEIC/WEBP files atm this is as good as it gets.
-                    UseMagickImageToGeneratePreview(originalImagePath: fileNameWithPath,
-                        generatedJpegPath: generatedFileName);
-                }
-                else
-                {
-                    img = LoadAndCorrectOrientation(filePath: fileNameWithPath);
-                }
+                img = await Task.Run(function: () => LoadPreviewInMemory(fileNameWithPath: fileNameWithPath,
+                    extension: extension), cancellationToken: request.Token);
             }
-            catch
+            finally
             {
-                // nothing.
+                _ = DecodeGate.Release();
+            }
+
+            if (img == null &&
+                !request.IsCancellationRequested)
+            {
+                img = await LoadPreviewViaExifTool(directoryElement: directoryElement);
             }
         }
-
-        if (img == null)
+        catch (OperationCanceledException)
         {
-            // don't run the thing again if file has already been generated
-            if (!File.Exists(path: generatedFileName))
-            {
-                await UseExifToolToGeneratePreviewsOrThumbnails(fileNameWithPath: fileNameWithPath,
-                    initiator: initiator);
-            }
+            // superseded
+        }
 
-            if (File.Exists(path: generatedFileName))
-            {
-                try
-                {
-                    // ReSharper disable once AssignNullToNotNullAttribute
-                    using FileStream stream = new(path: generatedFileName,
-                        mode: FileMode.Open,
-                        access: FileAccess.Read);
-                    img = Image.FromStream(stream: stream);
-
-                    img.ExifRotate();
-                }
-                catch
-                {
-                    // nothing
-                }
-            }
+        if (request.IsCancellationRequested)
+        {
+            img?.Dispose();
+            return;
         }
 
         if (img != null)
         {
-            if ((initiator == Initiator.FrmMainAppPictureBox ||
-                 initiator == Initiator.FrmMainAppAPIDataSelection) &&
-                frmMainAppInstance != null)
-            {
-                frmMainAppInstance.pbx_imagePreview.Image = img;
-            }
-            else if (initiator == Initiator.FrmMainAppListViewThumbnail)
-            {
-                if (!File.Exists(path: generatedFileName))
-                {
-                    await UseExifToolToGeneratePreviewsOrThumbnails(fileNameWithPath: fileNameWithPath,
-                        initiator: initiator);
-                }
-            }
-            else if (initiator == Initiator.FrmEditFileData &&
-                     frmEditFileDataInstance != null)
-            {
-                frmEditFileDataInstance.pbx_imagePreview.Image = img;
-            }
+            target.Image = img;
         }
-
-        else
+        else if (initiator == Initiator.FrmMainAppPictureBox)
         {
-            if (initiator == Initiator.FrmMainAppPictureBox &&
-                frmMainAppInstance != null)
-            {
-                frmMainAppInstance.pbx_imagePreview.SetErrorMessage(message: pbxErrorMsg);
-            }
-            else if (initiator == Initiator.FrmEditFileData &&
-                     frmEditFileDataInstance != null)
-            {
-                // frmEditFileDataInstance.pbx_imagePreview.SetErrorMessage(message: pbxErrorMsg); // <- nonesuch.
-            }
+            // sometimes no preview can be had at all.
+            (target as ImagePreview)?.SetErrorMessage(message: HelperControlAndMessageBoxHandling.ReturnControlText(
+                controlName: "pbx_imagePreviewCouldNotRetrieve",
+                fakeControlType: HelperControlAndMessageBoxHandling.FakeControlTypes.PictureBox));
         }
     }
 
     /// <summary>
-    ///     Takes a HEIC/WebP/etc file and dumps a JPG. Uses MagickImage. See comment above as to why this isn't being used for
-    ///     all RAW
-    ///     files. (Too slow).
+    ///     Produces the preview without any external process: plain images are decoded directly, RAW files give up
+    ///     their largest embedded JPEG (via LibRaw), HEIC/WebP are converted by Magick. The slow-to-produce kinds are
+    ///     kept in <see cref="PreviewCache" />. Runs on a worker thread.
     /// </summary>
-    /// <param name="originalImagePath"></param>
-    /// <param name="generatedJpegPath"></param>
-    private static void UseMagickImageToGeneratePreview(string originalImagePath,
-                                                        string generatedJpegPath)
+    /// <returns>The image (caller owns it), or null if nothing in-process could read the file.</returns>
+    private static Image? LoadPreviewInMemory(string fileNameWithPath,
+                                              string extension)
     {
-        using MagickImage image = new(fileName: originalImagePath);
-        // The AutoOrient() method adjusts the image to respect its orientation.
-        image.AutoOrient();
-        // Save the image as a JPEG.
-        image.Write(fileName: generatedJpegPath);
+        try
+        {
+            if (ThumbnailGenerator.IsGdiPlusFormat(extension: extension))
+            {
+                using FileStream stream = new(path: fileNameWithPath, mode: FileMode.Open, access: FileAccess.Read,
+                    share: FileShare.ReadWrite);
+                using Image decoded = Image.FromStream(stream: stream);
+                decoded.ExifRotate();
+                // copy so the result doesn't depend on the file stream
+                return new Bitmap(original: decoded);
+            }
+
+            PreviewEntry? entry = PreviewCache.TryGet(fileNameWithPath: fileNameWithPath);
+            if (entry == null)
+            {
+                entry = ThumbnailGenerator.IsMagickOnlyFormat(extension: extension)
+                    ? ReadMagickAsJpeg(fileNameWithPath: fileNameWithPath)
+                    : RawPreview.TryReadLargestEmbeddedJpeg(fileNameWithPath: fileNameWithPath);
+
+                if (entry != null)
+                {
+                    PreviewCache.Add(fileNameWithPath: fileNameWithPath, entry: entry);
+                }
+            }
+
+            return entry == null
+                ? null
+                : RawPreview.DecodeOriented(jpeg: entry.Jpeg, exifOrientation: entry.ExifOrientation);
+        }
+        catch
+        {
+            return null;
+        }
+    }
+
+    /// <summary>
+    ///     HEIC/WebP etc: decode with Magick, apply orientation, hand back as JPEG bytes (so the result can be cached
+    ///     cheaply). The orientation is already baked in, hence 0.
+    /// </summary>
+    private static PreviewEntry? ReadMagickAsJpeg(string fileNameWithPath)
+    {
+        try
+        {
+            using MagickImage image = new(fileName: fileNameWithPath);
+            image.AutoOrient();
+            image.Quality = 92;
+            return new PreviewEntry(jpeg: image.ToByteArray(format: MagickFormat.Jpeg), exifOrientation: 0);
+        }
+        catch
+        {
+            return null;
+        }
+    }
+
+    /// <summary>
+    ///     Last resort for files LibRaw/Magick/GDI+ couldn't read: ask the already-running ExifTool process for an
+    ///     embedded preview (see <see cref="ExifTool.TryGetEmbeddedPreview" />). No new process is started.
+    /// </summary>
+    private static Task<Image?> LoadPreviewViaExifTool(DirectoryElement directoryElement)
+    {
+        return Task.Run<Image?>(function: () =>
+        {
+            ExifTool? exifTool = FrmMainApp.DirectoryElements.ExifTool;
+            if (exifTool == null ||
+                !exifTool.TryGetEmbeddedPreview(filename: directoryElement.FileNameWithPath, jpeg: out byte[] jpeg,
+                    exifOrientation: out int exifOrientation))
+            {
+                return null;
+            }
+
+            try
+            {
+                return RawPreview.DecodeOriented(jpeg: jpeg, exifOrientation: exifOrientation);
+            }
+            catch
+            {
+                return null;
+            }
+        });
     }
 
     /// <summary>
@@ -288,65 +262,5 @@ internal static class ReadGetImagePreviews
         {
             // ignored
         }
-    }
-
-    /// <summary>
-    /// Loads an image from a file path and automatically corrects its rotation based on EXIF metadata.
-    /// </summary>
-    /// <param name="filePath">The full path to the image file.</param>
-    /// <returns>A rotation-corrected <see cref="Image"/> object.</returns>
-    public static Image LoadAndCorrectOrientation(string filePath)
-    {
-        if (string.IsNullOrWhiteSpace(value: filePath))
-        {
-            throw new ArgumentException(message: "File path cannot be null or empty.", paramName: nameof(filePath));
-        }
-
-        // Using FileStream to avoid locking the file directly via Image.FromFile
-        using FileStream stream = new(path: filePath, mode: FileMode.Open, access: FileAccess.Read);
-        Image originalImage = Image.FromStream(stream: stream);
-
-        // Check if the image contains the EXIF orientation property
-        if (originalImage.PropertyIdList.Contains(value: OrientationPropertyId))
-        {
-            System.Drawing.Imaging.PropertyItem propItem = originalImage.GetPropertyItem(propid: OrientationPropertyId);
-
-            if (propItem?.Value != null && propItem.Value.Length > 0)
-            {
-                int orientationValue = propItem.Value[0];
-                RotateFlipType rotateFlipType = GetRotateFlipType(orientation: orientationValue);
-
-                if (rotateFlipType != RotateFlipType.RotateNoneFlipNone)
-                {
-                    originalImage.RotateFlip(rotateFlipType: rotateFlipType);
-
-                    // Remove the orientation flag so it doesn't get double-rotated if saved later
-                    originalImage.RemovePropertyItem(propid: OrientationPropertyId);
-                }
-            }
-        }
-
-        return originalImage;
-    }
-
-    /// <summary>
-    /// Maps the standard EXIF orientation integer value to the corresponding GDI+ RotateFlipType.
-    /// </summary>
-    /// <param name="orientation">The EXIF orientation integer value.</param>
-    /// <returns>The correct <see cref="RotateFlipType"/> needed to fix the image.</returns>
-    private static RotateFlipType GetRotateFlipType(int orientation)
-    {
-        return orientation switch
-        {
-            1 => RotateFlipType.RotateNoneFlipNone,
-            2 => RotateFlipType.RotateNoneFlipX,
-            3 => RotateFlipType.Rotate180FlipNone,
-            4 => RotateFlipType.Rotate180FlipX,
-            5 => RotateFlipType.Rotate90FlipX,
-            6 => RotateFlipType.Rotate90FlipNone,// Very common for vertical phone photos/scans
-            7 => RotateFlipType.Rotate270FlipX,
-            8 => RotateFlipType.Rotate270FlipNone,
-            _ => RotateFlipType.RotateNoneFlipNone,
-        };
     }
 }

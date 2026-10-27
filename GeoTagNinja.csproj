@@ -160,6 +160,8 @@
     <Compile Include="Helpers\UI\ControlTextAndMessageBoxes.cs" />
     <Compile Include="Helpers\Data\CacheManager.cs" />
     <Compile Include="Helpers\Data\ThumbnailCache.cs" />
+    <Compile Include="Helpers\Data\FileKeyedCache.cs" />
+    <Compile Include="Helpers\Data\PreviewCache.cs" />
     <Compile Include="Helpers\Data\SettingsImportExportOptions.cs" />
     <Compile Include="Helpers\Data\SettingsExport.cs" />
     <Compile Include="Helpers\Data\SettingsImport.cs" />
@@ -246,6 +248,7 @@
     <Compile Include="Helpers\Exif\ReadExifData.cs" />
     <Compile Include="Helpers\Exif\ReadGetImagePreviews.cs" />
     <Compile Include="Helpers\Exif\ThumbnailGenerator.cs" />
+    <Compile Include="Helpers\Exif\RawPreview.cs" />
     <Compile Include="Helpers\Exif\ReadTrackFile.cs" />
     <Compile Include="Helpers\Exif\WriteSaveToFile.cs" />
     <Compile Include="Helpers\FileSystem\Operators.cs" />

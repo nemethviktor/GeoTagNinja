@@ -6,7 +6,6 @@ internal enum ExifToolInititators
     ExifGetTrackSyncDataReadSyncPhotos,
     ExifGetTrackSyncDataReadTrackPath,
     ExifGetTrackSyncDataWriteTrackPath,
-    ExifGetImagePreviews,
     GenericCheckForNewVersions,
     Unspecified
 }
