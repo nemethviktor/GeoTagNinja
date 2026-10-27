@@ -1096,14 +1096,35 @@ public partial class FileListView : System.Windows.Forms.ListView
         ListViewItem lvi = Items[index: e.Item];
         DirectoryElement de = (DirectoryElement)lvi.Tag;
 
-        // 1. HANDLE CANCELLATION (The Escape Key Fix)
-        // If e.Label is null, the user cancelled. We must restore the full name 
-        // because BeforeLabelEdit stripped the extension from the UI.
+        // If e.Label is null, the user cancelled (Escape). We must restore the full name because BeforeLabelEdit
+        // stripped the extension from the UI.
         if (e.Label == null)
         {
             lvi.Text = de.ItemNameWithoutPath;
             e.CancelEdit = true;
             return;
+        }
+
+        _ = TryRenameItem(lvi: lvi, newBaseName: e.Label);
+
+        // TryRenameItem has set the item's text; tell WinForms NOT to use the raw label
+        e.CancelEdit = true;
+    }
+
+    /// <summary>
+    ///     Renames a file on disk (keeping its extension, and moving its XMP sidecar along) and updates the model and the
+    ///     row. Shared by the in-place editor of the details list and the thumbnail view's F2. If nothing changed, or it
+    ///     fails (an error is shown), the row is left showing the original name.
+    /// </summary>
+    /// <param name="lvi">The row of the file to rename.</param>
+    /// <param name="newBaseName">The new name without the extension (a typed extension is not doubled).</param>
+    /// <returns>True if the file was renamed.</returns>
+    internal bool TryRenameItem(ListViewItem lvi,
+                                string newBaseName)
+    {
+        if (lvi.Tag is not DirectoryElement de)
+        {
+            return false;
         }
 
         try
@@ -1112,30 +1133,28 @@ public partial class FileListView : System.Windows.Forms.ListView
             if (string.IsNullOrEmpty(value: directory))
             {
                 lvi.Text = de.ItemNameWithoutPath;
-                e.CancelEdit = true;
-                return;
+                return false;
             }
 
             string originalExtension = Path.GetExtension(path: de.FileNameWithPath);
-            string newBaseName = e.Label.Trim();
+            newBaseName = newBaseName.Trim();
 
-            // 2. CHECK IF NAME ACTUALLY CHANGED
+            // CHECK IF NAME ACTUALLY CHANGED
             // If the user entered the same name (without extension) as before, treat as a cancel.
             if (string.Equals(a: newBaseName, b: Path.GetFileNameWithoutExtension(path: de.FileNameWithPath), comparisonType: StringComparison.OrdinalIgnoreCase))
             {
                 lvi.Text = de.ItemNameWithoutPath;
-                e.CancelEdit = true;
-                return;
+                return false;
             }
 
-            // 3. EXTENSION STITCHING
+            // EXTENSION STITCHING
             string newFileName = newBaseName.EndsWith(value: originalExtension, comparisonType: StringComparison.OrdinalIgnoreCase)
                 ? newBaseName
                 : newBaseName + originalExtension;
 
             string newPath = Path.Combine(path1: directory, path2: newFileName);
 
-            // 4. VALIDATION & DISK MOVE
+            // VALIDATION & DISK MOVE
             if (File.Exists(path: newPath))
             {
                 throw new IOException(message: "A file with that name already exists.");
@@ -1143,7 +1162,7 @@ public partial class FileListView : System.Windows.Forms.ListView
 
             File.Move(sourceFileName: de.FileNameWithPath, destFileName: newPath);
 
-            // 5. SIDECAR SYNC
+            // SIDECAR SYNC
             if (de.SidecarFile != null && de.SidecarFile.Exists)
             {
                 string newBaseWithoutExt = Path.GetFileNameWithoutExtension(path: newFileName);
@@ -1151,13 +1170,14 @@ public partial class FileListView : System.Windows.Forms.ListView
                 File.Move(sourceFileName: de.SidecarFile.FullName, destFileName: newSidecarPath);
             }
 
-            // 6. UPDATE MODEL & UI
+            // UPDATE MODEL & UI
             de.UpdatePathAfterRename(newPath: newPath);
             lvi.Text = newFileName;
             lvi.Name = newPath;
-            e.CancelEdit = true; // Tell WinForms NOT to use the raw e.Label
+            ItemsVersion++;
 
             Log.Info(message: $"Renamed successfully: {newFileName}");
+            return true;
         }
         catch (Exception ex)
         {
@@ -1166,7 +1186,7 @@ public partial class FileListView : System.Windows.Forms.ListView
 
             // Revert UI to safety
             lvi.Text = de.ItemNameWithoutPath;
-            e.CancelEdit = true;
+            return false;
         }
     }
 
@@ -1608,6 +1628,32 @@ public partial class FileListView : System.Windows.Forms.ListView
     /// </summary>
     /// <param name="sender"></param>
     /// <param name="e"></param>
+    /// <summary>The index of the column the list is sorted by.</summary>
+    internal int SortColumnIndex => LvwColumnSorter?.SortColumn ?? 0;
+
+    /// <summary>The direction the list is sorted in.</summary>
+    internal SortOrder SortDirection => LvwColumnSorter?.SortOrder ?? SortOrder.Ascending;
+
+    /// <summary>
+    ///     Sorts by a column in a given direction: what clicking a column header does, for callers without headers to click
+    ///     (the thumbnail view's View &gt; Sort By).
+    /// </summary>
+    internal void SortBy(int columnIndex,
+                         SortOrder order)
+    {
+        if (LvwColumnSorter == null ||
+            columnIndex < 0 ||
+            columnIndex >= Columns.Count)
+        {
+            return;
+        }
+
+        LvwColumnSorter.SortColumn = columnIndex;
+        LvwColumnSorter.SortOrder = order;
+        Sort();
+        ItemsVersion++;
+    }
+
     private void FileList_ColumnClick(object sender,
         ColumnClickEventArgs e)
     {
@@ -1738,11 +1784,15 @@ public partial class FileListView : System.Windows.Forms.ListView
     /// FrmMainApp.cms_FileListView, calls LocaliseDynamicMenu, and then displays the menu.</remarks>
     /// <param name="location">Location within the control where the context menu is displayed and used for hit-testing to determine the target
     /// column and item.</param>
-    private void ShowFilterMenu(Point location)
+    private void ShowFilterMenu(Point location,
+                                Control? owner = null,
+                                bool includeFilter = true)
     {
         ContextMenuStrip menu = new();
-        ListViewHitTestInfo hitInfo = HitTest(location);
-        int columnIndex = GetColumnAtX(x: location.X);
+
+        // the per-column filter needs a column under the pointer, which only the details list has
+        ListViewHitTestInfo hitInfo = includeFilter ? HitTest(location) : null;
+        int columnIndex = includeFilter ? GetColumnAtX(x: location.X) : -1;
 
         if (columnIndex != -1)
         {
@@ -1863,7 +1913,19 @@ public partial class FileListView : System.Windows.Forms.ListView
         // styles the whole tree (submenus, separators, arrows) in one go; no-op in light mode.
         ThemeHelper.StyleMenu(menu: menu);
         menu.ShowImageMargin = false;
-        menu.Show(control: this, location);
+        menu.Show(control: owner ?? this, location);
+    }
+
+    /// <summary>
+    ///     Shows the standard actions menu (copy/paste geodata and so on, the same items the details list's right-click
+    ///     menu ends with) for another control, i.e. the thumbnail view, which has no columns to filter by.
+    /// </summary>
+    /// <param name="owner">The control the menu is shown over.</param>
+    /// <param name="location">Where, in that control's client coordinates.</param>
+    internal void ShowActionsMenu(Control owner,
+                                  Point location)
+    {
+        ShowFilterMenu(location: location, owner: owner, includeFilter: false);
     }
 
     private static ToolStripSeparator CreateNewToolStripSeparator()

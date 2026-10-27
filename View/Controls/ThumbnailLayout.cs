@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Drawing;
 
 namespace GeoTagNinja.View.Controls;
@@ -101,6 +102,48 @@ internal static class ThumbnailLayout
         return index < count
             ? index
             : -1;
+    }
+
+    /// <summary>
+    ///     The items whose cells a rectangle touches (for rubber-band selection), in order. The rectangle is in content
+    ///     coordinates. A rectangle with no area counts as the single pixel it points at.
+    /// </summary>
+    internal static List<int> IndexesIn(Rectangle rect,
+                                        int columns,
+                                        int cellWidth,
+                                        int cellHeight,
+                                        int count)
+    {
+        List<int> result = [];
+        int right = Math.Max(val1: rect.Right, val2: rect.Left + 1);
+        int bottom = Math.Max(val1: rect.Bottom, val2: rect.Top + 1);
+
+        if (count <= 0 ||
+            right <= 0 ||
+            bottom <= 0 ||
+            rect.Left >= columns * cellWidth)
+        {
+            return result;
+        }
+
+        int firstColumn = Math.Max(val1: 0, val2: rect.Left) / cellWidth;
+        int lastColumn = Math.Min(val1: columns - 1, val2: (right - 1) / cellWidth);
+        int firstRow = Math.Max(val1: 0, val2: rect.Top) / cellHeight;
+        int lastRow = (bottom - 1) / cellHeight;
+
+        for (int row = firstRow; row <= lastRow; row++)
+        {
+            for (int column = firstColumn; column <= lastColumn; column++)
+            {
+                int index = (row * columns) + column;
+                if (index < count)
+                {
+                    result.Add(item: index);
+                }
+            }
+        }
+
+        return result;
     }
 
     /// <summary>

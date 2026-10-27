@@ -73,8 +73,12 @@ To announce something, add an entry to `Registry` with the build to compare agai
     (`ExifTool.TryGetEmbeddedPreview`: `-json -b`, binary as base64 over the text pipe). The wrapper's common `Filter` (which
     flattens newlines in text values) deliberately skips values starting with the JPEG marker, because it otherwise rewrites
     0x0A/0x0D bytes inside the image and corrupts it.
-  - *Still to do.* In thumbnail view there is no in-place rename (`F2`), filter menu or sorting by column (switch to Details);
-    no rubber-band selection; the JPEG/PNG/TIFF preview is still a full-resolution decode (fine now it is off the UI thread, but a
+  - *Interaction.* Sorting (`View > Sort By`, via `FileListView.SortBy`, the same sort the column headers drive), rename (`F2`
+    opens an editor over the caption and calls `FileListView.TryRenameItem`, the code the details list's editor uses too), the
+    right-click / Shift+F10 menu (`FileListView.ShowActionsMenu`, the list's standard actions without the per-column filter),
+    and rubber-band selection (`ThumbnailLayout.IndexesIn`, pure and tested) are all on the view itself. When testing by
+    keyboard, remember the view must have the focus (it takes it once the window is shown).
+  - *Still to do.* Per-column filtering is Details only; the JPEG/PNG/TIFF preview is still a full-resolution decode (fine now it is off the UI thread, but a
     scaled decode would be quicker for very large files); the metadata read is still strictly sequential within the priority order.
 - **`HelperControlAndMessageBoxHandling`** kept its name while moving to `Helpers/UI/`. Renaming it
   touches 253 references and is pure churn on top of an already large diff; worth doing on its own.

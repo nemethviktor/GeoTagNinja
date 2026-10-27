@@ -148,6 +148,38 @@ public class ThumbnailLayoutTests
         Assert.That(ThumbnailLayout.Navigate(current: -1, direction: ThumbnailNavigation.Down, columns: Cols, count: 0, pageRows: 2), Is.EqualTo(expected: -1));
     }
 
+    [Test]
+    public void IndexesIn_ReturnsEveryCellTheRectangleTouches()
+    {
+        // x 50..250 touches columns 0-2, y 25..85 touches rows 0-1
+        Assert.That(ThumbnailLayout.IndexesIn(rect: new Rectangle(x: 50, y: 25, width: 200, height: 60), columns: Cols, cellWidth: CellW, cellHeight: CellH, count: 10),
+            Is.EqualTo(new[] { 0, 1, 2, 4, 5, 6 }));
+
+        // a rectangle starting before the origin is clipped to it
+        Assert.That(ThumbnailLayout.IndexesIn(rect: new Rectangle(x: -30, y: -30, width: 80, height: 80), columns: Cols, cellWidth: CellW, cellHeight: CellH, count: 10),
+            Is.EqualTo(new[] { 0 }));
+    }
+
+    [Test]
+    public void IndexesIn_IgnoresCellsPastTheEndOfTheList_AndSpaceOutsideTheGrid()
+    {
+        // row 2 only has items 8 and 9; columns 2 and 3 of that row do not exist
+        Assert.That(ThumbnailLayout.IndexesIn(rect: new Rectangle(x: 200, y: 100, width: 150, height: 40), columns: Cols, cellWidth: CellW, cellHeight: CellH, count: 10),
+            Is.Empty);
+
+        // wholly to the right of the last column, and wholly above the origin
+        Assert.That(ThumbnailLayout.IndexesIn(rect: new Rectangle(x: 400, y: 0, width: 50, height: 50), columns: Cols, cellWidth: CellW, cellHeight: CellH, count: 10), Is.Empty);
+        Assert.That(ThumbnailLayout.IndexesIn(rect: new Rectangle(x: 0, y: -60, width: 50, height: 50), columns: Cols, cellWidth: CellW, cellHeight: CellH, count: 10), Is.Empty);
+        Assert.That(ThumbnailLayout.IndexesIn(rect: new Rectangle(x: 0, y: 0, width: 50, height: 50), columns: Cols, cellWidth: CellW, cellHeight: CellH, count: 0), Is.Empty);
+    }
+
+    [Test]
+    public void IndexesIn_ARectangleWithNoAreaIsThePixelItPointsAt()
+    {
+        Assert.That(ThumbnailLayout.IndexesIn(rect: new Rectangle(x: 100, y: 50, width: 0, height: 0), columns: Cols, cellWidth: CellW, cellHeight: CellH, count: 10),
+            Is.EqualTo(new[] { 5 }));
+    }
+
     [TestCase(10, ThumbnailLayout.MinThumbnailSize)]
     [TestCase(64, 64)]
     [TestCase(128, 128)]

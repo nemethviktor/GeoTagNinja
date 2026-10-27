@@ -10,6 +10,7 @@ using System.Collections.Concurrent;
 using System.Collections.Generic;
 using System.Drawing;
 using System.Drawing.Drawing2D;
+using System.IO;
 using System.Linq;
 using System.Threading;
 using System.Windows.Forms;
@@ -74,6 +75,20 @@ internal sealed class ThumbnailView : ScrollableControl
     private int _focusIndex = -1;
     private int _anchorIndex = -1;
     private int _hoverIndex = -1;
+
+    // rubber-band selection: dragging from empty space selects the cells the rectangle touches
+    private const int RubberBandThreshold = 4;
+    private bool _rubberPending;
+    private bool _rubberActive;
+    private Point _rubberStart; // content coordinates (grid origin, unscrolled)
+    private Rectangle _rubberRect; // content coordinates
+    private HashSet<int> _rubberBase = [];
+    private HashSet<int> _rubberLast = [];
+
+    // in-place rename (F2)
+    private TextBox? _renameBox;
+    private ListViewItem? _renameItem;
+    private bool _endingRename;
     private DirectoryElement? _lastPrioritisedFirst;
     private int _lastPrioritisedCount = -1;
 
@@ -107,6 +122,12 @@ internal sealed class ThumbnailView : ScrollableControl
     ///     which is when the app updates the preview and the map.
     /// </summary>
     internal event EventHandler? UserSelectionChanged;
+
+    /// <summary>
+    ///     Raised when the user asks for the context menu (right-click, the menu key or Shift+F10), with the position in this
+    ///     control's client coordinates. The selection has already been updated.
+    /// </summary>
+    internal event Action<Point>? ContextMenuRequested;
 
     /// <summary>Raised after <see cref="ThumbnailSize" /> changed.</summary>
     internal event EventHandler? ThumbnailSizeChanged;
@@ -407,6 +428,7 @@ internal sealed class ThumbnailView : ScrollableControl
 
     protected override void OnResize(EventArgs e)
     {
+        EndRename(commit: true);
         base.OnResize(e: e);
         ComputeLayout();
     }
@@ -550,6 +572,22 @@ internal sealed class ThumbnailView : ScrollableControl
                 FrmMainApp.Log.Debug(ex, message: $"Thumbnail cell {index} could not be drawn");
             }
         }
+
+        if (_rubberActive)
+        {
+            DrawRubberBand(g: g, scrollTop: scrollTop);
+        }
+    }
+
+    private void DrawRubberBand(Graphics g,
+                                int scrollTop)
+    {
+        Rectangle r = new(x: _rubberRect.X + _leftMargin, y: _rubberRect.Y - scrollTop, width: _rubberRect.Width, height: _rubberRect.Height);
+        Color edge = ThemeHelper.IsDark ? Color.FromArgb(red: 90, green: 140, blue: 220) : Color.FromArgb(red: 120, green: 170, blue: 240);
+        using SolidBrush fill = new(color: Color.FromArgb(alpha: 60, baseColor: edge));
+        using Pen border = new(color: edge);
+        g.FillRectangle(brush: fill, rect: r);
+        g.DrawRectangle(pen: border, x: r.X, y: r.Y, width: Math.Max(val1: 0, val2: r.Width - 1), height: Math.Max(val1: 0, val2: r.Height - 1));
     }
 
     private void DrawCell(Graphics g,
@@ -707,13 +745,27 @@ internal sealed class ThumbnailView : ScrollableControl
             return;
         }
 
+        EndRename(commit: true);
+
         int index = IndexAt(clientPoint: e.Location);
         if (index < 0)
         {
-            if (e.Button == MouseButtons.Left &&
-                ModifierKeys == Keys.None)
+            if (e.Button == MouseButtons.Left)
             {
-                SetSelection(indexes: [], focus: -1);
+                // Empty space: a drag from here is a rubber band (Ctrl adds to the selection). A plain click without a
+                // drag just clears the selection, as before.
+                _rubberPending = true;
+                _rubberStart = new Point(x: e.X - _leftMargin, y: e.Y - AutoScrollPosition.Y);
+                bool keepSelection = (ModifierKeys & (Keys.Control | Keys.Shift)) != 0;
+                _rubberBase = keepSelection
+                    ? [.. _source.SelectedIndices.Cast<int>()]
+                    : [];
+                _rubberLast = [.. _rubberBase];
+
+                if (!keepSelection)
+                {
+                    SetSelection(indexes: [], focus: -1);
+                }
             }
 
             return;
@@ -746,8 +798,92 @@ internal sealed class ThumbnailView : ScrollableControl
 
     protected override void OnMouseUp(MouseEventArgs e)
     {
+        bool wasRubberBanding = _rubberActive;
+        EndRubberBand();
+
         base.OnMouseUp(e: e);
         UserSelectionChanged?.Invoke(sender: this, e: EventArgs.Empty);
+
+        // the selection was updated on mouse down, so the menu acts on what was clicked
+        if (e.Button == MouseButtons.Right &&
+            !wasRubberBanding)
+        {
+            ContextMenuRequested?.Invoke(obj: e.Location);
+        }
+    }
+
+    protected override void OnMouseCaptureChanged(EventArgs e)
+    {
+        base.OnMouseCaptureChanged(e: e);
+        if (!Capture)
+        {
+            EndRubberBand();
+        }
+    }
+
+    private void EndRubberBand()
+    {
+        if (!_rubberPending &&
+            !_rubberActive)
+        {
+            return;
+        }
+
+        _rubberPending = false;
+        _rubberActive = false;
+        Invalidate();
+    }
+
+    /// <summary>Grows the rubber band to the pointer and selects what it touches. Dragging past an edge scrolls.</summary>
+    private void UpdateRubberBand(Point client)
+    {
+        if ((MouseButtons & MouseButtons.Left) == 0)
+        {
+            EndRubberBand();
+            return;
+        }
+
+        Point current = new(x: client.X - _leftMargin, y: client.Y - AutoScrollPosition.Y);
+        if (!_rubberActive)
+        {
+            if (Math.Abs(value: current.X - _rubberStart.X) < RubberBandThreshold &&
+                Math.Abs(value: current.Y - _rubberStart.Y) < RubberBandThreshold)
+            {
+                return;
+            }
+
+            _rubberActive = true;
+        }
+
+        int scrollTop = -AutoScrollPosition.Y;
+        if (client.Y < 0)
+        {
+            AutoScrollPosition = new Point(x: 0, y: Math.Max(val1: 0, val2: scrollTop - 30));
+        }
+        else if (client.Y > ClientSize.Height)
+        {
+            AutoScrollPosition = new Point(x: 0, y: scrollTop + 30);
+        }
+
+        current = new Point(x: client.X - _leftMargin, y: client.Y - AutoScrollPosition.Y);
+        _rubberRect = Rectangle.FromLTRB(
+            left: Math.Min(val1: _rubberStart.X, val2: current.X),
+            top: Math.Min(val1: _rubberStart.Y, val2: current.Y),
+            right: Math.Max(val1: _rubberStart.X, val2: current.X),
+            bottom: Math.Max(val1: _rubberStart.Y, val2: current.Y));
+
+        List<int> touched = ThumbnailLayout.IndexesIn(rect: _rubberRect, columns: _columns, cellWidth: _cellWidth,
+            cellHeight: _cellHeight, count: Math.Min(val1: _count, val2: _source.Items.Count));
+        HashSet<int> wanted = [.. _rubberBase, .. touched];
+
+        // only touch the list when the set actually changed
+        if (!wanted.SetEquals(other: _rubberLast))
+        {
+            _rubberLast = wanted;
+            SetSelection(indexes: wanted, focus: touched.Count > 0 ? touched.Max() : -1);
+        }
+
+        Invalidate();
     }
 
     protected override void OnMouseDoubleClick(MouseEventArgs e)
@@ -763,6 +899,14 @@ internal sealed class ThumbnailView : ScrollableControl
     protected override void OnMouseMove(MouseEventArgs e)
     {
         base.OnMouseMove(e: e);
+
+        if (_rubberPending ||
+            _rubberActive)
+        {
+            UpdateRubberBand(client: e.Location);
+            return;
+        }
+
         int index = IndexAt(clientPoint: e.Location);
         if (index == _hoverIndex)
         {
@@ -777,6 +921,9 @@ internal sealed class ThumbnailView : ScrollableControl
         }
 
         _hoverIndex = index;
+
+        // a tip that is already showing keeps the old text, so hide it before the caption changes
+        _toolTip.Hide(win: this);
         if (index >= 0)
         {
             Invalidate(rc: CellRectangle(index: index, scrollTop: scrollTop));
@@ -802,6 +949,9 @@ internal sealed class ThumbnailView : ScrollableControl
 
     protected override void OnMouseWheel(MouseEventArgs e)
     {
+        // an editor over a caption would be left behind by the scrolling
+        EndRename(commit: true);
+
         // Ctrl + wheel resizes the thumbnails, as in other image browsers; plain wheel scrolls
         if ((ModifierKeys & Keys.Control) != 0)
         {
@@ -890,6 +1040,25 @@ internal sealed class ThumbnailView : ScrollableControl
             e.Handled = true;
             ToggleSelection(index: _focusIndex);
         }
+        else if (e.KeyCode == Keys.F2)
+        {
+            e.Handled = true;
+            BeginRename();
+        }
+        else if (e.KeyCode == Keys.Apps ||
+                 (e.KeyCode == Keys.F10 && e.Shift))
+        {
+            e.Handled = true;
+            Point at = new(x: 10, y: 10);
+            if (_focusIndex >= 0 &&
+                _focusIndex < _count)
+            {
+                Rectangle cell = CellRectangle(index: _focusIndex, scrollTop: -AutoScrollPosition.Y);
+                at = new Point(x: cell.Left + (cell.Width / 2), y: cell.Top + (cell.Height / 2));
+            }
+
+            ContextMenuRequested?.Invoke(obj: at);
+        }
 
         // lets the app handle everything else (Ctrl+A, Enter, Delete, F5, Ctrl+S, ...)
         base.OnKeyDown(e: e);
@@ -914,6 +1083,101 @@ internal sealed class ThumbnailView : ScrollableControl
     {
         base.OnLostFocus(e: e);
         Invalidate();
+    }
+
+    #endregion
+
+    #region In-place rename (F2)
+
+    /// <summary>
+    ///     Opens an editor over the caption of the selected file (a single file only). Enter or clicking away renames it
+    ///     through <see cref="FileListView.TryRenameItem" />, the same code the details list uses (so the extension is kept
+    ///     and the XMP sidecar goes with it); Escape cancels.
+    /// </summary>
+    private void BeginRename()
+    {
+        if (_renameBox != null ||
+            _source.SelectedItems.Count != 1 ||
+            _source.SelectedItems[index: 0].Tag is not DirectoryElement { Type: DirectoryElement.ElementType.File } element)
+        {
+            return;
+        }
+
+        ListViewItem item = _source.SelectedItems[index: 0];
+        EnsureIndexVisible(index: item.Index);
+        Rectangle cell = CellRectangle(index: item.Index, scrollTop: -AutoScrollPosition.Y);
+        bool dark = ThemeHelper.IsDark;
+
+        _renameItem = item;
+        _renameBox = new TextBox
+        {
+            Text = Path.GetFileNameWithoutExtension(path: element.FileNameWithPath),
+            Font = Font,
+            BorderStyle = BorderStyle.FixedSingle,
+            TextAlign = HorizontalAlignment.Center,
+            BackColor = dark ? ThemeHelper.HighlightDark : SystemColors.Window,
+            ForeColor = dark ? ThemeHelper.ForeDark : SystemColors.WindowText,
+            Bounds = new Rectangle(x: cell.X + 2,
+                y: cell.Y + ThumbnailLayout.CellPadding + _thumbnailSize + ThumbnailLayout.CellPadding,
+                width: cell.Width - 4,
+                height: Font.Height + 6)
+        };
+
+        _renameBox.KeyDown += (_,
+                               e) =>
+        {
+            if (e.KeyCode == Keys.Enter)
+            {
+                e.SuppressKeyPress = true;
+                EndRename(commit: true);
+            }
+            else if (e.KeyCode == Keys.Escape)
+            {
+                e.SuppressKeyPress = true;
+                EndRename(commit: false);
+            }
+        };
+        _renameBox.LostFocus += (_,
+                                 _) => EndRename(commit: true);
+
+        Controls.Add(value: _renameBox);
+        _renameBox.BringToFront();
+        _ = _renameBox.Focus();
+        _renameBox.SelectAll();
+    }
+
+    private void EndRename(bool commit)
+    {
+        if (_renameBox == null ||
+            _endingRename)
+        {
+            return;
+        }
+
+        _endingRename = true;
+        try
+        {
+            string text = _renameBox.Text;
+            ListViewItem? item = _renameItem;
+
+            Controls.Remove(value: _renameBox);
+            _renameBox.Dispose();
+            _renameBox = null;
+            _renameItem = null;
+            _ = Focus();
+
+            if (commit &&
+                item != null &&
+                _source.TryRenameItem(lvi: item, newBaseName: text))
+            {
+                // the caption changed
+                Invalidate();
+            }
+        }
+        finally
+        {
+            _endingRename = false;
+        }
     }
 
     #endregion

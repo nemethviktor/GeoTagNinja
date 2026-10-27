@@ -127,6 +127,7 @@ public partial class FrmMainApp
     private ToolStripMenuItem tmi_View;
     private ToolStripMenuItem tmi_View_Details;
     private ToolStripMenuItem tmi_View_Thumbnails;
+    private ToolStripMenuItem tmi_View_SortBy;
     private readonly List<ToolStripMenuItem> _thumbnailSizeMenuItems = [];
     private System.Windows.Forms.Timer _thumbnailSizePersistTimer;
     private bool _syncingThumbnailSize;
@@ -188,6 +189,9 @@ public partial class FrmMainApp
             }
         };
 
+        // right-click, the menu key and Shift+F10: the same actions menu the details list ends its right-click menu with
+        thumbnailView.ContextMenuRequested += location => lvw_FileList.ShowActionsMenu(owner: thumbnailView, location: location);
+
         thumbnailView.ThumbnailSizeChanged += (_,
                                                _) => OnThumbnailSizeChanged();
 
@@ -206,6 +210,20 @@ public partial class FrmMainApp
         ApplyViewMode(mode: HelperVariables.UserSettingShowThumbnails
             ? ListViewDisplayMode.LargeIcons
             : ListViewDisplayMode.Details, persist: false);
+
+        // When the app starts in thumbnail mode the form isn't visible yet, so the focus the view takes on becoming visible
+        // doesn't stick and the keyboard would act on the menu bar until the user clicked. Take it once the window shows.
+        void FocusThumbnailsOnceShown(object sender,
+                                      EventArgs e)
+        {
+            Shown -= FocusThumbnailsOnceShown;
+            if (thumbnailView.Visible)
+            {
+                _ = thumbnailView.Focus();
+            }
+        }
+
+        Shown += FocusThumbnailsOnceShown;
     }
 
     /// <summary>Adds the View menu (between Edit and Settings) and the size slider in the status row.</summary>
@@ -236,6 +254,13 @@ public partial class FrmMainApp
             _ = sizeMenu.DropDownItems.Add(value: preset);
         }
 
+        // Sort By: the thumbnail view has no column headers to click, so the columns are offered here (the details list's
+        // headers still work, and both change the same sort)
+        tmi_View_SortBy = NewMenuItem(controlName: "tmi_View_SortBy");
+        tmi_View_SortBy.DropDownOpening += (_,
+                                            _) => BuildSortMenu();
+        BuildSortMenu();
+
         ToolStripMenuItem smaller = NewMenuItem(controlName: "tmi_View_ThumbnailSize_Smaller");
         smaller.ShortcutKeys = Keys.Control | Keys.OemMinus;
         smaller.ShortcutKeyDisplayString = "Ctrl+-";
@@ -257,7 +282,9 @@ public partial class FrmMainApp
             sizeMenu,
             new ToolStripSeparator { Name = "tss_View_2" },
             smaller,
-            larger
+            larger,
+            new ToolStripSeparator { Name = "tss_View_3" },
+            tmi_View_SortBy
         ]);
 
         int position = mns_MenuStrip.Items.IndexOf(value: tmi_Settings);
@@ -309,6 +336,56 @@ public partial class FrmMainApp
             fakeControlType: HelperControlAndMessageBoxHandling.FakeControlTypes.ToolTip));
 
         RefreshThumbnailSizeControls();
+    }
+
+    /// <summary>
+    ///     (Re)fills View &gt; Sort By with the columns that are showing in the details list, the current one ticked, then
+    ///     ascending / descending. Rebuilt each time it opens because the user can show and hide columns.
+    /// </summary>
+    private void BuildSortMenu()
+    {
+        ToolStripItemCollection items = tmi_View_SortBy.DropDownItems;
+        items.Clear();
+
+        int current = lvw_FileList.SortColumnIndex;
+        SortOrder direction = lvw_FileList.SortDirection;
+
+        foreach (ColumnHeader column in lvw_FileList.Columns)
+        {
+            // hidden columns have no width; the file name is always offered
+            if (column.Width == 0 &&
+                column.Index != 0)
+            {
+                continue;
+            }
+
+            int columnIndex = column.Index;
+            ToolStripMenuItem item = new()
+            {
+                Name = $"tmi_View_SortBy_{column.Name}",
+                Text = column.Text
+            };
+            SetMenuMark(item: item, on: columnIndex == current);
+            item.Click += (_,
+                           _) => lvw_FileList.SortBy(columnIndex: columnIndex, order: lvw_FileList.SortDirection);
+            _ = items.Add(value: item);
+        }
+
+        _ = items.Add(value: new ToolStripSeparator { Name = "tss_View_SortBy" });
+
+        ToolStripMenuItem ascending = NewMenuItem(controlName: "tmi_View_SortBy_Ascending");
+        SetMenuMark(item: ascending, on: direction == SortOrder.Ascending);
+        ascending.Click += (_,
+                            _) => lvw_FileList.SortBy(columnIndex: lvw_FileList.SortColumnIndex, order: SortOrder.Ascending);
+        ToolStripMenuItem descending = NewMenuItem(controlName: "tmi_View_SortBy_Descending");
+        SetMenuMark(item: descending, on: direction == SortOrder.Descending);
+        descending.Click += (_,
+                             _) => lvw_FileList.SortBy(columnIndex: lvw_FileList.SortColumnIndex, order: SortOrder.Descending);
+        _ = items.Add(value: ascending);
+        _ = items.Add(value: descending);
+
+        // items made after start-up have to be themed like the rest of the menu
+        ThemeHelper.ApplyTo(control: tmi_View_SortBy.DropDown);
     }
 
     /// <summary>

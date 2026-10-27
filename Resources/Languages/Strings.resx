@@ -1606,4 +1606,16 @@ That said the code _should_ be able to comprehend other layouts. Note if the cli
     <value>Thumbnail size</value>
     <comment>Tooltip of the thumbnail size slider on the toolbar</comment>
   </data>
+  <data name="tmi_View_SortBy" xml:space="preserve">
+    <value>Sort By</value>
+    <comment>View menu: submenu to sort the file list by a column</comment>
+  </data>
+  <data name="tmi_View_SortBy_Ascending" xml:space="preserve">
+    <value>Ascending</value>
+    <comment>View menu, Sort By: ascending order</comment>
+  </data>
+  <data name="tmi_View_SortBy_Descending" xml:space="preserve">
+    <value>Descending</value>
+    <comment>View menu, Sort By: descending order</comment>
+  </data>
 </root>

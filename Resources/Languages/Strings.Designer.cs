@@ -3383,5 +3383,32 @@ namespace GeoTagNinja.Resources.Languages {
                 return ResourceManager.GetString("ttp_ThumbnailSize", resourceCulture);
             }
         }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Sort By.
+        /// </summary>
+        public static string tmi_View_SortBy {
+            get {
+                return ResourceManager.GetString("tmi_View_SortBy", resourceCulture);
+            }
+        }
+
+        /// <summary>
+        ///   Looks up a localized string similar to Ascending.
+        /// </summary>
+        public static string tmi_View_SortBy_Ascending {
+            get {
+                return ResourceManager.GetString("tmi_View_SortBy_Ascending", resourceCulture);
+            }
+        }
+
+        /// <summary>
+        ///   Looks up a localized string similar to Descending.
+        /// </summary>
+        public static string tmi_View_SortBy_Descending {
+            get {
+                return ResourceManager.GetString("tmi_View_SortBy_Descending", resourceCulture);
+            }
+        }
     }
 }
