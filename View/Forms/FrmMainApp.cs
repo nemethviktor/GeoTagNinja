@@ -2755,8 +2755,22 @@ public partial class FrmMainApp : Form
         Directory.GetDirectoryRoot(path: tbx_FolderName.Text),
         "C:"
     );
-                tbx_FolderName.Text =
-                    StringOperations.Coalesce(tmpStrParent, tmpStrRoot);
+                // After the load, the parent shows the folder we have just left selected and scrolled into view
+                // (lvw_FileList_LoadOrUpdate restores from LastScrollDict). Set here rather than relying on the
+                // selection saved when entering: that is only stored on some paths (CurrentFolder is not kept up to
+                // date by Enter / Backspace) and not at all when the folder was typed in or opened at start-up.
+                string leftFolder = tbx_FolderName.Text.TrimEnd('\\');
+                string newFolder = StringOperations.Coalesce(tmpStrParent, tmpStrRoot);
+                if (leftFolder.Length > 0 &&
+                    !string.Equals(a: leftFolder, b: newFolder.TrimEnd('\\'), comparisonType: StringComparison.OrdinalIgnoreCase))
+                {
+                    lvw_FileList.LastScrollDict[newFolder.TrimEnd('\\')] = new DirectoryElement(
+                        itemNameWithoutPath: Path.GetFileName(path: leftFolder),
+                        type: DirectoryElement.ElementType.SubDirectory,
+                        fileNameWithPath: leftFolder);
+                }
+
+                tbx_FolderName.Text = newFolder;
             }
 
             Application.DoEvents();

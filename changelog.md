@@ -13,6 +13,7 @@
 	- ExifTool requests now take turns on the shared process (a lock), so a preview request can't interleave with the metadata read.
 	- Internal: the shared logger and the "no value" sentinels no longer live on the main form (each class has its own logger, like the model classes; the sentinels are in `Model/NullEquivalents`), so the helpers and model reach into the form a little less.
 - BUGS & FIXES:
+	- Going up a folder (Backspace, `..`, or the up button) lands on the folder you just left, selected and scrolled into view, again; it used to land at the top of the parent unless you had entered the folder by double-click from that same parent view.
 	- Opening a folder of RAW files no longer sits behind the parsing box for many seconds: every file was being read in full to checksum it before the list could continue. New files are no longer checksummed on the way in (they are read by ExifTool anyway); the checksums are filled in afterwards on background threads for the next rescan. The per-file element and sidecar lookups, which scaled with the square of the folder size, are now hash lookups.
 	- The window froze for a second or two just as it appeared: the check for new ExifTool and GeoTagNinja versions made its web requests on the UI thread. They now run in the background. (In a Release build the check only runs about once a week; a Debug build does it every time.)
 	- Loading a folder was slower than it needed to be because every file asked the shell for its list icon by touching the file; the icon is now looked up once per file type.
