@@ -19,7 +19,7 @@ namespace GeoTagNinja.Helpers.Data;
 /// </remarks>
 internal static class ThumbnailCache
 {
-    private const long MaxTotalBytes = 64L * 1024 * 1024;
+    private const long MaxTotalBytes = 512L * 1024 * 1024;
 
     private static readonly ConcurrentDictionary<string, byte[]> Entries = new();
     private static readonly ConcurrentQueue<string> InsertionOrder = new();
