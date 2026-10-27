@@ -1,6 +1,6 @@
-﻿using ImageMagick;
+﻿using GeoTagNinja.Helpers.Data;
+using ImageMagick;
 using ImageMagick.Formats;
-using Sdcb.LibRaw;
 using System;
 using System.Collections.Generic;
 using System.Drawing;
@@ -21,9 +21,6 @@ internal static class ThumbnailGenerator
 {
     /// <summary>EXIF "ThumbnailData" GDI+ property (the IFD1 JPEG).</summary>
     private const int ExifThumbnailDataId = 0x501B;
-
-    /// <summary>Highest LibRaw embedded-thumbnail index worth probing. Some bodies have index 0, others 1 and beyond.</summary>
-    private const int MaxLibRawThumbnailIndex = 3;
 
     /// <summary>How far the embedded thumbnail's aspect ratio may drift from the real image before we distrust it.</summary>
     private const double AspectTolerance = 0.02;
@@ -201,37 +198,28 @@ internal static class ThumbnailGenerator
     }
 
     /// <summary>
-    ///     Pulls the JPEG preview embedded in a RAW. The file is opened once and the thumbnail indexes are probed on that
-    ///     one context (previously the file was re-opened for each index).
+    ///     Pulls a JPEG embedded in a RAW: the smallest one that is still comfortably bigger than the thumbnail (see
+    ///     <see cref="RawPreview.TryReadEmbeddedJpeg" />), so a 36 MP RAW costs a ~600 px decode, not a 36 MP one.
     /// </summary>
     private static Image? TryLibRawEmbeddedPreview(string fileNameWithPath,
                                                    int size)
     {
+        PreviewEntry? entry = RawPreview.TryReadEmbeddedJpeg(fileNameWithPath: fileNameWithPath,
+            minLongEdge: size * 2);
+        if (entry == null)
+        {
+            return null;
+        }
+
         try
         {
-            using RawContext raw = RawContext.OpenFile(filePath: fileNameWithPath);
-            int exifOrientation = RawPreview.TryGetExifOrientation(raw: raw);
-
-            for (int index = 0; index <= MaxLibRawThumbnailIndex; index++)
-            {
-                try
-                {
-                    using ProcessedImage thumb = raw.ExportThumbnail(thumbnailIndex: index);
-                    using Image decoded = RawPreview.DecodeOriented(jpeg: thumb.AsSpan<byte>().ToArray(), exifOrientation: exifOrientation);
-                    return FitToSquare(source: decoded, size: size);
-                }
-                catch
-                {
-                    // this index doesn't exist or isn't a JPEG; try the next.
-                }
-            }
+            using Image decoded = RawPreview.DecodeOriented(jpeg: entry.Jpeg, exifOrientation: entry.ExifOrientation);
+            return FitToSquare(source: decoded, size: size);
         }
         catch
         {
-            // not a RAW LibRaw understands
+            return null;
         }
-
-        return null;
     }
 
     /// <summary>

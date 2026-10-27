@@ -28,6 +28,12 @@ internal static class ReadGetImagePreviews
     /// <summary>The newest request per picture box, so an older one can be cancelled when it is superseded.</summary>
     private static readonly ConditionalWeakTable<PictureBox, CancellationTokenSource> PendingRequests = new();
 
+    /// <summary>
+    ///     The long edge the preview pane wants from an embedded RAW JPEG. Plenty for the pane, and the full-size
+    ///     embedded JPEG (36 MP on a D800E) is several times slower to decode and 100+ MB of bitmap.
+    /// </summary>
+    private const int PreviewMinLongEdge = 1600;
+
     /// <summary>Limits concurrent preview decodes.</summary>
     private static readonly SemaphoreSlim DecodeGate = new(initialCount: 2);
 
@@ -137,7 +143,7 @@ internal static class ReadGetImagePreviews
 
     /// <summary>
     ///     Produces the preview without any external process: plain images are decoded directly, RAW files give up
-    ///     their largest embedded JPEG (via LibRaw), HEIC/WebP are converted by Magick. The slow-to-produce kinds are
+    ///     a right-sized embedded JPEG (via LibRaw), HEIC/WebP are converted by Magick. The slow-to-produce kinds are
     ///     kept in <see cref="PreviewCache" />. Runs on a worker thread.
     /// </summary>
     /// <returns>The image (caller owns it), or null if nothing in-process could read the file.</returns>
@@ -161,7 +167,7 @@ internal static class ReadGetImagePreviews
             {
                 entry = ThumbnailGenerator.IsMagickOnlyFormat(extension: extension)
                     ? ReadMagickAsJpeg(fileNameWithPath: fileNameWithPath)
-                    : RawPreview.TryReadLargestEmbeddedJpeg(fileNameWithPath: fileNameWithPath);
+                    : RawPreview.TryReadEmbeddedJpeg(fileNameWithPath: fileNameWithPath, minLongEdge: PreviewMinLongEdge);
 
                 if (entry != null)
                 {

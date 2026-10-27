@@ -44,19 +44,23 @@ internal static class RawPreview
     }
 
     /// <summary>
-    ///     Finds the largest embedded JPEG in the RAW and returns it with the RAW's own orientation.
+    ///     Reads the embedded JPEG that best fits a target size, together with the RAW's own orientation. RAWs embed
+    ///     several images (a Nikon NEF typically: a 160 px raw bitmap, a full-size JPEG, a ~1600 px JPEG and a ~600 px
+    ///     JPEG), and decoding the full-size one to make a thumbnail is what makes this slow, so the smallest JPEG whose
+    ///     long edge is at least <paramref name="minLongEdge" /> is used; if none is that big, the biggest there is.
     /// </summary>
+    /// <param name="fileNameWithPath">The RAW file.</param>
+    /// <param name="minLongEdge">The long edge, in pixels, the result should have at least.</param>
     /// <returns>The preview, or null if LibRaw can't read the file or it has no embedded JPEG.</returns>
-    internal static PreviewEntry? TryReadLargestEmbeddedJpeg(string fileNameWithPath)
+    internal static PreviewEntry? TryReadEmbeddedJpeg(string fileNameWithPath,
+                                                      int minLongEdge)
     {
         try
         {
             using RawContext raw = RawContext.OpenFile(filePath: fileNameWithPath);
-
             int exifOrientation = TryGetExifOrientation(raw: raw);
-            byte[]? best = null;
 
-            foreach (int index in CandidateIndexes(raw: raw))
+            foreach (int index in CandidateIndexes(raw: raw, minLongEdge: minLongEdge))
             {
                 try
                 {
@@ -65,26 +69,23 @@ internal static class RawPreview
 
                     if (bytes.Length > 2 &&
                         bytes[0] == JpegMagic1 &&
-                        bytes[1] == JpegMagic2 &&
-                        (best == null || bytes.Length > best.Length))
+                        bytes[1] == JpegMagic2)
                     {
-                        best = bytes;
+                        return new PreviewEntry(jpeg: bytes, exifOrientation: exifOrientation);
                     }
                 }
                 catch
                 {
-                    // this index doesn't exist or isn't a JPEG
+                    // this index doesn't exist or isn't a JPEG; try the next best
                 }
             }
-
-            return best == null
-                ? null
-                : new PreviewEntry(jpeg: best, exifOrientation: exifOrientation);
         }
         catch
         {
-            return null;
+            // not a RAW LibRaw understands
         }
+
+        return null;
     }
 
     /// <summary>
@@ -151,10 +152,11 @@ internal static class RawPreview
     }
 
     /// <summary>
-    ///     Embedded-preview indexes to try, biggest JPEG first according to LibRaw's list; the blind range if the list
-    ///     isn't available.
+    ///     Embedded-image indexes to try, best first: JPEGs at least <paramref name="minLongEdge" /> long, smallest
+    ///     first, then the smaller ones, biggest first. If LibRaw's list can't be read, the blind range.
     /// </summary>
-    private static IEnumerable<int> CandidateIndexes(RawContext raw)
+    private static IEnumerable<int> CandidateIndexes(RawContext raw,
+                                                     int minLongEdge)
     {
         try
         {
@@ -163,9 +165,18 @@ internal static class RawPreview
                 list.Value.ThumbCount > 0)
             {
                 LibRawThumbnailItem[] items = list.Value.ThumbList;
-                return Enumerable.Range(start: 0, count: Math.Min(val1: list.Value.ThumbCount, val2: items.Length))
-                                 .OrderByDescending(keySelector: i => items[i].Width * items[i].Height)
-                                 .ToList();
+                List<(int Index, int LongEdge)> jpegs = Enumerable
+                                                        .Range(start: 0, count: Math.Min(val1: list.Value.ThumbCount, val2: items.Length))
+                                                        .Where(predicate: i => items[i].Format == InternalThumbnailFormat.Jpeg)
+                                                        .Select(selector: i => (Index: i, LongEdge: Math.Max(val1: (int)items[i].Width, val2: (int)items[i].Height)))
+                                                        .ToList();
+
+                return jpegs.Where(predicate: j => j.LongEdge >= minLongEdge)
+                            .OrderBy(keySelector: j => j.LongEdge)
+                            .Concat(second: jpegs.Where(predicate: j => j.LongEdge < minLongEdge)
+                                                 .OrderByDescending(keySelector: j => j.LongEdge))
+                            .Select(selector: j => j.Index)
+                            .ToList();
             }
         }
         catch

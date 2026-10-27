@@ -3213,10 +3213,20 @@ public partial class FrmMainApp : Form
             tbx_FolderName.Text = @"** collectionMode enabled **";
         }
 
+        ThumbnailWorker? thumbnailWorker = null;
         try
         {
             lvw_FileList.BeginUpdate();
             lvw_FileList.ClearData();
+
+            // Thumbnails don't depend on metadata, so they are queued as files are found and generated on worker
+            // threads, visible rows first - independent of the (strictly sequential) ExifTool read pass below.
+            ThumbnailWorker worker = new(
+                onGenerated: (DirectoryElement de) => lvw_FileList.SyncElementThumbnail(directoryElement: de),
+                ct: _token,
+                workerCount: ThumbnailWorker.DefaultWorkerCount);
+            thumbnailWorker = worker;
+            StartThumbnailPrioritisation(worker: worker, ct: _token);
 
             // 1. Scan and Stream Files to the UI
             await DirectoryElements.ParseFolderOrFileListToDEsAsync(
@@ -3239,30 +3249,23 @@ public partial class FrmMainApp : Form
                     if (HelperVariables.UserSettingShowThumbnails && de.Type == DirectoryElement.ElementType.File)
                     {
                         lvw_FileList.SyncElementThumbnail(directoryElement: de);
+                        worker.Enqueue(directoryElement: de);
                     }
                 }
             );
 
+            // Every file has been found and queued; the workers finish what is left and exit.
+            worker.CompleteAdding();
+
             frmPleaseWaitBox.Close();
 
             // 2. Start Background Hydration with Live Counting
-            ThumbnailWorker thumbnailWorker = new(
-                onGenerated: (DirectoryElement de) => lvw_FileList.SyncElementThumbnail(directoryElement: de),
-                ct: _token,
-                workerCount: ThumbnailWorker.DefaultWorkerCount);
-
             // We use a lambda to perform multiple actions when a file is updated.
             _ = DirectoryElements.StartBackgroundMetadataRead(
                 onUpdated: (DirectoryElement de) =>
                 {
                     // Action A: Update the specific row in the ListView (GPS data, dates, etc.)
                     lvw_FileList.UpdateListItemData(de: de);
-
-                    if (HelperVariables.UserSettingShowThumbnails)
-                    {
-                        // Thumbnails are built on worker threads so they don't hold up the next ExifTool read.
-                        thumbnailWorker.Enqueue(directoryElement: de);
-                    }
 
                     // Action B: Re-calculate the global counts for the status label
                     FileListViewReadWrite.ListViewCountItemsWithGeoData();
@@ -3293,9 +3296,6 @@ public partial class FrmMainApp : Form
                     }
                 }
             );
-
-            // Hydration has queued everything it will; workers finish what is left and exit.
-            thumbnailWorker.CompleteAdding();
 
             lvw_FileList.EndUpdate();
             try
@@ -3333,12 +3333,54 @@ public partial class FrmMainApp : Form
         }
         finally
         {
+            // no-op if already completed; makes sure the workers can't wait forever if loading failed part-way
+            thumbnailWorker?.CompleteAdding();
+
             FileLocking.FileListBeingUpdated = false;
             HandlerUpdateLabelText(lbl_ParseProgress, $"{HelperControlAndMessageBoxHandling.ReturnControlText("Generic_Ready", HelperControlAndMessageBoxHandling.FakeControlTypes.Generic)}.");
 
             // Final count update
             FileListViewReadWrite.ListViewCountItemsWithGeoData();
         }
+    }
+
+    /// <summary>
+    /// While thumbnails are still being generated, keeps the worker pointed at the rows the user can see. A UI timer
+    /// is used instead of hooking scroll messages because the list can move for many reasons (scroll bar, wheel,
+    /// keyboard, sorting, resizing) and the check is cheap. It only re-prioritises when the visible rows change, and
+    /// stops itself when the worker is done or cancelled.
+    /// </summary>
+    private void StartThumbnailPrioritisation(ThumbnailWorker worker,
+                                              CancellationToken ct)
+    {
+        System.Windows.Forms.Timer timer = new() { Interval = 150 };
+        DirectoryElement? lastFirst = null;
+        int lastCount = -1;
+
+        timer.Tick += (_, _) =>
+        {
+            if (ct.IsCancellationRequested ||
+                worker.IsDrained)
+            {
+                timer.Stop();
+                timer.Dispose();
+                return;
+            }
+
+            List<DirectoryElement> wanted = lvw_FileList.GetVisibleAndNearbyElements();
+            DirectoryElement? first = wanted.FirstOrDefault();
+            if (first == lastFirst &&
+                wanted.Count == lastCount)
+            {
+                return;
+            }
+
+            lastFirst = first;
+            lastCount = wanted.Count;
+            worker.Prioritise(elements: wanted);
+        };
+
+        timer.Start();
     }
 
     /// <summary>

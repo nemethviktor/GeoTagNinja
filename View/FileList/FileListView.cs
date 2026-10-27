@@ -398,6 +398,9 @@ public partial class FileListView : System.Windows.Forms.ListView
 
     private DirectoryElementCollection _masterCollection = [];
 
+    /// <summary>Row for each element, so a thumbnail can find its row without scanning the list. UI thread only.</summary>
+    private readonly Dictionary<DirectoryElement, ListViewItem> _itemByElement = [];
+
     #region Filter strings
 
     /// <summary>
@@ -572,6 +575,7 @@ public partial class FileListView : System.Windows.Forms.ListView
 
         // 6. Finalise
         _ = Items.Add(lvi);
+        _itemByElement[directoryElement] = lvi;
 
         // Only sync/background-task for folders/drives if they aren't ready
         if (directoryElement.Type != DirectoryElement.ElementType.File && directoryElement.Thumbnail == null && HelperVariables.UserSettingShowThumbnails)
@@ -1466,26 +1470,15 @@ public partial class FileListView : System.Windows.Forms.ListView
             return;
         }
 
-        // 2. Locate the specific UI row
-        ListViewItem? lvi = null;
-        string guid = null;
-        if (directoryElement.Type == DirectoryElement.ElementType.File)
-        {
-            // Files use GUID because they have metadata
-            guid = directoryElement.GetAttributeValueAsString(attribute: SourcesAndAttributes.ElementAttribute.GUID);
-            lvi = FindItemByGuid(guid: guid);
-        }
-        else
-        {
-            // Drives/Folders/MyComputer don't have GUIDs, so we find them by reference
-            lvi = Items.Cast<ListViewItem>()
-                           .FirstOrDefault(i => i.Tag == directoryElement);
-        }
-
-        // Still not found? Try a final fallback by path (useful for structural items)
-        lvi ??= Items.Cast<ListViewItem>()
-                       .FirstOrDefault(i => i.Tag is DirectoryElement de
-                                        && de.FileNameWithPath == directoryElement.FileNameWithPath);
+        // 2. Locate the specific UI row. Rows are found by element reference (filled in AddListItem), not by scanning
+        // the list or by GUID: hydration briefly clears and restores an element's attributes (GUID included), which
+        // thumbnails generated in parallel could otherwise hit.
+        ListViewItem? lvi = _itemByElement.TryGetValue(key: directoryElement, value: out ListViewItem? known) &&
+                            known.ListView == this
+            ? known
+            : Items.Cast<ListViewItem>()
+                   .FirstOrDefault(i => i.Tag is DirectoryElement de &&
+                                        (de == directoryElement || de.FileNameWithPath == directoryElement.FileNameWithPath));
 
         if (lvi == null)
         {
@@ -1508,9 +1501,9 @@ public partial class FileListView : System.Windows.Forms.ListView
         }
         else
         {
-            // Use GUID as unique key for files, or ElementType string for system icons
-            string imageKey = (directoryElement.Type == DirectoryElement.ElementType.File)
-                ? guid
+            // The path is the unique key for files (also unique in flat mode), the ElementType string for system icons
+            string imageKey = directoryElement.Type == DirectoryElement.ElementType.File
+                ? directoryElement.FileNameWithPath
                 : directoryElement.Type.ToString();
 
             if (!LargeImageList.Images.ContainsKey(key: imageKey))
@@ -1523,44 +1516,72 @@ public partial class FileListView : System.Windows.Forms.ListView
     }
 
     /// <summary>
-    /// Searches the current ListView items for a specific row associated with the given GUID.
+    ///     The file rows the user can see, followed by the next screenful below and then the one above, so thumbnails
+    ///     can be generated in the order they are likely to be needed. UI thread only.
     /// </summary>
-    /// <param name="guid">The unique identifier (GUID) of the DirectoryElement to find.</param>
-    /// <returns>
-    /// The <see cref="ListViewItem"/> associated with the GUID if found; otherwise, <c>null</c>.
-    /// </returns>
-    public ListViewItem? FindItemByGuid(string guid)
+    /// <remarks>
+    ///     <c>ListView.TopItem</c> isn't supported in the icon views, so the visible rows are found by hit-testing a grid
+    ///     of points over the client area (spaced at half a thumbnail, finer than any row or cell).
+    /// </remarks>
+    /// <returns>Elements, most urgent first. Empty if nothing is visible (or there is no handle yet).</returns>
+    internal List<DirectoryElement> GetVisibleAndNearbyElements()
     {
-        if (string.IsNullOrWhiteSpace(value: guid))
+        List<DirectoryElement> result = [];
+        int count = Items.Count;
+        if (count == 0 ||
+            !IsHandleCreated)
         {
-            return null;
+            return result;
         }
 
-        // We iterate through the Items collection of the ListView.
-        // Note: Since this is a UI control, this must be called from the UI thread 
-        // or via an Invoke/BeginInvoke call.
-        foreach (ListViewItem lvi in Items)
-        {
-            // 1. Ensure the Tag is not null and is indeed a DirectoryElement.
-            if (lvi.Tag is DirectoryElement element)
-            {
-                // 2. Retrieve the GUID from the directoryElement's attributes.
-                string elementGuid = element.GetAttributeValueAsString(
-                    attribute: SourcesAndAttributes.ElementAttribute.GUID);
+        Rectangle client = ClientRectangle;
+        int step = Math.Max(val1: 16, val2: ThumbnailSize / 2);
+        int first = int.MaxValue;
+        int last = -1;
 
-                // 3. Compare using InvariantCultureIgnoreCase to avoid casing mismatches.
-                if (string.Equals(
-                    a: elementGuid,
-                    b: guid,
-                    comparisonType: StringComparison.InvariantCultureIgnoreCase))
+        for (int y = client.Top + 2; y < client.Bottom; y += step)
+        {
+            for (int x = client.Left + 2; x < client.Right; x += step)
+            {
+                ListViewItem? hit = GetItemAt(x: x, y: y);
+                if (hit == null)
                 {
-                    return lvi;
+                    continue;
+                }
+
+                int index = hit.Index;
+                first = Math.Min(val1: first, val2: index);
+                last = Math.Max(val1: last, val2: index);
+            }
+        }
+
+        if (last < 0)
+        {
+            return result;
+        }
+
+        int span = last - first + 1;
+
+        void Add(int from,
+                 int to,
+                 bool ascending)
+        {
+            from = Math.Max(val1: 0, val2: from);
+            to = Math.Min(val1: count - 1, val2: to);
+            for (int i = 0; i <= to - from; i++)
+            {
+                int index = ascending ? from + i : to - i;
+                if (Items[index: index].Tag is DirectoryElement { Type: DirectoryElement.ElementType.File } element)
+                {
+                    result.Add(item: element);
                 }
             }
         }
 
-        // Return null if no matching item is currently visible in the ListView.
-        return null;
+        Add(from: first, to: last, ascending: true); // on screen
+        Add(from: last + 1, to: last + span, ascending: true); // next screenful down
+        Add(from: first - span, to: first - 1, ascending: false); // screenful above, nearest first
+        return result;
     }
 
     /// <summary>
@@ -1570,6 +1591,7 @@ public partial class FileListView : System.Windows.Forms.ListView
     public void ClearData()
     {
         _masterCollection.Clear();
+        _itemByElement.Clear();
         Items.Clear();
     }
 

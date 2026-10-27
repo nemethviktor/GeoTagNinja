@@ -49,9 +49,14 @@ To announce something, add an entry to `Registry` with the build to compare agai
   preview pane (`ReadGetImagePreviews.GenericCreateImagePreview`) decodes off the UI thread, cancels superseded requests,
   and uses `Helpers/Exif/RawPreview` (LibRaw) plus `PreviewCache`. Both caches are in-memory only
   (`Helpers/Data/FileKeyedCache`: path + mtime + size), so a cold start regenerates; a persistent store would only
-  matter for that. Still to do: the worker does not yet prioritise visible rows; `FileListView.FindItemByGuid` is a
-  linear scan per thumbnail; `DirectoryElement.Thumbnail` is a live `Image` that the `ImageList` copies again; the
-  JPEG/PNG/TIFF preview is still a full-resolution decode (fine, but a scaled decode would be quicker for big files).
+  matter for that. The worker (`ThumbnailWorker`) takes the rows from `FileListView.GetVisibleAndNearbyElements` first;
+  `FrmMainApp.StartThumbnailPrioritisation` polls every 150 ms and re-prioritises when the visible rows change (a timer
+  rather than scroll messages, because the list moves for many reasons). Thumbnails are queued at discovery, not
+  after the metadata read, and rows are found via `FileListView._itemByElement` with the file path as the image key (not
+  the GUID, which hydration briefly clears). The metadata read itself is still strictly in list order, so metadata
+  columns for rows far down a big folder still wait their turn. Still to do: `DirectoryElement.Thumbnail` is a live
+  `Image` that the `ImageList` copies again; the JPEG/PNG/TIFF preview is still a full-resolution decode (fine, but a
+  scaled decode would be quicker for big files).
   `ExifTool.TryGetEmbeddedPreview` sends `-json -b` so binary data travels as base64 over the text pipe. The wrapper's
   common `Filter` (which flattens newlines in text values) deliberately skips values starting with the JPEG marker,
   because it otherwise rewrites 0x0A/0x0D bytes inside the image and corrupts it. `RawContext.RawData` is protected in
