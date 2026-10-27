@@ -403,7 +403,7 @@ internal static class ReadTrackFile
                 notFoundValue: dirElemFileToModify.GetAttributeValueAsString(
                     attribute: attribute,
                     version: DirectoryElement.AttributeVersion.Original,
-                    notFoundValue: FrmMainApp.NullStringEquivalentGeneric,
+                    notFoundValue: NullEquivalents.StringGeneric,
                     context: ValueFormatContext.Display),
                 context: ValueFormatContext.Display);
             return currentValue;
@@ -440,7 +440,7 @@ internal static class ReadTrackFile
             return valuesInTrackFile.TryGetValue(key: attribute, value: out IConvertible value)
                 ? AttributeValueFormatter.Format(value: value,
                     context: ValueFormatContext.Display)
-                : FrmMainApp.NullStringEquivalentGeneric;
+                : NullEquivalents.StringGeneric;
         }
     }
 }

@@ -1,4 +1,5 @@
-﻿using GeoTagNinja.View.Forms;
+﻿using NLog;
+using GeoTagNinja.View.Forms;
 using System;
 using System.Collections.Generic;
 using System.Diagnostics;
@@ -10,6 +11,8 @@ namespace GeoTagNinja.Helpers.Exif;
 
 internal class WriteTrackDataToSideCar
 {
+    private static readonly Logger Log = LogManager.GetCurrentClassLogger();
+
     /// <summary>
     ///     This triggers the first half of the track import process - it reads the various gpx files and creates sidecars as
     ///     needed.
@@ -30,7 +33,7 @@ internal class WriteTrackDataToSideCar
                                                            int timeShiftSeconds = 0
     )
     {
-        FrmMainApp.Log.Info(message: "Starting");
+        Log.Info(message: "Starting");
 
         string argsFile = Path.Combine(path1: HelperVariables.UserDataFolderPath, path2: "exifArgsToWriteForTrackExport.args");
         File.Delete(path: argsFile);

@@ -1,4 +1,4 @@
-# CLAUDE.md
+﻿# CLAUDE.md
 
 This file provides guidance to Claude Code (claude.ai/code) when working with code in this repository.
 
@@ -40,13 +40,12 @@ ExifTool raw tag strings go through `ExifTagSetParser`, then `TagsToModelValueTr
 - Numbers are deliberately invariant in all contexts, including `Display`.
 - `DirectoryElement` keeps up to four versions per attribute (`Original`, `Stage1…`, `Stage2…`, `Stage3ReadyToWrite`). The newest-first ordering lives only in `DirectoryElement.VersionsNewestFirst`.
 - `GPSAltitude` is held in the user's display unit. `T2M_Altitude` converts on read and `WriteSaveToFile` converts back on write.
-- The blank sentinel for strings is `"-"` (`FrmMainApp.NullStringEquivalentGeneric`). `WriteSaveToFile` maps it to empty so it is never written to a file.
+- The blank sentinel for strings is `"-"` (`NullEquivalents.StringGeneric` in `Model/`). `WriteSaveToFile` maps it to empty so it is never written to a file.
 
 ### Known structural debt
 
-- `FrmMainApp` (about 4k lines) doubles as a service locator (`Log`, `DirectoryElements`, the `Null*Equivalent` constants), reached from Model and Helpers.
+- `FrmMainApp` (about 4k lines) still doubles as a service locator: `DirectoryElements`, `Instance`, `AppLanguage`, `FolderName` and `FlatMode` are reached from Model and Helpers. (The logger is now per class, like the Model classes' own, and the `Null*` sentinels live in `Model/NullEquivalents`; the form keeps forwarding constants for its own code.)
 - `HelperVariables` holds about 50 mutable statics for settings, session state and paths.
-- The write path, `UpdateArgsFile`, dedupes arguments by substring `Contains`, which can suppress a legitimately different argument.
 
 ## Conventions
 

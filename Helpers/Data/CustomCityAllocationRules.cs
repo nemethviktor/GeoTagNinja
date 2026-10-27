@@ -1,4 +1,5 @@
-﻿using GeoTagNinja.Helpers.Localisation;
+﻿using NLog;
+using GeoTagNinja.Helpers.Localisation;
 using GeoTagNinja.View.Forms;
 using System;
 using System.Data;
@@ -9,6 +10,8 @@ namespace GeoTagNinja.Helpers.Data;
 
 internal static class CustomCityAllocationRules
 {
+    private static readonly Logger Log = LogManager.GetCurrentClassLogger();
+
     internal static DataTable DataReadSQLiteCustomCityAllocationLogic()
     {
         using SQLiteConnection SQLiteDB = new(connectionString:
@@ -45,7 +48,7 @@ internal static class CustomCityAllocationRules
 
     internal static void DataWriteSQLiteCustomCityAllocationLogicDefaults(bool resetToDefaults = false)
     {
-        FrmMainApp.Log.Info(message: "Starting");
+        Log.Info(message: "Starting");
         string[] defaultCityNameIsAdminName1Arr = { "LIE", "SMR", "MNE", "MKD", "MLT", "SVN" };
         string[] defaultCityNameIsAdminName2Arr = { "ALA", "BRA", "COL", "CUB", "CYP", "DNK", "FRO", "GTM", "HND", "HRV", "ISL", "LUX", "LVA", "NIC", "NLD", "NOR", "PRI", "PRT", "ROU", "SWE" };
         string[] defaultCityNameIsAdminName3Arr = { "AUT", "CHE", "CHL", "CZE", "EST", "ESP", "FIN", "GRC", "ITA", "PAN", "PER", "POL", "SRB", "SVK", "USA", "ZAF" };
@@ -99,7 +102,7 @@ internal static class CustomCityAllocationRules
             }
 
             seedTransaction.Commit();
-            FrmMainApp.Log.Info(message: $"Seeded customCityAllocationLogic with {seededRows} default rows");
+            Log.Info(message: $"Seeded customCityAllocationLogic with {seededRows} default rows");
         }
     }
 

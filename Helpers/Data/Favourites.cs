@@ -1,4 +1,5 @@
-﻿using GeoTagNinja.Helpers.UI;
+﻿using NLog;
+using GeoTagNinja.Helpers.UI;
 using GeoTagNinja.Model;
 using GeoTagNinja.View.Forms;
 using System;
@@ -17,6 +18,8 @@ namespace GeoTagNinja.Helpers.Data;
 
 internal static class Favourites
 {
+    private static readonly Logger Log = LogManager.GetCurrentClassLogger();
+
     #region GeoSetter Favourites/Import
 
     /// <summary>
@@ -234,7 +237,7 @@ internal static class Favourites
     internal static void DataRenameSQLiteFavourite(string oldName,
                                                    string newName)
     {
-        FrmMainApp.Log.Info(message: "Starting");
+        Log.Info(message: "Starting");
 
         using SQLiteConnection SQLiteDB = new(connectionString:
             $"Data Source={HelperVariables.SettingsDatabaseFilePath}");
@@ -260,7 +263,7 @@ internal static class Favourites
     /// </summary>
     internal static void DataWriteSQLiteClearAndUpdateFavourites()
     {
-        FrmMainApp.Log.Info(message: "Starting");
+        Log.Info(message: "Starting");
 
         using SQLiteConnection SQLiteDB =
             new(connectionString: $"Data Source={HelperVariables.SettingsDatabaseFilePath}");
@@ -345,11 +348,11 @@ internal static class Favourites
             }
 
             SQLiteTransaction.Commit();
-            FrmMainApp.Log.Info(message: "Favourites successfully saved.");
+            Log.Info(message: "Favourites successfully saved.");
         }
         catch (Exception ex)
         {
-            FrmMainApp.Log.Error(message: "Error saving favourites", argument: ex);
+            Log.Error(message: "Error saving favourites", argument: ex);
             SQLiteTransaction.Rollback();
             throw;
         }

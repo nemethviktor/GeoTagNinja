@@ -1,4 +1,5 @@
-﻿using GeoTagNinja.Helpers.UI;
+﻿using NLog;
+using GeoTagNinja.Helpers.UI;
 using GeoTagNinja.View.Forms;
 using System;
 using System.Collections.Generic;
@@ -15,6 +16,8 @@ namespace GeoTagNinja.Helpers.Exif;
 
 internal class ReadTrackFilePath
 {
+    private static readonly Logger Log = LogManager.GetCurrentClassLogger();
+
     /// <summary>
     ///     This commands ExifTool to collect the track path. Very simple to run.
     ///     -> exiftool -v4 -geotag 2023-02-28.gpx NUL
@@ -32,7 +35,7 @@ internal class ReadTrackFilePath
         string TZVal
     )
     {
-        FrmMainApp.Log.Info(message: "Starting");
+        Log.Info(message: "Starting");
 
         string argsFile = Path.Combine(path1: HelperVariables.UserDataFolderPath,
             path2: "exifReadTrackFileForMapping.args");

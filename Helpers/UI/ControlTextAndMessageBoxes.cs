@@ -1,4 +1,5 @@
-﻿using GeoTagNinja.Helpers.Data;
+﻿using NLog;
+using GeoTagNinja.Helpers.Data;
 using GeoTagNinja.Helpers.Localisation;
 using GeoTagNinja.View.Forms;
 using System;
@@ -9,6 +10,8 @@ namespace GeoTagNinja.Helpers.UI;
 
 internal static class HelperControlAndMessageBoxHandling
 {
+    private static readonly Logger Log = LogManager.GetCurrentClassLogger();
+
     public enum MessageBoxCaption
     {
         None,
@@ -75,7 +78,7 @@ internal static class HelperControlAndMessageBoxHandling
         //||
         )
         {
-            FrmMainApp.Log.Trace(message: $"Starting - control: {control.Name}");
+            Log.Trace(message: $"Starting - control: {control.Name}");
 
             control.Text = ResourceManager.GetResourceValue(control: control, location: "Strings");
         }
@@ -85,7 +88,7 @@ internal static class HelperControlAndMessageBoxHandling
             if (senderForm != null &&
                 senderForm.Name == "FrmSettings")
             {
-                FrmMainApp.Log.Trace(message: $"Starting - control: {nud.Name}");
+                Log.Trace(message: $"Starting - control: {nud.Name}");
                 _ = decimal.TryParse(
                     s: ApplicationSettings.DataReadSQLiteSettings(
                         dataTable: HelperVariables.DtHelperDataApplicationSettings,
@@ -108,7 +111,7 @@ internal static class HelperControlAndMessageBoxHandling
     /// <returns></returns>
     internal static string ReturnControlText(string controlName, FakeControlTypes fakeControlType)
     {
-        FrmMainApp.Log.Trace(message: $"Starting - control: {controlName}");
+        Log.Trace(message: $"Starting - control: {controlName}");
 
         if (fakeControlType == FakeControlTypes.Form)
         {

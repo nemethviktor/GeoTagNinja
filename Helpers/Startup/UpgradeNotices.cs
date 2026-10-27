@@ -1,4 +1,5 @@
-﻿using GeoTagNinja.Helpers.Data;
+﻿using NLog;
+using GeoTagNinja.Helpers.Data;
 using GeoTagNinja.Helpers.UI;
 using GeoTagNinja.Model;
 using GeoTagNinja.View.Forms;
@@ -48,6 +49,8 @@ internal sealed class UpgradeNotice
 /// </remarks>
 internal static class UpgradeNotices
 {
+    private static readonly Logger Log = LogManager.GetCurrentClassLogger();
+
     /// <summary>The last public build that did not record the build it ran (Build 9778 [20261009]).</summary>
     internal const int LastBuildBeforeTracking = 9778;
 
@@ -154,7 +157,7 @@ internal static class UpgradeNotices
         catch (Exception ex)
         {
             _pending = [];
-            FrmMainApp.Log.Error(message: $"Upgrade notices - could not evaluate: {ex.Message}");
+            Log.Error(message: $"Upgrade notices - could not evaluate: {ex.Message}");
         }
     }
 
@@ -182,7 +185,7 @@ internal static class UpgradeNotices
         }
         catch (Exception ex)
         {
-            FrmMainApp.Log.Error(message: $"Upgrade notices - could not show: {ex.Message}");
+            Log.Error(message: $"Upgrade notices - could not show: {ex.Message}");
         }
         finally
         {

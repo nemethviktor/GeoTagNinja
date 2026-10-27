@@ -40,10 +40,12 @@ To announce something, add an entry to `Registry` with the build to compare agai
   it is a bag of ~50 mutable statics mixing user settings, per-session scratch state and well-known
   paths, referenced from 49 files. Splitting it into settings / session state / paths is worthwhile
   but is a behavioural change, not a move, so it was left for its own pass.
-- **`FrmMainApp` doubles as a service locator.** `FrmMainApp.Log`, `.DirectoryElements`,
-  `.NullStringEquivalentGeneric` and friends are reached from `Model/` and `Helpers/`, so those layers
-  now carry a `using GeoTagNinja.View.Forms;`. That dependency was always there; moving the forms into
-  their own namespace merely made it visible. Extracting the shared state is the fix.
+- **`FrmMainApp` still doubles as a service locator, less than it did.** The shared logger and the `Null*`
+  sentinels no longer live on it (each class has its own logger; the sentinels are `Model/NullEquivalents`).
+  `.DirectoryElements`, `.Instance`, `.AppLanguage`, `.FolderName` and `.FlatMode` are still reached from `Model/` and
+  `Helpers/`, so those layers carry a `using GeoTagNinja.View.Forms;`. They are real application state, not constants, so
+  moving them means deciding where the folder collection and the UI-independent session state live. That is a design
+  change rather than a move, and was left for its own pass.
 - **Thumbnails and previews: how they fit together, and what is left.**
   - *View.* `View/Controls/ThumbnailView` is a purpose-built `ScrollableControl` that paints the items of the (hidden, still
     alive) `FileListView`. The list stays the owner of items, order (sorting, filtering) and selection, so the map, preview,

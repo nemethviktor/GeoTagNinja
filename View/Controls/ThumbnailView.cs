@@ -1,4 +1,5 @@
-﻿using GeoTagNinja.Helpers;
+﻿using NLog;
+using GeoTagNinja.Helpers;
 using GeoTagNinja.Helpers.Data;
 using GeoTagNinja.Helpers.Exif;
 using GeoTagNinja.Helpers.UI;
@@ -39,6 +40,8 @@ namespace GeoTagNinja.View.Controls;
 /// </remarks>
 internal sealed class ThumbnailView : ScrollableControl
 {
+    private static readonly Logger Log = LogManager.GetCurrentClassLogger();
+
     /// <summary>How far one Ctrl + wheel notch changes the size.</summary>
     private const int WheelSizeStep = 16;
 
@@ -569,7 +572,7 @@ internal sealed class ThumbnailView : ScrollableControl
             {
                 // An exception escaping OnPaint makes WinForms paint a red cross over the whole control and stop painting
                 // it, which is far worse than one blank cell.
-                FrmMainApp.Log.Debug(ex, message: $"Thumbnail cell {index} could not be drawn");
+                Log.Debug(ex, message: $"Thumbnail cell {index} could not be drawn");
             }
         }
 

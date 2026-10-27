@@ -1,4 +1,5 @@
-﻿using GeoTagNinja.Helpers.Exif;
+﻿using NLog;
+using GeoTagNinja.Helpers.Exif;
 using GeoTagNinja.Helpers.UI;
 using GeoTagNinja.Model;
 using GeoTagNinja.View.Forms;
@@ -15,6 +16,8 @@ namespace GeoTagNinja.Helpers.FileSystem;
 
 internal static class Operators
 {
+    private static readonly Logger Log = LogManager.GetCurrentClassLogger();
+
     /// <summary>
     ///     When the user leaves the current folder (or refreshes it) we check if there is anything in the write-queue
     ///     If the Q is empty we do as the user requested, else ask user if they want to write the data in the Q or discard it.
@@ -111,7 +114,7 @@ internal static class Operators
     /// </summary>
     internal static void FsoCleanUpUserFolder()
     {
-        FrmMainApp.Log.Info(message: "Starting");
+        Log.Info(message: "Starting");
 
         DirectoryInfo di = new(path: HelperVariables.UserDataFolderPath);
         List<string> filesToKeep = ["exiftool.exe", ".ExifTool_config"];
@@ -122,7 +125,7 @@ internal static class Operators
             {
                 try
                 {
-                    FrmMainApp.Log.Trace(message: $"Deleting:{directory.Name}");
+                    Log.Trace(message: $"Deleting:{directory.Name}");
                     directory.Delete(recursive: true);
                 }
                 catch
@@ -144,7 +147,7 @@ internal static class Operators
             {
                 try
                 {
-                    FrmMainApp.Log.Trace(message: $"Deleting:{file.Name}");
+                    Log.Trace(message: $"Deleting:{file.Name}");
                     file.Delete();
                 }
                 catch

@@ -1,4 +1,5 @@
-﻿using GeoTagNinja.Helpers.Data;
+﻿using NLog;
+using GeoTagNinja.Helpers.Data;
 using GeoTagNinja.Model;
 using GeoTagNinja.View.Forms;
 using System;
@@ -20,6 +21,8 @@ namespace GeoTagNinja.Helpers.UI;
 /// </remarks>
 internal sealed class ThumbnailWorker
 {
+    private static readonly Logger Log = LogManager.GetCurrentClassLogger();
+
     private readonly object _lock = new();
     private readonly PriorityWorkList<DirectoryElement> _work = new();
     private readonly Action<DirectoryElement> _process;
@@ -142,7 +145,7 @@ internal sealed class ThumbnailWorker
                 }
                 catch (Exception ex)
                 {
-                    FrmMainApp.Log.Error(ex, message: $"Thumbnail worker failed for {directoryElement!.ItemNameWithoutPath}");
+                    Log.Error(ex, message: $"Thumbnail worker failed for {directoryElement!.ItemNameWithoutPath}");
                 }
             }
         }

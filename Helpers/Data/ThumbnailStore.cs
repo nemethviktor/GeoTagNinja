@@ -1,4 +1,5 @@
-﻿using GeoTagNinja.View.Forms;
+﻿using NLog;
+using GeoTagNinja.View.Forms;
 using System;
 using System.Collections.Concurrent;
 using System.Collections.Generic;
@@ -31,6 +32,8 @@ namespace GeoTagNinja.Helpers.Data;
 /// </remarks>
 internal static class ThumbnailStore
 {
+    private static readonly Logger Log = LogManager.GetCurrentClassLogger();
+
     private const int FlushDelayMilliseconds = 500;
     private const long MaxTotalBytes = 256L * 1024 * 1024;
     private static readonly TimeSpan MaxAge = TimeSpan.FromDays(value: 90);
@@ -258,7 +261,7 @@ internal static class ThumbnailStore
         }
         catch (Exception first)
         {
-            FrmMainApp.Log?.Warn(exception: first, message: "Thumbnail cache database unusable; rebuilding it");
+            Log?.Warn(exception: first, message: "Thumbnail cache database unusable; rebuilding it");
             DeleteDatabaseFiles();
 
             try
@@ -290,7 +293,7 @@ internal static class ThumbnailStore
             {
                 // The write-ahead log of a crashed session is replayed automatically on open; this checks what is left.
                 // (Throws, or returns something other than "ok", if the file is damaged.)
-                FrmMainApp.Log?.Info(message: "Previous session did not exit cleanly; checking the thumbnail cache");
+                Log?.Info(message: "Previous session did not exit cleanly; checking the thumbnail cache");
                 using SQLiteCommand check = connection.CreateCommand();
                 check.CommandText = "PRAGMA quick_check";
                 string? result = check.ExecuteScalar() as string;
@@ -447,7 +450,7 @@ internal static class ThumbnailStore
         if (!_disabled)
         {
             _disabled = true;
-            FrmMainApp.Log?.Warn(exception: ex, message: "Persistent thumbnail cache disabled for this session");
+            Log?.Warn(exception: ex, message: "Persistent thumbnail cache disabled for this session");
         }
     }
 }

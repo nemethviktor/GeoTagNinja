@@ -1,4 +1,5 @@
-﻿using GeoTagNinja.Helpers.UI;
+﻿using NLog;
+using GeoTagNinja.Helpers.UI;
 using GeoTagNinja.Model;
 using GeoTagNinja.View.Forms;
 using System;
@@ -17,6 +18,8 @@ namespace GeoTagNinja.Helpers.Exif;
 
 internal static class ExifToolOperator
 {
+    private static readonly Logger Log = LogManager.GetCurrentClassLogger();
+
     // this is a list of junk that we generally want to ignore coming from exiftool's error reporting
     private static List<string> ignoreExifToolWarningsList =
     [
@@ -51,7 +54,7 @@ internal static class ExifToolOperator
     {
         int lviIndex = 0;
         _exifInvokeCounter += 1;
-        FrmMainApp.Log.Trace(message:
+        Log.Trace(message:
             $"Start EXIF Tool number {_exifInvokeCounter} for {initiator} with cmdLine: {exiftoolCmd}");
         await Task.Run(action: () =>
         {
@@ -130,7 +133,7 @@ internal static class ExifToolOperator
                                 FrmMainApp.HandlerUpdateLabelText(
                                     label: frmMainAppInstance.lbl_ParseProgress,
                                     text: $"Processing: {fileNameWithoutPath}");
-                                FrmMainApp.Log.Debug(
+                                Log.Debug(
                                     message: $"Writing {fileNameWithoutPath} [this is via OutputDataReceived]");
 
                                 try
@@ -318,26 +321,26 @@ internal static class ExifToolOperator
                     break;
             }
 
-            FrmMainApp.Log.Trace(message: $"EXIF number {_exifInvokeCounter}: Start");
+            Log.Trace(message: $"EXIF number {_exifInvokeCounter}: Start");
             _ = prcExifTool.Start();
             prcExifTool.BeginOutputReadLine();
             prcExifTool.BeginErrorReadLine();
-            FrmMainApp.Log.Trace(message: $"EXIF number {_exifInvokeCounter}: Wait for Exit");
+            Log.Trace(message: $"EXIF number {_exifInvokeCounter}: Wait for Exit");
             prcExifTool.WaitForExit();
-            FrmMainApp.Log.Trace(message: $"EXIF number {_exifInvokeCounter}: Close");
+            Log.Trace(message: $"EXIF number {_exifInvokeCounter}: Close");
             prcExifTool.Close();
-            FrmMainApp.Log.Trace(message: "Closing exifTool");
+            Log.Trace(message: "Closing exifTool");
 
             // if still here then exorcise
             try
             {
-                FrmMainApp.Log.Trace(message: "Killing exifTool");
+                Log.Trace(message: "Killing exifTool");
                 prcExifTool.Kill();
             }
             catch
             {
                 // "funnily" enough this seems to persist for some reason. Unsure why.
-                FrmMainApp.Log.Error(message: "Killing exifTool failed");
+                Log.Error(message: "Killing exifTool failed");
             }
         });
     }

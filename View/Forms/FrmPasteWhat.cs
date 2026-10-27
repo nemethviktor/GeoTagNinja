@@ -510,7 +510,7 @@ public partial class FrmPasteWhat : Form
                     else // this will be marked as "remove" later
                     {
                         copyPasteDict.Add(key: attribute,
-                            value: FrmMainApp.NullStringEquivalentGeneric);
+                            value: NullEquivalents.StringGeneric);
                     }
                 }
 
@@ -555,7 +555,7 @@ public partial class FrmPasteWhat : Form
                             // remove value if blank
                             bool markForRemoval =
                                 keyValuePair.Value.ToString() ==
-                                FrmMainApp.NullStringEquivalentGeneric ||
+                                NullEquivalents.StringGeneric ||
                                 string.IsNullOrEmpty(
                                     value: keyValuePair.Value.ToString());
                             dirElemFileToModify.SetAttributeValueAnyType(

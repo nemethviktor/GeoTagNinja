@@ -1,4 +1,5 @@
-﻿using GeoTagNinja.Helpers.FileSystem;
+﻿using NLog;
+using GeoTagNinja.Helpers.FileSystem;
 using GeoTagNinja.Helpers.Localisation;
 using GeoTagNinja.View.Forms;
 using System.Collections.Generic;
@@ -17,13 +18,15 @@ namespace GeoTagNinja.Helpers.Data;
 /// </remarks>
 internal static class SessionDataTables
 {
+    private static readonly Logger Log = LogManager.GetCurrentClassLogger();
+
     /// <summary>
     ///     This creates the DataTables for the main Form - been moved out here because it's otherwise tedious to keep track
     ///     of.
     /// </summary>
     public static Task GenericCreateDataTables()
     {
-        FrmMainApp.Log.Info(message: "Starting");
+        Log.Info(message: "Starting");
 
         // DTLanguageMapping
         FrmMainApp.DTLanguageMapping = new DataTable();

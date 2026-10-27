@@ -1006,7 +1006,7 @@ public static class SourcesAndAttributes
             }
         }
 
-        return FrmMainApp.NullStringEquivalentBlank;
+        return NullEquivalents.StringBlank;
     }
 
     /// <summary>
@@ -1029,7 +1029,7 @@ public static class SourcesAndAttributes
             }
         }
 
-        return FrmMainApp.NullStringEquivalentBlank;
+        return NullEquivalents.StringBlank;
     }
 
     /// <summary>

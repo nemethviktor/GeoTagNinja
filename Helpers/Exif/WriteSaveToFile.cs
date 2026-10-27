@@ -1,4 +1,5 @@
-﻿using GeoTagNinja.Helpers.Data;
+﻿using NLog;
+using GeoTagNinja.Helpers.Data;
 using GeoTagNinja.Helpers.FileSystem;
 using GeoTagNinja.Helpers.UI;
 using GeoTagNinja.Model;
@@ -21,9 +22,11 @@ namespace GeoTagNinja.Helpers.Exif;
 
 internal static class WriteSaveToFile
 {
+    private static readonly Logger Log = LogManager.GetCurrentClassLogger();
+
     internal static async Task ExifWriteExifToFile(HashSet<string> distinctGUIDs)
     {
-        FrmMainApp.Log.Info(message: "Starting");
+        Log.Info(message: "Starting");
 
         FileLocking.FilesAreBeingSaved = true;
         string argsFile = Path.Combine(path1: HelperVariables.UserDataFolderPath, path2: "exifArgsToWrite.args");
@@ -52,7 +55,7 @@ internal static class WriteSaveToFile
         foreach (string GUID in distinctGUIDs)
         {
             DirectoryElement dirElemFileToModify = FrmMainApp.DirectoryElements.FindElementByItemGUID(GUID: GUID);
-            FrmMainApp.Log.Trace(message: dirElemFileToModify.FileNameWithPath);
+            Log.Trace(message: dirElemFileToModify.FileNameWithPath);
 
             if (dirElemFileToModify != null)
             {
@@ -154,11 +157,11 @@ internal static class WriteSaveToFile
 
                     if (writeXMPSideCar)
                     {
-                        FrmMainApp.Log.Trace(message: $"{fileNameWithPath} - writeXMPSideCar - {writeXMPSideCar}");
+                        Log.Trace(message: $"{fileNameWithPath} - writeXMPSideCar - {writeXMPSideCar}");
 
                         if (!File.Exists(path: xmpFileLocation))
                         {
-                            FrmMainApp.Log.Trace(message:
+                            Log.Trace(message:
                                 $"{fileNameWithPath} - writeXMPSideCar - {writeXMPSideCar} - File has been created.");
 
                             // otherwise create a new one. 
@@ -223,9 +226,9 @@ internal static class WriteSaveToFile
                                .ToString();
 
                             // the display sentinel means "blank"; it must delete the tag, never be written into the file as a literal "-"
-                            if (settingValue == FrmMainApp.NullStringEquivalentGeneric)
+                            if (settingValue == NullEquivalents.StringGeneric)
                             {
-                                settingValue = FrmMainApp.NullStringEquivalentBlank;
+                                settingValue = NullEquivalents.StringBlank;
                             }
 
                             ElementAttribute attribute = GetElementAttributesElementAttribute(attributeToFind: settingId);
@@ -240,7 +243,7 @@ internal static class WriteSaveToFile
                                 // ignore.
                             }
 
-                            FrmMainApp.Log.Trace(message: $"{fileNameWithPath} - {settingId}: {settingValue}");
+                            Log.Trace(message: $"{fileNameWithPath} - {settingId}: {settingValue}");
 
                             // non-xmp always
                             if (deleteAllGPSData && !deleteTagAlreadyAdded)
@@ -286,8 +289,7 @@ internal static class WriteSaveToFile
                                             {
                                                 if (updateExifVal.Substring(
                                                         startIndex: 0, length: 1) ==
-                                                    FrmMainApp
-                                                       .NullStringEquivalentGeneric)
+                                                    NullEquivalents.StringGeneric)
                                                 {
                                                     UpdateArgsFile(
                                                         argfileToUpdate: ArgfileToUpdate
@@ -310,8 +312,7 @@ internal static class WriteSaveToFile
                                             {
                                                 if (updateExifVal.Substring(
                                                         startIndex: 0, length: 1) ==
-                                                    FrmMainApp
-                                                       .NullStringEquivalentGeneric)
+                                                    NullEquivalents.StringGeneric)
                                                 {
                                                     UpdateArgsFile(
                                                         argfileToUpdate: ArgfileToUpdate
@@ -415,7 +416,7 @@ internal static class WriteSaveToFile
                                                 : "";
                                     }
 
-                                    FrmMainApp.Log.Trace(
+                                    Log.Trace(
                                         message: $"{fileNameWithPath} - {exifToolAttribute}: {updateExifVal}");
 
                                     UpdateArgsFile(argfileToUpdate: ArgfileToUpdate.Both,
@@ -494,7 +495,7 @@ internal static class WriteSaveToFile
                     if (!processOriginalFile && !writeXMPSideCar)
                     {
                         failWriteNothingEnabled = true;
-                        FrmMainApp.Log.Info(message: "Both file-writes disabled. Nothing Written.");
+                        Log.Info(message: "Both file-writes disabled. Nothing Written.");
                         Themer.ShowMessageBox(
                             message: HelperControlAndMessageBoxHandling.ReturnControlText(
                                 controlName: "mbx_Helper_WarningNoWriteSettingEnabled",
@@ -509,7 +510,7 @@ internal static class WriteSaveToFile
         // this is the "optimal" scenario
         if (!failWriteNothingEnabled && !queueWasEmpty)
         {
-            FrmMainApp.Log.Info(message: "Starting ExifTool.");
+            Log.Info(message: "Starting ExifTool.");
             ///////////////
 
             await ExifToolOperator.RunExifTool(exiftoolCmd: exiftoolCmd,
@@ -521,7 +522,7 @@ internal static class WriteSaveToFile
         }
         else if (!queueWasEmpty)
         {
-            FrmMainApp.Log.Info(message: "Both file-writes disabled. Nothing Written.");
+            Log.Info(message: "Both file-writes disabled. Nothing Written.");
             Themer.ShowMessageBox(
                 message: HelperControlAndMessageBoxHandling.ReturnControlText(
                     controlName: "mbx_Helper_WarningNoWriteSettingEnabled",
@@ -531,7 +532,7 @@ internal static class WriteSaveToFile
         }
         else
         {
-            FrmMainApp.Log.Info(message: "Queue was empty. Nothing Written.");
+            Log.Info(message: "Queue was empty. Nothing Written.");
             Themer.ShowMessageBox(
                 message: HelperControlAndMessageBoxHandling.ReturnControlText(
                     controlName: "mbx_Helper_WarningNothingInWriteQueue",

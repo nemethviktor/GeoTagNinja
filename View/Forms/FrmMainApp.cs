@@ -55,14 +55,14 @@ public partial class FrmMainApp : Form
     internal const string DoubleQuote = "\"";
 
     internal const string ParentFolder = "..";
-    internal const string NullStringEquivalentGeneric = "-";
-    internal const string NullStringEquivalentBlank = ""; // fml.
-    internal const string NullStringEquivalentZero = "0"; // fml.
-    internal const int NullIntEquivalent = 0;
-    internal const double NullDoubleEquivalent = 0.0;
+    // The sentinels live in Model/NullEquivalents; these forward to them so this form's own code reads as before.
+    internal const string NullStringEquivalentGeneric = NullEquivalents.StringGeneric;
+    internal const string NullStringEquivalentBlank = NullEquivalents.StringBlank;
+    internal const string NullStringEquivalentZero = NullEquivalents.StringZero;
+    internal const int NullIntEquivalent = NullEquivalents.Int;
+    internal const double NullDoubleEquivalent = NullEquivalents.Double;
 
-    internal static readonly DateTime NullDateTimeEquivalent =
-        new(year: 1, month: 1, day: 1, hour: 0, minute: 0, second: 0);
+    internal static readonly DateTime NullDateTimeEquivalent = NullEquivalents.DateTime;
 
     #endregion
 

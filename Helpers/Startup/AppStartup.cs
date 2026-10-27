@@ -1,4 +1,5 @@
-﻿using GeoTagNinja.Helpers.Data;
+﻿using NLog;
+using GeoTagNinja.Helpers.Data;
 using GeoTagNinja.Helpers.Localisation;
 using GeoTagNinja.Helpers.UI;
 using GeoTagNinja.Model;
@@ -22,23 +23,25 @@ namespace GeoTagNinja.Helpers.Startup;
 
 internal static class AppStartup
 {
+    private static readonly Logger Log = LogManager.GetCurrentClassLogger();
+
     /// <summary>
     ///     Creates the database SQLite file
     /// </summary>
     public static Task AppStartupCreateDatabaseFile()
     {
-        FrmMainApp.Log.Info(message: "Starting");
+        Log.Info(message: "Starting");
         // load all settings
         try
         {
-            FrmMainApp.Log.Debug(message: "applicationDataGeoTagNinjaFolder");
+            Log.Debug(message: "applicationDataGeoTagNinjaFolder");
             string applicationDataGeoTagNinjaFolder = Path.Combine(path1: Environment.GetFolderPath(folder: Environment.SpecialFolder.ApplicationData), path2: "GeoTagNinja");
             _ = Directory.CreateDirectory(path: applicationDataGeoTagNinjaFolder);
             DatabaseAndStartup.DataCreateSQLiteDB();
         }
         catch (Exception ex)
         {
-            FrmMainApp.Log.Fatal(message: $"Could not create the settings database: {ex}");
+            Log.Fatal(message: $"Could not create the settings database: {ex}");
             Themer.ShowMessageBox(
                 message: HelperControlAndMessageBoxHandling.ReturnControlText(
                     controlName: "mbx_FrmMainApp_ErrorCantCreateSQLiteDB",
@@ -59,7 +62,7 @@ internal static class AppStartup
     /// </summary>
     public static Task AppStartupWriteDefaultSettings()
     {
-        FrmMainApp.Log.Info(message: "Starting");
+        Log.Info(message: "Starting");
 
         // write settings for combobox defaults etc
         try
@@ -71,7 +74,7 @@ internal static class AppStartup
         }
         catch (Exception ex)
         {
-            FrmMainApp.Log.Fatal(message: $"Could not write the default settings: {ex}");
+            Log.Fatal(message: $"Could not write the default settings: {ex}");
             Themer.ShowMessageBox(
                 message: HelperControlAndMessageBoxHandling.ReturnControlText(
                     controlName: "mbx_FrmMainApp_ErrorCantWriteSQLiteDB",
@@ -115,7 +118,7 @@ internal static class AppStartup
     /// </summary>
     public static Task AppStartupReadAppLanguage()
     {
-        FrmMainApp.Log.Info(message: "Starting");
+        Log.Info(message: "Starting");
 
         try
         {
@@ -123,7 +126,7 @@ internal static class AppStartup
                 dataTable: HelperVariables.DtHelperDataApplicationSettings, settingTabPage: "tpg_Application",
                 settingId: "cbx_Language") ?? "en"; // default to "en".
 
-            FrmMainApp.Log.Info(message: $"AppLanguage lang is{lang}");
+            Log.Info(message: $"AppLanguage lang is{lang}");
 
             FrmMainApp.AppLanguage = lang switch
             {
@@ -139,11 +142,11 @@ internal static class AppStartup
 
             Thread.CurrentThread.CurrentUICulture = new CultureInfo(name: cultureInfo.ToString());
 
-            FrmMainApp.Log.Info(message: $"AppLanguage is{FrmMainApp.AppLanguage}");
+            Log.Info(message: $"AppLanguage is{FrmMainApp.AppLanguage}");
         }
         catch (Exception ex)
         {
-            FrmMainApp.Log.Fatal(message: $"Error: {ex.Message}");
+            Log.Fatal(message: $"Error: {ex.Message}");
             Themer.ShowMessageBox(
                 message: HelperControlAndMessageBoxHandling.ReturnControlText(
                     controlName: "mbx_FrmMainApp_ErrorCantLoadSQLiteDB",
@@ -202,7 +205,7 @@ internal static class AppStartup
     /// </summary>
     public static Task AppStartupReadAPILanguage()
     {
-        FrmMainApp.Log.Info(message: "Starting");
+        Log.Info(message: "Starting");
         string TryUseGeoNamesLanguage = null;
         try
         {
@@ -255,7 +258,7 @@ internal static class AppStartup
     public static Task AppStartupApplyDefaults(string settingTabPage,
                                                bool actuallyRunningAtStartup)
     {
-        FrmMainApp.Log.Info(message: "Starting");
+        Log.Info(message: "Starting");
 
         // Define setting maps for different types
         Dictionary<string, Dictionary<string, string>> stringSettings = new()
@@ -348,7 +351,7 @@ internal static class AppStartup
 
         foreach (FieldInfo field in fields)
         {
-            FrmMainApp.Log.Debug(message: $"Now retrieving: {field.Name}");
+            Log.Debug(message: $"Now retrieving: {field.Name}");
 
             TrySetStringValue(dict: stringSettings, tab: settingTabPage, field: field);
             TrySetBoolValue(dict: boolSettingsWithFalseDefaults, tab: settingTabPage, field: field, defaultValue: false);
@@ -484,7 +487,7 @@ internal static class AppStartup
     public static Task AppStartupCheckWebView2()
     {
         // Check webView2 availability
-        FrmMainApp.Log.Info(message: "Starting");
+        Log.Info(message: "Starting");
 
         try
         {
@@ -492,11 +495,11 @@ internal static class AppStartup
             webView2Version =
                 CoreWebView2Environment.GetAvailableBrowserVersionString(
                     browserExecutableFolder: null);
-            FrmMainApp.Log.Trace(message: $"Check webView2 version is: {webView2Version}");
+            Log.Trace(message: $"Check webView2 version is: {webView2Version}");
         }
         catch (Exception ex)
         {
-            FrmMainApp.Log.Fatal(message: $"Error: {ex.Message}");
+            Log.Fatal(message: $"Error: {ex.Message}");
             Themer.ShowMessageBox(
                 message: HelperControlAndMessageBoxHandling.ReturnControlText(
                     controlName: "mbx_FrmMainApp_ErrorCantLoadWebView2",
@@ -567,7 +570,7 @@ internal static class AppStartup
     /// <returns></returns>
     public static void AppStartupLoadFavourites(bool clearDropDown = true)
     {
-        FrmMainApp.Log.Info(message: "Starting");
+        Log.Info(message: "Starting");
 
         FrmMainApp.Favourites.Clear();
         Favourites.DataReadSQLiteFavourites();
@@ -592,7 +595,7 @@ internal static class AppStartup
     /// <param name="toolStripTextBox"></param>
     public static void AppSetupInitialiseStartupFolder(ToolStripTextBox toolStripTextBox)
     {
-        FrmMainApp.Log.Info(message: "Starting");
+        Log.Info(message: "Starting");
 
         // we first try to check if there is a parameter supplied with the application launch (command-line)
         string startupFolder = string.Empty;
@@ -622,7 +625,7 @@ internal static class AppStartup
                         settingTabPage: "tpg_Application",
                         settingId: "tbx_LastUsed_Folder" // technially there is no such tbx but it's easier this way.
                     );
-                    FrmMainApp.Log.Trace(message: $"Startup Folder is: {startupFolder} (via last-used folder)");
+                    Log.Trace(message: $"Startup Folder is: {startupFolder} (via last-used folder)");
                 }
                 else
                 {
@@ -631,12 +634,12 @@ internal static class AppStartup
                         settingTabPage: "tpg_Application",
                         settingId: "tbx_Startup_Folder"
                     );
-                    FrmMainApp.Log.Trace(message: $"Startup Folder is: {startupFolder}");
+                    Log.Trace(message: $"Startup Folder is: {startupFolder}");
                 }
             }
             catch (Exception ex)
             {
-                FrmMainApp.Log.Fatal(message: $"Error: {ex.Message}");
+                Log.Fatal(message: $"Error: {ex.Message}");
                 Themer.ShowMessageBox(
                     message: HelperControlAndMessageBoxHandling.ReturnControlText(
                         controlName: "mbx_FrmMainApp_ErrorSettingStartupFolder",
@@ -651,7 +654,7 @@ internal static class AppStartup
         if (string.IsNullOrWhiteSpace(value: startupFolder))
         {
             startupFolder = Environment.GetFolderPath(folder: Environment.SpecialFolder.MyPictures);
-            FrmMainApp.Log.Trace(message:
+            Log.Trace(message:
                 $"Startup Folder is null, defaulting to SpecialFolder.MyPictures: {startupFolder}");
         }
 

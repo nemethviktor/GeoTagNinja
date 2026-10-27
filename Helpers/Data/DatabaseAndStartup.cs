@@ -1,4 +1,5 @@
-﻿using GeoTagNinja.Helpers.FileSystem;
+﻿using NLog;
+using GeoTagNinja.Helpers.FileSystem;
 using GeoTagNinja.Helpers.Startup;
 using GeoTagNinja.Helpers.UI;
 using GeoTagNinja.Model;
@@ -17,6 +18,8 @@ namespace GeoTagNinja.Helpers.Data;
 
 internal static class DatabaseAndStartup
 {
+    private static readonly Logger Log = LogManager.GetCurrentClassLogger();
+
     private static readonly string DoubleQuote = @"""";
 
     /// <summary>
@@ -31,17 +34,17 @@ internal static class DatabaseAndStartup
     /// </remarks>
     internal static void DataCreateSQLiteDB()
     {
-        FrmMainApp.Log.Info(message: "Starting");
+        Log.Info(message: "Starting");
 
         try
         {
-            FrmMainApp.Log.Trace(message: $"SettingsDatabaseFilePath is {HelperVariables.SettingsDatabaseFilePath}");
+            Log.Trace(message: $"SettingsDatabaseFilePath is {HelperVariables.SettingsDatabaseFilePath}");
             FileInfo userDataBaseFile = new(fileName: HelperVariables.SettingsDatabaseFilePath);
 
             // a zero-byte file is an interrupted create rather than a database, and EnsureSettingsDatabaseExists
             // starts it over, so it doesn't count as pre-existing here either.
             bool userDataBaseFileAlreadyExisted = userDataBaseFile.Exists && userDataBaseFile.Length > 0;
-            FrmMainApp.Log.Trace(message: $"SettingsDatabaseFilePath already exists: {userDataBaseFileAlreadyExisted}");
+            Log.Trace(message: $"SettingsDatabaseFilePath already exists: {userDataBaseFileAlreadyExisted}");
 
             DatabaseSchema.EnsureSettingsDatabaseExists();
 
@@ -66,7 +69,7 @@ internal static class DatabaseAndStartup
         }
         catch (Exception ex)
         {
-            FrmMainApp.Log.Fatal(message: $"Error: {ex.Message}");
+            Log.Fatal(message: $"Error: {ex.Message}");
             ThemeHelper.ShowMessageBox(message: ex.Message);
         }
     }
@@ -76,7 +79,7 @@ internal static class DatabaseAndStartup
     /// </summary>
     internal static void DataWriteSQLiteSettingsDefaultSettings()
     {
-        FrmMainApp.Log.Info(message: "Starting");
+        Log.Info(message: "Starting");
 
         // note to self. for any keys, use the Control name, not the Variable name.
 
@@ -207,7 +210,7 @@ internal static class DatabaseAndStartup
         if (UpgradeNotices.IsFreshInstall)
         {
             bool windowsIsDark = ThemeHelper.WindowsPrefersDarkApps();
-            FrmMainApp.Log.Info(message: $"New install - starting in {(windowsIsDark ? "dark" : "light")} mode to match Windows");
+            Log.Info(message: $"New install - starting in {(windowsIsDark ? "dark" : "light")} mode to match Windows");
             settingsToWriteTmp.Add(item: new AppSettingContainer
             {
                 TableName = "settings",

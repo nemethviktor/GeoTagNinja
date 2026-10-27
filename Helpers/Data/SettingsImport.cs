@@ -1,4 +1,5 @@
-﻿using GeoTagNinja.View.Forms;
+﻿using NLog;
+using GeoTagNinja.View.Forms;
 using System;
 using System.Collections.Generic;
 using System.Data.SQLite;
@@ -9,6 +10,8 @@ namespace GeoTagNinja.Helpers.Data;
 
 internal static class SettingsImport
 {
+    private static readonly Logger Log = LogManager.GetCurrentClassLogger();
+
     /// <summary>
     ///     The alias the file being imported from is attached under. Not a real database name - it only has to be
     ///     something that can't collide with <c>main</c> or <c>temp</c>.
@@ -54,7 +57,7 @@ internal static class SettingsImport
     internal static bool DataImportSettings(List<string> settingsToImportList,
                                             string importFilePath)
     {
-        FrmMainApp.Log.Info(message: "Starting");
+        Log.Info(message: "Starting");
 
         // Check if importFilePath is a valid SQLite database
         if (!File.Exists(path: importFilePath) || !IsValidSQLite(filePath: importFilePath))
@@ -75,7 +78,7 @@ internal static class SettingsImport
                 // taking the app down over it - the remaining tables can still be imported.
                 if (tableName is null || !DatabaseSchema.IsKnownTable(tableName: tableName))
                 {
-                    FrmMainApp.Log.Error(
+                    Log.Error(
                         message: $"'{settingName}' does not map to a table of the settings database - skipping it.");
                     continue;
                 }
@@ -86,7 +89,7 @@ internal static class SettingsImport
 
         if (settingsTablesToBeImportedList.Count == 0)
         {
-            FrmMainApp.Log.Info(message: "Nothing was selected for import.");
+            Log.Info(message: "Nothing was selected for import.");
             return false;
         }
 
@@ -109,7 +112,7 @@ internal static class SettingsImport
         }
         catch (Exception ex)
         {
-            FrmMainApp.Log.Error(message: $"Import failed, restoring the backup. Error: {ex.Message}");
+            Log.Error(message: $"Import failed, restoring the backup. Error: {ex.Message}");
             RestoreBackup(backupFilePath: backupFilePath, settingsDatabaseFilePath: settingsDatabaseFilePath);
 
             throw;
@@ -117,7 +120,7 @@ internal static class SettingsImport
 
         // Delete the backup if no errors occurred
         File.Delete(path: backupFilePath);
-        FrmMainApp.Log.Info(message: "Done");
+        Log.Info(message: "Done");
 
         return true;
     }
@@ -170,7 +173,7 @@ internal static class SettingsImport
     {
         if (!DatabaseSchema.TableExists(connection: connection, schemaName: ImportSchemaName, tableName: tableName))
         {
-            FrmMainApp.Log.Info(
+            Log.Info(
                 message: $"Table '{tableName}' is not in the import file - leaving the current one as it is.");
 
             return;
@@ -190,7 +193,7 @@ internal static class SettingsImport
 
         if (columnNamesToCopy.Count == 0)
         {
-            FrmMainApp.Log.Error(
+            Log.Error(
                 message:
                 $"Table '{tableName}' in the import file has no column in common with the current one - it has been left empty.");
 
@@ -207,7 +210,7 @@ internal static class SettingsImport
             connection: connection);
         int rowsImported = copyCommand.ExecuteNonQuery();
 
-        FrmMainApp.Log.Info(message: $"Imported {rowsImported} row(s) into '{tableName}'.");
+        Log.Info(message: $"Imported {rowsImported} row(s) into '{tableName}'.");
     }
 
     /// <summary>
@@ -249,7 +252,7 @@ internal static class SettingsImport
         }
         catch (Exception ex)
         {
-            FrmMainApp.Log.Error(message: $"Could not detach the import file. Error: {ex.Message}");
+            Log.Error(message: $"Could not detach the import file. Error: {ex.Message}");
         }
     }
 
@@ -270,7 +273,7 @@ internal static class SettingsImport
         {
             // deliberately leave the backup on disk - at this point it may be the only intact copy of the user's
             // settings, and the file name says what it is.
-            FrmMainApp.Log.Error(
+            Log.Error(
                 message: $"Could not restore '{backupFilePath}', leaving it in place. Error: {ex.Message}");
         }
     }

@@ -1,4 +1,5 @@
-﻿using GeoTagNinja.Helpers.Data;
+﻿using NLog;
+using GeoTagNinja.Helpers.Data;
 using GeoTagNinja.Helpers.Exif;
 using GeoTagNinja.Helpers.UI;
 using GeoTagNinja.Model;
@@ -43,6 +44,8 @@ public class TimedWebClient : WebClient
 
 internal static class APIVersionCheckers
 {
+    private static readonly Logger Log = LogManager.GetCurrentClassLogger();
+
     /// <summary>
     ///     Responsible for pulling the latest prod-version number of exifTool from ~~exiftool.org~~ sourceforge.
     /// </summary>
@@ -138,7 +141,7 @@ internal static class APIVersionCheckers
     /// </summary>
     internal static async Task CheckForNewVersions()
     {
-        FrmMainApp.Log.Info(message: "Starting");
+        Log.Info(message: "Starting");
 
         // check when the last polling took place
         long nowUnixTime = ((DateTimeOffset)DateTime.Now).ToUnixTimeSeconds();
@@ -174,13 +177,13 @@ internal static class APIVersionCheckers
         DateTimeOffset dateTimelastCheckUnixTime = DateTimeOffset.FromUnixTimeSeconds(lastCheckUnixTime);
         DateTimeOffset dateTimenowUnixTime = DateTimeOffset.FromUnixTimeSeconds(nowUnixTime);
 
-        FrmMainApp.Log.Info(message: $"strLastOnlineVersionCheck: {strLastOnlineVersionCheck}");
+        Log.Info(message: $"strLastOnlineVersionCheck: {strLastOnlineVersionCheck}");
 
-        FrmMainApp.Log.Info(message: $"dateTimelastCheckUnixTime: {dateTimelastCheckUnixTime.DateTime}");
-        FrmMainApp.Log.Info(message: $"dateTimenowUnixTime: {dateTimenowUnixTime.DateTime}");
+        Log.Info(message: $"dateTimelastCheckUnixTime: {dateTimelastCheckUnixTime.DateTime}");
+        Log.Info(message: $"dateTimenowUnixTime: {dateTimenowUnixTime.DateTime}");
 
-        FrmMainApp.Log.Info(message: $"nowUnixTime: {nowUnixTime}");
-        FrmMainApp.Log.Info(message: $"nowUnixTime > lastCheckUnixTime: {nowUnixTime - lastCheckUnixTime}");
+        Log.Info(message: $"nowUnixTime: {nowUnixTime}");
+        Log.Info(message: $"nowUnixTime > lastCheckUnixTime: {nowUnixTime - lastCheckUnixTime}");
 
         int checkUpdateVal = 604800; //604800 is a week's worth of seconds
 #if DEBUG
@@ -200,14 +203,14 @@ internal static class APIVersionCheckers
         if (nowUnixTime > lastCheckUnixTime + checkUpdateVal ||
             strLastOnlineVersionCheck == null)
         {
-            FrmMainApp.Log.Info(message: "Checking for new ExifTool versions.");
+            Log.Info(message: "Checking for new ExifTool versions.");
             // get the newest exiftool version -- do this here at the end so it doesn't hold up the process
             /////////////////
 
             int CPUBitness = Environment.Is64BitOperatingSystem ? 64 : 32;
             HelperVariables.CurrentExifToolVersionCloud = API_ExifGetExifToolVersionFromWeb();
 
-            FrmMainApp.Log.Info(message: $"currentExifToolVersionLocal: {HelperVariables
+            Log.Info(message: $"currentExifToolVersionLocal: {HelperVariables
                .CurrentExifToolVersionLocal} / newestExifToolVersionOnline: {HelperVariables.CurrentExifToolVersionCloud}");
 
             // if cloud version is newer, either arm an already-downloaded zip (e.g. left over from a
@@ -221,7 +224,7 @@ internal static class APIVersionCheckers
 
                 if (File.Exists(path: existingZipPath))
                 {
-                    FrmMainApp.Log.Info(
+                    Log.Info(
                         message:
                         $"Found already-downloaded exifTool version {HelperVariables.CurrentExifToolVersionCloud.ToString(
                             provider: CultureInfo
@@ -231,7 +234,7 @@ internal static class APIVersionCheckers
                 }
                 else
                 {
-                    FrmMainApp.Log.Info(
+                    Log.Info(
                         message:
                         $"Downloading newest exifTool version from the cloud. {HelperVariables.CurrentExifToolVersionCloud.ToString(
                             provider: CultureInfo
@@ -244,7 +247,7 @@ internal static class APIVersionCheckers
                 }
             }
 
-            FrmMainApp.Log.Info(message: "Checking for new GTN versions.");
+            Log.Info(message: "Checking for new GTN versions.");
             // Done w ExifTool and move on to checking GTN stuff
             // current version may be something like "0.5.8251.40825"
             // Assembly.GetExecutingAssembly().GetName().Version.Build is just "8251"
@@ -277,7 +280,7 @@ internal static class APIVersionCheckers
                 // ignore
             }
 
-            FrmMainApp.Log.Info($"Remotebuild is {newestOnlineGTNVersion}");
+            Log.Info($"Remotebuild is {newestOnlineGTNVersion}");
 
             CreateJsonForUpdate(localMajor: currentGTNVersionBuildMajor,
                 localMinor: currentGTNVersionBuildMinor,
@@ -299,7 +302,7 @@ internal static class APIVersionCheckers
         }
         else
         {
-            FrmMainApp.Log.Info(message: "Not checking for new versions.");
+            Log.Info(message: "Not checking for new versions.");
         }
     }
 

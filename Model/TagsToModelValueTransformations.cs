@@ -301,7 +301,7 @@ internal class TagsToModelValueTransformations
                                  result: out double returnVal);
         return _
             ? returnVal
-            : FrmMainApp.NullDoubleEquivalent;
+            : NullEquivalents.Double;
     }
 
     /// <summary>

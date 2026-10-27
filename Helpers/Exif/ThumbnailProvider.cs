@@ -1,4 +1,5 @@
-﻿using GeoTagNinja.Helpers.Data;
+﻿using NLog;
+using GeoTagNinja.Helpers.Data;
 using GeoTagNinja.Model;
 using GeoTagNinja.View.Forms;
 using System;
@@ -17,6 +18,8 @@ namespace GeoTagNinja.Helpers.Exif;
 /// </remarks>
 internal static class ThumbnailProvider
 {
+    private static readonly Logger Log = LogManager.GetCurrentClassLogger();
+
     internal const int SmallBucket = 128;
     internal const int LargeBucket = 256;
 
@@ -44,7 +47,7 @@ internal static class ThumbnailProvider
             return true;
         }
 
-        FrmMainApp.Log.Info(message: $"Thumbnail generation started for {path}");
+        Log.Info(message: $"Thumbnail generation started for {path}");
         try
         {
             using Image? thumbnail = ThumbnailGenerator.Create(fileNameWithPath: path, size: bucket);
@@ -54,12 +57,12 @@ internal static class ThumbnailProvider
             }
 
             ThumbnailCache.Add(fileNameWithPath: path, size: bucket, thumbnail: thumbnail);
-            FrmMainApp.Log.Info(message: $"Thumbnail generation finished for {path}");
+            Log.Info(message: $"Thumbnail generation finished for {path}");
             return true;
         }
         catch (Exception ex)
         {
-            FrmMainApp.Log.Error(ex, message: $"Thumbnail generation failed for {path}");
+            Log.Error(ex, message: $"Thumbnail generation failed for {path}");
             return false;
         }
     }

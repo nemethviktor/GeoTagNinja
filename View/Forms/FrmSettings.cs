@@ -1,4 +1,5 @@
-﻿using GeoTagNinja.Helpers;
+﻿using NLog;
+using GeoTagNinja.Helpers;
 using GeoTagNinja.Helpers.Data;
 using GeoTagNinja.Helpers.FileSystem;
 using GeoTagNinja.Helpers.Localisation;
@@ -25,6 +26,8 @@ namespace GeoTagNinja.View.Forms;
 
 public partial class FrmSettings : Form
 {
+    private static readonly Logger Log = LogManager.GetCurrentClassLogger();
+
     private static List<Control> _lstTpgApplicationControls = []; // do not rename
     private static List<Control> _lstTpgGeoNamesControls = []; // do not rename
     private static bool _importHasBeenProcessed;
@@ -1370,7 +1373,7 @@ public partial class FrmSettings : Form
                 {
                     // the import rolls itself back, so the settings database is whatever it was beforehand. There
                     // is no global exception handler, so without this a bad file takes the whole app down.
-                    FrmMainApp.Log.Error(message: $"Error: {ex.Message}");
+                    Log.Error(message: $"Error: {ex.Message}");
                     Themer.ShowMessageBox(
                         message: HelperControlAndMessageBoxHandling.ReturnControlText(
                                      controlName: "mbx_FrmSettings_ErrorImportFailed",

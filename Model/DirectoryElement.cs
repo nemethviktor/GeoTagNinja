@@ -111,7 +111,7 @@ public class DirectoryElement
 
         /// <summary>
         ///     The value that stands in for "nothing" for this container's type. Note that for strings this is the
-        ///     display sentinel <see cref="FrmMainApp.NullStringEquivalentGeneric" /> rather than an empty string;
+        ///     display sentinel <see cref="NullEquivalents.StringGeneric" /> rather than an empty string;
         ///     that is long-standing behaviour which the refactor preserves rather than quietly changes.
         /// </summary>
         public abstract IConvertible BlankValue { get; }
@@ -153,22 +153,22 @@ public class DirectoryElement
         {
             if (attributeType == typeof(string))
             {
-                return new AttributeValues<string>(blankValue: FrmMainApp.NullStringEquivalentGeneric);
+                return new AttributeValues<string>(blankValue: NullEquivalents.StringGeneric);
             }
 
             if (attributeType == typeof(int))
             {
-                return new AttributeValues<int>(blankValue: FrmMainApp.NullIntEquivalent);
+                return new AttributeValues<int>(blankValue: NullEquivalents.Int);
             }
 
             if (attributeType == typeof(double))
             {
-                return new AttributeValues<double>(blankValue: FrmMainApp.NullDoubleEquivalent);
+                return new AttributeValues<double>(blankValue: NullEquivalents.Double);
             }
 
             if (attributeType == typeof(DateTime))
             {
-                return new AttributeValues<DateTime>(blankValue: FrmMainApp.NullDateTimeEquivalent);
+                return new AttributeValues<DateTime>(blankValue: NullEquivalents.DateTime);
             }
 
             throw new ArgumentException(
@@ -442,7 +442,7 @@ public class DirectoryElement
         // already reflect that even though the old value is still in memory until the file is actually written.
         if (avc.IsMarkedForDeletion(version: (AttributeVersion)versionToReturn))
         {
-            return FrmMainApp.NullStringEquivalentGeneric;
+            return NullEquivalents.StringGeneric;
         }
 
         return AttributeValueFormatter.Format(
@@ -629,7 +629,7 @@ public class DirectoryElement
     /// <remarks>
     ///     Exposed because the readers need to store a blank without owning a <see cref="DirectoryElement" /> yet, and
     ///     because the sentinels are not all the obvious ones: for strings it is
-    ///     <see cref="FrmMainApp.NullStringEquivalentGeneric" />, not the empty string.
+    ///     <see cref="NullEquivalents.StringGeneric" />, not the empty string.
     /// </remarks>
     /// <param name="attribute">The attribute whose blank value is wanted.</param>
     public static IConvertible BlankValueFor(ElementAttribute attribute)
