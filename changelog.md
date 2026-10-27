@@ -12,6 +12,7 @@
 	- Icon-view thumbnails are generated for the rows you can see first (then the next screenful below and above), and they now start as soon as files are found instead of waiting for each file's metadata to be read, so a big folder shows its visible thumbnails straight away and re-prioritises as you scroll.
 	- ExifTool requests now take turns on the shared process (a lock), so a preview request can't interleave with the metadata read.
 - BUGS & FIXES:
+	- When saving, an ExifTool argument was dropped if an earlier one merely contained it as text: `-IPTC:City=Foo` was lost if `-IPTC:City=Foobar` had been added before it, and a file path if a longer path containing it had. Only an exactly identical argument line is skipped now.
 	- Starting the app in `Thumbnail View` left the keyboard focus on the menu bar, so the arrow keys did nothing until you clicked a picture. The thumbnails now take the focus once the window shows.
 	- RAW previews and thumbnails could show portrait shots sideways: embedded RAW previews usually carry no orientation of their own, so the file's orientation is now applied.
 	- Icon-view thumbnails of RAW files that needed a full decode showed the top-left corner of the picture instead of the whole picture.

@@ -547,7 +547,8 @@ internal static class WriteSaveToFile
     }
 
     /// <summary>
-    ///     Updates the arguments file
+    ///     Updates the arguments file. An argument is added unless the file already has exactly that line (see
+    ///     <see cref="ExifArgumentLines" /> for why this is not a substring test).
     /// </summary>
     /// <param name="argfileToUpdate">Which file to update -> <see cref="ArgfileToUpdate" /></param>
     /// <param name="whatText">The text to add</param>
@@ -563,27 +564,13 @@ internal static class WriteSaveToFile
         if (argfileToUpdate is ArgfileToUpdate.Orig or
             ArgfileToUpdate.Both)
         {
-            if (!exifArgsForOriginalFile.Contains(value: whatText))
-            {
-                exifArgsForOriginalFile += whatText +
-                                           (addNewLine
-                                               ? Environment.NewLine
-                                               : "");
-            }
+            _ = ExifArgumentLines.AddUnique(arguments: ref exifArgsForOriginalFile, line: whatText, addNewLine: addNewLine);
         }
-
-        ;
 
         if (argfileToUpdate is ArgfileToUpdate.SideCar or
             ArgfileToUpdate.Both)
         {
-            if (!exifArgsForSidecar.Contains(value: whatText))
-            {
-                exifArgsForSidecar += whatText +
-                                      (addNewLine
-                                          ? Environment.NewLine
-                                          : "");
-            }
+            _ = ExifArgumentLines.AddUnique(arguments: ref exifArgsForSidecar, line: whatText, addNewLine: addNewLine);
         }
     }
 

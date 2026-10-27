@@ -256,6 +256,7 @@
     <Compile Include="Helpers\Exif\ExifToolOperator.cs" />
     <Compile Include="Helpers\Exif\ReadExifData.cs" />
     <Compile Include="Helpers\Exif\ReadGetImagePreviews.cs" />
+    <Compile Include="Helpers\Exif\ExifArgumentLines.cs" />
     <Compile Include="Helpers\Exif\ThumbnailGenerator.cs" />
     <Compile Include="Helpers\Exif\RawPreview.cs" />
     <Compile Include="Helpers\Exif\ThumbnailProvider.cs" />
