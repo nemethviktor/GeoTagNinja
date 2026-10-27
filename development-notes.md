@@ -44,6 +44,13 @@ To announce something, add an entry to `Registry` with the build to compare agai
   `.NullStringEquivalentGeneric` and friends are reached from `Model/` and `Helpers/`, so those layers
   now carry a `using GeoTagNinja.View.Forms;`. That dependency was always there; moving the forms into
   their own namespace merely made it visible. Extracting the shared state is the fix.
+- **Thumbnails and previews are only partly reworked.** Icon-view thumbnails are built in memory by
+  `Helpers/Exif/ThumbnailGenerator` on `Helpers/UI/ThumbnailWorker` threads. Still to do: a persistent cache keyed by
+  path + mtime + size (the old name-only disk cache was dropped, not replaced); the preview pane
+  (`ReadGetImagePreviews.GenericCreateImagePreview`) still full-decodes JPEGs on the UI thread and spawns
+  `cmd.exe` + a fresh `exiftool.exe` per RAW; the worker does not yet prioritise visible rows;
+  `FileListView.FindItemByGuid` is a linear scan per thumbnail; and `DirectoryElement.Thumbnail` is a live `Image`
+  that the `ImageList` copies again.
 - **`HelperControlAndMessageBoxHandling`** kept its name while moving to `Helpers/UI/`. Renaming it
   touches 253 references and is pure churn on top of an already large diff; worth doing on its own.
 

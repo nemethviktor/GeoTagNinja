@@ -1457,7 +1457,7 @@ public partial class FileListView : System.Windows.Forms.ListView
         // 1. Thread-safety check
         if (InvokeRequired)
         {
-            _ = Invoke(new Action(() => SyncElementThumbnail(directoryElement: directoryElement)));
+            _ = BeginInvoke(new Action(() => SyncElementThumbnail(directoryElement: directoryElement)));
             return;
         }
 

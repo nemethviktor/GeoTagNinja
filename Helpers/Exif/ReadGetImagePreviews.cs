@@ -252,34 +252,6 @@ internal static class ReadGetImagePreviews
     }
 
     /// <summary>
-    ///     Use LibRaw to create thumbnail. Does not always rotate images properly.
-    /// </summary>
-    /// <param name="originalImagePath"></param>
-    /// <param name="generatedJpegPath"></param>
-    /// <param name="thumbnailIndex">
-    ///     The idea here is that not all raw images have a 0 index thumbnail so forcing a zero is
-    ///     likely to fail
-    /// </param>
-    internal static void UseLibRawToGenerateThumbnail(string originalImagePath,
-                                                      string generatedJpegPath,
-                                                      int thumbnailIndex)
-    {
-        try
-        {
-            using RawContext r = RawContext.OpenFile(filePath: originalImagePath);
-            using ProcessedImage image = r.ExportThumbnail(thumbnailIndex: thumbnailIndex);
-
-            using Bitmap bmp =
-                (Bitmap)Image.FromStream(stream: new MemoryStream(buffer: image.AsSpan<byte>().ToArray()));
-            bmp.Save(filename: generatedJpegPath, format: ImageFormat.Jpeg);
-        }
-        catch
-        {
-            // ignored
-        }
-    }
-
-    /// <summary>
     ///     Use LibRaw to pull the full image.
     /// </summary>
     /// <param name="originalImagePath"></param>
@@ -316,95 +288,6 @@ internal static class ReadGetImagePreviews
         {
             // ignored
         }
-    }
-
-    /// <summary>
-    ///     Same as <see cref="UseMagickImageToGeneratePreview(string,string)" /> but specific to thumbnail creation.
-    /// </summary>
-    /// <param name="originalImagePath"></param>
-    /// <param name="generatedJpegPath"></param>
-    /// <param name="imgWidth"></param>
-    /// <param name="imgHeight"></param>
-    internal static void UseMagickImageToGeneratePreview(string originalImagePath,
-                                                         string generatedJpegPath,
-                                                         int imgWidth,
-                                                         int imgHeight)
-    {
-        using MagickImage image = new(fileName: originalImagePath);
-        MagickGeometry size = new(width: (uint)imgWidth, height: (uint)imgHeight);
-
-        image.AutoOrient();
-        image.Resize(geometry: size);
-        image.Write(fileName: generatedJpegPath);
-    }
-
-    /// <summary>
-    ///     Basically used for non-special files' thumb generation. (Using Windows's own logic/capabilities.)
-    ///     Via https://www.thatsoftwaredude.com/content/11478/how-to-resize-image-files-with-c
-    /// </summary>
-    /// <param name="fileNameIn"></param>
-    /// <param name="fileNameOut"></param>
-    /// <param name="maxWidth"></param>
-    /// <param name="maxHeight"></param>
-    internal static void UseWindowsImageHandlerToCreateThumbnail(string fileNameIn,
-                                                                 string fileNameOut,
-                                                                 int maxWidth,
-                                                                 int maxHeight)
-    {
-        try
-        {
-            Image img = Image.FromFile(filename: fileNameIn);
-            string strName = string.Format(format: "thumb_{0}", arg0: fileNameOut);
-
-            double newWidth = img.Width;
-            double newHeight = img.Height;
-
-            // finds the small dimensions
-            for (int i = 99; i > 0; i--)
-            {
-                newWidth = i / 100.0 * newWidth;
-                newHeight = i / 100.0 * newHeight;
-
-                if (newWidth <= maxWidth ||
-                    newHeight <= maxHeight)
-                {
-                    break;
-                }
-            }
-
-            Bitmap bmSmall = new(original: img, newSize: new Size(width: (int)newWidth, height: (int)newHeight));
-
-            // via https://learn.microsoft.com/en-us/dotnet/desktop/winforms/advanced/how-to-set-jpeg-compression-level?view=netframeworkdesktop-4.8
-            Encoder myEncoder = Encoder.Quality;
-            ImageCodecInfo jpgEncoder = GetEncoder(format: ImageFormat.Jpeg);
-
-            EncoderParameters encoderParams = new(count: 1);
-            EncoderParameter encoderParameter = new(encoder: myEncoder, value: 90L);
-            encoderParams.Param[0] = encoderParameter;
-
-            Image newImg = bmSmall;
-            newImg.Save(filename: fileNameOut, encoder: jpgEncoder, encoderParams: encoderParams);
-            img.Dispose();
-            newImg.Dispose();
-        }
-        catch (Exception ex)
-        {
-            Debug.Print(message: ex.Message);
-        }
-    }
-
-    private static ImageCodecInfo GetEncoder(ImageFormat format)
-    {
-        ImageCodecInfo[] codecs = ImageCodecInfo.GetImageEncoders();
-        foreach (ImageCodecInfo codec in codecs)
-        {
-            if (codec.FormatID == format.Guid)
-            {
-                return codec;
-            }
-        }
-
-        return null;
     }
 
     /// <summary>

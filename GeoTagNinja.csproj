@@ -169,6 +169,7 @@
     <Compile Include="Helpers\UI\ControlTraversal.cs" />
     <Compile Include="Helpers\UI\FormPositioning.cs" />
     <Compile Include="Helpers\UI\ThemeHelper.cs" />
+    <Compile Include="Helpers\UI\ThumbnailWorker.cs" />
     <Compile Include="Helpers\FileSystem\FileEnumeration.cs" />
     <Compile Include="Helpers\Update\AutoUpdaterCallbacks.cs" />
     <Compile Include="Helpers\FileSystem\GetChecksum.cs" />
@@ -243,6 +244,7 @@
     <Compile Include="Helpers\Exif\ExifToolOperator.cs" />
     <Compile Include="Helpers\Exif\ReadExifData.cs" />
     <Compile Include="Helpers\Exif\ReadGetImagePreviews.cs" />
+    <Compile Include="Helpers\Exif\ThumbnailGenerator.cs" />
     <Compile Include="Helpers\Exif\ReadTrackFile.cs" />
     <Compile Include="Helpers\Exif\WriteSaveToFile.cs" />
     <Compile Include="Helpers\FileSystem\Operators.cs" />

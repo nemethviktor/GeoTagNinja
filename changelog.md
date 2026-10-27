@@ -2,7 +2,10 @@
 
 **Build 9xxx [202xxxxx]** (upcoming release)
 - NEW & UPDATED:
+	- Much faster icon-view thumbnails. They are now built in memory by `ThumbnailGenerator` instead of via temporary JPEG files: the JPEG already inside the file (EXIF thumbnail, or the RAW's embedded preview) is used where there is one, otherwise the image is decoded at reduced size, and a full decode is the last resort. They are also generated on a few background threads (`ThumbnailWorker`), so they no longer hold up the metadata read of the next file.
 - BUGS & FIXES:
+	- Icon-view thumbnails of RAW files that needed a full decode showed the top-left corner of the picture instead of the whole picture.
+	- Icon-view thumbnails were cached on disk by file name only, so two folders containing a file with the same name could show each other's thumbnail. Thumbnails are no longer cached on disk. (A proper cache keyed by path, size and date is planned.)
 
 **Build 9794 [20261025]**
 - NEW & UPDATED:

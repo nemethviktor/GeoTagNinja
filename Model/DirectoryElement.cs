@@ -298,8 +298,8 @@ public class DirectoryElement
     public FileInfo SidecarFile { set; get; }
 
     /// <summary>
-    ///     We attempt to generate a thumbnail through a variety of means. Initially we try Windows's own magic, then LibRaw in
-    ///     a variety of ways, then exiftool, then Magick, then we hang ourselves.
+    ///     The icon-view thumbnail, built in memory by <see cref="ThumbnailGenerator" /> (embedded preview, then scaled
+    ///     decode, then full decode). Set from the background <c>ThumbnailWorker</c>.
     /// </summary>
     public Image Thumbnail
     {
@@ -314,74 +314,6 @@ public class DirectoryElement
                 field = value;
             }
         }
-    }
-
-    /// <summary>
-    ///     Via https://stackoverflow.com/a/2001462/3968494 - plus I added the ExifRotate because the incoming image's
-    ///     rotation appears to be ignored by the original script.
-    /// </summary>
-    /// <param name="originalPath"></param>
-    /// <param name="width"></param>
-    /// <param name="height"></param>
-    /// <returns></returns>
-    private static Image GenerateFixedSizeImage(string originalPath,
-                                                int width,
-                                                int height)
-    {
-        Bitmap? bmPhoto = null;
-        using (Image imgPhoto = Image.FromFile(filename: originalPath))
-        {
-            imgPhoto.ExifRotate();
-            int sourceWidth = imgPhoto.Width;
-            int sourceHeight = imgPhoto.Height;
-            int sourceX = 0;
-            int sourceY = 0;
-            int destX = 0;
-            int destY = 0;
-
-            float nPercent = 0;
-            float nPercentW = 0;
-            float nPercentH = 0;
-
-            nPercentW = width / (float)sourceWidth;
-            nPercentH = height / (float)sourceHeight;
-            if (nPercentH < nPercentW)
-            {
-                nPercent = nPercentH;
-                destX = Convert.ToInt16(value: (width -
-                                                (sourceWidth * nPercent)) / 2);
-            }
-            else
-            {
-                nPercent = nPercentW;
-                destY = Convert.ToInt16(value: (height -
-                                                (sourceHeight * nPercent)) / 2);
-            }
-
-            int destWidth = (int)(sourceWidth * nPercent);
-            int destHeight = (int)(sourceHeight * nPercent);
-
-            bmPhoto = new Bitmap(width: width, height: height,
-                format: PixelFormat.Format24bppRgb);
-            bmPhoto.SetResolution(xDpi: imgPhoto.HorizontalResolution,
-                yDpi: imgPhoto.VerticalResolution);
-
-            Graphics grPhoto = Graphics.FromImage(image: bmPhoto);
-            grPhoto.Clear(color: Color.Transparent);
-            grPhoto.InterpolationMode =
-                InterpolationMode.HighQualityBicubic;
-
-            grPhoto.DrawImage(image: imgPhoto,
-                destRect: new Rectangle(x: destX, y: destY, width: destWidth, height: destHeight),
-                srcRect: new Rectangle(x: sourceX, y: sourceY, width: sourceWidth, height: sourceHeight),
-                srcUnit: GraphicsUnit.Pixel);
-
-            grPhoto.Dispose();
-        }
-
-        File.Delete(path: originalPath);
-        bmPhoto.Save(filename: originalPath);
-        return bmPhoto;
     }
 
     #endregion
@@ -810,13 +742,10 @@ public class DirectoryElement
         try
         {
             Image? generatedValue = null;
-            string generatedFileName = Path.Combine(path1: HelperVariables.UserDataFolderPath,
-                    path2: $"{ItemNameWithoutPath}_small_thumbnail.jpg");
-
             if (Type == ElementType.File)
             {
                 // Expensive file extraction (only done in background hydration)
-                generatedValue = ExtractFileThumbnail(fileNameWithPath: FileNameWithPath, generatedFileName: generatedFileName);
+                generatedValue = ExtractFileThumbnail(fileNameWithPath: FileNameWithPath);
             }
             else
             {
@@ -849,90 +778,23 @@ public class DirectoryElement
         }
     }
 
-    private Image? ExtractFileThumbnail(string fileNameWithPath, string generatedFileName)
+    /// <summary>
+    ///     Builds the icon-view thumbnail in memory (embedded preview first, scaled decode next, full decode last).
+    ///     See <see cref="ThumbnailGenerator" />.
+    /// </summary>
+    private Image? ExtractFileThumbnail(string fileNameWithPath)
     {
         Log.Info(message: $"Thumbnail generation started for {fileNameWithPath}");
 
         Image? generatedValue = null;
         try
         {
-            // this only works for the basic file types
-            ReadGetImagePreviews.UseWindowsImageHandlerToCreateThumbnail(
-                fileNameIn: fileNameWithPath,
-                fileNameOut: generatedFileName,
-                maxWidth: FileListView.ThumbnailSize,
-                maxHeight: FileListView.ThumbnailSize);
+            generatedValue = ThumbnailGenerator.Create(fileNameWithPath: fileNameWithPath,
+                size: FileListView.ThumbnailSize);
         }
-        catch
+        catch (Exception ex)
         {
-            //
-        }
-
-        if (!File.Exists(path: generatedFileName))
-        {
-            try
-            {
-                // This is so fucking stupid it hurts my brain.
-                // Libraw is the fastest but doesn't work w/ my D5 files
-                // Basically i've found that some files have a zero-index thumbnail but others have a 1-index.
-                // ... maybe even more. So bump this to high heavens. (= 4)
-                for (int i = 0; i < 4; i++)
-                {
-                    // yes i know this line duplicates the above for 0-index but alas.
-                    if (!File.Exists(path: generatedFileName))
-                    {
-                        ReadGetImagePreviews.UseLibRawToGenerateThumbnail(
-                            originalImagePath: fileNameWithPath,
-                            generatedJpegPath: generatedFileName,
-                            thumbnailIndex: i);
-                    }
-                }
-            }
-            catch
-            {
-                //
-            }
-        }
-
-        // This just sucks altogether.
-        if (!File.Exists(path: generatedFileName))
-        {
-            try
-            {
-                ReadGetImagePreviews.UseLibRawToGenerateFullImage(
-                    originalImagePath: fileNameWithPath,
-                    generatedJpegPath: generatedFileName,
-                    imgWidth: FileListView.ThumbnailSize,
-                    imgHeight: FileListView.ThumbnailSize);
-            }
-            catch
-            {
-                //
-            }
-        }
-
-        // And if we've still not succeeded try Magick
-        if (!File.Exists(path: generatedFileName))
-        {
-            try
-            {
-                ReadGetImagePreviews.UseMagickImageToGeneratePreview
-                (
-                    originalImagePath: fileNameWithPath,
-                    generatedJpegPath: generatedFileName,
-                    imgWidth: FileListView.ThumbnailSize,
-                    imgHeight: FileListView.ThumbnailSize);
-            }
-            catch
-            {
-                // sod it
-            }
-        }
-
-        if (File.Exists(path: generatedFileName))
-        {
-            generatedValue = GenerateFixedSizeImage(originalPath: generatedFileName,
-                width: FileListView.ThumbnailSize, height: FileListView.ThumbnailSize);
+            Log.Error(ex, message: $"Thumbnail generation failed for {fileNameWithPath}");
         }
 
         Log.Info(message: $"Thumbnail generation finished for {fileNameWithPath}");

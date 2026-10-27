@@ -3246,6 +3246,11 @@ public partial class FrmMainApp : Form
             frmPleaseWaitBox.Close();
 
             // 2. Start Background Hydration with Live Counting
+            ThumbnailWorker thumbnailWorker = new(
+                onGenerated: (DirectoryElement de) => lvw_FileList.SyncElementThumbnail(directoryElement: de),
+                ct: _token,
+                workerCount: ThumbnailWorker.DefaultWorkerCount);
+
             // We use a lambda to perform multiple actions when a file is updated.
             _ = DirectoryElements.StartBackgroundMetadataRead(
                 onUpdated: (DirectoryElement de) =>
@@ -3255,9 +3260,8 @@ public partial class FrmMainApp : Form
 
                     if (HelperVariables.UserSettingShowThumbnails)
                     {
-                        // This will create the thumbnail if missing and then sync the icon key
-                        de.GenerateThumbnailIfRequired();
-                        lvw_FileList.SyncElementThumbnail(directoryElement: de);
+                        // Thumbnails are built on worker threads so they don't hold up the next ExifTool read.
+                        thumbnailWorker.Enqueue(directoryElement: de);
                     }
 
                     // Action B: Re-calculate the global counts for the status label
@@ -3289,6 +3293,9 @@ public partial class FrmMainApp : Form
                     }
                 }
             );
+
+            // Hydration has queued everything it will; workers finish what is left and exit.
+            thumbnailWorker.CompleteAdding();
 
             lvw_FileList.EndUpdate();
             try
