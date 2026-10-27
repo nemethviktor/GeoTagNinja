@@ -777,6 +777,22 @@ public class DirectoryElementCollection : List<DirectoryElement>
         // checksums below) is what benefits from running in parallel.
         List<(DirectoryElement de, FileInfo imageFile, bool isNew)> workItems = [];
 
+        // Looked up by hash instead of scanning the list / sidecar set for every image (that was O(n squared)).
+        Dictionary<string, DirectoryElement> existingByPath = new(comparer: StringComparer.Ordinal);
+        foreach (DirectoryElement existing in this)
+        {
+            existingByPath[key: existing.FileNameWithPath] = existing;
+        }
+
+        Dictionary<string, FileInfo> xmpByName = new(comparer: StringComparer.InvariantCultureIgnoreCase);
+        foreach (FileInfo sidecar in sidecarFiles)
+        {
+            if (!xmpByName.ContainsKey(key: sidecar.Name))
+            {
+                xmpByName[key: sidecar.Name] = sidecar;
+            }
+        }
+
         foreach (FileInfo imagefileFileInfoItem in imageFiles)
         {
             if (cancellationToken.IsCancellationRequested)
@@ -785,7 +801,7 @@ public class DirectoryElementCollection : List<DirectoryElement>
             }
 
             // 1. Find or create the element
-            DirectoryElement? de = this.FirstOrDefault(x => x.FileNameWithPath == imagefileFileInfoItem.FullName);
+            _ = existingByPath.TryGetValue(key: imagefileFileInfoItem.FullName, value: out DirectoryElement? de);
             bool isNew = de == null;
 
             if (isNew)
@@ -800,8 +816,8 @@ public class DirectoryElementCollection : List<DirectoryElement>
 
             // 2. Map Sidecar
             string baseName = Path.GetFileNameWithoutExtension(path: imagefileFileInfoItem.Name);
-            de.SidecarFile = sidecarFiles.FirstOrDefault(x =>
-                x.Name.Equals(baseName + ".xmp", StringComparison.InvariantCultureIgnoreCase));
+            _ = xmpByName.TryGetValue(key: baseName + ".xmp", value: out FileInfo? sidecarMatch);
+            de.SidecarFile = sidecarMatch;
 
             workItems.Add(item: (de: de, imageFile: imagefileFileInfoItem, isNew: isNew));
         }
@@ -810,6 +826,13 @@ public class DirectoryElementCollection : List<DirectoryElement>
         // is deliberate (see comment below) and embarrassingly parallel per file, so this is where the wall-clock
         // time was going. onElementFound ends up calling into Control.Invoke, which is safe to call concurrently
         // from multiple threads, so rows can still stream into the UI as each checksum finishes.
+        //
+        // New elements are not hashed here at all: they are read by ExifTool regardless (isNew), so the hash cannot
+        // change what happens to them, and hashing every RAW in full (tens of MB each, often from a cloud-synced
+        // drive) is what kept the "parsing" box up for many seconds. Their checksums are filled in afterwards on
+        // background threads (StoreChecksumsInBackground). Until that finishes a rescan sees no stored checksum and
+        // simply re-reads the file, which is the safe direction.
+        List<DirectoryElement> checksumLater = [];
         _ = Parallel.ForEach(source: workItems, body: (workItem, loopState) =>
         {
             if (cancellationToken.IsCancellationRequested)
@@ -819,6 +842,18 @@ public class DirectoryElementCollection : List<DirectoryElement>
             }
 
             DirectoryElement de = workItem.de;
+
+            if (workItem.isNew)
+            {
+                lock (checksumLater)
+                {
+                    checksumLater.Add(item: de);
+                }
+
+                de.IsDirty = true;
+                onElementFound?.Invoke(de);
+                return;
+            }
 
             // 3. Checksum Logic
             bool fileNeedsReDEing = workItem.isNew;
@@ -867,6 +902,64 @@ public class DirectoryElementCollection : List<DirectoryElement>
 
             // 4. Notify UI
             onElementFound?.Invoke(de);
+        });
+
+        StoreChecksumsInBackground(elements: checksumLater, cancellationToken: cancellationToken);
+    }
+
+    /// <summary>
+    ///     Hashes the image and sidecar of each element and records the result in
+    ///     <see cref="HelperVariables.FileChecksumDictionary" />, for the next rescan's change detection. Runs on the
+    ///     thread pool, at most two files at a time so it does not compete with the metadata read, and stops when the
+    ///     folder load is cancelled (e.g. the user navigates away).
+    /// </summary>
+    private static void StoreChecksumsInBackground(List<DirectoryElement> elements,
+                                                   CancellationToken cancellationToken)
+    {
+        if (elements.Count == 0)
+        {
+            return;
+        }
+
+        _ = Task.Run(action: () =>
+        {
+            try
+            {
+                _ = Parallel.ForEach(
+                    source: elements,
+                    parallelOptions: new ParallelOptions
+                    {
+                        MaxDegreeOfParallelism = 2,
+                        CancellationToken = cancellationToken
+                    },
+                    body: de =>
+                    {
+                        FileInfo?[] targets = [new FileInfo(fileName: de.FileNameWithPath), de.SidecarFile];
+                        foreach (FileInfo? target in targets)
+                        {
+                            if (target == null ||
+                                !File.Exists(path: target.FullName) ||
+                                CloudFileHelpers.IsCloudOnlyPlaceholder(fileInfo: target))
+                            {
+                                continue;
+                            }
+
+                            string checksum = Helpers.FileSystem.GetChecksum.GetFileChecksum(fileNameWithPath: target.FullName);
+                            if (!string.IsNullOrWhiteSpace(value: checksum))
+                            {
+                                HelperVariables.FileChecksumDictionary[key: target.FullName] = checksum;
+                            }
+                        }
+                    });
+            }
+            catch (OperationCanceledException)
+            {
+                // folder changed; nothing to record
+            }
+            catch (Exception ex)
+            {
+                Log.Error(ex, "Background checksums failed");
+            }
         });
     }
 }
