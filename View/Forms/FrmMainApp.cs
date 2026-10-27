@@ -209,6 +209,7 @@ public partial class FrmMainApp : Form
     // Start-up reveal: the window stays at Opacity 0 until the startup tasks are done AND the saved layout is in place.
     private bool _startupTasksDone;
     private bool _startupLayoutRestored;
+    private bool _startupFolderLoaded;
     private System.Windows.Forms.Timer? _revealSafetyTimer;
 
     /// <summary>
@@ -405,8 +406,9 @@ public partial class FrmMainApp : Form
         _revealSafetyTimer.Tick += (_,
                                     _) =>
         {
-            Log.Warn(message: "The saved layout was not applied in time; showing the window anyway.");
+            Log.Warn(message: "The saved layout or first folder was not ready in time; showing the window anyway.");
             _startupLayoutRestored = true;
+            _startupFolderLoaded = true;
             RevealWhenLayoutRestored();
         };
         _revealSafetyTimer.Start();
@@ -3344,6 +3346,11 @@ public partial class FrmMainApp : Form
 
             // Final count update
             FileListViewReadWrite.ListViewCountItemsWithGeoData();
+
+            // The first folder is in the list now, so the window can be revealed without an empty grid and the
+            // "please wait" box showing.
+            _startupFolderLoaded = true;
+            RevealWhenLayoutRestored();
         }
     }
 

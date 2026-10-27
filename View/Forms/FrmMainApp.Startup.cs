@@ -372,13 +372,14 @@ public partial class FrmMainApp
     }
 
     /// <summary>
-    ///     Shows the window (it has been invisible since start-up) once the startup tasks are finished and the saved layout
-    ///     has been applied, so nothing visibly jumps into place.
+    ///     Shows the window (it has been invisible since start-up) once the startup tasks are finished, the saved layout
+    ///     has been applied and the first folder is in the list, so nothing visibly jumps into place or fills in.
     /// </summary>
     private void RevealWhenLayoutRestored()
     {
         if (!_startupTasksDone ||
-            !_startupLayoutRestored)
+            !_startupLayoutRestored ||
+            !_startupFolderLoaded)
         {
             return;
         }
@@ -389,7 +390,9 @@ public partial class FrmMainApp
 
         if (Opacity < 1)
         {
-            Log.Debug(message: "Start-up layout is in place; revealing the window");
+            Log.Debug(message: "Start-up layout and first folder are in place; revealing the window");
+            // paint everything (the owner-drawn list included) while still invisible, so the first visible frame is complete
+            Refresh();
             Opacity = 1;
         }
     }
