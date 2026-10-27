@@ -20,26 +20,49 @@ internal static class ThumbnailCache
     private static readonly FileKeyedCache<byte[]> Cache = new(maxTotalBytes: MaxTotalBytes,
         sizeOf: bytes => bytes.Length);
 
-    /// <summary>Returns a fresh <see cref="Image" /> for the file at this size if cached, else null. The caller owns the image.</summary>
-    internal static Image? TryGet(string fileNameWithPath,
-                                  int size)
+    /// <summary>
+    ///     Makes sure the thumbnail is in the in-memory tier, fetching it from the persistent store if that is where it
+    ///     is. Nothing is decoded. Meant for background threads.
+    /// </summary>
+    /// <returns>True if a thumbnail for this file and size exists (now in memory).</returns>
+    internal static bool EnsureLoaded(string fileNameWithPath,
+                                      int size)
     {
         string? key = FileKeyedCache<byte[]>.KeyFor(fileNameWithPath: fileNameWithPath, variant: size.ToString());
         if (key == null)
         {
-            return null;
+            return false;
         }
 
-        byte[]? bytes = Cache.TryGetByKey(key: key);
+        if (Cache.TryGetByKey(key: key) != null)
+        {
+            return true;
+        }
+
+        byte[]? bytes = ThumbnailStore.TryGet(key: key);
         if (bytes == null)
         {
-            bytes = ThumbnailStore.TryGet(key: key);
-            if (bytes == null)
-            {
-                return null;
-            }
+            return false;
+        }
 
-            Cache.AddByKey(key: key, value: bytes);
+        Cache.AddByKey(key: key, value: bytes);
+        return true;
+    }
+
+    /// <summary>
+    ///     A fresh <see cref="Image" /> from the in-memory tier only, or null. Never touches the database or the disk,
+    ///     so it is safe to call while painting. The caller owns the image.
+    /// </summary>
+    internal static Image? TryGetMemory(string fileNameWithPath,
+                                        int size)
+    {
+        string? key = FileKeyedCache<byte[]>.KeyFor(fileNameWithPath: fileNameWithPath, variant: size.ToString());
+        byte[]? bytes = key == null
+            ? null
+            : Cache.TryGetByKey(key: key);
+        if (bytes == null)
+        {
+            return null;
         }
 
         try

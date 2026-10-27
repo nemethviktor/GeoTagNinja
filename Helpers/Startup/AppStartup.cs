@@ -274,6 +274,10 @@ internal static class AppStartup
 
         Dictionary<string, Dictionary<string, string>> intSettings = new()
         {
+            [key: "tpg_Application"] = new Dictionary<string, string>
+            {
+                { "UserSettingThumbnailSize", "nud_ThumbnailSize" }
+            },
             [key: "tpg_ImportExport_Import"] = new Dictionary<string, string>
             {
                 { "UserSettingImportGPXMaxInterpolation", "nud_GeoMaxIntSecs" },

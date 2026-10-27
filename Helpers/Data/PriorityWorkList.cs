@@ -27,9 +27,18 @@ internal sealed class PriorityWorkList<T>
     /// <summary>Items added and not yet taken.</summary>
     internal int PendingCount => _pending.Count;
 
-    /// <summary>Adds an item. Ignored (false) if it was added before.</summary>
-    internal bool Add(T item)
+    /// <summary>
+    ///     Adds an item. Ignored (false) if it was added before, unless <paramref name="allowRepeat" /> says to forget
+    ///     that it was (for work that has to be redone, e.g. a thumbnail evicted from the cache).
+    /// </summary>
+    internal bool Add(T item,
+                      bool allowRepeat = false)
     {
+        if (allowRepeat)
+        {
+            _ = _accepted.Remove(item: item);
+        }
+
         if (!_accepted.Add(item: item))
         {
             return false;

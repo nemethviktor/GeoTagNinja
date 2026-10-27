@@ -30,7 +30,20 @@ public partial class FileListView : System.Windows.Forms.ListView
     // but replace did not take ""
     private const string UNKNOWN_VALUE_DIR = "";
 
-    internal static readonly int ThumbnailSize = 128;
+    /// <summary>Pixels between the points sampled when working out which rows are on screen.</summary>
+    private const int VisibleSampleStep = 64;
+
+    /// <summary>
+    ///     Bumped whenever items are added, removed or re-sorted, so the thumbnail view (which draws from this list) knows
+    ///     to lay itself out again without being told item by item.
+    /// </summary>
+    internal int ItemsVersion { get; private set; }
+
+    /// <summary>
+    ///     Bumped when an item's content changes (metadata arrives, a row is marked as changed) but the list's shape does
+    ///     not: the thumbnail view only needs to repaint, not lay out again.
+    /// </summary>
+    internal int ContentVersion { get; private set; }
 
     /// <summary>
     ///     Constructor
@@ -40,14 +53,8 @@ public partial class FileListView : System.Windows.Forms.ListView
         Log.Info(message: "Creating List View ...");
         InitializeComponent();
 
-        // Bucket for Tiles/Large Icons
-        LargeImageList = new ImageList
-        {
-            ImageSize = new Size(width: ThumbnailSize, height: ThumbnailSize),
-            ColorDepth = ColorDepth.Depth32Bit
-        };
-
-        // Bucket for Details view (Standard 16x16 or 32x32 icons)
+        // Bucket for Details view (Standard 16x16 or 32x32 icons). The thumbnail view is a separate control and keeps no
+        // images in this list.
         SmallImageList = new ImageList
         {
             ImageSize = new Size(width: 32, height: 32), // Standard detail icon size
@@ -398,9 +405,6 @@ public partial class FileListView : System.Windows.Forms.ListView
 
     private DirectoryElementCollection _masterCollection = [];
 
-    /// <summary>Row for each element, so a thumbnail can find its row without scanning the list. UI thread only.</summary>
-    private readonly Dictionary<DirectoryElement, ListViewItem> _itemByElement = [];
-
     #region Filter strings
 
     /// <summary>
@@ -522,39 +526,15 @@ public partial class FileListView : System.Windows.Forms.ListView
             Name = directoryElement.FileNameWithPath
         };
 
-        // 1. Check for custom icons (Folders, Drives, etc.)
-        if (directoryElement.Thumbnail != null)
-        {
-            string imageKey = directoryElement.Type == DirectoryElement.ElementType.Drive
-                ? $"Drive_{directoryElement.ItemNameWithoutPath}"
-                : directoryElement.Type.ToString();
+        // 1. Shell icons (the thumbnail view draws its own pictures)
+        NativeMethods.SHFILEINFO shfi = new();
+        uint flags = NativeMethods.SHGFI_SYSICONINDEX | NativeMethods.SHGFI_SMALLICON;
+        string path = (directoryElement.Type == DirectoryElement.ElementType.MyComputer)
+            ? directoryElement.ItemNameWithoutPath
+            : directoryElement.FileNameWithPath;
 
-            // Add to LargeImageList
-            if (LargeImageList != null && !LargeImageList.Images.ContainsKey(key: imageKey))
-            {
-                LargeImageList.Images.Add(key: imageKey, image: directoryElement.Thumbnail);
-            }
-
-            // ADD TO SMALLIMAGELIST (Fixes the Details view issue)
-            if (SmallImageList != null && !SmallImageList.Images.ContainsKey(key: imageKey))
-            {
-                SmallImageList.Images.Add(key: imageKey, image: directoryElement.Thumbnail);
-            }
-
-            lvi.ImageKey = imageKey;
-        }
-        else
-        {
-            // 2. Fallback to Shell Icons
-            NativeMethods.SHFILEINFO shfi = new();
-            uint flags = NativeMethods.SHGFI_SYSICONINDEX | NativeMethods.SHGFI_SMALLICON;
-            string path = (directoryElement.Type == DirectoryElement.ElementType.MyComputer)
-                ? directoryElement.ItemNameWithoutPath
-                : directoryElement.FileNameWithPath;
-
-            _ = NativeMethods.SHGetFileInfo(pszPath: path, dwFileAttributes: 0, psfi: ref shfi, cbSizeFileInfo: (uint)Marshal.SizeOf(shfi), uFlags: flags);
-            lvi.ImageIndex = shfi.iIcon;
-        }
+        _ = NativeMethods.SHGetFileInfo(pszPath: path, dwFileAttributes: 0, psfi: ref shfi, cbSizeFileInfo: (uint)Marshal.SizeOf(shfi), uFlags: flags);
+        lvi.ImageIndex = shfi.iIcon;
 
         // 4. Fill SubItems (Metadata)
         // If it's already hydrated (e.g., during a filter redraw), fill the actual values
@@ -575,13 +555,7 @@ public partial class FileListView : System.Windows.Forms.ListView
 
         // 6. Finalise
         _ = Items.Add(lvi);
-        _itemByElement[directoryElement] = lvi;
-
-        // Only sync/background-task for folders/drives if they aren't ready
-        if (directoryElement.Type != DirectoryElement.ElementType.File && directoryElement.Thumbnail == null && HelperVariables.UserSettingShowThumbnails)
-        {
-            SyncElementThumbnail(directoryElement: directoryElement);
-        }
+        ItemsVersion++;
 
         return lvi;
     }
@@ -592,6 +566,8 @@ public partial class FileListView : System.Windows.Forms.ListView
             _ = Invoke(new Action<DirectoryElement>(UpdateListItemData), de);
             return;
         }
+
+        ContentVersion++;
 
         // Find the ListViewItem that represents this DirectoryElement
         ListViewItem lvi = Items.Cast<ListViewItem>().FirstOrDefault(i => i.Tag == de);
@@ -690,11 +666,6 @@ public partial class FileListView : System.Windows.Forms.ListView
             if (colWidth is { Length: > 0 })
             {
                 columnHeader.Width = Convert.ToInt16(value: colWidth);
-            }
-
-            if (View == System.Windows.Forms.View.LargeIcon)
-            {
-                columnHeader.Width = columnHeader.Name == "clh_FileName" ? ThumbnailSize : 0;
             }
 
             Log.Trace(message: $"columnHeader: {columnHeader.Name} - columnHeader.Width: {columnHeader.Width}");
@@ -1035,6 +1006,24 @@ public partial class FileListView : System.Windows.Forms.ListView
     #region File operations
 
     /// <summary>
+    ///     Lets the thumbnail view (which has the keyboard focus while it is shown) pass on the keys this list handles
+    ///     itself. Only Delete applies: renaming in place belongs to this list's own editor.
+    /// </summary>
+    /// <returns>True if the key was handled.</returns>
+    internal bool TryHandleExternalKey(KeyEventArgs e)
+    {
+        if (e.KeyCode == Keys.Delete &&
+            SelectedItems.Count > 0)
+        {
+            e.Handled = true;
+            DeleteSelectedFiles();
+            return true;
+        }
+
+        return false;
+    }
+
+    /// <summary>
     ///     Processes specialized key inputs. Forces the termination of active label edits 
     ///     when the Escape key is pressed to ensure UI consistency.
     /// </summary>
@@ -1261,6 +1250,7 @@ public partial class FileListView : System.Windows.Forms.ListView
                     // 4. Update memory and UI only if the physical operation succeeded
                     _ = (_masterCollection?.Remove(item: de));
                     Items.Remove(item: lvi);
+                    ItemsVersion++;
                 }
                 catch (Exception ex)
                 {
@@ -1370,6 +1360,7 @@ public partial class FileListView : System.Windows.Forms.ListView
         try
         {
             Items.Clear();
+            ItemsVersion++;
             foreach (DirectoryElement de in filteredItems)
             {
                 // 1. Add the item (this handles the icon and basic placeholders)
@@ -1421,6 +1412,7 @@ public partial class FileListView : System.Windows.Forms.ListView
         try
         {
             Items.Clear();
+            ItemsVersion++;
 
             foreach (DirectoryElement de in elements)
             {
@@ -1452,76 +1444,13 @@ public partial class FileListView : System.Windows.Forms.ListView
     }
 
     /// <summary>
-    /// Synchronizes the ListViewItem's icon with the DirectoryElement.
-    /// Ensures thread-safety and prevents icon inheritance by explicitly clearing keys if null.
-    /// </summary>
-    /// <param name="directoryElement">The data directoryElement providing the image or type.</param>
-    public void SyncElementThumbnail(DirectoryElement directoryElement)
-    {
-        // 1. Thread-safety check
-        if (InvokeRequired)
-        {
-            _ = BeginInvoke(new Action(() => SyncElementThumbnail(directoryElement: directoryElement)));
-            return;
-        }
-
-        if (directoryElement == null)
-        {
-            return;
-        }
-
-        // 2. Locate the specific UI row. Rows are found by element reference (filled in AddListItem), not by scanning
-        // the list or by GUID: hydration briefly clears and restores an element's attributes (GUID included), which
-        // thumbnails generated in parallel could otherwise hit.
-        ListViewItem? lvi = _itemByElement.TryGetValue(key: directoryElement, value: out ListViewItem? known) &&
-                            known.ListView == this
-            ? known
-            : Items.Cast<ListViewItem>()
-                   .FirstOrDefault(i => i.Tag is DirectoryElement de &&
-                                        (de == directoryElement || de.FileNameWithPath == directoryElement.FileNameWithPath));
-
-        if (lvi == null)
-        {
-            return;
-        }
-
-        // 3. Initialize the ImageList if missing
-        LargeImageList ??= new ImageList
-        {
-            ImageSize = new Size(width: ThumbnailSize, height: ThumbnailSize),
-            ColorDepth = ColorDepth.Depth32Bit
-        };
-
-        // 4. Handle Icon Assignment
-        // If Thumbnail is null, we MUST set ImageIndex to -1 to stop ghosting/inheritance.
-        if (directoryElement.Thumbnail == null)
-        {
-            lvi.ImageKey = string.Empty;
-            lvi.ImageIndex = -1;
-        }
-        else
-        {
-            // The path is the unique key for files (also unique in flat mode), the ElementType string for system icons
-            string imageKey = directoryElement.Type == DirectoryElement.ElementType.File
-                ? directoryElement.FileNameWithPath
-                : directoryElement.Type.ToString();
-
-            if (!LargeImageList.Images.ContainsKey(key: imageKey))
-            {
-                LargeImageList.Images.Add(key: imageKey, image: directoryElement.Thumbnail);
-            }
-
-            lvi.ImageKey = imageKey;
-        }
-    }
-
-    /// <summary>
     ///     The file rows the user can see, followed by the next screenful below and then the one above, so thumbnails
     ///     can be generated in the order they are likely to be needed. UI thread only.
     /// </summary>
     /// <remarks>
-    ///     <c>ListView.TopItem</c> isn't supported in the icon views, so the visible rows are found by hit-testing a grid
-    ///     of points over the client area (spaced at half a thumbnail, finer than any row or cell).
+    ///     The visible rows are found by hit-testing a grid of points over the client area; only the first and last
+    ///     matter, so the spacing can be coarser than a row. Used to prioritise the metadata read while the details list is
+    ///     showing (the thumbnail view works this out for itself).
     /// </remarks>
     /// <returns>Elements, most urgent first. Empty if nothing is visible (or there is no handle yet).</returns>
     internal List<DirectoryElement> GetVisibleAndNearbyElements()
@@ -1535,7 +1464,7 @@ public partial class FileListView : System.Windows.Forms.ListView
         }
 
         Rectangle client = ClientRectangle;
-        int step = Math.Max(val1: 16, val2: ThumbnailSize / 2);
+        int step = VisibleSampleStep;
         int first = int.MaxValue;
         int last = -1;
 
@@ -1591,8 +1520,8 @@ public partial class FileListView : System.Windows.Forms.ListView
     public void ClearData()
     {
         _masterCollection.Clear();
-        _itemByElement.Clear();
         Items.Clear();
+        ItemsVersion++;
     }
 
     /// <summary>
@@ -1656,6 +1585,7 @@ public partial class FileListView : System.Windows.Forms.ListView
 
         ListViewItem lvi = FindItemByDirectoryElement(directoryElement: directoryElement);
         _ = (lvi?.ForeColor = ThemeHelper.MapItemColour(color: color));
+        ContentVersion++;
     }
 
     /// <summary>
@@ -1696,6 +1626,7 @@ public partial class FileListView : System.Windows.Forms.ListView
 
         // Perform the sort with these new sort options.
         Sort();
+        ItemsVersion++;
     }
 
     private void FileList_ColumnWidthChanging(object sender,

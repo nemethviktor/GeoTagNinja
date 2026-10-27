@@ -12,7 +12,7 @@ using System.Linq;
 namespace GeoTagNinja.Helpers.Exif;
 
 /// <summary>
-///     Produces the square icon-view thumbnails, entirely in memory. The idea (and the reason this is quick) is the
+///     Produces icon-view thumbnails (long edge = the requested size, aspect ratio kept), entirely in memory. The idea (and the reason this is quick) is the
 ///     same as in other photo browsers: avoid decoding the full image whenever the file already carries a small JPEG
 ///     (EXIF IFD1 thumbnail, RAW embedded preview), and when it doesn't, ask the decoder for a pre-scaled decode instead
 ///     of a full one. Nothing is written to disk.
@@ -42,10 +42,10 @@ internal static class ThumbnailGenerator
     internal static bool IsMagickOnlyFormat(string extension) => MagickOnlyExtensions.Contains(item: extension);
 
     /// <summary>
-    ///     Builds a <paramref name="size" /> x <paramref name="size" /> thumbnail (letterboxed, orientation applied).
+    ///     Builds a thumbnail whose long edge is <paramref name="size" /> pixels (orientation applied, aspect kept).
     /// </summary>
     /// <param name="fileNameWithPath">The image to thumbnail.</param>
-    /// <param name="size">Edge length in pixels.</param>
+    /// <param name="size">Long-edge length in pixels.</param>
     /// <returns>The thumbnail, or null if no method could read the file.</returns>
     internal static Image? Create(string fileNameWithPath,
                                   int size)
@@ -129,7 +129,7 @@ internal static class ThumbnailGenerator
             }
 
             thumb.ExifRotate();
-            return FitToSquare(source: thumb, size: size);
+            return FitWithin(source: thumb, maxEdge: size);
         }
         catch
         {
@@ -173,7 +173,7 @@ internal static class ThumbnailGenerator
     {
         using MemoryStream stream = new(buffer: image.ToByteArray(format: MagickFormat.Bmp));
         using Image decoded = Image.FromStream(stream: stream);
-        return FitToSquare(source: decoded, size: size);
+        return FitWithin(source: decoded, maxEdge: size);
     }
 
     /// <summary>
@@ -189,7 +189,7 @@ internal static class ThumbnailGenerator
                 share: FileShare.ReadWrite);
             using Image full = Image.FromStream(stream: stream);
             full.ExifRotate();
-            return FitToSquare(source: full, size: size);
+            return FitWithin(source: full, maxEdge: size);
         }
         catch
         {
@@ -214,7 +214,7 @@ internal static class ThumbnailGenerator
         try
         {
             using Image decoded = RawPreview.DecodeOriented(jpeg: entry.Jpeg, exifOrientation: entry.ExifOrientation);
-            return FitToSquare(source: decoded, size: size);
+            return FitWithin(source: decoded, maxEdge: size);
         }
         catch
         {
@@ -241,7 +241,7 @@ internal static class ThumbnailGenerator
 
             using FileStream stream = new(path: tempFile, mode: FileMode.Open, access: FileAccess.Read);
             using Image decoded = Image.FromStream(stream: stream);
-            return FitToSquare(source: decoded, size: size);
+            return FitWithin(source: decoded, maxEdge: size);
         }
         catch
         {
@@ -261,24 +261,23 @@ internal static class ThumbnailGenerator
     }
 
     /// <summary>
-    ///     Scales <paramref name="source" /> to fit a <paramref name="size" /> square, centred. The source is not
-    ///     disposed.
+    ///     Scales <paramref name="source" /> down so its long edge is <paramref name="maxEdge" />, keeping the aspect
+    ///     ratio (an image already smaller is not enlarged). There is deliberately no square canvas or letterboxing here:
+    ///     the thumbnail view centres each image in its cell and picks the background itself, so the stored thumbnail is
+    ///     just the picture. The source is not disposed.
     /// </summary>
-    private static Bitmap FitToSquare(Image source,
-                                      int size)
+    private static Bitmap FitWithin(Image source,
+                                    int maxEdge)
     {
-        float scale = Math.Min(val1: size / (float)source.Width, val2: size / (float)source.Height);
-        int destWidth = Math.Max(val1: 1, val2: (int)(source.Width * scale));
-        int destHeight = Math.Max(val1: 1, val2: (int)(source.Height * scale));
-        int destX = (size - destWidth) / 2;
-        int destY = (size - destHeight) / 2;
+        float scale = Math.Min(val1: 1f, val2: Math.Min(val1: maxEdge / (float)source.Width, val2: maxEdge / (float)source.Height));
+        int width = Math.Max(val1: 1, val2: (int)Math.Round(a: source.Width * scale));
+        int height = Math.Max(val1: 1, val2: (int)Math.Round(a: source.Height * scale));
 
-        Bitmap bitmap = new(width: size, height: size, format: PixelFormat.Format24bppRgb);
+        Bitmap bitmap = new(width: width, height: height, format: PixelFormat.Format24bppRgb);
         using Graphics graphics = Graphics.FromImage(image: bitmap);
-        graphics.Clear(color: Color.Transparent);
         graphics.InterpolationMode = InterpolationMode.HighQualityBicubic;
         graphics.DrawImage(image: source,
-            destRect: new Rectangle(x: destX, y: destY, width: destWidth, height: destHeight),
+            destRect: new Rectangle(x: 0, y: 0, width: width, height: height),
             srcRect: new Rectangle(x: 0, y: 0, width: source.Width, height: source.Height),
             srcUnit: GraphicsUnit.Pixel);
 

@@ -11,8 +11,8 @@ namespace GeoTagNinja.Tests;
 
 /// <summary>
 ///     The ordering and lifetime rules of <see cref="ThumbnailWorker" />: visible rows first, each element once, and
-///     the worker ending exactly when it should. (No images are touched: with thumbnails switched off,
-///     <c>GenerateThumbnailIfRequired</c> returns immediately, so these tests see only the scheduling.)
+///     the worker ending exactly when it should. (No images are touched: the work done per element is a stand-in, so
+///     these tests see only the scheduling.)
 /// </summary>
 [TestFixture]
 public class ThumbnailWorkerTests
@@ -52,7 +52,7 @@ public class ThumbnailWorkerTests
         // One worker. It takes f0 straight away and parks inside the callback, which gives us a deterministic
         // moment to change the priorities before it takes anything else.
         ThumbnailWorker worker = new(
-            onGenerated: de =>
+            process: de =>
             {
                 processed.Enqueue(item: de.ItemNameWithoutPath);
                 if (processed.Count == 1)
@@ -90,7 +90,7 @@ public class ThumbnailWorkerTests
         ConcurrentQueue<string> processed = new();
 
         ThumbnailWorker worker = new(
-            onGenerated: de => processed.Enqueue(item: de.ItemNameWithoutPath),
+            process: de => processed.Enqueue(item: de.ItemNameWithoutPath),
             ct: CancellationToken.None,
             workerCount: 4);
 
@@ -118,7 +118,7 @@ public class ThumbnailWorkerTests
         ConcurrentQueue<string> processed = new();
 
         ThumbnailWorker worker = new(
-            onGenerated: de => processed.Enqueue(item: de.ItemNameWithoutPath),
+            process: de => processed.Enqueue(item: de.ItemNameWithoutPath),
             ct: CancellationToken.None,
             workerCount: 2);
 
@@ -138,7 +138,7 @@ public class ThumbnailWorkerTests
         ConcurrentQueue<string> processed = new();
 
         ThumbnailWorker worker = new(
-            onGenerated: de => processed.Enqueue(item: de.ItemNameWithoutPath),
+            process: de => processed.Enqueue(item: de.ItemNameWithoutPath),
             ct: CancellationToken.None,
             workerCount: 2);
 
@@ -163,7 +163,7 @@ public class ThumbnailWorkerTests
         using ManualResetEventSlim release = new(initialState: false);
 
         ThumbnailWorker worker = new(
-            onGenerated: _ =>
+            process: _ =>
             {
                 if (Interlocked.Increment(location: ref processed) == 1)
                 {

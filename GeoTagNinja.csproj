@@ -141,6 +141,9 @@
     <Compile Include="View\Forms\FrmCustomiseFormControls.Designer.cs">
       <DependentUpon>FrmCustomiseFormControls.cs</DependentUpon>
     </Compile>
+    <Compile Include="View\Forms\FrmMainApp.ViewMenu.cs">
+      <SubType>Form</SubType>
+    </Compile>
     <Compile Include="View\Forms\FrmMainApp.Startup.cs">
       <SubType>Form</SubType>
     </Compile>
@@ -163,6 +166,7 @@
     <Compile Include="Helpers\Data\FileKeyedCache.cs" />
     <Compile Include="Helpers\Data\PriorityWorkList.cs" />
     <Compile Include="Helpers\Data\ThumbnailStore.cs" />
+    <Compile Include="Helpers\Data\MenuSettings.cs" />
     <Compile Include="Helpers\Data\PreviewCache.cs" />
     <Compile Include="Helpers\Data\SettingsImportExportOptions.cs" />
     <Compile Include="Helpers\Data\SettingsExport.cs" />
@@ -175,6 +179,9 @@
     <Compile Include="Helpers\UI\FormPositioning.cs" />
     <Compile Include="Helpers\UI\ThemeHelper.cs" />
     <Compile Include="Helpers\UI\ThumbnailWorker.cs" />
+    <Compile Include="View\Controls\ThumbnailLayout.cs" />
+    <Compile Include="View\Controls\ThumbnailView.cs" />
+    <Compile Include="View\Controls\FolderIcons.cs" />
     <Compile Include="Helpers\FileSystem\FileEnumeration.cs" />
     <Compile Include="Helpers\Update\AutoUpdaterCallbacks.cs" />
     <Compile Include="Helpers\FileSystem\GetChecksum.cs" />
@@ -251,6 +258,7 @@
     <Compile Include="Helpers\Exif\ReadGetImagePreviews.cs" />
     <Compile Include="Helpers\Exif\ThumbnailGenerator.cs" />
     <Compile Include="Helpers\Exif\RawPreview.cs" />
+    <Compile Include="Helpers\Exif\ThumbnailProvider.cs" />
     <Compile Include="Helpers\Exif\ReadTrackFile.cs" />
     <Compile Include="Helpers\Exif\WriteSaveToFile.cs" />
     <Compile Include="Helpers\FileSystem\Operators.cs" />

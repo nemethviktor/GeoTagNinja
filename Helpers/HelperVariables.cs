@@ -58,7 +58,17 @@ internal static class HelperVariables
     /// <summary>
     /// This relates to the user setting to whether we are in Details mode or Thumbnail mode for the ListView
     /// </summary>
+    /// <summary>
+    ///     Whether the file list shows as thumbnails (true) or the details list (false). Stored as the setting
+    ///     <c>ckb_ShowThumbnails</c>; since the View menu replaced the Settings checkbox it is changed live, without a restart.
+    /// </summary>
     internal static bool UserSettingShowThumbnails;
+
+    /// <summary>
+    ///     On-screen thumbnail edge in pixels. Stored as the setting <c>nud_ThumbnailSize</c> (0 = not stored yet; the
+    ///     view then uses its default).
+    /// </summary>
+    internal static int UserSettingThumbnailSize;
 
     // ReSharper disable once FieldCanBeMadeReadOnly.Global
     internal static bool UserSettingUseImperial = false;

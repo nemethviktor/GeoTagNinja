@@ -9,6 +9,7 @@ using GeoTagNinja.Helpers.Map;
 using GeoTagNinja.Helpers.Startup;
 using GeoTagNinja.Helpers.Text;
 using GeoTagNinja.Helpers.UI;
+using GeoTagNinja.View.Controls;
 using GeoTagNinja.Helpers.Update;
 using GeoTagNinja.Model;
 using GeoTagNinja.View.Dialogs;
@@ -469,31 +470,22 @@ public partial class FrmMainApp : Form
     /// Configures the file list view control according to the current user preferences for display mode and language
     /// settings.
     /// </summary>
-    /// <remarks>If the user preference is set to show thumbnails, the file list view is displayed with large
-    /// icons and a predefined tile size; otherwise, it is shown in details view. Applies language-specific settings and
-    /// refreshes the control. Any errors encountered during setup are logged, and an error message is displayed to the
-    /// user.</remarks>
+    /// <remarks>Sets the list up as the details view, applies language-specific settings and refreshes the control,
+    /// then creates the thumbnail view and the View menu and applies the user's stored mode. Any errors encountered
+    /// during setup are logged, and an error message is displayed to the user.</remarks>
     private void SetUpLvwFileList()
     {
-        // Setup the List View
-        listViewDisplayMode = HelperVariables.UserSettingShowThumbnails
-            ? ListViewDisplayMode.LargeIcons
-            : ListViewDisplayMode.Details;
+        // Setup the List View. It is always the details list; the thumbnails are a separate control that draws the same
+        // items (see SetUpThumbnailView), so the two can be switched between without a restart.
         try
         {
-            if (listViewDisplayMode == ListViewDisplayMode.LargeIcons)
-            {
-                lvw_FileList.View = System.Windows.Forms.View.LargeIcon;
-                lvw_FileList.TileSize = new Size(width: 128, height: 128);
-            }
-            else
-            {
-                lvw_FileList.View = System.Windows.Forms.View.Details;
-            }
+            lvw_FileList.View = System.Windows.Forms.View.Details;
 
             lvw_FileList.ReadAndApplySetting(appLanguage: _AppLanguage);
 
             lvw_FileList.Invalidate();
+
+            SetUpThumbnailView();
         }
         catch (Exception ex)
         {
@@ -618,6 +610,9 @@ public partial class FrmMainApp : Form
         Log.Trace(message: "Write column widths to db");
         lvw_FileList.PersistSettings();
         Helpers.HelperVariables.ApplicationIsClosing = true;
+
+        // a thumbnail size changed in the last moments before closing (it is normally saved a short while after the change)
+        PersistThumbnailSize();
         AppClosingPersistData();
 
         // Clean up
@@ -3216,20 +3211,17 @@ public partial class FrmMainApp : Form
             tbx_FolderName.Text = @"** collectionMode enabled **";
         }
 
-        ThumbnailWorker? thumbnailWorker = null;
+        _discoveryComplete = false;
         try
         {
             lvw_FileList.BeginUpdate();
             lvw_FileList.ClearData();
 
-            // Thumbnails don't depend on metadata, so they are queued as files are found and generated on worker
-            // threads, visible rows first - independent of the (strictly sequential) ExifTool read pass below.
-            ThumbnailWorker worker = new(
-                onGenerated: (DirectoryElement de) => lvw_FileList.SyncElementThumbnail(directoryElement: de),
-                ct: _token,
-                workerCount: ThumbnailWorker.DefaultWorkerCount);
-            thumbnailWorker = worker;
-            StartVisibleRowPrioritisation(worker: worker, ct: _token);
+            // A new folder: drop thumbnail work left over from the last one. Thumbnails don't depend on metadata, so they
+            // are queued as files are found and made on worker threads, visible rows first - independent of the
+            // (strictly sequential) ExifTool read pass below. (Does nothing while the details list is showing.)
+            thumbnailView?.RestartGeneration();
+            StartVisibleRowPrioritisation(ct: _token);
 
             // 1. Scan and Stream Files to the UI
             await DirectoryElements.ParseFolderOrFileListToDEsAsync(
@@ -3240,25 +3232,12 @@ public partial class FrmMainApp : Form
                 cts: _cts,
                 onElementFound: (DirectoryElement de) =>
                 {
-                    // For non-files, get the icon immediately
-                    if (de.Type != DirectoryElement.ElementType.File)
-                    {
-                        de.GenerateThumbnailIfRequired();
-                    }
-
                     _ = lvw_FileList.AddListItem(directoryElement: de);
-
-                    // Sync immediately (folders show icon, files get their 'ghosts' cleared)
-                    if (HelperVariables.UserSettingShowThumbnails && de.Type == DirectoryElement.ElementType.File)
-                    {
-                        lvw_FileList.SyncElementThumbnail(directoryElement: de);
-                        worker.Enqueue(directoryElement: de);
-                    }
+                    thumbnailView?.QueueForGeneration(directoryElement: de);
                 }
             );
 
-            // Every file has been found and queued; the workers finish what is left and exit.
-            worker.CompleteAdding();
+            _discoveryComplete = true;
 
             frmPleaseWaitBox.Close();
 
@@ -3317,6 +3296,7 @@ public partial class FrmMainApp : Form
 
                         // Use a better scrolling method
                         lvw_FileList.ScrollToItemCentred(targetItem);
+                        thumbnailView?.EnsureVisible(item: targetItem);
                     }
                 }
             }
@@ -3336,8 +3316,8 @@ public partial class FrmMainApp : Form
         }
         finally
         {
-            // no-op if already completed; makes sure the workers can't wait forever if loading failed part-way
-            thumbnailWorker?.CompleteAdding();
+            // lets the prioritisation timer stop even if loading failed part-way
+            _discoveryComplete = true;
 
             FileLocking.FileListBeingUpdated = false;
             HandlerUpdateLabelText(lbl_ParseProgress, $"{HelperControlAndMessageBoxHandling.ReturnControlText("Generic_Ready", HelperControlAndMessageBoxHandling.FakeControlTypes.Generic)}.");
@@ -3348,13 +3328,13 @@ public partial class FrmMainApp : Form
     }
 
     /// <summary>
-    /// While thumbnails are being generated or metadata is being read, keeps both pointed at the rows the user can see
-    /// (then the next screenful below and above). A UI timer is used instead of hooking scroll messages because the list
-    /// can move for many reasons (scroll bar, wheel, keyboard, sorting, resizing) and the check is cheap. It only
-    /// re-prioritises when the visible rows change, and stops itself once both jobs are done or cancelled.
+    /// While metadata is being read, keeps the read pointed at the rows the user can see (then the next screenful below
+    /// and above), whichever view is showing. A UI timer is used instead of hooking scroll messages because the list can
+    /// move for many reasons (scroll bar, wheel, keyboard, sorting, resizing) and the check is cheap. It only
+    /// re-prioritises when the visible rows change, and stops itself once the read is done or cancelled. (The thumbnail
+    /// view prioritises its own thumbnails.)
     /// </summary>
-    private void StartVisibleRowPrioritisation(ThumbnailWorker worker,
-                                               CancellationToken ct)
+    private void StartVisibleRowPrioritisation(CancellationToken ct)
     {
         System.Windows.Forms.Timer timer = new() { Interval = 150 };
         DirectoryElement? lastFirst = null;
@@ -3362,17 +3342,19 @@ public partial class FrmMainApp : Form
 
         timer.Tick += (_, _) =>
         {
-            // HydrationTask is assigned synchronously right after discovery, before the next tick can run.
-            bool hydrationDone = DirectoryElements.HydrationTask is { IsCompleted: true };
+            // HydrationTask is assigned synchronously right after discovery, so once discovery is complete it is this
+            // folder's task (not the previous one's).
             if (ct.IsCancellationRequested ||
-                (worker.IsDrained && hydrationDone))
+                (_discoveryComplete && DirectoryElements.HydrationTask is { IsCompleted: true }))
             {
                 timer.Stop();
                 timer.Dispose();
                 return;
             }
 
-            List<DirectoryElement> wanted = lvw_FileList.GetVisibleAndNearbyElements();
+            List<DirectoryElement> wanted = thumbnailView is { Visible: true }
+                ? thumbnailView.GetVisibleAndNearbyElements()
+                : lvw_FileList.GetVisibleAndNearbyElements();
             DirectoryElement? first = wanted.FirstOrDefault();
             if (first == lastFirst &&
                 wanted.Count == lastCount)
@@ -3382,7 +3364,6 @@ public partial class FrmMainApp : Form
 
             lastFirst = first;
             lastCount = wanted.Count;
-            worker.Prioritise(elements: wanted);
             DirectoryElements.PrioritiseHydration(elements: wanted);
         };
 
@@ -3458,8 +3439,18 @@ public partial class FrmMainApp : Form
         Log.Info(message: "Starting");
 
         ListViewHitTestInfo info = lvw_FileList.HitTest(x: e.X, y: e.Y);
-        ListViewItem item = info.Item;
+        await OpenListItem(item: info.Item, sender: sender);
+    }
 
+    /// <summary>
+    ///     Opens a list item: a folder or drive is entered, ".." goes up, a file opens the edit form. Shared by the details
+    ///     list (double-click) and the thumbnail view.
+    /// </summary>
+    /// <param name="item">The item that was activated, or null if there was none (warns and clears the selection).</param>
+    /// <param name="sender">Passed on to the handlers that are reused.</param>
+    private async Task OpenListItem(ListViewItem item,
+                                    object sender)
+    {
         if (item == null)
         {
             lvw_FileList.SelectedItems.Clear();
@@ -3827,6 +3818,9 @@ context: ValueFormatContext.Display));
             )
         };
         _ = FrmSettings.ShowDialog();
+
+        // a settings import may have changed the view mode or thumbnail size
+        SyncViewFromSettings();
     }
 
     /// <summary>

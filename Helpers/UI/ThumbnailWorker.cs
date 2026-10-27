@@ -10,7 +10,7 @@ using System.Threading.Tasks;
 namespace GeoTagNinja.Helpers.UI;
 
 /// <summary>
-///     Generates icon-view thumbnails on a few background threads, independent of the metadata read pass, and in an
+///     Runs per-element thumbnail work on a few background threads, independent of the metadata read pass, and in an
 ///     order that favours what the user is looking at: elements passed to <see cref="Prioritise" /> are taken first, in
 ///     the order given; everything else follows in the order it was queued.
 /// </summary>
@@ -22,22 +22,25 @@ internal sealed class ThumbnailWorker
 {
     private readonly object _lock = new();
     private readonly PriorityWorkList<DirectoryElement> _work = new();
-    private readonly Action<DirectoryElement> _onGenerated;
+    private readonly Action<DirectoryElement> _process;
     private readonly CancellationToken _ct;
     private bool _addingCompleted;
     private int _runningWorkers;
 
-    /// <param name="onGenerated">Called on a worker thread after an element's thumbnail has been attempted.</param>
+    /// <param name="process">
+    ///     Does the work for one element (typically: make sure its thumbnail exists, then tell the view). Runs on a worker
+    ///     thread.
+    /// </param>
     /// <param name="ct">Cancels the worker.</param>
     /// <param name="workerCount">
     ///     How many threads. Kept small: past a few the disk (often a spinning or cloud-synced one) is the
     ///     bottleneck, not the CPU.
     /// </param>
-    internal ThumbnailWorker(Action<DirectoryElement> onGenerated,
+    internal ThumbnailWorker(Action<DirectoryElement> process,
                              CancellationToken ct,
                              int workerCount)
     {
-        _onGenerated = onGenerated;
+        _process = process;
         _ct = ct;
         _runningWorkers = workerCount;
 
@@ -56,13 +59,17 @@ internal sealed class ThumbnailWorker
     /// <summary>True once every worker thread has finished (queue drained after <see cref="CompleteAdding" />, or cancelled).</summary>
     internal bool IsDrained => Volatile.Read(location: ref _runningWorkers) == 0;
 
-    /// <summary>Queues an element. Ignored if it was queued before, or if <see cref="CompleteAdding" /> was called.</summary>
-    internal void Enqueue(DirectoryElement directoryElement)
+    /// <summary>
+    ///     Queues an element. Ignored if it was queued before (unless <paramref name="allowRepeat" />), or if
+    ///     <see cref="CompleteAdding" /> was called.
+    /// </summary>
+    internal void Enqueue(DirectoryElement directoryElement,
+                          bool allowRepeat = false)
     {
         lock (_lock)
         {
             if (_addingCompleted ||
-                !_work.Add(item: directoryElement))
+                !_work.Add(item: directoryElement, allowRepeat: allowRepeat))
             {
                 return;
             }
@@ -131,8 +138,7 @@ internal sealed class ThumbnailWorker
             {
                 try
                 {
-                    directoryElement!.GenerateThumbnailIfRequired();
-                    _onGenerated(obj: directoryElement);
+                    _process(obj: directoryElement!);
                 }
                 catch (Exception ex)
                 {

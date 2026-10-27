@@ -1,4 +1,5 @@
-﻿using System;
+﻿using GeoTagNinja.View.Controls;
+using System;
 using System.ComponentModel;
 using System.Drawing;
 using System.Runtime.InteropServices;
@@ -158,7 +159,7 @@ internal static class ThemeHelper
 
     private static void ApplyScrollbars(Control root)
     {
-        if (root is ListView or TreeView or ListBox or TextBoxBase)
+        if (root is ListView or TreeView or ListBox or TextBoxBase or ThumbnailView)
         {
             void Set()
             {

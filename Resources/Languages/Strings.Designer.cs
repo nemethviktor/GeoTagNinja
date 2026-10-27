@@ -3284,5 +3284,104 @@ namespace GeoTagNinja.Resources.Languages {
                 return ResourceManager.GetString("ttp_ShowThumbnails", resourceCulture);
             }
         }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to View.
+        /// </summary>
+        public static string tmi_View {
+            get {
+                return ResourceManager.GetString("tmi_View", resourceCulture);
+            }
+        }
+
+        /// <summary>
+        ///   Looks up a localized string similar to Details.
+        /// </summary>
+        public static string tmi_View_Details {
+            get {
+                return ResourceManager.GetString("tmi_View_Details", resourceCulture);
+            }
+        }
+
+        /// <summary>
+        ///   Looks up a localized string similar to Thumbnails.
+        /// </summary>
+        public static string tmi_View_Thumbnails {
+            get {
+                return ResourceManager.GetString("tmi_View_Thumbnails", resourceCulture);
+            }
+        }
+
+        /// <summary>
+        ///   Looks up a localized string similar to Thumbnail Size.
+        /// </summary>
+        public static string tmi_View_ThumbnailSize {
+            get {
+                return ResourceManager.GetString("tmi_View_ThumbnailSize", resourceCulture);
+            }
+        }
+
+        /// <summary>
+        ///   Looks up a localized string similar to Small.
+        /// </summary>
+        public static string tmi_View_ThumbnailSize_Small {
+            get {
+                return ResourceManager.GetString("tmi_View_ThumbnailSize_Small", resourceCulture);
+            }
+        }
+
+        /// <summary>
+        ///   Looks up a localized string similar to Medium.
+        /// </summary>
+        public static string tmi_View_ThumbnailSize_Medium {
+            get {
+                return ResourceManager.GetString("tmi_View_ThumbnailSize_Medium", resourceCulture);
+            }
+        }
+
+        /// <summary>
+        ///   Looks up a localized string similar to Large.
+        /// </summary>
+        public static string tmi_View_ThumbnailSize_Large {
+            get {
+                return ResourceManager.GetString("tmi_View_ThumbnailSize_Large", resourceCulture);
+            }
+        }
+
+        /// <summary>
+        ///   Looks up a localized string similar to Extra Large.
+        /// </summary>
+        public static string tmi_View_ThumbnailSize_ExtraLarge {
+            get {
+                return ResourceManager.GetString("tmi_View_ThumbnailSize_ExtraLarge", resourceCulture);
+            }
+        }
+
+        /// <summary>
+        ///   Looks up a localized string similar to Smaller Thumbnails.
+        /// </summary>
+        public static string tmi_View_ThumbnailSize_Smaller {
+            get {
+                return ResourceManager.GetString("tmi_View_ThumbnailSize_Smaller", resourceCulture);
+            }
+        }
+
+        /// <summary>
+        ///   Looks up a localized string similar to Larger Thumbnails.
+        /// </summary>
+        public static string tmi_View_ThumbnailSize_Larger {
+            get {
+                return ResourceManager.GetString("tmi_View_ThumbnailSize_Larger", resourceCulture);
+            }
+        }
+
+        /// <summary>
+        ///   Looks up a localized string similar to Thumbnail size.
+        /// </summary>
+        public static string ttp_ThumbnailSize {
+            get {
+                return ResourceManager.GetString("ttp_ThumbnailSize", resourceCulture);
+            }
+        }
     }
 }
