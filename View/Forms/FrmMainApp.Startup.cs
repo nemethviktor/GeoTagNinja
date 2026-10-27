@@ -353,7 +353,44 @@ public partial class FrmMainApp
     {
         // https://stackoverflow.com/a/16006968
         splitContainerMain.Paint -= splitContainerControl_Paint;
-        // Handle restoration here
-        AppStartupApplyVisualStyleDefaults();
+
+        // Handle restoration here. The window is still invisible (Opacity 0), so the user never sees the panels move.
+        try
+        {
+            AppStartupApplyVisualStyleDefaults();
+        }
+        finally
+        {
+            // let the re-layout be painted before the window is shown, then reveal it
+            _ = BeginInvoke(method: (Action)(() =>
+            {
+                Update();
+                _startupLayoutRestored = true;
+                RevealWhenLayoutRestored();
+            }));
+        }
+    }
+
+    /// <summary>
+    ///     Shows the window (it has been invisible since start-up) once the startup tasks are finished and the saved layout
+    ///     has been applied, so nothing visibly jumps into place.
+    /// </summary>
+    private void RevealWhenLayoutRestored()
+    {
+        if (!_startupTasksDone ||
+            !_startupLayoutRestored)
+        {
+            return;
+        }
+
+        _revealSafetyTimer?.Stop();
+        _revealSafetyTimer?.Dispose();
+        _revealSafetyTimer = null;
+
+        if (Opacity < 1)
+        {
+            Log.Debug(message: "Start-up layout is in place; revealing the window");
+            Opacity = 1;
+        }
     }
 }

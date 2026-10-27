@@ -206,6 +206,11 @@ public partial class FrmMainApp : Form
     internal static readonly Logger Log = LogManager.GetCurrentClassLogger();
     private FrmSplashScreen frmSplashScreen = new();
 
+    // Start-up reveal: the window stays at Opacity 0 until the startup tasks are done AND the saved layout is in place.
+    private bool _startupTasksDone;
+    private bool _startupLayoutRestored;
+    private System.Windows.Forms.Timer? _revealSafetyTimer;
+
     /// <summary>
     ///     This is the main Form for the app. This particular section handles the initialisation of the form and loading
     ///     various defaults.
@@ -390,7 +395,22 @@ public partial class FrmMainApp : Form
 
         ResumeLayout();
         Visible = true;
-        Opacity = 1;
+
+        // Don't reveal the window yet: the saved splitter positions can only be applied once the window has its final
+        // (maximised) size, i.e. from the first paint of the split container, and revealing now would show the panels
+        // visibly jumping into place. The reveal happens when that has been done (see RevealWhenLayoutRestored), with a
+        // safety net so a missed paint can never leave the window invisible.
+        _startupTasksDone = true;
+        _revealSafetyTimer = new System.Windows.Forms.Timer { Interval = 2500 };
+        _revealSafetyTimer.Tick += (_,
+                                    _) =>
+        {
+            Log.Warn(message: "The saved layout was not applied in time; showing the window anyway.");
+            _startupLayoutRestored = true;
+            RevealWhenLayoutRestored();
+        };
+        _revealSafetyTimer.Start();
+        RevealWhenLayoutRestored();
 
         return Task.CompletedTask;
     }

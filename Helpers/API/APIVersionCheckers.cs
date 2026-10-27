@@ -122,7 +122,8 @@ internal static class APIVersionCheckers
         else
         {
             HelperVariables.OperationAPIReturnedOKResponse = false;
-            Themer.ShowMessageBox(
+            // this now runs off the UI thread, and ThemeHelper shows the box on it
+            ThemeHelper.ShowMessageBox(
                 message: HelperControlAndMessageBoxHandling.ReturnControlText(
                     controlName: "mbx_Helper_WarningGTNVerAPIResponse",
                     fakeControlType: HelperControlAndMessageBoxHandling.FakeControlTypes.MessageBox
@@ -208,7 +209,9 @@ internal static class APIVersionCheckers
             /////////////////
 
             int CPUBitness = Environment.Is64BitOperatingSystem ? 64 : 32;
-            HelperVariables.CurrentExifToolVersionCloud = API_ExifGetExifToolVersionFromWeb();
+            // A blocking web request (2 s timeout) must not run on the UI thread: it froze the window for about a second
+            // right as it appeared. Task.Run keeps the order of everything else the same.
+            HelperVariables.CurrentExifToolVersionCloud = await Task.Run(function: API_ExifGetExifToolVersionFromWeb);
 
             Log.Info(message: $"currentExifToolVersionLocal: {HelperVariables
                .CurrentExifToolVersionLocal} / newestExifToolVersionOnline: {HelperVariables.CurrentExifToolVersionCloud}");
@@ -273,7 +276,7 @@ internal static class APIVersionCheckers
             int newestOnlineGTNVersion = 0;
             try
             {
-                newestOnlineGTNVersion = API_GenericGetGTNVersionFromWeb();
+                newestOnlineGTNVersion = await Task.Run(function: API_GenericGetGTNVersionFromWeb);
             }
             catch
             {

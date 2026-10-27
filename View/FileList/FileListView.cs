@@ -91,6 +91,12 @@ public partial class FileListView : System.Windows.Forms.ListView
         public const uint SHGFI_SMALLICON = 0x1;
         public const uint SHGFI_SYSICONINDEX = 0x4000;
 
+        /// <summary>Use the file attributes passed in instead of touching the file: the icon of the type, no disk access.</summary>
+        public const uint SHGFI_USEFILEATTRIBUTES = 0x10;
+
+        public const uint FILE_ATTRIBUTE_DIRECTORY = 0x10;
+        public const uint FILE_ATTRIBUTE_NORMAL = 0x80;
+
         [DllImport(dllName: "user32")]
         public static extern IntPtr SendMessage(IntPtr hWnd,
             uint msg,
@@ -507,6 +513,59 @@ public partial class FileListView : System.Windows.Forms.ListView
     /// </summary>
     /// <param name="directoryElement">New DE to add</param>
     // Inside FileListView.cs
+    /// <summary>The shell's small-icon index per file type, so each type is looked up once (UI thread only).</summary>
+    private readonly Dictionary<string, int> _shellIconIndexByKey = [];
+
+    /// <summary>
+    ///     The index of the shell icon for an item in the system small-icon list. For files and folders it is the icon of
+    ///     the <i>type</i> (asked for by extension, without touching the file) and is remembered, so a folder of 600 photos
+    ///     costs one lookup instead of 600 trips to the shell and the disk, which was most of the "Please wait" at the start of
+    ///     loading a folder. Drives, "up" and My Computer are few and keep the per-item lookup.
+    /// </summary>
+    private int ShellIconIndexFor(DirectoryElement directoryElement)
+    {
+        string? key = null;
+        string path = directoryElement.FileNameWithPath;
+        uint attributes = 0;
+        uint flags = NativeMethods.SHGFI_SYSICONINDEX | NativeMethods.SHGFI_SMALLICON;
+
+        switch (directoryElement.Type)
+        {
+            case DirectoryElement.ElementType.File:
+                key = "." + (directoryElement.Extension ?? string.Empty).ToLowerInvariant();
+                path = "file" + key;
+                attributes = NativeMethods.FILE_ATTRIBUTE_NORMAL;
+                flags |= NativeMethods.SHGFI_USEFILEATTRIBUTES;
+                break;
+            case DirectoryElement.ElementType.SubDirectory:
+                key = "<folder>";
+                path = "folder";
+                attributes = NativeMethods.FILE_ATTRIBUTE_DIRECTORY;
+                flags |= NativeMethods.SHGFI_USEFILEATTRIBUTES;
+                break;
+            case DirectoryElement.ElementType.MyComputer:
+                path = directoryElement.ItemNameWithoutPath;
+                break;
+        }
+
+        if (key != null &&
+            _shellIconIndexByKey.TryGetValue(key: key, value: out int cached))
+        {
+            return cached;
+        }
+
+        NativeMethods.SHFILEINFO shfi = new();
+        _ = NativeMethods.SHGetFileInfo(pszPath: path, dwFileAttributes: attributes, psfi: ref shfi,
+            cbSizeFileInfo: (uint)Marshal.SizeOf(shfi), uFlags: flags);
+
+        if (key != null)
+        {
+            _shellIconIndexByKey[key: key] = shfi.iIcon;
+        }
+
+        return shfi.iIcon;
+    }
+
     public ListViewItem AddListItem(DirectoryElement directoryElement)
     {
         if (InvokeRequired)
@@ -526,15 +585,8 @@ public partial class FileListView : System.Windows.Forms.ListView
             Name = directoryElement.FileNameWithPath
         };
 
-        // 1. Shell icons (the thumbnail view draws its own pictures)
-        NativeMethods.SHFILEINFO shfi = new();
-        uint flags = NativeMethods.SHGFI_SYSICONINDEX | NativeMethods.SHGFI_SMALLICON;
-        string path = (directoryElement.Type == DirectoryElement.ElementType.MyComputer)
-            ? directoryElement.ItemNameWithoutPath
-            : directoryElement.FileNameWithPath;
-
-        _ = NativeMethods.SHGetFileInfo(pszPath: path, dwFileAttributes: 0, psfi: ref shfi, cbSizeFileInfo: (uint)Marshal.SizeOf(shfi), uFlags: flags);
-        lvi.ImageIndex = shfi.iIcon;
+        // 1. Shell icon (the thumbnail view draws its own pictures)
+        lvi.ImageIndex = ShellIconIndexFor(directoryElement: directoryElement);
 
         // 4. Fill SubItems (Metadata)
         // If it's already hydrated (e.g., during a filter redraw), fill the actual values
