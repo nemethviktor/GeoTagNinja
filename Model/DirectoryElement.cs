@@ -787,7 +787,7 @@ public class DirectoryElement
     {
         Log.Info(message: $"Thumbnail generation started for {fileNameWithPath}");
 
-        Image? generatedValue = ThumbnailCache.TryGet(fileNameWithPath: fileNameWithPath);
+        Image? generatedValue = ThumbnailCache.TryGet(fileNameWithPath: fileNameWithPath, size: FileListView.ThumbnailSize);
         if (generatedValue != null)
         {
             return generatedValue;
@@ -799,7 +799,7 @@ public class DirectoryElement
                 size: FileListView.ThumbnailSize);
             if (generatedValue != null)
             {
-                ThumbnailCache.Add(fileNameWithPath: fileNameWithPath, thumbnail: generatedValue);
+                ThumbnailCache.Add(fileNameWithPath: fileNameWithPath, size: FileListView.ThumbnailSize, thumbnail: generatedValue);
             }
         }
         catch (Exception ex)

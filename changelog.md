@@ -2,6 +2,7 @@
 
 **Build 9xxx [202xxxxx]** (upcoming release)
 - NEW & UPDATED:
+	- Thumbnails are remembered between sessions: an in-memory cache (512 MB cap) backed by a small database, `thumbnailcache.sqlite`, in the app's data folder (256 MB cap, entries unused for 90 days are dropped). Reopening a folder you have browsed before shows its thumbnails almost immediately. It is safe to delete that file at any time. It is flushed and closed when the app exits; if the app was killed or crashed, the next start checks it and rebuilds it from scratch if it was damaged.
 	- Much faster icon-view thumbnails. They are now built in memory by `ThumbnailGenerator` instead of via temporary JPEG files: the JPEG already inside the file (EXIF thumbnail, or the RAW's embedded preview) is used where there is one, otherwise the image is decoded at reduced size, and a full decode is the last resort. They are also generated on a few background threads (`ThumbnailWorker`), so they no longer hold up the metadata read of the next file.
 	- Much faster preview pane. The preview is now produced off the UI thread, so the window no longer freezes while a large JPEG is decoded, and a newer selection cancels an older one instead of queueing behind it. RAW previews are read in-process (a right-sized JPEG embedded in the file, via LibRaw: about 1600 px for the preview pane, about 600 px for thumbnails, instead of decoding the 36-megapixel one), HEIC/WebP via Magick, and recently shown ones are cached in memory (256 MB cap). ExifTool is only asked as a last resort, and then through the ExifTool process that is already running, rather than starting `cmd.exe` and a new `exiftool.exe` for every preview as before.
 	- Icon-view thumbnails are generated for the rows you can see first (then the next screenful below and above), and they now start as soon as files are found instead of waiting for each file's metadata to be read, so a big folder shows its visible thumbnails straight away and re-prioritises as you scroll.
@@ -9,7 +10,7 @@
 - BUGS & FIXES:
 	- RAW previews and thumbnails could show portrait shots sideways: embedded RAW previews usually carry no orientation of their own, so the file's orientation is now applied.
 	- Icon-view thumbnails of RAW files that needed a full decode showed the top-left corner of the picture instead of the whole picture.
-	- Icon-view thumbnails were cached on disk by file name only, so two folders containing a file with the same name could show each other's thumbnail. Thumbnails are no longer cached on disk. Instead there is now an in-memory cache (capped at 512 MB) keyed by full path, size and modified date, so revisiting a folder is fast and an edited file gets a fresh thumbnail. It is not kept between sessions.
+	- Icon-view thumbnails were cached on disk by file name only, so two folders containing a file with the same name could show each other's thumbnail. They are now cached by full path, size and modified date, so an edited file gets a fresh thumbnail and same-named files in different folders can't clash.
 
 **Build 9794 [20261025]**
 - NEW & UPDATED:

@@ -24,6 +24,9 @@ public class DirectoryElementCollection : List<DirectoryElement>
     private ExifTool _ExifTool;
     private FrmPleaseWaitBox _frmPleaseWaitBoxInstance;
 
+    private readonly object _hydrationLock = new();
+    private IReadOnlyList<DirectoryElement> _hydrationPriority = [];
+
     /// <summary>
     /// Provides access to the currently running metadata hydration task.
     /// </summary>
@@ -605,6 +608,29 @@ public class DirectoryElementCollection : List<DirectoryElement>
     }
 
     /// <summary>
+    /// Asks the metadata read to do these elements next (in this order), before the rest of the folder, which follows
+    /// in list order. Safe to call from the UI thread at any time, including before hydration starts.
+    /// </summary>
+    /// <param name="elements">Typically the rows the user can see, then the ones about to scroll into view.</param>
+    public void PrioritiseHydration(IEnumerable<DirectoryElement> elements)
+    {
+        List<DirectoryElement> copy = elements.ToList();
+        lock (_hydrationLock)
+        {
+            _hydrationPriority = copy;
+        }
+    }
+
+    private DirectoryElement? TakeNextToHydrate(PriorityWorkList<DirectoryElement> remaining)
+    {
+        lock (_hydrationLock)
+        {
+            remaining.SetPriority(items: _hydrationPriority);
+            return remaining.TakeNext();
+        }
+    }
+
+    /// <summary>
     /// Starts and awaits a background metadata hydration task, storing the running task in HydrationTask for
     /// monitoring.
     /// </summary>
@@ -650,8 +676,14 @@ public class DirectoryElementCollection : List<DirectoryElement>
         List<DirectoryElement> workList;
         lock (this) { workList = this.Where(x => x.Type == DirectoryElement.ElementType.File).ToList(); }
 
+        PriorityWorkList<DirectoryElement> remaining = new();
+        foreach (DirectoryElement element in workList)
+        {
+            _ = remaining.Add(item: element);
+        }
+
         int completedCount = 0;
-        foreach (DirectoryElement de in workList)
+        while (TakeNextToHydrate(remaining: remaining) is { } de)
         {
             if (ct.IsCancellationRequested)
             {

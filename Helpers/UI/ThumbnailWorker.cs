@@ -1,4 +1,5 @@
-﻿using GeoTagNinja.Model;
+﻿using GeoTagNinja.Helpers.Data;
+using GeoTagNinja.Model;
 using GeoTagNinja.View.Forms;
 using System;
 using System.Collections.Generic;
@@ -20,17 +21,9 @@ namespace GeoTagNinja.Helpers.UI;
 internal sealed class ThumbnailWorker
 {
     private readonly object _lock = new();
-    private readonly Queue<DirectoryElement> _queue = new();
-
-    /// <summary>Queued elements nobody has taken yet. The queue and priority list may hold stale entries; this is the truth.</summary>
-    private readonly HashSet<DirectoryElement> _pending = [];
-
-    /// <summary>Everything ever accepted, so an element is processed at most once per worker however often it is queued.</summary>
-    private readonly HashSet<DirectoryElement> _accepted = [];
-
+    private readonly PriorityWorkList<DirectoryElement> _work = new();
     private readonly Action<DirectoryElement> _onGenerated;
     private readonly CancellationToken _ct;
-    private List<DirectoryElement> _priority = [];
     private bool _addingCompleted;
     private int _runningWorkers;
 
@@ -69,13 +62,11 @@ internal sealed class ThumbnailWorker
         lock (_lock)
         {
             if (_addingCompleted ||
-                !_accepted.Add(item: directoryElement))
+                !_work.Add(item: directoryElement))
             {
                 return;
             }
 
-            _ = _pending.Add(item: directoryElement);
-            _queue.Enqueue(item: directoryElement);
             Monitor.Pulse(obj: _lock);
         }
     }
@@ -89,7 +80,7 @@ internal sealed class ThumbnailWorker
         List<DirectoryElement> copy = elements.ToList();
         lock (_lock)
         {
-            _priority = copy;
+            _work.SetPriority(items: (IReadOnlyList<DirectoryElement>)copy);
         }
     }
 
@@ -115,7 +106,7 @@ internal sealed class ThumbnailWorker
                     return false;
                 }
 
-                directoryElement = TakeNextPending();
+                directoryElement = _work.TakeNext();
                 if (directoryElement != null)
                 {
                     return true;
@@ -130,29 +121,6 @@ internal sealed class ThumbnailWorker
                 _ = Monitor.Wait(obj: _lock, millisecondsTimeout: 250);
             }
         }
-    }
-
-    /// <summary>Caller holds the lock.</summary>
-    private DirectoryElement? TakeNextPending()
-    {
-        foreach (DirectoryElement candidate in _priority)
-        {
-            if (_pending.Remove(item: candidate))
-            {
-                return candidate;
-            }
-        }
-
-        while (_queue.Count > 0)
-        {
-            DirectoryElement next = _queue.Dequeue();
-            if (_pending.Remove(item: next))
-            {
-                return next;
-            }
-        }
-
-        return null;
     }
 
     private void Run()

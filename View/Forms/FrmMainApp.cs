@@ -626,6 +626,9 @@ public partial class FrmMainApp : Form
         ApplicationSettings.DataDeleteSQLiteSettingsCleanup();
         ApplicationSettings.DataVacuumDatabase();
 
+        // Flush and close the persistent thumbnail cache (leaves a single tidy file; see ThumbnailStore)
+        ThumbnailStore.Shutdown();
+
         // Shut down ExifTool
         Log.Debug(message: "OnClose: Dispose ExifTool");
         _ExifTool.Dispose();
@@ -3226,7 +3229,7 @@ public partial class FrmMainApp : Form
                 ct: _token,
                 workerCount: ThumbnailWorker.DefaultWorkerCount);
             thumbnailWorker = worker;
-            StartThumbnailPrioritisation(worker: worker, ct: _token);
+            StartVisibleRowPrioritisation(worker: worker, ct: _token);
 
             // 1. Scan and Stream Files to the UI
             await DirectoryElements.ParseFolderOrFileListToDEsAsync(
@@ -3345,13 +3348,13 @@ public partial class FrmMainApp : Form
     }
 
     /// <summary>
-    /// While thumbnails are still being generated, keeps the worker pointed at the rows the user can see. A UI timer
-    /// is used instead of hooking scroll messages because the list can move for many reasons (scroll bar, wheel,
-    /// keyboard, sorting, resizing) and the check is cheap. It only re-prioritises when the visible rows change, and
-    /// stops itself when the worker is done or cancelled.
+    /// While thumbnails are being generated or metadata is being read, keeps both pointed at the rows the user can see
+    /// (then the next screenful below and above). A UI timer is used instead of hooking scroll messages because the list
+    /// can move for many reasons (scroll bar, wheel, keyboard, sorting, resizing) and the check is cheap. It only
+    /// re-prioritises when the visible rows change, and stops itself once both jobs are done or cancelled.
     /// </summary>
-    private void StartThumbnailPrioritisation(ThumbnailWorker worker,
-                                              CancellationToken ct)
+    private void StartVisibleRowPrioritisation(ThumbnailWorker worker,
+                                               CancellationToken ct)
     {
         System.Windows.Forms.Timer timer = new() { Interval = 150 };
         DirectoryElement? lastFirst = null;
@@ -3359,8 +3362,10 @@ public partial class FrmMainApp : Form
 
         timer.Tick += (_, _) =>
         {
+            // HydrationTask is assigned synchronously right after discovery, before the next tick can run.
+            bool hydrationDone = DirectoryElements.HydrationTask is { IsCompleted: true };
             if (ct.IsCancellationRequested ||
-                worker.IsDrained)
+                (worker.IsDrained && hydrationDone))
             {
                 timer.Stop();
                 timer.Dispose();
@@ -3378,6 +3383,7 @@ public partial class FrmMainApp : Form
             lastFirst = first;
             lastCount = wanted.Count;
             worker.Prioritise(elements: wanted);
+            DirectoryElements.PrioritiseHydration(elements: wanted);
         };
 
         timer.Start();

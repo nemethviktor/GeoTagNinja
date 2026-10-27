@@ -5,8 +5,9 @@ using System.IO;
 namespace GeoTagNinja.Helpers.Data;
 
 /// <summary>
-///     Process-wide, in-memory cache of finished icon-view thumbnails, so revisiting a folder doesn't regenerate them.
-///     See <see cref="FileKeyedCache{T}" /> for the keying and eviction rules.
+///     Cache of finished icon-view thumbnails, so revisiting a folder (this session or a later one) doesn't regenerate
+///     them. Two tiers: an in-memory one (<see cref="FileKeyedCache{T}" />, fast, lost on exit) in front of the
+///     persistent <see cref="ThumbnailStore" />. Entries are specific to a thumbnail size.
 /// </summary>
 /// <remarks>
 ///     Thumbnails are held as small JPEG byte arrays rather than <see cref="Image" /> objects (a 128 px bitmap is
@@ -19,13 +20,26 @@ internal static class ThumbnailCache
     private static readonly FileKeyedCache<byte[]> Cache = new(maxTotalBytes: MaxTotalBytes,
         sizeOf: bytes => bytes.Length);
 
-    /// <summary>Returns a fresh <see cref="Image" /> for the file if cached, else null. The caller owns the image.</summary>
-    internal static Image? TryGet(string fileNameWithPath)
+    /// <summary>Returns a fresh <see cref="Image" /> for the file at this size if cached, else null. The caller owns the image.</summary>
+    internal static Image? TryGet(string fileNameWithPath,
+                                  int size)
     {
-        byte[]? bytes = Cache.TryGet(fileNameWithPath: fileNameWithPath);
-        if (bytes == null)
+        string? key = FileKeyedCache<byte[]>.KeyFor(fileNameWithPath: fileNameWithPath, variant: size.ToString());
+        if (key == null)
         {
             return null;
+        }
+
+        byte[]? bytes = Cache.TryGetByKey(key: key);
+        if (bytes == null)
+        {
+            bytes = ThumbnailStore.TryGet(key: key);
+            if (bytes == null)
+            {
+                return null;
+            }
+
+            Cache.AddByKey(key: key, value: bytes);
         }
 
         try
@@ -42,13 +56,22 @@ internal static class ThumbnailCache
     }
 
     internal static void Add(string fileNameWithPath,
+                             int size,
                              Image thumbnail)
     {
+        string? key = FileKeyedCache<byte[]>.KeyFor(fileNameWithPath: fileNameWithPath, variant: size.ToString());
+        if (key == null)
+        {
+            return;
+        }
+
         try
         {
             using MemoryStream stream = new();
             thumbnail.Save(stream: stream, format: ImageFormat.Jpeg);
-            Cache.Add(fileNameWithPath: fileNameWithPath, value: stream.ToArray());
+            byte[] bytes = stream.ToArray();
+            Cache.AddByKey(key: key, value: bytes);
+            ThumbnailStore.Add(key: key, jpeg: bytes);
         }
         catch
         {
@@ -56,6 +79,6 @@ internal static class ThumbnailCache
         }
     }
 
-    /// <summary>Empties the cache.</summary>
+    /// <summary>Empties the in-memory tier (the persistent one is left alone).</summary>
     internal static void Clear() => Cache.Clear();
 }

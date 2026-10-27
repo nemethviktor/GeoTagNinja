@@ -161,6 +161,8 @@
     <Compile Include="Helpers\Data\CacheManager.cs" />
     <Compile Include="Helpers\Data\ThumbnailCache.cs" />
     <Compile Include="Helpers\Data\FileKeyedCache.cs" />
+    <Compile Include="Helpers\Data\PriorityWorkList.cs" />
+    <Compile Include="Helpers\Data\ThumbnailStore.cs" />
     <Compile Include="Helpers\Data\PreviewCache.cs" />
     <Compile Include="Helpers\Data\SettingsImportExportOptions.cs" />
     <Compile Include="Helpers\Data\SettingsExport.cs" />

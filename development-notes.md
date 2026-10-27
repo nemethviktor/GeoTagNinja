@@ -47,9 +47,15 @@ To announce something, add an entry to `Registry` with the build to compare agai
 - **Thumbnails and previews: what is left.** Icon-view thumbnails are built in memory by
   `Helpers/Exif/ThumbnailGenerator` on `Helpers/UI/ThumbnailWorker` threads and held in `Helpers/Data/ThumbnailCache`; the
   preview pane (`ReadGetImagePreviews.GenericCreateImagePreview`) decodes off the UI thread, cancels superseded requests,
-  and uses `Helpers/Exif/RawPreview` (LibRaw) plus `PreviewCache`. Both caches are in-memory only
-  (`Helpers/Data/FileKeyedCache`: path + mtime + size), so a cold start regenerates; a persistent store would only
-  matter for that. The worker (`ThumbnailWorker`) takes the rows from `FileListView.GetVisibleAndNearbyElements` first;
+  and uses `Helpers/Exif/RawPreview` (LibRaw) plus `PreviewCache`. `PreviewCache` is in-memory only; thumbnails
+  have two tiers (`ThumbnailCache`: in-memory `FileKeyedCache`, keyed path + mtime + length + size, then the persistent
+  `ThumbnailStore`, a SQLite file of its own so it cannot endanger the settings DB). The store batches writes (flush
+  after 500 ms), uses WAL, is closed by `PerformAppClosingProcedure` (and `ProcessExit` as a net), and keeps a
+  `thumbnailcache.sqlite.running` marker while open: a marker left at startup means a dirty exit, so the file is
+  integrity-checked and rebuilt if damaged (any open/check failure also rebuilds). SQLite was kept after considering
+  loose files (slow on cloud-synced folders), a hand-rolled pack file (needs our own compaction/recovery) and an
+  embedded key-value store (new dependency, no real gain); 3000 x 12 KB blobs write in one ~0.75 s transaction and read
+  back at ~0.1 ms each. The worker (`ThumbnailWorker`) takes the rows from `FileListView.GetVisibleAndNearbyElements` first;
   `FrmMainApp.StartThumbnailPrioritisation` polls every 150 ms and re-prioritises when the visible rows change (a timer
   rather than scroll messages, because the list moves for many reasons). Thumbnails are queued at discovery, not
   after the metadata read, and rows are found via `FileListView._itemByElement` with the file path as the image key (not
