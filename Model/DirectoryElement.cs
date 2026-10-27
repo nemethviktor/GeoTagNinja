@@ -1,5 +1,6 @@
 ﻿#nullable enable
 using GeoTagNinja.Helpers;
+using GeoTagNinja.Helpers.Data;
 using GeoTagNinja.Helpers.Exif;
 using GeoTagNinja.View.FileList;
 using GeoTagNinja.View.Forms;
@@ -786,11 +787,20 @@ public class DirectoryElement
     {
         Log.Info(message: $"Thumbnail generation started for {fileNameWithPath}");
 
-        Image? generatedValue = null;
+        Image? generatedValue = ThumbnailCache.TryGet(fileNameWithPath: fileNameWithPath);
+        if (generatedValue != null)
+        {
+            return generatedValue;
+        }
+
         try
         {
             generatedValue = ThumbnailGenerator.Create(fileNameWithPath: fileNameWithPath,
                 size: FileListView.ThumbnailSize);
+            if (generatedValue != null)
+            {
+                ThumbnailCache.Add(fileNameWithPath: fileNameWithPath, thumbnail: generatedValue);
+            }
         }
         catch (Exception ex)
         {

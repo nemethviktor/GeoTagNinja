@@ -159,6 +159,7 @@
     <Compile Include="Helpers\FileSystem\CloudFileHelpers.cs" />
     <Compile Include="Helpers\UI\ControlTextAndMessageBoxes.cs" />
     <Compile Include="Helpers\Data\CacheManager.cs" />
+    <Compile Include="Helpers\Data\ThumbnailCache.cs" />
     <Compile Include="Helpers\Data\SettingsImportExportOptions.cs" />
     <Compile Include="Helpers\Data\SettingsExport.cs" />
     <Compile Include="Helpers\Data\SettingsImport.cs" />
