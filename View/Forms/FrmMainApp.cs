@@ -402,7 +402,7 @@ public partial class FrmMainApp : Form
         // visibly jumping into place. The reveal happens when that has been done (see RevealWhenLayoutRestored), with a
         // safety net so a missed paint can never leave the window invisible.
         _startupTasksDone = true;
-        _revealSafetyTimer = new System.Windows.Forms.Timer { Interval = 2500 };
+        _revealSafetyTimer = new System.Windows.Forms.Timer { Interval = 6000 };
         _revealSafetyTimer.Tick += (_,
                                     _) =>
         {
@@ -3239,6 +3239,10 @@ public partial class FrmMainApp : Form
             lvw_FileList.BeginUpdate();
             lvw_FileList.ClearData();
 
+            // With a sorter attached the list re-sorts on every added row, which made each row slower than the last (a
+            // folder of 3,000 files took about 20 s to list). Sort once when the rows are all in.
+            lvw_FileList.SuspendColumnSorting();
+
             // A new folder: drop thumbnail work left over from the last one. Thumbnails don't depend on metadata, so they
             // are queued as files are found and made on worker threads, visible rows first - independent of the
             // (strictly sequential) ExifTool read pass below. (Does nothing while the details list is showing.)
@@ -3260,6 +3264,7 @@ public partial class FrmMainApp : Form
             );
 
             _discoveryComplete = true;
+            lvw_FileList.ResumeColumnSorting();
 
             frmPleaseWaitBox.Close();
 
@@ -3340,6 +3345,7 @@ public partial class FrmMainApp : Form
         {
             // lets the prioritisation timer stop even if loading failed part-way
             _discoveryComplete = true;
+            lvw_FileList.ResumeColumnSorting();
 
             FileLocking.FileListBeingUpdated = false;
             HandlerUpdateLabelText(lbl_ParseProgress, $"{HelperControlAndMessageBoxHandling.ReturnControlText("Generic_Ready", HelperControlAndMessageBoxHandling.FakeControlTypes.Generic)}.");
@@ -3347,8 +3353,8 @@ public partial class FrmMainApp : Form
             // Final count update
             FileListViewReadWrite.ListViewCountItemsWithGeoData();
 
-            // The first folder is in the list now, so the window can be revealed without an empty grid and the
-            // "please wait" box showing.
+            // The list only paints once EndUpdate has run (above), so this is the first moment the grid is complete: the
+            // window is revealed now, and the metadata cells fill in afterwards. (Also covers an empty or failed load.)
             _startupFolderLoaded = true;
             RevealWhenLayoutRestored();
         }

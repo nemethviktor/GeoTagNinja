@@ -296,7 +296,29 @@ internal static class FileListViewReadWrite
         // AddListItem/UpdateListItemData/SyncElementThumbnail).
         if (frmMainAppInstance.lvw_FileList.InvokeRequired)
         {
-            _ = frmMainAppInstance.lvw_FileList.Invoke(new Action(ListViewCountItemsWithGeoData));
+            _ = frmMainAppInstance.lvw_FileList.BeginInvoke(new Action(ListViewCountItemsWithGeoData));
+            return;
+        }
+
+        // Reading metadata asks for a recount after every file; counting the whole list each time is O(n²). Ask once and let
+        // the recount run when the UI thread is next free, which also covers every update queued in the meantime.
+        if (_countQueued)
+        {
+            return;
+        }
+
+        _countQueued = true;
+        _ = frmMainAppInstance.lvw_FileList.BeginInvoke(new Action(CountItemsWithGeoDataNow));
+    }
+
+    private static bool _countQueued;
+
+    private static void CountItemsWithGeoDataNow()
+    {
+        _countQueued = false;
+        FrmMainApp frmMainAppInstance = FrmMainApp.Instance;
+        if (frmMainAppInstance == null)
+        {
             return;
         }
 

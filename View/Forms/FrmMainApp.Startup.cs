@@ -373,7 +373,8 @@ public partial class FrmMainApp
 
     /// <summary>
     ///     Shows the window (it has been invisible since start-up) once the startup tasks are finished, the saved layout
-    ///     has been applied and the first folder is in the list, so nothing visibly jumps into place or fills in.
+    ///     has been applied and the grid has been drawn with the folder's files, so nothing visibly jumps into place or shows as an empty gap.
+    ///     The metadata cells fill in afterwards.
     /// </summary>
     private void RevealWhenLayoutRestored()
     {

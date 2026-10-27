@@ -15,7 +15,8 @@
 - BUGS & FIXES:
 	- The window froze for a second or two just as it appeared: the check for new ExifTool and GeoTagNinja versions made its web requests on the UI thread. They now run in the background. (In a Release build the check only runs about once a week; a Debug build does it every time.)
 	- Loading a folder was slower than it needed to be because every file asked the shell for its list icon by touching the file; the icon is now looked up once per file type.
-	- The window is no longer shown until the saved panel sizes have been applied and the first folder is in the list, so the panels no longer jump into place and the grid no longer flashes empty with the "please wait" box as the app opens.
+	- Opening a big folder (thousands of files) is much faster and no longer freezes the window: the list used to re-sort after every added row (3,000 files took about 20 s, now about 3 s), and each metadata update and the "files / with geodata" count scanned the whole list.
+	- The window is no longer shown until the saved panel sizes have been applied and the grid has been drawn with the first folder, so the panels no longer jump into place and the grid no longer shows as an empty dark gap while it fills in.
 	- When saving, an ExifTool argument was dropped if an earlier one merely contained it as text: `-IPTC:City=Foo` was lost if `-IPTC:City=Foobar` had been added before it, and a file path if a longer path containing it had. Only an exactly identical argument line is skipped now.
 	- Starting the app in `Thumbnail View` left the keyboard focus on the menu bar, so the arrow keys did nothing until you clicked a picture. The thumbnails now take the focus once the window shows.
 	- RAW previews and thumbnails could show portrait shots sideways: embedded RAW previews usually carry no orientation of their own, so the file's orientation is now applied.

@@ -574,7 +574,8 @@ public partial class FileListView : System.Windows.Forms.ListView
         }
 
         _masterCollection ??= [];
-        if (!_masterCollection.Contains(directoryElement))
+        // the dictionary stands in for List.Contains, which made every add slower than the last (O(n²) for a folder)
+        if (!_itemByElement.ContainsKey(key: directoryElement))
         {
             _masterCollection.Add(directoryElement);
         }
@@ -607,10 +608,19 @@ public partial class FileListView : System.Windows.Forms.ListView
 
         // 6. Finalise
         _ = Items.Add(lvi);
+        _itemByElement[key: directoryElement] = lvi;
         ItemsVersion++;
 
         return lvi;
     }
+
+    /// <summary>
+    ///     The row of each element, so a metadata update finds its row directly instead of scanning the whole list (which made
+    ///     reading a folder O(n²)). Entries can go stale (rows removed or cleared elsewhere), so a hit is checked and a
+    ///     miss falls back to the scan.
+    /// </summary>
+    private readonly Dictionary<DirectoryElement, ListViewItem> _itemByElement = [];
+
     public void UpdateListItemData(DirectoryElement de)
     {
         if (InvokeRequired)
@@ -622,7 +632,13 @@ public partial class FileListView : System.Windows.Forms.ListView
         ContentVersion++;
 
         // Find the ListViewItem that represents this DirectoryElement
-        ListViewItem lvi = Items.Cast<ListViewItem>().FirstOrDefault(i => i.Tag == de);
+        if (!_itemByElement.TryGetValue(key: de, value: out ListViewItem? lvi) ||
+            lvi.ListView != this ||
+            lvi.Tag != de)
+        {
+            lvi = Items.Cast<ListViewItem>().FirstOrDefault(i => i.Tag == de);
+        }
+
         if (lvi == null)
         {
             return;
@@ -1050,7 +1066,13 @@ public partial class FileListView : System.Windows.Forms.ListView
     /// </summary>
     public void ResumeColumnSorting()
     {
+        if (ListViewItemSorter == LvwColumnSorter)
+        {
+            return;
+        }
+
         ListViewItemSorter = LvwColumnSorter;
+        ItemsVersion++;
     }
 
     #endregion
@@ -1321,6 +1343,7 @@ public partial class FileListView : System.Windows.Forms.ListView
 
                     // 4. Update memory and UI only if the physical operation succeeded
                     _ = (_masterCollection?.Remove(item: de));
+                    _ = _itemByElement.Remove(key: de);
                     Items.Remove(item: lvi);
                     ItemsVersion++;
                 }
@@ -1593,6 +1616,7 @@ public partial class FileListView : System.Windows.Forms.ListView
     {
         _masterCollection.Clear();
         Items.Clear();
+        _itemByElement.Clear();
         ItemsVersion++;
     }
 
