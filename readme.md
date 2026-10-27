@@ -1,4 +1,4 @@
-[![Translation status](https://hosted.weblate.org/widget/geotagninja/svg-badge.svg)](https://hosted.weblate.org/engage/geotagninja/) [![Github All Releases](https://img.shields.io/github/downloads/nemethviktor/geotagninja/total.svg)]()
+﻿[![Translation status](https://hosted.weblate.org/widget/geotagninja/svg-badge.svg)](https://hosted.weblate.org/engage/geotagninja/) [![Github All Releases](https://img.shields.io/github/downloads/nemethviktor/geotagninja/total.svg)]()
 
 # Welcome to GeoTagNinja
 
@@ -19,7 +19,6 @@ There is a "short" (15 mins) demo on [YouTube](https://youtu.be/ulP1ZG7mH-I) if 
   - [Translations, Contributions & Pull Requests](#translations,-contributions-&-pull-requests)
     - [Translation Progress](#translation-progress)
   - [Known Issues](#known-issues)
-    - [Destinations/Possible Bug in WebView2](#destinations/possible-bug-in-webview2)
   - [Possible Issues & Solutions](#possible-issues-&-solutions)
   - [ToDos](#todos)
   - [Roadmap](#roadmap)
@@ -51,7 +50,7 @@ There is a "short" (15 mins) demo on [YouTube](https://youtu.be/ulP1ZG7mH-I) if 
 - Filter list columns, rename (`F2`) and delete (`Del`) files from the list, and copy/paste tags between files
 - Remove all geodata from files in one go
 - Flat Mode: load all subfolders of the current folder at once
-- Thumbnail View, plus previews for common image types including RAW, HEIC, PNG and WEBP
+- Thumbnail View (switch from the `View` menu at any time; resize with `Ctrl` + mouse wheel, the slider or the menu), plus previews for common image types including RAW, HEIC, PNG and WEBP
 - Streaming folder load with progress on the taskbar button; loading a folder can be cancelled
 - Dark Mode (including a dark map option) and a choice of map layers
 - Optionally leave a file's modified date untouched when saving (`Settings`), so a photo keeps showing when it was taken rather than when its location was added
@@ -83,7 +82,7 @@ The app works without parameters, however you may add:
 	- I've seen once (and only once) ESET being silly about the app. Tbh no idea as to why. While I'd say the source code is open for public viewing and building it is probably clearer to just say: the app isn't tracking or recording your data and isn't doing anything that's not strictly related to its function. If I ever were to include any tracking (no such plans for the foreseeable future), it'd be entirely anonymised anyway.
 - `Build 8646 [20230903]`+: I've finally gotten around to displaying the `GPSImgDirection` on the map. The logic is, as not to clutter the map the direction "line" will only show when only one image (with GPSImgDirection) is selected; if more than one such image is selected then the lines don't show.
 	- The way this is calculated requires a "distance" so that the target coordinate pair ("the image direction") can be calculated. This is defaulted to 10km for the line and 1km for the triangle and is unlikely to change at this point.
-- `Build 8651 [20230908]`+: The other thing I've gotten around to was adding some method of displaying the `Destination` in images. WebView2 seems to be buggy about this and see below for details - also suggestions on fix welcome.
+- `Build 8651 [20230908]`+: The other thing I've gotten around to was adding some method of displaying the `Destination` in images.
 - `Build 8658 [20230915]`+: There is now some support for `Dark Mode`. This is a little "unbeautiful", however there is no proper API support in .NET Framework 4.8.x for "real" (read: Windows 11 style) Dark Mode.
 	- Some Borders and Scrollbars don't draw proper "dark" lines/brushes - so there's a discrepancy around the edges. From what I gather as an outcome of the above (lack of support).
 	- Point being Dark Mode is an option so that the app doesn't burn your eyes if you are the night owl type, rather than to be pretty, apologies.
@@ -92,7 +91,8 @@ The app works without parameters, however you may add:
 	- I coded this in a relatively foolproof way but try not to outsmart it.
 - `Build 8831 [20240306]`+: ExifTool should now auto-update into the Roaming folder upon app shutdown. (that's `c:\Users\username\AppData\Roaming\GeoTagNinja\`)
 - `Build 9095 [20241125]`+: There is now an option for `Flat Mode` that can be triggered from within the `File` menu. This will parse and load all subfolders within the currently selected folder. It's a little experimental although should work.
-- `Build 9276 [20250526]`+: There is now an option for `Thumbnail View` within `Settings`. It incurs a very heavy performance hit on RAW-type files and so I don't particularly recommend it but it works. Currently there's no option to customise the thumbnail size.
+- ~~`Build 9276 [20250526]`+: There is now an option for `Thumbnail View` within `Settings`. It incurs a very heavy performance hit on RAW-type files and so I don't particularly recommend it but it works. Currently there's no option to customise the thumbnail size.~~
+- `Build 9xxx`+ (upcoming): `Thumbnail View` has moved from `Settings` to the new `View` menu (`View` > `Details` / `Thumbnails`; your previous choice carries over) and can be switched at any time without restarting. The thumbnail size can be changed with `Ctrl` + mouse wheel, the slider under the list, or `View` > `Thumbnail Size`. Thumbnails are now generated in the background (the ones you can see first), are no longer slow on RAW files, and are remembered between sessions in `thumbnailcache.sqlite` in the Roaming folder (it is safe to delete). Thumbnail View has no column headers, so to sort or filter, or to rename with `F2`, switch to `Details`.
 
 ### A Particular Note on Working with Adobe Bridge (ACR) and RAW files > Saving as JPGs or Other Formats.
 
@@ -176,7 +176,6 @@ As for code updates, I'm generally happy for anyone competent to add pull reques
 - If user zooms "too far out" on Map they will get odd longitude values. The code handles this internally but map feedback is what it is.
 - I didn't really manage to test this but for Nikon D5 the camera outputs NEF files with a built-in "Rating=0" tag. This becomes an issue in Adobe Bridge if an XMP is created and then the NEF file is subsequently overwritten by GTN because Bridge would ignore the Rating value in the XMP file going forward. For this reason, `Rating` is always sent back to the RAW files if they are saved. I don't think this would be a problem but more of a heads-up that there are some oddities like this. Btw this force-save-Rating isn't limited to Nikon camera saves in GTN.
 - If you change `Time Offset` (time zone) _and nothing else at all_ then you'll get a warning that "nothing has changed" in the xmp sidecar file. This is not a bug. There is no XMP tag for `OffsetTime`.
-- Destinations: See below.
 - IPTC Keywords & XMP Subjects: when using Adobe Bridge or certain other tools, keywords get added by that software. This can be anything whatsoever (e.g. `mum` or `I love you` or `Stratford`) either defined by the user or the software. The problem is that there most often is no indicator as to what a keyword is, e.g. no `City=` or some such -> this makes it extremely difficult (read: impossible) to sync data with keywords. See: `[XMP] Subject: England, GBR, geo:lat=51.54131500, geo:lon=-0.01036167, geotagged, Stratford, Stratford and New Town Ward, United Kingdom`
 	- At the moment there's some groundwork-code in the codebase to enable some future interaction with keywords but I haven't quite worked out an efficient way around this. You'll notice that the two `geo:` are easy to capture and edit but the rest are just undefined character strings. A `remove all geodata` command therefore wouldn’t be able to identify whether say `Fxxking` is a verb or a [town in Austria](https://en.wikipedia.org/wiki/Fugging,_Upper_Austria) or perhaps `Bugyi` is a character string that refers to the Hungarian town called Bugyi, or the otherwise equivalent noun that translates as `panties`. If you think I'm entirely crazy, then read the [Wikipedia article](https://en.wikipedia.org/wiki/Bugyi) regarding that settlement.
 	- This means that if your file has Keywords/Subjects and you edit the geo-data the keywords will become out of sync with the changes.

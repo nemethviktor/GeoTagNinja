@@ -19,15 +19,18 @@ Model/                         the domain: what a file's metadata is, independen
   Favourite / GeoSetterFavourite / MapWebMessage / AppSettingContainer   plain data carriers
 
 View/
-  Forms/      every Frm* dialog, plus EditFileFormLauncher
-  Controls/   custom controls (ImagePreview)
+  Forms/      every Frm* dialog, plus EditFileFormLauncher. FrmMainApp is split into partial files:
+              .Startup (start-up steps) and .ViewMenu (the View menu, mode switching, thumbnail size)
+  Controls/   custom controls: ImagePreview, and the thumbnail view (ThumbnailView, its pure layout maths in
+              ThumbnailLayout, FolderIcons)
   FileList/   the main file list view and its collaborators
   Dialogs/    reusable message-box style dialogs
 
 Helpers/
   API/           GeoNames and GitHub HTTP calls and their response types
-  Data/          SQLite settings, custom rules, and the session's in-memory DataTables
-  Exif/          reading, writing and track-file handling via ExifTool
+  Data/          SQLite settings (and MenuSettings, for settings changed from menus), custom rules, the thumbnail
+                 and preview caches (in memory, plus ThumbnailStore in SQLite) and the session's in-memory DataTables
+  Exif/          reading, writing and track-file handling via ExifTool; thumbnail and preview extraction
   FileSystem/    enumeration, checksums, locking, cloud placeholders, supported extensions
   Geo/           coordinate and field-of-view maths
   Localisation/  languages, countries, time zones, resource lookup

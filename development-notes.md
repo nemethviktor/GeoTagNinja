@@ -44,31 +44,67 @@ To announce something, add an entry to `Registry` with the build to compare agai
   `.NullStringEquivalentGeneric` and friends are reached from `Model/` and `Helpers/`, so those layers
   now carry a `using GeoTagNinja.View.Forms;`. That dependency was always there; moving the forms into
   their own namespace merely made it visible. Extracting the shared state is the fix.
-- **Thumbnails and previews: what is left.** Icon-view thumbnails are built in memory by
-  `Helpers/Exif/ThumbnailGenerator` on `Helpers/UI/ThumbnailWorker` threads and held in `Helpers/Data/ThumbnailCache`; the
-  preview pane (`ReadGetImagePreviews.GenericCreateImagePreview`) decodes off the UI thread, cancels superseded requests,
-  and uses `Helpers/Exif/RawPreview` (LibRaw) plus `PreviewCache`. `PreviewCache` is in-memory only; thumbnails
-  have two tiers (`ThumbnailCache`: in-memory `FileKeyedCache`, keyed path + mtime + length + size, then the persistent
-  `ThumbnailStore`, a SQLite file of its own so it cannot endanger the settings DB). The store batches writes (flush
-  after 500 ms), uses WAL, is closed by `PerformAppClosingProcedure` (and `ProcessExit` as a net), and keeps a
-  `thumbnailcache.sqlite.running` marker while open: a marker left at startup means a dirty exit, so the file is
-  integrity-checked and rebuilt if damaged (any open/check failure also rebuilds). SQLite was kept after considering
-  loose files (slow on cloud-synced folders), a hand-rolled pack file (needs our own compaction/recovery) and an
-  embedded key-value store (new dependency, no real gain); 3000 x 12 KB blobs write in one ~0.75 s transaction and read
-  back at ~0.1 ms each. The worker (`ThumbnailWorker`) takes the rows from `FileListView.GetVisibleAndNearbyElements` first;
-  `FrmMainApp.StartThumbnailPrioritisation` polls every 150 ms and re-prioritises when the visible rows change (a timer
-  rather than scroll messages, because the list moves for many reasons). Thumbnails are queued at discovery, not
-  after the metadata read, and rows are found via `FileListView._itemByElement` with the file path as the image key (not
-  the GUID, which hydration briefly clears). The metadata read itself is still strictly in list order, so metadata
-  columns for rows far down a big folder still wait their turn. Still to do: `DirectoryElement.Thumbnail` is a live
-  `Image` that the `ImageList` copies again; the JPEG/PNG/TIFF preview is still a full-resolution decode (fine, but a
-  scaled decode would be quicker for big files).
-  `ExifTool.TryGetEmbeddedPreview` sends `-json -b` so binary data travels as base64 over the text pipe. The wrapper's
-  common `Filter` (which flattens newlines in text values) deliberately skips values starting with the JPEG marker,
-  because it otherwise rewrites 0x0A/0x0D bytes inside the image and corrupts it. `RawContext.RawData` is protected in
-  Sdcb.LibRaw, so `RawPreview` reads it by reflection.
+- **Thumbnails and previews: how they fit together, and what is left.**
+  - *View.* `View/Controls/ThumbnailView` is a purpose-built `ScrollableControl` that paints the items of the (hidden, still
+    alive) `FileListView`. The list stays the owner of items, order (sorting, filtering) and selection, so the map, preview,
+    shortcuts and edit flows are unchanged: the view writes the user's clicks and keys back as selection on the list and raises
+    `UserSelectionChanged` / `ItemActivated`, which `FrmMainApp.ViewMenu.cs` routes to the existing handlers
+    (`lvw_HandleSelectionChange`, `lvw_FileList_KeyDown`, `OpenListItem`). Geometry and key navigation are pure and tested
+    (`ThumbnailLayout`). It follows the list by polling `FileListView.ItemsVersion` (shape: add/remove/sort) and
+    `ContentVersion` (text/colour) on a 100 ms timer; anything indexing the list must use the live `Items.Count`, not its
+    cached count, because a folder reload clears the list between two ticks (an exception escaping `OnPaint` makes WinForms
+    paint a red cross over the control for good, so cell drawing is also wrapped).
+  - *Pictures.* Nothing is held per file. `ThumbnailProvider.Ensure` makes the picture (`ThumbnailGenerator`: embedded
+    thumbnail/preview first, scaled decode next, full decode last; aspect ratio kept, no letterbox) and puts it in
+    `ThumbnailCache` as a small JPEG at one of two stored sizes (128 or 256, chosen from the on-screen size), so resizing doesn't
+    regenerate; the view scales to fit. Tiers: in-memory (`FileKeyedCache`, path + mtime + length + size), then the persistent
+    `ThumbnailStore`. The view paints from the in-memory tier only (never the database or disk) via a small LRU of decoded
+    bitmaps, and asks its own `ThumbnailWorker` (visible cells first) for anything missing. `PreviewCache` (previews of slow
+    formats) is in-memory only.
+  - *Store.* `ThumbnailStore` is a SQLite file of its own (WAL, batched writes), closed by `PerformAppClosingProcedure`
+    (and `ProcessExit` as a net). A `thumbnailcache.sqlite.running` marker exists while open: finding it at start means a dirty
+    exit, so the file is integrity-checked and rebuilt if damaged (any open/check failure also rebuilds). SQLite was kept after
+    considering loose files (slow on cloud-synced folders), a hand-rolled pack file (needs our own compaction/recovery) and an
+    embedded key-value store (new dependency, no real gain).
+  - *Metadata order.* `DirectoryElementCollection.PrioritiseHydration` (fed by `FrmMainApp.StartVisibleRowPrioritisation`)
+    makes the ExifTool read serve the visible rows first; both it and the thumbnail worker use `PriorityWorkList`.
+  - *Preview pane.* Decodes off the UI thread, cancels superseded requests, RAW via `RawPreview` (LibRaw; the embedded JPEG that
+    best fits, `RawContext.RawData` read by reflection as it is protected), and falls back to the running ExifTool
+    (`ExifTool.TryGetEmbeddedPreview`: `-json -b`, binary as base64 over the text pipe). The wrapper's common `Filter` (which
+    flattens newlines in text values) deliberately skips values starting with the JPEG marker, because it otherwise rewrites
+    0x0A/0x0D bytes inside the image and corrupts it.
+  - *Still to do.* In thumbnail view there is no in-place rename (`F2`), filter menu or sorting by column (switch to Details);
+    no rubber-band selection; the JPEG/PNG/TIFF preview is still a full-resolution decode (fine now it is off the UI thread, but a
+    scaled decode would be quicker for very large files); the metadata read is still strictly sequential within the priority order.
 - **`HelperControlAndMessageBoxHandling`** kept its name while moving to `Helpers/UI/`. Renaming it
   touches 253 references and is pure churn on top of an already large diff; worth doing on its own.
+
+## Moving a setting into a menu
+
+The View menu is the first setting to leave the Settings dialog; more can follow the same way. A setting is a row in the
+`settings` table whose id is the name of the control that edited it (`ckb_…` check box, `nud_…` number, `rbt_…` radio button, …)
+under that control's tab page; import/export copies the whole table, `AppStartup.AppStartupApplyDefaults` maps each id to a
+`HelperVariables` field, and `DataWriteSQLiteSettings` writes the row and refreshes the in-memory tables. So:
+
+1. **Keep the id.** If it stays the same, the stored row keeps working and existing users keep their value: no migration.
+   (Renaming an id *does* need a one-off migration of the stored row, run once, keyed on the build number that
+   `UpgradeNotices` already remembers.)
+2. Remove the control from `FrmSettings`: the designer lines, the `.resx` entries (and move the neighbours up to close the gap),
+   any mention in the OK handler (restart warnings) and its tooltip handler. Leave the mapping in `AppStartup` and any default in
+   `DatabaseAndStartup` alone; they are keyed by id, not by control. (The now-unused caption strings can stay: the language files
+   are managed in Weblate.)
+3. Add the menu entry in `FrmMainApp.ViewMenu.cs`: `NewMenuItem("tmi_…")` gives a localised, dark-mode-aware item (add its caption to
+   `Strings.resx`, in British English); for a plain yes/no setting `AddSettingToggle(...)` does the tick, the store and the call to
+   apply it; anything else stores with `MenuSettings.WriteBool/WriteInt/Write`. Mark the active item with `SetMenuMark`, not
+   `Checked`: the stock check box is painted light blue in dark mode and as a tiny glyph in an oversized box on high-DPI
+   displays, and an image larger than the text makes every row of that drop-down taller than the other menus' rows (hence the
+   small, font-sized, unscaled tick). Menu items carry no colours of their own: after adding a menu, run
+   `ThemeHelper.ApplyTo(mns_MenuStrip)` so it is themed exactly like the rest (colouring items by hand gave a different dark).
+4. Write a setting only when the user changes it (the thumbnail size is the example: `_thumbnailSizeChangedByUser`). Don't seed
+   a default row or write the current value back at start-up or on close: a user who never chose a value then simply gets the
+   default and the app works the same, and a value chosen earlier is kept whichever mode the app is in.
+5. Make it take effect at once (set the `HelperVariables` field and refresh whatever shows it), and re-apply it after the Settings
+   dialog closes (`SyncViewFromSettings` is the example), since a settings import can change stored values behind the menu's back.
 
 ## Keeping the designer loadable
 
