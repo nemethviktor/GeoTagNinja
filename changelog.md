@@ -241,15 +241,19 @@
 	- App Version Bump: 1.14
 	- Implemented an Export/Import functionality for Settings and Custom Rules
 	- Bumped ExifTool to v12.67
-	- Streamlined a lot of code relating to the reusability of on-the-fly Form generation
-	- Same goes for generic reusability, messageboxes, enums, buttons, whatnots
-	- Various further Dark Mode changes/improvements
+	- All message boxes and dialogs, including the rewritten `About` box, now share the same custom dialog classes and follow Dark Mode.
+	- Further Dark Mode work: menu strip item colours, the `About` box, dialogs and the order in which dark mode is initialised.
 	- Added the capability to Restart the app immediately if the user wants so in the Settings
 	- Added support for previewing HEIC images
+	- Added two read-only columns, `IPTC Keywords` and `XMP Subject`.
 - BUGS & FIXES:
 	- Fixed Country DropDown not displaying anything if the existing data wasn't on the predefined list. It now takes value from CountryCode
 	- Fixed Date Shift misbehaving 
 	- Fixed newly-saved data not being written back into the DE-logic
+	- Fixed the Edit File form's numeric fields using the current culture's decimal separator instead of the invariant one.
+	- Fixed the time-zone offset list in the Edit File form not being picked up properly.
+	- RAW previews are now rotated correctly (the Orientation tag read from the RAW preview was wrong).
+	- Fixed settings import leaving the settings database locked.
 
 **Build 8661 [20230918]** 
 - NEW & UPDATED:
@@ -262,6 +266,7 @@
 	- Added 2 new buttons for filing feature requests and bugs (both require a GitHub acct.)
 	- Added Dark Mode support. Refer to the readme but it's very ugly and there's little I can do about that as WinForms doesn't support the rich capabilities Windows 10/11 can offer for the time being.
 	- Added various options for `Dark Mode Map`
+	- Rearranged the area below the map in the `Map` tab, and split the `Application` settings tab in two as it had grown too big.
 - BUGS & FIXES:
 	- Fixed an error when data in MyComputer wasn't properly recorded and this caused a crash
 	- Reverted a change introduced earlier re: webView2 initialisation after it randomly failed on one of my VMs
@@ -274,7 +279,7 @@
 		- Added a TaskbarProgressBarState indicator
 		- Update the update logic -> there's now a Setting that enables the user to update to pre-release [dev] releases or master-only. Master releases will no longer be marked as pre-release on github.
 	- Bumped ExifTool to v12.65
-	- Changed the internal logic as to how the ListView coordinates get put on the map. Trying to fully move away from reading data from the ListView rather than from the DirectoryElement
+	- The map position on selection now comes from the file's own data (including unsaved edits) rather than from the text in the list, so markers for files with unsaved edited coordinates reflect the edit.
 	- Changed internal logic re: (not) defaulting values to strings in certain cases
 - BUGS & FIXES:
 	- Fixed a bug where in Finland (English) culture [possibly others too] the app would crash because decimals were being converted in the wrong way.
@@ -282,6 +287,7 @@
 	- Then fixed an issue caused by this where XMP tags weren't written out to XMP files properly. 
 	- Also fixed a duplication issue in the outgoing args file while at it
 	- Fixed a bug where Paste would also attempt to affect folders
+	- Fixed clicking a row in the list not showing its location on the map (off-by-one in the column lookup).
 
 **Build 8610 [20230729]** [dev branch release]
 - NEW & UPDATED:
@@ -306,10 +312,12 @@
 	- Bumped ExifTool to v12.62
 - BUGS & FIXES:
 	- Fixed a bug where the TZ dropdown in Import GPX could cause a crash if the user was in a TZ that wasn't on the dropdown.
-	- Paste-values logic minor revamp
-	- Changed settings to default-write-into-image-file to false
+	- The Paste dialog no longer opens with every field ticked; only the values that were copied or edited are pre-ticked (#77).
+	- Changed the default of `write into image file` to off for RAW and TIFF files (other types are unchanged and existing installs keep their saved choice).
 	- Rewrote the File Edit Form load process. The existing one took way too long because it parsed data for a number of Objects that were entirely irrelevant.
 	- Rewrote the Track Import logic not to overflow when too many files were involved. (see ticket 78).
+	- Added a warning when one XMP sidecar matches several image files, listing the files (#57).
+	- Fixed `.xmp` sidecars not being added in `Collections Mode`.
 
 **Build 8469 [20230310]**
 - NEW & UPDATED:
@@ -324,14 +332,20 @@
 	- Changed certain numeric TextBoxes to NumericUpDowns.
 	- Added logic to replace hard-coded City-definition logic with user choices.
 	- Changed versioning logic. Will use simple build numbers from now on in the public facing element of the app. Windows & Visual Studio still require the ##.##.#### logic rather than just a build number but the About section won't show it..
+	- Added a right-click `Open Coordinates in API` item that opens the GeoNames nearby-place lookup for the selected file in the browser.
+	- When the API offers several results to pick from, the file is now selected and its preview shown behind the picker.
+	- Added a `Settings` option to restrict GeoNames results to populated places only (`fcode=PPL`).
 - BUGS & FIXES:
 	- Fixed a bug where NumericUpDown changes didn't trigger setting fonts to Bold
 	- Fixed the map zooming way too far out when negative lat/long values are present
 	- Changed the pick-from-API-choices Form to be 1-based-index rather than 0-based
 	- Fixed MessageBox captions always saying `Error` as output
 	- Fixed a bug where one or two Settings were ignored on load
-	- Fixed a variety of random bugs relating to time-shift copypastes not entirely behaving
-	- Further fixed a variety of bugs that yet again I don't entirely remember
+	- Fixed time-shift values not copy-pasting entirely correctly.
+	- When the API returns no rows you are now asked whether to clear the existing country/city fields. Previously they were blanked silently.
+	- A failed write no longer drops the file's pending edits from the write queue (#58).
+	- Fixed the numeric up-downs not working in the Edit form in comma-decimal locales such as German (#66, #68).
+	- Removed a redundant preview generation while loading a folder (#55).
 
 **Build 8421 [20230121]**
 - NEW & UPDATED:
@@ -344,20 +358,27 @@
 	- Bumped ExifTool to v12.55
 	- Made the installer look a tad prettier. (I know, right?!)
 	- Rewrote parts of the Settings Form and the underlying logic.
+	- ExifTool is now kept running (`stay_open`) for reading folder contents: started with the app, closed on exit (kudos to Urmel).
+	- Preview images now respect the picture's EXIF orientation.
 - BUGS & FIXES:
 	- Fixed Paste not actually pasting Country
 	- Fixed crash when API offline or Unauth'd
 	- Fixed crash when User Folder not existing
 	- Fixed a bug re: the API sending back invalid Altitude data. While I can't do much about that per se but now if there is existing data in the file then that will be retained rather than making it -32756m or some such.
 	- Fixed a recursion bug while loading the Edit Form. Should run faster now.
-	- Fixed a bug re: how DateTime formats are handled. 
+	- Fixed dates and times not working in certain locales: parsing and formatting no longer depend on the UI culture's short/long formats (#51).
 	- Fixed a bug re: Time-Shift values not being properly recalled if user didn't explicitly refresh folder.
 	- Fixed a bug in Settings where subject to certain preceding actions the wrong checkbox value would be saved.
+	- Fixed GPX Track Import not completing (#47): `Cancel` is disabled while it runs and ExifTool's output is now read properly.
+	- Fixed the `Insert` buttons for Taken/Create date in the Edit form being enabled or disabled wrongly (#48).
+	- Fixed IPTC Country, CountryCode and State not being deleted when blanked.
+	- Fixed the ExifTool version check reporting a wrong or stale version, and failing in comma-decimal locales.
+	- Fixed the preview not showing in the Edit form (#45).
 
 **Build 8391 [20221222]**
 - NEW & UPDATED:
 	- App Version Bump: 0.7
-	- Added Column Sort (kudos to Urmel, thank you!)
+	- Added Column Sort, and dragging columns to reorder them, with the order remembered (kudos to Urmel, thank you!)
 	- Added Column Show/Hide (kudos to Urmel, thank you!)
 	- Added a Setting to return X rows of data from the API within Y miles radius (I think it's miles anyway, maybe KM)
 	- Added a Setting to optionally replace empty Toponomy values with whatever the user wants
@@ -369,11 +390,23 @@
 	- Updated Translations. (thanks pbranly)
 	- Updated City/Sublocation logic (thanks Clariden)
 	- Bumped ExifTool to v12.52
+	- Added `Favourites`: save the current location (coordinates, altitude, city, state, sub-location, country) under a name and apply it to the selected files from the main window.
+	- Added a `Settings` option controlling whether `Remove GeoData` also deletes `OffsetTime` (off by default).
+	- Saving now clears and regenerates the IPTC digest, so other programs are not confused by out-of-sync IPTC data.
+	- The empty preview pane now says "No image to show", column widths are remembered and the Show/Hide Columns dialog has a Select/Deselect All tick (kudos to Urmel).
+	- Refreshing the file list no longer re-sorts it, the map is hidden while the window is being resized, and manual resizing was replaced with flow layouts and docking (kudos to Urmel).
+	- Language files are now plain UTF-8 CSV files, which are easier to edit.
 - BUGS & FIXES:
 	- Eliminate MD5 checks. Basically the bloody thing takes longer than re-parsing the whole folder.
 	- Removed the built-in webView2 installer because it was more of a pain in the backside than benefit. Updated the readme w/ instructions should this cause a problem.
 	- Fixed logic to ensure if a value in the FrmEdit is replaced with a blank it actually does get queued up for writing.
-	- Stuff I don't remember.
+	- Fixed the file-list columns being in an odd order on fresh installs (#32).
+	- Fixed the file-list sort order: `..` first, then drives, folders and files, and descending sort no longer reverses the folders (#30).
+	- Pulling toponomy for a file without coordinates is now handled instead of failing (#31).
+	- Fixed `Remove GeoData` in the Edit form not queueing the blanked tags for writing.
+	- Fixed the Settings form clipping larger checkboxes (#26).
+	- Fixed values that look like numbers being misread from CSV in non-English locales (the CSV reader is now CsvHelper with the invariant culture instead of OLEDB).
+	- Fixed the context menu and some Edit/Paste labels not being translatable.
 
 **Build 8370 [20221201]**
 - NEW & UPDATED:
@@ -386,6 +419,8 @@
 	- Bumped ExifTool to v12.51
 	- Added some logic to the above to allow for `Original Files DateTime` to be reset to CreateDateTime by default for RAW images. (These can all be changed in Settings/File Specific)
 	- Rewrote the Excel macro that deals with exporting languages. It can now also import. (less relevant for the users but makes my life easier.)
+	- The `About` box now shows the build date and time.
+	- The file list now scrolls automatically to the file being processed.
 - BUGS & FIXES:
 	- Fixed Copy-Paste properly. Users can now pick what to paste. It's faster too now.
 	- Error msg/image name not showing properly when file gone missing
@@ -405,6 +440,7 @@
 	- If a user's "Pictures" (or any other "Special") folder had been moved and renamed the would break because Windows treats special folders in odd ways. (e.g. if the Pics folder is called "Pics" Windows would still show "Pictures", which doesn't per se exist.)
 	- If the user had chosen `Delete All GPS Data` and subsequently added GPS data the addition would not have gone through upon save. This is now fixed.
 	- Rewrote the logic of (re)creating sidecar XMP files as the original logic would pull data from the RAW file (only), possibly overwriting Adobe-specific stuff that had been stored in an already-existing XMP.
+	- Clicking into the folder-name box now selects its whole text.
 
 **Build 8350 [20221111]**
 - NEW & UPDATED:
@@ -417,11 +453,13 @@
 	- Updates to nuGet packages
 	- Special thanks to pbranly for very extensive testing.
 - BUGS & FIXES:
-	- Using keyboard/keys on the main grid (listView).
+	- Fixed the keyboard (arrow keys, `Ctrl`+`A`) not working properly on the main grid (listView).
 	- ToolStripButtons' ToolTips now work as intended.
 	- Removing data when sidecar XMPs are enabled now actually removes data from the sidecar XMPs
 	- Code updates re how integers and decimals are handled in various culture settings. (tested on HU and FR)
-	- IDK (i don't know) - so far 39 files have been updated, that is almost everything. I should do proper commits, not one-huge-commit, it is bad practice.
+	- Files with a pending `get from web` edit are now shown in red in the list (the Edit form's toponomy/altitude pull marks them too).
+	- If you changed folder while ExifTool was still reading, the old results could be written into the new folder's rows when file names matched. They are now discarded.
+	- Added a `File` > `Import GPX` menu entry, and the toolbar buttons got new icons.
 
 **Build 8334 [20221026]**
 - NEW & UPDATED:
@@ -438,6 +476,7 @@
 - NEW & UPDATED:
 	- Added a `Don't ask again` button for the `loc-to-file` dialogbox. This is session specific (if you close/restart the app, it will come back again). [Updated this logic in the Build 8318 release]
 - BUGS & FIXES:
+	- Closing the `loc-to-file` dialogbox with `Alt`+`F4` no longer breaks the flow. (Build 8318)
 	- Minor code cleanup
 
 **Build 8304 [20220926]**
@@ -449,7 +488,7 @@
 	- Disabled the notification for "1 new file created" when saving RAW files that don't already have an XMP s/c file. This came up for each file separately and was a bit annoying.
 	- Changed max zoom on map to more "zoomier" (from lvl 13 to 19). FWIW I think the new one is the "zoomiest" the system allows.
 - BUGS & FIXES:
-	- Various
+	- The ExifTool update prompt no longer fires when the stored ExifTool version is blank.
 
 **Build 8270 [20220823]**
 - NEW & UPDATED:
@@ -457,8 +496,13 @@
 	- Added check for GeoTagNinja version change tracking
 	- Added (better) commentary to the code
 	- Changed Settings/Edit Forms' behaviour not to block other windows.
+	- Toponomy and altitude lookups now check a local SQLite cache before calling the web API.
 - BUGS & FIXES:
-	- Various
+	- Typing a value such as `50` in an Edit field no longer queues both `5` and `50` for the file; a newer edit now replaces the earlier pending one for that field.
+	- Negative numbers are now accepted in the Edit form's type-in fields, and typed-in numbers are saved properly.
+	- Leaving a lat/long field blank (`-`) in the Edit form no longer triggers the "must be numbers" warning or forces the field to 0.
+	- Selecting only folders and pressing `Edit` no longer shows the "file disappeared" warning.
+	- After `OK` in the Edit form the main window's map and preview now refresh for the selected file.
 
 **Build 8251 [20220804]**
 - NEW & UPDATED:
