@@ -1231,4 +1231,46 @@ Zapisz klucz API, gdy zostaniesz o to poproszony. Jeśli tego nie zrobisz od raz
   <data name="Generic_ShowUserName" xml:space="preserve">
     <value>Pokaż nazwę użytkownika</value>
   </data>
+  <data name="tmi_View" xml:space="preserve">
+    <value>Podgląd</value>
+  </data>
+  <data name="tmi_View_Details" xml:space="preserve">
+    <value>Szczegóły</value>
+  </data>
+  <data name="tmi_View_Thumbnails" xml:space="preserve">
+    <value>Miniatury</value>
+  </data>
+  <data name="tmi_View_ThumbnailSize" xml:space="preserve">
+    <value>Rozmiar miniatur</value>
+  </data>
+  <data name="tmi_View_ThumbnailSize_Small" xml:space="preserve">
+    <value>Mały</value>
+  </data>
+  <data name="tmi_View_ThumbnailSize_Medium" xml:space="preserve">
+    <value>Średni</value>
+  </data>
+  <data name="tmi_View_ThumbnailSize_Large" xml:space="preserve">
+    <value>Duży</value>
+  </data>
+  <data name="tmi_View_ThumbnailSize_ExtraLarge" xml:space="preserve">
+    <value>Bardzo duży</value>
+  </data>
+  <data name="tmi_View_ThumbnailSize_Smaller" xml:space="preserve">
+    <value>Zmniejsz miniatury</value>
+  </data>
+  <data name="tmi_View_ThumbnailSize_Larger" xml:space="preserve">
+    <value>Zwiększ miniatury</value>
+  </data>
+  <data name="ttp_ThumbnailSize" xml:space="preserve">
+    <value>Rozmiar miniatur</value>
+  </data>
+  <data name="tmi_View_SortBy" xml:space="preserve">
+    <value>Sortuj po</value>
+  </data>
+  <data name="tmi_View_SortBy_Ascending" xml:space="preserve">
+    <value>Rosnąco</value>
+  </data>
+  <data name="tmi_View_SortBy_Descending" xml:space="preserve">
+    <value>Malejąco</value>
+  </data>
 </root>
