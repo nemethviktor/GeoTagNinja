@@ -1,7 +1,8 @@
 ﻿# GeoTagNinja Changelog
 
-**Build 9xxx [202xxxxx]** (upcoming release)
+**Build 9807 [20261107]**
 - NEW & UPDATED:
+	- `Export` track as `KML` as well as GPX: in the `Import/Export GPX` form's `Export` tab the save dialog now offers `GPX` and `KML`, and the extension you choose picks the format. The KML is a Google Earth track (a single line through the selected photos), based on ExifTool's `kml_track.fmt`. `Include altitude` writes absolute altitudes, and photos without an altitude are then left out of the track. KML has no timestamps, so the timestamp-type choice is greyed out for it.
 	- `Thumbnail View` has moved from `Settings` to a new `View` menu (`View` > `Details` / `Thumbnails`) and can be switched at any time without restarting. The `Show Thumbnails` tick in `Settings` is gone; your previous choice carries over because it is stored under the same setting.
 	- The thumbnail size can be changed on the fly, as in other image browsers: `Ctrl` + mouse wheel over the thumbnails, the slider at the bottom right of the file list, or `View` > `Thumbnail Size` (four presets, plus `Ctrl` `-` / `Ctrl` `+`). The size is remembered.
 	- The thumbnail view is now a purpose-built control instead of the list's icon mode. It draws only the pictures on screen, so memory no longer grows with the number of files, folders of any size scroll smoothly, and thumbnails keep their proportions (no more black bars). You can sort it from `View` > `Sort By`, rename a file with `F2`, select several pictures by dragging a rectangle over empty space, and right-click (or `Shift`+`F10`) for the same actions menu as the list; filtering by column is still `Details` only.

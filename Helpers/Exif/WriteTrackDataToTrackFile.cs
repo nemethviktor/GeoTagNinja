@@ -18,10 +18,11 @@ internal class WriteTrackDataToTrackFile
     private static readonly Logger Log = LogManager.GetCurrentClassLogger();
 
     /// <summary>
-    ///     Writes the gpx file based on the settings.
+    ///     Writes the track file (GPX or KML, depending on the extension of <paramref name="outFilePath" />) based on the settings.
+    ///     The matching <c>out.fmt</c> must have been generated first (<c>GpxExportOptions</c> / <c>KmlExportOptions</c>).
     /// </summary>
     /// <param name="fileList">List (string) of files to be parsed/written data for.</param>
-    /// <param name="outFilePath">Location of the GPX file to save to.</param>
+    /// <param name="outFilePath">Location of the GPX/KML file to save to.</param>
     /// <returns></returns>
     internal static async Task ExifWriteTrackDataToTrackFile(List<string> fileList,
                                                              string outFilePath)
@@ -73,7 +74,7 @@ internal class WriteTrackDataToTrackFile
 
             // -p
             exifArgsForOriginalFile += $"-p{Environment.NewLine}";
-            // gpx.fmt
+            // out.fmt (gpx or kml)
             exifArgsForOriginalFile += Path.Combine(path1: HelperVariables.UserDataFolderPath, path2: "out.fmt") +
                                        Environment.NewLine;
 

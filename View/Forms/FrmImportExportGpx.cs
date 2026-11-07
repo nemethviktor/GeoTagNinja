@@ -60,6 +60,9 @@ public partial class FrmImportExportGpx : Form
 
         ofd_importOneFile.Filter = gpxExtensionsFilter;
 
+        // export: the extension picks the format (GPX or KML)
+        ofd_SaveTrackTo.Filter = "GPX (*.gpx)|*.gpx|KML (*.kml)|*.kml";
+
         // set label texts and combobox items
         IEnumerable<Control> controls = ControlTraversal.GetAllControls(control: this);
         foreach (Control control in controls)
@@ -434,8 +437,17 @@ public partial class FrmImportExportGpx : Form
                                                into directoryElement
                                                select directoryElement.FileNameWithPath).ToList();
 
-                GpxExportOptions.GenerateFMTFile(includeAltitude: ckb_ExportTrackIncludeAltitude.Checked,
-                    exportFileFMTTimeBasis: cbx_ExportTrackTimeStampType.Text);
+                // the format follows the extension of the chosen file: .kml -> KML track, anything else -> GPX
+                if (KmlExportOptions.IsKmlPath(outFilePath: tbx_SaveTrackTo.Text))
+                {
+                    KmlExportOptions.GenerateFMTFile(includeAltitude: ckb_ExportTrackIncludeAltitude.Checked);
+                }
+                else
+                {
+                    GpxExportOptions.GenerateFMTFile(includeAltitude: ckb_ExportTrackIncludeAltitude.Checked,
+                        exportFileFMTTimeBasis: cbx_ExportTrackTimeStampType.Text);
+                }
+
                 await WriteTrackDataToTrackFile.ExifWriteTrackDataToTrackFile(fileList: exportFileList,
                     outFilePath: tbx_SaveTrackTo.Text);
                 Hide();
@@ -722,6 +734,10 @@ public partial class FrmImportExportGpx : Form
         if (ofd_SaveTrackTo.ShowDialog() == DialogResult.OK)
         {
             tbx_SaveTrackTo.Text = ofd_SaveTrackTo.FileName;
+
+            // KML tracks carry no timestamps, so the time-basis choice only applies to GPX
+            cbx_ExportTrackTimeStampType.Enabled =
+                !KmlExportOptions.IsKmlPath(outFilePath: ofd_SaveTrackTo.FileName);
         }
     }
 

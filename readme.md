@@ -39,7 +39,7 @@ There is a "short" (15 mins) demo on [YouTube](https://youtu.be/ulP1ZG7mH-I) if 
 - Tag the location coordinates and City/State/etc details of multiple photos with the help of a map
 - Save and retrieve favourite locations
 - Import Track (GPX etc) files and associate them with the photos
-- Export coordinate tracks of photos to GPX
+- Export coordinate tracks of photos to GPX or KML
 - Ability to define custom rules/logic wrt naming of places at country level
 - Get place names (country, state, city, etc.) and altitude from GeoNames for the selected location (altitude lookup can be disabled in `Settings`)
 - Drag the map marker, or long-press a point on the map, to apply a location to the selected photos

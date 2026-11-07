@@ -198,6 +198,7 @@
     <Compile Include="Helpers\FileSystem\SupportedFileExtensions.cs" />
     <Compile Include="Helpers\Exif\GpxImportOptions.cs" />
     <Compile Include="Helpers\Exif\GpxExportOptions.cs" />
+    <Compile Include="Helpers\Exif\KmlExportOptions.cs" />
     <Compile Include="Helpers\Exif\CopyPasteTags.cs" />
     <Compile Include="Helpers\Map\MapLayers.cs" />
     <Compile Include="View\Forms\FrmAboutBox.cs">
