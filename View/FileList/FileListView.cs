@@ -480,10 +480,12 @@ public partial class FileListView : System.Windows.Forms.ListView
 
         string DefaultStrGetter(SourcesAndAttributes.ElementAttribute atrb)
         {
+            // A multi-value attribute (keywords) is held one item per line; a grid cell shows them on one line.
             return directoryElement.GetAttributeValueAsString(
-                attribute: atrb,
-                notFoundValue: nfVal,
-                context: ValueFormatContext.Display);
+                                        attribute: atrb,
+                                        notFoundValue: nfVal,
+                                        context: ValueFormatContext.Display)
+                                   .Replace(oldValue: "\n", newValue: ", ");
         }
 
         if (ColumnToAttributeMap.TryGetValue(

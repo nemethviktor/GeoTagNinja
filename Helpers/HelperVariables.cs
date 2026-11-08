@@ -76,6 +76,12 @@ internal static class HelperVariables
     internal static bool UserSettingRetainMapZoom = false;
     internal static bool UserSettingAlwaysRecenterMap = true;
 
+    /// <summary>
+    ///     When true, saving a changed (or removed) location also swaps the old place-name keywords and <c>geo:</c>
+    ///     keywords of the photo for ones that match (see <c>GeoKeywordSync</c>). On by default.
+    /// </summary>
+    internal static bool UserSettingSyncGeoKeywords = true;
+
     internal static bool UserSettingDoNotDownloadAltitude = false;
 
     /// <summary>

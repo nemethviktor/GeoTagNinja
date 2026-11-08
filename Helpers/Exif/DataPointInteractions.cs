@@ -8,6 +8,9 @@ using System.Globalization;
 using System.Linq;
 using System.Text.RegularExpressions;
 using System.Threading.Tasks;
+using System.Windows.Forms;
+using GeoTagNinja.Helpers.UI;
+using Themer = WinFormsDarkThemerNinja.Themer;
 using static GeoTagNinja.Model.SourcesAndAttributes;
 
 namespace GeoTagNinja.Helpers.Exif;
@@ -92,6 +95,40 @@ internal static class DataPointInteractions
 
         coordinate = pointVal * multiplier;
         return true;
+    }
+
+    /// <summary>
+    ///     When "keep keywords in step with the location" is off, tells the user that removing the location data leaves
+    ///     the keywords alone - the place names and <c>geo:</c> keywords some tools put there stay in the file. Says
+    ///     nothing when the setting is on (it removes them) or when none of the files has any keywords to leave behind.
+    /// </summary>
+    /// <param name="directoryElements">The files the removal is about to run on.</param>
+    internal static void NotifyIfKeywordsWillRemain(IEnumerable<DirectoryElement> directoryElements)
+    {
+        if (HelperVariables.UserSettingSyncGeoKeywords)
+        {
+            return;
+        }
+
+        bool anyKeywords = directoryElements.Any(predicate: element =>
+            element.Type == DirectoryElement.ElementType.File &&
+            new[] { ElementAttribute.IPTCKeywords, ElementAttribute.XMLSubjects }.Any(predicate: attribute =>
+                {
+                    string text = element.GetAttributeValueAsString(attribute: attribute, notFoundValue: string.Empty)
+                                         .Trim();
+                    return text.Length > 0 &&
+                           text != NullEquivalents.StringGeneric;
+                }));
+
+        if (anyKeywords)
+        {
+            _ = Themer.ShowMessageBoxWithResult(
+                message: HelperControlAndMessageBoxHandling.ReturnControlText(
+                    controlName: "mbx_Helper_InfoRemoveGeoDataKeywordsRemain",
+                    fakeControlType: HelperControlAndMessageBoxHandling.FakeControlTypes.MessageBox),
+                icon: MessageBoxIcon.Information,
+                buttons: MessageBoxButtons.OK);
+        }
     }
 
     /// <summary>

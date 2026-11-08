@@ -1778,4 +1778,260 @@ That said the code _should_ be able to comprehend other layouts. Note if the cli
     <value>The web service has nothing for this position.</value>
     <comment>Location: Favourites</comment>
   </data>
+  <data name="tpg_Keywords" xml:space="preserve">
+    <value>Categories/Keywords</value>
+    <comment>Location: Edit Data tabs</comment>
+  </data>
+  <data name="tpg_SourceDescription" xml:space="preserve">
+    <value>Source/Description</value>
+    <comment>Location: Edit Data tabs</comment>
+  </data>
+  <data name="tpg_Contact" xml:space="preserve">
+    <value>Contact</value>
+    <comment>Location: Edit Data tabs</comment>
+  </data>
+  <data name="lbl_SectionSource" xml:space="preserve">
+    <value>Source</value>
+    <comment>Location: Edit Data tabs</comment>
+  </data>
+  <data name="lbl_SectionDescription" xml:space="preserve">
+    <value>Description</value>
+    <comment>Location: Edit Data tabs</comment>
+  </data>
+  <data name="lbl_Category" xml:space="preserve">
+    <value>Category</value>
+    <comment>Location: Edit Data tabs</comment>
+  </data>
+  <data name="lbl_SupplementalCategories" xml:space="preserve">
+    <value>Supplemental Categories</value>
+    <comment>Location: Edit Data tabs</comment>
+  </data>
+  <data name="lbl_IPTCKeywords" xml:space="preserve">
+    <value>Keywords</value>
+    <comment>Location: Edit Data tabs</comment>
+  </data>
+  <data name="lbl_Artist" xml:space="preserve">
+    <value>Artist</value>
+    <comment>Location: Edit Data tabs</comment>
+  </data>
+  <data name="lbl_CaptionWriter" xml:space="preserve">
+    <value>Caption Writer</value>
+    <comment>Location: Edit Data tabs</comment>
+  </data>
+  <data name="lbl_Source" xml:space="preserve">
+    <value>Source</value>
+    <comment>Location: Edit Data tabs</comment>
+  </data>
+  <data name="lbl_Credit" xml:space="preserve">
+    <value>Credit</value>
+    <comment>Location: Edit Data tabs</comment>
+  </data>
+  <data name="lbl_SourceURL" xml:space="preserve">
+    <value>URL</value>
+    <comment>Location: Edit Data tabs</comment>
+  </data>
+  <data name="lbl_Copyright" xml:space="preserve">
+    <value>Copyright</value>
+    <comment>Location: Edit Data tabs</comment>
+  </data>
+  <data name="lbl_ObjectName" xml:space="preserve">
+    <value>Object Name</value>
+    <comment>Location: Edit Data tabs</comment>
+  </data>
+  <data name="lbl_Headline" xml:space="preserve">
+    <value>Headline</value>
+    <comment>Location: Edit Data tabs</comment>
+  </data>
+  <data name="lbl_Caption" xml:space="preserve">
+    <value>Caption</value>
+    <comment>Location: Edit Data tabs</comment>
+  </data>
+  <data name="lbl_SpecialInstructions" xml:space="preserve">
+    <value>Special Instructions</value>
+    <comment>Location: Edit Data tabs</comment>
+  </data>
+  <data name="lbl_Byline" xml:space="preserve">
+    <value>Byline</value>
+    <comment>Location: Edit Data tabs</comment>
+  </data>
+  <data name="lbl_BylineTitle" xml:space="preserve">
+    <value>Byline Title</value>
+    <comment>Location: Edit Data tabs</comment>
+  </data>
+  <data name="lbl_CreatorAddress" xml:space="preserve">
+    <value>Address</value>
+    <comment>Location: Edit Data tabs</comment>
+  </data>
+  <data name="lbl_CreatorCity" xml:space="preserve">
+    <value>City</value>
+    <comment>Location: Edit Data tabs</comment>
+  </data>
+  <data name="lbl_CreatorPostalCode" xml:space="preserve">
+    <value>Postal Code</value>
+    <comment>Location: Edit Data tabs</comment>
+  </data>
+  <data name="lbl_CreatorRegion" xml:space="preserve">
+    <value>State/Province</value>
+    <comment>Location: Edit Data tabs</comment>
+  </data>
+  <data name="lbl_CreatorCountry" xml:space="preserve">
+    <value>Country</value>
+    <comment>Location: Edit Data tabs</comment>
+  </data>
+  <data name="lbl_CreatorPhone" xml:space="preserve">
+    <value>Phone</value>
+    <comment>Location: Edit Data tabs</comment>
+  </data>
+  <data name="lbl_CreatorEmail" xml:space="preserve">
+    <value>E-Mail</value>
+    <comment>Location: Edit Data tabs</comment>
+  </data>
+  <data name="lbl_CreatorURL" xml:space="preserve">
+    <value>URL</value>
+    <comment>Location: Edit Data tabs</comment>
+  </data>
+  <data name="tmi_FieldMenu_InsertFrom" xml:space="preserve">
+    <value>Insert from</value>
+    <comment>Location: Edit Data field menu</comment>
+  </data>
+  <data name="tmi_FieldMenu_CopyTo" xml:space="preserve">
+    <value>Copy to</value>
+    <comment>Location: Edit Data field menu</comment>
+  </data>
+  <data name="tmi_FieldMenu_CopySelectionToCategories" xml:space="preserve">
+    <value>Copy Selection to Categories</value>
+    <comment>Location: Edit Data field menu</comment>
+  </data>
+  <data name="tmi_FieldMenu_CopySelectionToKeywords" xml:space="preserve">
+    <value>Copy Selection to Keywords</value>
+    <comment>Location: Edit Data field menu</comment>
+  </data>
+  <data name="tmi_FieldMenu_MostRecentlyUsed" xml:space="preserve">
+    <value>Most Recently Used Items</value>
+    <comment>Location: Edit Data field menu</comment>
+  </data>
+  <data name="lbl_ContactPrefix" xml:space="preserve">
+    <value>Contact</value>
+    <comment>Location: Edit Data field menu</comment>
+  </data>
+  <data name="btn_LoadFromTemplate" xml:space="preserve">
+    <value>Load from Template...</value>
+    <comment>Location: Edit Data templates</comment>
+  </data>
+  <data name="btn_LoadFromImage" xml:space="preserve">
+    <value>Load from Image...</value>
+    <comment>Location: Edit Data templates</comment>
+  </data>
+  <data name="btn_SaveAsTemplate" xml:space="preserve">
+    <value>Save as Template...</value>
+    <comment>Location: Edit Data templates</comment>
+  </data>
+  <data name="lbl_TemplateName" xml:space="preserve">
+    <value>Template:</value>
+    <comment>Location: Edit Data templates</comment>
+  </data>
+  <data name="lbl_TemplateInclude" xml:space="preserve">
+    <value>Use these:</value>
+    <comment>Location: Edit Data templates</comment>
+  </data>
+  <data name="btn_TemplateDelete" xml:space="preserve">
+    <value>Delete</value>
+    <comment>Location: Edit Data templates</comment>
+  </data>
+  <data name="chk_TemplateGroup_Country" xml:space="preserve">
+    <value>Country</value>
+    <comment>Location: Edit Data templates</comment>
+  </data>
+  <data name="chk_TemplateGroup_State" xml:space="preserve">
+    <value>State/Province</value>
+    <comment>Location: Edit Data templates</comment>
+  </data>
+  <data name="chk_TemplateGroup_City" xml:space="preserve">
+    <value>City</value>
+    <comment>Location: Edit Data templates</comment>
+  </data>
+  <data name="chk_TemplateGroup_Sublocation" xml:space="preserve">
+    <value>Sublocation</value>
+    <comment>Location: Edit Data templates</comment>
+  </data>
+  <data name="chk_TemplateGroup_Position" xml:space="preserve">
+    <value>GPS position</value>
+    <comment>Location: Edit Data templates</comment>
+  </data>
+  <data name="chk_TemplateGroup_Altitude" xml:space="preserve">
+    <value>Altitude</value>
+    <comment>Location: Edit Data templates</comment>
+  </data>
+  <data name="chk_TemplateGroup_Direction" xml:space="preserve">
+    <value>Image direction</value>
+    <comment>Location: Edit Data templates</comment>
+  </data>
+  <data name="chk_TemplateGroup_Destination" xml:space="preserve">
+    <value>Destination</value>
+    <comment>Location: Edit Data templates</comment>
+  </data>
+  <data name="chk_TemplateGroup_TakenDate" xml:space="preserve">
+    <value>Taken date</value>
+    <comment>Location: Edit Data templates</comment>
+  </data>
+  <data name="chk_TemplateGroup_CreateDate" xml:space="preserve">
+    <value>Created date</value>
+    <comment>Location: Edit Data templates</comment>
+  </data>
+  <data name="chk_TemplateGroup_OffsetTime" xml:space="preserve">
+    <value>Time zone offset</value>
+    <comment>Location: Edit Data templates</comment>
+  </data>
+  <data name="mbx_FrmEditTemplateDialog_QuestionDeleteTemplate" xml:space="preserve">
+    <value>Delete the template '{0}'?</value>
+    <comment>Location: Edit Data templates</comment>
+  </data>
+  <data name="mbx_FrmEditTemplateDialog_QuestionOverwriteTemplate" xml:space="preserve">
+    <value>A template called '{0}' already exists. Replace it?</value>
+    <comment>Location: Edit Data templates</comment>
+  </data>
+  <data name="mbx_FrmEditFileData_ErrorTemplateNotSaved" xml:space="preserve">
+    <value>The template could not be saved.</value>
+    <comment>Location: Edit Data templates</comment>
+  </data>
+  <data name="mbx_FrmEditFileData_InfoImageHasNothingToLoad" xml:space="preserve">
+    <value>That file has nothing this form can load.</value>
+    <comment>Location: Edit Data templates</comment>
+  </data>
+  <data name="lbl_Sexagesimal" xml:space="preserve">
+    <value>Sexagesimal</value>
+    <comment>Location: Edit Data Location tab</comment>
+  </data>
+  <data name="lbl_ImageDirection" xml:space="preserve">
+    <value>Image Direction [°]:</value>
+    <comment>Location: Edit Data Location tab</comment>
+  </data>
+  <data name="lbl_DestLatitude" xml:space="preserve">
+    <value>Dest. Latitude:</value>
+    <comment>Location: Edit Data Location tab</comment>
+  </data>
+  <data name="lbl_DestLongitude" xml:space="preserve">
+    <value>Dest. Longitude:</value>
+    <comment>Location: Edit Data Location tab</comment>
+  </data>
+  <data name="btn_GetAltitudeFromWeb" xml:space="preserve">
+    <value>Get from Web</value>
+    <comment>Location: Edit Data Location tab</comment>
+  </data>
+  <data name="mbx_FrmEditFileData_InfoCoordinatesNeededForAltitude" xml:space="preserve">
+    <value>Enter a latitude and a longitude first.</value>
+    <comment>Location: Edit Data Location tab</comment>
+  </data>
+  <data name="mbx_FrmEditFileData_WarningNoAltitudeFromWeb" xml:space="preserve">
+    <value>The web service has no altitude for this position.</value>
+    <comment>Location: Edit Data Location tab</comment>
+  </data>
+  <data name="ckb_SyncGeoKeywords" xml:space="preserve">
+    <value>Keep keywords in step with the location (place names and geo: keywords)</value>
+    <comment>Location: Settings</comment>
+  </data>
+  <data name="mbx_Helper_InfoRemoveGeoDataKeywordsRemain" xml:space="preserve">
+    <value>The location data has been removed, but your keywords have not been touched: any place names or "geo:" keywords in them stay as they were. To have them follow location changes, turn on "Keep keywords in step with the location" in Settings.</value>
+    <comment>Location: Remove geodata</comment>
+  </data>
 </root>

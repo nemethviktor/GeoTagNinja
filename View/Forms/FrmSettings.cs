@@ -55,7 +55,7 @@ public partial class FrmSettings : Form
     ];
 
     private readonly List<string> _checkBoxesWithTrueDefaultValue =
-        ["ckb_AlwaysRecenterMap"];
+        ["ckb_AlwaysRecenterMap", "ckb_SyncGeoKeywords"];
 
     /// <summary>
     ///     This Form provides an interface for the user to edit various app and file-specific settings.
@@ -63,6 +63,7 @@ public partial class FrmSettings : Form
     public FrmSettings()
     {
         InitializeComponent();
+        AddSyncGeoKeywordsCheckBox();
 
         // this one is largely responsible for disabling the detection of "new" (changed) data. (ie when going from "noting" to "something")
         _nowLoadingSettingsData = true;
@@ -78,6 +79,36 @@ public partial class FrmSettings : Form
     /// populates language selection ComboBoxes with both native and English names, and selects the previously saved
     /// language if available. It also assigns text values to other controls as needed. This method should be called
     /// during form initialization to ensure controls are properly configured for user interaction.</remarks>
+    /// <summary>
+    ///     Adds the "keep keywords in step with the location" checkbox under the others in the Application group. It is
+    ///     added in code (before the controls are read and labelled, which finds it by name like any other) rather
+    ///     than in the designer so the designer file stays untouched; the group grows if the new row does not fit and the
+    ///     tab page scrolls.
+    /// </summary>
+    private void AddSyncGeoKeywordsCheckBox()
+    {
+        int bottom = 0;
+        foreach (Control child in gbx_AppSettings.Controls)
+        {
+            // only the left column, where the checkboxes are stacked
+            if (child.Left < 100)
+            {
+                bottom = Math.Max(val1: bottom, val2: child.Bottom);
+            }
+        }
+
+        CheckBox checkBox = new()
+        {
+            Name = "ckb_SyncGeoKeywords",
+            AutoSize = true,
+            UseVisualStyleBackColor = true,
+            Location = new Point(x: 15, y: bottom + 6)
+        };
+        checkBox.CheckStateChanged += Any_ckb_CheckStateChanged;
+        gbx_AppSettings.Controls.Add(value: checkBox);
+        gbx_AppSettings.Height = Math.Max(val1: gbx_AppSettings.Height, val2: checkBox.Bottom + 12);
+    }
+
     private void AssignControlLabelsAndValues()
     {
         ReturnControlText(

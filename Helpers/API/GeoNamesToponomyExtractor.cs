@@ -23,23 +23,7 @@ internal static class GeoNamesToponomyExtractor
                                                                           string longitude,
                                                                           string radius)
     {
-        if (HelperVariables.UserSettingGeoNamesUserName == null)
-        {
-            try
-            {
-                HelperVariables.UserSettingGeoNamesUserName = ApplicationSettings.DataReadSQLiteSettings(dataTable: HelperVariables.DtHelperDataApplicationSettings, settingTabPage: "tpg_Application", settingId: "tbx_GeoNames_UserName");
-                HelperVariables.UserSettingGeoNamesPwd = ApplicationSettings.DataReadSQLiteSettings(dataTable: HelperVariables.DtHelperDataApplicationSettings, settingTabPage: "tpg_Application", settingId: "tbx_GeoNames_Pwd");
-            }
-            catch (Exception)
-            {
-                Themer.ShowMessageBox(
-                    message: HelperControlAndMessageBoxHandling.ReturnControlText(
-                        controlName: "mbx_Helper_ErrorCantReadDefaultSQLiteDB",
-                        fakeControlType: HelperControlAndMessageBoxHandling.FakeControlTypes.MessageBox),
-                    icon: MessageBoxIcon.Error,
-                    buttons: MessageBoxButtons.OK);
-            }
-        }
+        EnsureCredentialsLoaded();
 
         GeoResponseToponomy returnVal = new();
         RestClientOptions options = new(baseUrl: "http://api.geonames.org")
@@ -101,5 +85,73 @@ internal static class GeoNamesToponomyExtractor
         }
 
         return returnVal;
+    }
+
+    /// <summary>Reads the GeoNames user name and password from the settings the first time they are needed.</summary>
+    private static void EnsureCredentialsLoaded()
+    {
+        if (HelperVariables.UserSettingGeoNamesUserName == null)
+        {
+            try
+            {
+                HelperVariables.UserSettingGeoNamesUserName = ApplicationSettings.DataReadSQLiteSettings(dataTable: HelperVariables.DtHelperDataApplicationSettings, settingTabPage: "tpg_Application", settingId: "tbx_GeoNames_UserName");
+                HelperVariables.UserSettingGeoNamesPwd = ApplicationSettings.DataReadSQLiteSettings(dataTable: HelperVariables.DtHelperDataApplicationSettings, settingTabPage: "tpg_Application", settingId: "tbx_GeoNames_Pwd");
+            }
+            catch (Exception)
+            {
+                Themer.ShowMessageBox(
+                    message: HelperControlAndMessageBoxHandling.ReturnControlText(
+                        controlName: "mbx_Helper_ErrorCantReadDefaultSQLiteDB",
+                        fakeControlType: HelperControlAndMessageBoxHandling.FakeControlTypes.MessageBox),
+                    icon: MessageBoxIcon.Error,
+                    buttons: MessageBoxButtons.OK);
+            }
+        }
+    }
+
+    /// <summary>
+    ///     Asks GeoNames for the height above sea level of a point (the SRTM3 elevation model).
+    /// </summary>
+    /// <param name="latitude">Signed decimal degrees, invariant text.</param>
+    /// <param name="longitude">Signed decimal degrees, invariant text.</param>
+    /// <returns>The height in metres, or null when GeoNames has none for the point (open sea) or could not be reached.</returns>
+    internal static double? API_GetAltitudeFromWeb(string latitude,
+                                                   string longitude)
+    {
+        EnsureCredentialsLoaded();
+
+        RestClientOptions options = new(baseUrl: "http://api.geonames.org")
+        {
+            Authenticator = new HttpBasicAuthenticator(username: HelperVariables.UserSettingGeoNamesUserName, password: HelperVariables.UserSettingGeoNamesPwd)
+        };
+        RestClient client = new(options: options);
+        RestResponse response = client.ExecuteGet(request: new RestRequest(resource: $"srtm3JSON?lat={latitude}&lng={longitude}"));
+
+        if (string.IsNullOrWhiteSpace(value: response.Content))
+        {
+            return null;
+        }
+
+        try
+        {
+            JObject data = JObject.Parse(json: response.Content);
+            if (data["srtm3"] == null)
+            {
+                // an error body: {"status": {"message": ...}}
+                return null;
+            }
+
+            double metres = data["srtm3"].Value<double>();
+
+            // the model's "no data" marker, which it gives over water
+            return Math.Abs(value: metres) > 32000.0
+                ? null
+                : metres;
+        }
+        catch (Exception ex)
+        {
+            Debug.Print(message: ex.Message);
+            return null;
+        }
     }
 }

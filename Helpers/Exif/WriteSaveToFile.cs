@@ -1,6 +1,7 @@
 ﻿using NLog;
 using GeoTagNinja.Helpers.Data;
 using GeoTagNinja.Helpers.FileSystem;
+using GeoTagNinja.Helpers.Geo;
 using GeoTagNinja.Helpers.UI;
 using GeoTagNinja.Model;
 using GeoTagNinja.View.Forms;
@@ -177,6 +178,12 @@ internal static class WriteSaveToFile
                         exifArgsForOriginalFile: ref exifArgsForOriginalFile,
                         exifArgsForSidecar: ref exifArgsForSidecar);
 
+                    // keywords that name the old location follow the edit (or removal) of it
+                    if (HelperVariables.UserSettingSyncGeoKeywords)
+                    {
+                        _ = GeoKeywordSync.StageFor(element: dirElemFileToModify);
+                    }
+
                     DataTable dtFileWriteQueue = new();
                     dtFileWriteQueue.Clear();
                     _ = dtFileWriteQueue.Columns.Add(columnName: "ItemNameWithoutPath");
@@ -268,6 +275,22 @@ internal static class WriteSaveToFile
                                     exifToolAttribute = objectTagNameOut;
                                     updateExifVal = settingValue;
 
+                                    // A multi-value tag is written item by item; the generic "-Tag=value" below would
+                                    // store the whole list as one entry.
+                                    if (GetElementAttributesType(attributeToFind: attribute) == typeof(TagList))
+                                    {
+                                        foreach (string listLine in ListTagArguments.Build(tag: objectTagNameOut,
+                                                     items: TagList.Parse(text: settingValue)))
+                                        {
+                                            UpdateArgsFile(argfileToUpdate: ArgfileToUpdate.Both,
+                                                whatText: listLine,
+                                                exifArgsForOriginalFile: ref exifArgsForOriginalFile,
+                                                exifArgsForSidecar: ref exifArgsForSidecar);
+                                        }
+
+                                        continue;
+                                    }
+
                                     if (updateExifVal != "")
                                     {
                                         if (
@@ -282,10 +305,21 @@ internal static class WriteSaveToFile
                                                 exifArgsForSidecar: ref exifArgsForSidecar);
                                         }
 
+                                        // an image direction is meaningless to ExifTool without saying whether it is true or magnetic north
+                                        if (exifToolAttribute.EndsWith(value: "GPSImgDirection"))
+                                        {
+                                            UpdateArgsFile(
+                                                argfileToUpdate: ArgfileToUpdate.Both,
+                                                whatText: $"-{exifToolAttribute}Ref={(dirElemFileToModify.GetAttributeValueAsString(attribute: ElementAttribute.GPSImgDirectionRef, notFoundValue: "").StartsWith(value: "Magnetic", comparisonType: StringComparison.OrdinalIgnoreCase) ? "M" : "T")}",
+                                                exifArgsForOriginalFile: ref exifArgsForOriginalFile,
+                                                exifArgsForSidecar: ref exifArgsForSidecar);
+                                        }
+
                                         //if lat/long/alt then add Ref. 
                                         if (!exifToolAttribute.StartsWith(value: "XMP"))
                                         {
-                                            if (exifToolAttribute.EndsWith(value: "GPSLatitude"))
+                                            if (exifToolAttribute.EndsWith(value: "GPSLatitude") ||
+                                                exifToolAttribute.EndsWith(value: "GPSDestLatitude"))
                                             {
                                                 if (updateExifVal.Substring(
                                                         startIndex: 0, length: 1) ==
@@ -308,7 +342,8 @@ internal static class WriteSaveToFile
                                                         exifArgsForSidecar: ref exifArgsForSidecar);
                                                 }
                                             }
-                                            else if (exifToolAttribute.EndsWith(value: "GPSLongitude"))
+                                            else if (exifToolAttribute.EndsWith(value: "GPSLongitude") ||
+                                                     exifToolAttribute.EndsWith(value: "GPSDestLongitude"))
                                             {
                                                 if (updateExifVal.Substring(
                                                         startIndex: 0, length: 1) ==
@@ -381,6 +416,12 @@ internal static class WriteSaveToFile
                                             if (
                                                 exifToolAttribute.EndsWith(
                                                     value: "GPSLatitude") ||
+                                                exifToolAttribute.EndsWith(
+                                                    value: "GPSDestLatitude") ||
+                                                exifToolAttribute.EndsWith(
+                                                    value: "GPSDestLongitude") ||
+                                                exifToolAttribute.EndsWith(
+                                                    value: "GPSImgDirection") ||
                                                 exifToolAttribute.EndsWith(
                                                     value: "GPSLongitude") ||
                                                 exifToolAttribute.EndsWith(

@@ -365,6 +365,7 @@ public static class AttributeValueFormatter
         {
             null => string.Empty,
             string stringValue => stringValue,
+            TagList tagListValue => tagListValue.ToString(),
             DateTime dateTimeValue => FormatDateTime(value: dateTimeValue, context: context),
             double doubleValue => FormatDouble(value: doubleValue, context: context),
             int intValue => FormatInt(value: intValue, context: context),
@@ -395,6 +396,12 @@ public static class AttributeValueFormatter
         if (targetType == typeof(string))
         {
             result = value;
+            return value != null;
+        }
+
+        if (targetType == typeof(TagList))
+        {
+            result = TagList.Parse(text: value);
             return value != null;
         }
 

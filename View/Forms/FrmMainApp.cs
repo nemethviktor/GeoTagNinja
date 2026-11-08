@@ -2830,6 +2830,11 @@ public partial class FrmMainApp : Form
                 FileLocking.FileListBeingUpdated = true;
                 FrmMainApp.RemoveGeoDataIsRunning = true;
 
+                DataPointInteractions.NotifyIfKeywordsWillRemain(
+                    directoryElements: lvw_FileList.SelectedItems.Cast<ListViewItem>()
+                                                   .Select(selector: item => item.Tag as DirectoryElement)
+                                                   .Where(predicate: element => element != null));
+
                 foreach (ListViewItem lvi in lvw_FileList.SelectedItems)
                 {
                     DirectoryElement dirElemFileToModify = lvi.Tag as DirectoryElement;

@@ -32,6 +32,8 @@ internal static class DatabaseSchema
     internal const string TableNameFavourites = "Favourites";
     internal const string TableNameCustomRules = "customRules";
     internal const string TableNameCustomCityAllocationLogic = "customCityAllocationLogic";
+    internal const string TableNameFieldHistory = "FieldHistory";
+    internal const string TableNameEditTemplates = "EditTemplates";
 
     /// <summary>
     ///     Every table the settings database is expected to have, in creation order.
@@ -42,7 +44,9 @@ internal static class DatabaseSchema
         TableNameAppLayout,
         TableNameFavourites,
         TableNameCustomRules,
-        TableNameCustomCityAllocationLogic
+        TableNameCustomCityAllocationLogic,
+        TableNameFieldHistory,
+        TableNameEditTemplates
     ];
 
     private static readonly Dictionary<string, string> CreateTableStatements =
@@ -114,6 +118,28 @@ internal static class DatabaseSchema
                                                         PRIMARY KEY(CountryCode, TargetPointNameCustomCityLogic)
                                                     );
                                                     """
+            },
+            {
+                // the values last typed into each field of the Edit Data form's metadata tabs, newest first
+                TableNameFieldHistory, """
+                                       CREATE TABLE IF NOT EXISTS FieldHistory(
+                                           attributeName NTEXT NOT NULL,
+                                           fieldValue NTEXT NOT NULL,
+                                           lastUsed INTEGER NOT NULL,
+                                           PRIMARY KEY(attributeName, fieldValue)
+                                       );
+                                       """
+            },
+            {
+                // saved sets of Edit Data values: one row per attribute of a named template
+                TableNameEditTemplates, """
+                                        CREATE TABLE IF NOT EXISTS EditTemplates(
+                                            templateName NTEXT NOT NULL,
+                                            attributeName NTEXT NOT NULL,
+                                            fieldValue NTEXT NOT NULL,
+                                            PRIMARY KEY(templateName, attributeName)
+                                        );
+                                        """
             }
         };
 

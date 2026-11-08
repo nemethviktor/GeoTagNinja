@@ -156,6 +156,11 @@ public class DirectoryElement
                 return new AttributeValues<string>(blankValue: NullEquivalents.StringGeneric);
             }
 
+            if (attributeType == typeof(TagList))
+            {
+                return new AttributeValues<TagList>(blankValue: TagList.Empty);
+            }
+
             if (attributeType == typeof(int))
             {
                 return new AttributeValues<int>(blankValue: NullEquivalents.Int);

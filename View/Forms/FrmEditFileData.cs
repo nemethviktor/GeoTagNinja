@@ -49,6 +49,8 @@ public partial class FrmEditFileData : Form
 
         Log.Trace(message: "InitializeComponent OK");
 
+        BuildMetadataTabs();
+
     }
 
     /// <summary>
@@ -68,6 +70,7 @@ public partial class FrmEditFileData : Form
 
         ClearDirectoryElementsTemporaryData();
         EnableDateControlsAndSetDropdownDefaultValues();
+        FillFieldHistory();
 
         // we select the first item in the listview (while ensuring there is _something_ in the lvw.)
         if (lvw_FileListEditImages.Items.Count > 0)
@@ -219,6 +222,12 @@ public partial class FrmEditFileData : Form
         /// For each control we attempt to get their values
         foreach (Control control in controls)
         {
+            // entry boxes and "..." buttons of the metadata tabs are not attributes and carry their own captions
+            if (control.Tag is NoAttributeTag)
+            {
+                continue;
+            }
+
             if (lstControlTypesNoDEValue.Contains(item: control.GetType()) ||
                 lstControlTypesWithDEValue.Contains(item: control.GetType()))
             {
@@ -430,6 +439,8 @@ public partial class FrmEditFileData : Form
                                                                       .Name}) - Done.");
             }
         }
+
+        ShowListEditors(element: dirElemFileToModify);
 
         Log.Trace(message: "Assinging Labels Done");
 
@@ -1308,6 +1319,8 @@ public partial class FrmEditFileData : Form
                     whichAttributeVersion: DirectoryElement.AttributeVersion
                                                            .Stage1EditFormIntraTabTransferQueue))
             {
+                RememberFieldHistory(element: dirElemFileToModify);
+
                 foreach (ElementAttribute attribute in (ElementAttribute[])
                          Enum.GetValues(enumType: typeof(ElementAttribute)))
                 {
@@ -1415,6 +1428,10 @@ public partial class FrmEditFileData : Form
      EventArgs e)
     {
         _frmEditFileDataNowLoadingFileData = true;
+        DataPointInteractions.NotifyIfKeywordsWillRemain(
+            directoryElements: lvw_FileListEditImages.SelectedItems.Cast<ListViewItem>()
+                                                     .Select(selector: item => item.Tag as DirectoryElement)
+                                                     .Where(predicate: element => element != null));
         foreach (ListViewItem lvi in lvw_FileListEditImages.SelectedItems)
         {
             DirectoryElement dirElemFileToModify = lvi.Tag as DirectoryElement;

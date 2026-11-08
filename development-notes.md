@@ -22,6 +22,11 @@ the form does not need to get bigger. Grow `gbx_AppSettings` by the height of th
 controls below it down; keep the group box's bottom within the tab to avoid a scrollbar until it is
 actually needed.
 
+Note: `ckb_SyncGeoKeywords` ("Keep keywords in step with the location") is the exception to point 1: it is added in code by
+`FrmSettings.AddSyncGeoKeywordsCheckBox` (under the last checkbox of the left column, growing the group box if needed) before the
+form reads its controls by name, so it needs only points 2 to 4. Its logic is `Helpers/Geo/GeoKeywordSync`, called from
+`WriteSaveToFile` just before the write queue is built.
+
 ## Adding a column to a settings-database table
 
 `DatabaseSchema` is the one place a table's shape is written, but `CREATE TABLE IF NOT EXISTS` leaves an existing table alone, so a
@@ -41,6 +46,27 @@ To announce something, add an entry to `Registry` with the build to compare agai
 - New users never see one. A fresh install is recognised by an empty `settings` table, which is why `UpgradeNotices.EvaluateAtStartup` has to run before the default settings are written (`AppStartup.AppStartupWriteDefaultSettings`).
 - Users from before the tracking existed have no stored build and count as `LastBuildBeforeTracking` (9778).
 - The stored build is never lowered, so running an older build doesn't make a notice reappear.
+
+## Adding a field to the Edit File form's metadata tabs
+
+The Keywords/Categories, Source/Description and Contact tabs (and the extras on the Location tab) are built in code in
+`View/Forms/FrmEditFileData.MetadataTabs.cs` / `.LocationExtras.cs`, not in the designer, so they do not show in the Visual
+Studio designer. This was deliberate: thirty near-identical fields are easier to keep right as a table of calls than as a
+generated `InitializeComponent`. To add a text field:
+
+1. Add the attribute: an `ElementAttribute` value *below* the "items without OrderID" line (no file-list column), and its
+   mapping in `Model/SourcesAndAttributes.cs` (in tags in order of preference, out tags to write). A string needs nothing
+   else on the read or write side; a multi-value tag uses `typeof(TagList)`.
+2. Add one `AddTextField(...)` (or `AddListField(...)`) call in `BuildMetadataTabs`. The control is named
+   `<prefix>_<AttributeName>`, which is all the generic load/change handlers need.
+3. Add the caption `lbl_<AttributeName>` to `Strings.resx` (the loader blanks a label that has no entry). A `Tag` of
+   `FrmEditFileData.NoAttributeTag` keeps a control away from that loader.
+4. To offer it in the `...` menus add it to `s_menuFields` in `.FieldMenus.cs`; for templates and "Load from Image" add a
+   `TemplateGroup` in `Helpers/Exif/EditTemplateGroups.cs`.
+
+Things that bite: ExifTool run with `-struct` prints the creator contact fields as one `XMP:CreatorContactInfo` structure,
+not the flattened `XMP:CreatorCity` tags (`ExifStructTags` expands it); and a list tag must be written as repeated
+`-Tag=item` (an empty `-Tag=` followed by `-Tag+=item` keeps the old items).
 
 ## Still outstanding
 

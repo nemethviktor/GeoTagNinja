@@ -65,7 +65,8 @@ internal static class FileListViewReadWrite
                             string itemValue = dirElemFileToModify.GetAttributeValueAsString(
                                 attribute: attribute,
                                 version: DirectoryElement.AttributeVersion.Stage3ReadyToWrite,
-                                context: ValueFormatContext.Display);
+                                context: ValueFormatContext.Display)
+                               .Replace(oldValue: "\n", newValue: ", ");
 
                             // ElementAttribute has a column assigned (ie it's not Shift or some such) 
                             if (lvchs[key: columnHeaderName] != null)

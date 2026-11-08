@@ -73,6 +73,28 @@ public static class SourcesAndAttributes
 
         // items without OrderID below this line
 
+        Artist,
+        CaptionWriter,
+        Source,
+        Credit,
+        SourceURL,
+        Copyright,
+        ObjectName,
+        Headline,
+        Caption,
+        SpecialInstructions,
+        Category,
+        SupplementalCategories,
+        Byline,
+        BylineTitle,
+        CreatorAddress,
+        CreatorCity,
+        CreatorPostalCode,
+        CreatorRegion,
+        CreatorCountry,
+        CreatorPhone,
+        CreatorEmail,
+        CreatorURL,
         TakenDateDaysShift,
         TakenDateHoursShift,
         TakenDateMinutesShift,
@@ -242,7 +264,7 @@ public static class SourcesAndAttributes
                             "XMP:GPSImgDirection",
                             "EXIF:GPSImgDirection"
                         ],
-                        OutAttributes = [],
+                        OutAttributes = ["GPS:GPSImgDirection", "XMP-exif:GPSImgDirection"],
                         OrderID = ORDER_INCREMENT_VALUE + (int)ElementAttribute.GPSImgDirection
                     }
                 },
@@ -258,6 +280,7 @@ public static class SourcesAndAttributes
                             "XMP:GPSImgDirectionRef",
                             "EXIF:GPSImgDirectionRef"
                         ],
+                        // the reference is written alongside the direction (WriteSaveToFile), from this attribute
                         OutAttributes = [],
                         OrderID = ORDER_INCREMENT_VALUE + (int)ElementAttribute.GPSImgDirectionRef
                     }
@@ -830,9 +853,10 @@ public static class SourcesAndAttributes
                     {
                         Name = "IPTCKeywords",
                         ColumnHeader = HelperVariables.COL_NAME_PREFIX + FileListColumns.IPTC_KEYWORDS,
-                        TypeOfElement = typeof(string),
-                        InAttributes = ["IPTC:Keywords"],
-                        OutAttributes = ["IPTC:Keywords"],
+                        TypeOfElement = typeof(TagList),
+                        // Keywords are kept in step in both places; XMP:Subject is the fallback when the file has no IPTC block.
+                        InAttributes = ["IPTC:Keywords", "XMP:Subject"],
+                        OutAttributes = ["IPTC:Keywords", "XMP-dc:Subject"],
                         OrderID = ORDER_INCREMENT_VALUE + (int)ElementAttribute.IPTCKeywords
                     }
                 },
@@ -841,7 +865,7 @@ public static class SourcesAndAttributes
                     {
                         Name = "XMLSubjects",
                         ColumnHeader = HelperVariables.COL_NAME_PREFIX + FileListColumns.XML_SUBJECTS,
-                        TypeOfElement = typeof(string),
+                        TypeOfElement = typeof(TagList),
                         InAttributes = ["XMP:Subject"],
                         OutAttributes = ["XMP:Subject"],
                         OrderID = ORDER_INCREMENT_VALUE + (int)ElementAttribute.XMLSubjects
@@ -895,11 +919,213 @@ public static class SourcesAndAttributes
                         OrderID = ORDER_INCREMENT_VALUE + (int)ElementAttribute.GPSHPositioningError,
                         isGeoData = true
                     }
-            }
+                },
+                {
+                    ElementAttribute.Artist, new ElementAttributeMapping
+                    {
+                        Name = "Artist",
+                        TypeOfElement = typeof(string),
+                        InAttributes = ["EXIF:Artist", "XMP:Artist"],
+                        OutAttributes = ["EXIF:Artist", "XMP-tiff:Artist"]
+                    }
+                },
+                {
+                    ElementAttribute.CaptionWriter, new ElementAttributeMapping
+                    {
+                        Name = "CaptionWriter",
+                        TypeOfElement = typeof(string),
+                        InAttributes = ["XMP:CaptionWriter", "IPTC:Writer-Editor"],
+                        OutAttributes = ["IPTC:Writer-Editor", "XMP-photoshop:CaptionWriter"]
+                    }
+                },
+                {
+                    ElementAttribute.Source, new ElementAttributeMapping
+                    {
+                        Name = "Source",
+                        TypeOfElement = typeof(string),
+                        InAttributes = ["XMP:Source", "IPTC:Source"],
+                        OutAttributes = ["IPTC:Source", "XMP-photoshop:Source"]
+                    }
+                },
+                {
+                    ElementAttribute.Credit, new ElementAttributeMapping
+                    {
+                        Name = "Credit",
+                        TypeOfElement = typeof(string),
+                        InAttributes = ["XMP:Credit", "IPTC:Credit"],
+                        OutAttributes = ["IPTC:Credit", "XMP-photoshop:Credit"]
+                    }
+                },
+                {
+                    ElementAttribute.SourceURL, new ElementAttributeMapping
+                    {
+                        Name = "SourceURL",
+                        TypeOfElement = typeof(string),
+                        InAttributes = ["XMP:WebStatement"],
+                        OutAttributes = ["XMP-xmpRights:WebStatement"]
+                    }
+                },
+                {
+                    ElementAttribute.Copyright, new ElementAttributeMapping
+                    {
+                        Name = "Copyright",
+                        TypeOfElement = typeof(string),
+                        InAttributes = ["XMP:Rights", "IPTC:CopyrightNotice", "EXIF:Copyright"],
+                        OutAttributes = ["EXIF:Copyright", "IPTC:CopyrightNotice", "XMP-dc:Rights"]
+                    }
+                },
+                {
+                    ElementAttribute.ObjectName, new ElementAttributeMapping
+                    {
+                        Name = "ObjectName",
+                        TypeOfElement = typeof(string),
+                        InAttributes = ["XMP:Title", "IPTC:ObjectName"],
+                        OutAttributes = ["IPTC:ObjectName", "XMP-dc:Title"]
+                    }
+                },
+                {
+                    ElementAttribute.Headline, new ElementAttributeMapping
+                    {
+                        Name = "Headline",
+                        TypeOfElement = typeof(string),
+                        InAttributes = ["XMP:Headline", "IPTC:Headline"],
+                        OutAttributes = ["IPTC:Headline", "XMP-photoshop:Headline"]
+                    }
+                },
+                {
+                    ElementAttribute.Caption, new ElementAttributeMapping
+                    {
+                        Name = "Caption",
+                        TypeOfElement = typeof(string),
+                        InAttributes = ["XMP:Description", "IPTC:Caption-Abstract", "EXIF:ImageDescription"],
+                        OutAttributes = ["EXIF:ImageDescription", "IPTC:Caption-Abstract", "XMP-dc:Description"]
+                    }
+                },
+                {
+                    ElementAttribute.SpecialInstructions, new ElementAttributeMapping
+                    {
+                        Name = "SpecialInstructions",
+                        TypeOfElement = typeof(string),
+                        InAttributes = ["XMP:Instructions", "IPTC:SpecialInstructions"],
+                        OutAttributes = ["IPTC:SpecialInstructions", "XMP-photoshop:Instructions"]
+                    }
+                },
+                {
+                    ElementAttribute.Category, new ElementAttributeMapping
+                    {
+                        Name = "Category",
+                        TypeOfElement = typeof(string),
+                        InAttributes = ["XMP:Category", "IPTC:Category"],
+                        OutAttributes = ["IPTC:Category", "XMP-photoshop:Category"]
+                    }
+                },
+                {
+                    ElementAttribute.SupplementalCategories, new ElementAttributeMapping
+                    {
+                        Name = "SupplementalCategories",
+                        TypeOfElement = typeof(TagList),
+                        InAttributes = ["XMP:SupplementalCategories", "IPTC:SupplementalCategories"],
+                        OutAttributes = ["IPTC:SupplementalCategories", "XMP-photoshop:SupplementalCategories"]
+                    }
+                },
+                {
+                    ElementAttribute.Byline, new ElementAttributeMapping
+                    {
+                        Name = "Byline",
+                        TypeOfElement = typeof(string),
+                        InAttributes = ["XMP:Creator", "IPTC:By-line"],
+                        OutAttributes = ["IPTC:By-line", "XMP-dc:Creator"]
+                    }
+                },
+                {
+                    ElementAttribute.BylineTitle, new ElementAttributeMapping
+                    {
+                        Name = "BylineTitle",
+                        TypeOfElement = typeof(string),
+                        InAttributes = ["XMP:AuthorsPosition", "IPTC:By-lineTitle"],
+                        OutAttributes = ["IPTC:By-lineTitle", "XMP-photoshop:AuthorsPosition"]
+                    }
+                },
+                {
+                    ElementAttribute.CreatorAddress, new ElementAttributeMapping
+                    {
+                        Name = "CreatorAddress",
+                        TypeOfElement = typeof(string),
+                        InAttributes = ["XMP:CreatorAddress"],
+                        OutAttributes = ["XMP-iptcCore:CreatorAddress"]
+                    }
+                },
+                {
+                    ElementAttribute.CreatorCity, new ElementAttributeMapping
+                    {
+                        Name = "CreatorCity",
+                        TypeOfElement = typeof(string),
+                        InAttributes = ["XMP:CreatorCity"],
+                        OutAttributes = ["XMP-iptcCore:CreatorCity"]
+                    }
+                },
+                {
+                    ElementAttribute.CreatorPostalCode, new ElementAttributeMapping
+                    {
+                        Name = "CreatorPostalCode",
+                        TypeOfElement = typeof(string),
+                        InAttributes = ["XMP:CreatorPostalCode"],
+                        OutAttributes = ["XMP-iptcCore:CreatorPostalCode"]
+                    }
+                },
+                {
+                    ElementAttribute.CreatorRegion, new ElementAttributeMapping
+                    {
+                        Name = "CreatorRegion",
+                        TypeOfElement = typeof(string),
+                        InAttributes = ["XMP:CreatorRegion"],
+                        OutAttributes = ["XMP-iptcCore:CreatorRegion"]
+                    }
+                },
+                {
+                    ElementAttribute.CreatorCountry, new ElementAttributeMapping
+                    {
+                        Name = "CreatorCountry",
+                        TypeOfElement = typeof(string),
+                        InAttributes = ["XMP:CreatorCountry"],
+                        OutAttributes = ["XMP-iptcCore:CreatorCountry"]
+                    }
+                },
+                {
+                    ElementAttribute.CreatorPhone, new ElementAttributeMapping
+                    {
+                        Name = "CreatorPhone",
+                        TypeOfElement = typeof(string),
+                        InAttributes = ["XMP:CreatorWorkTelephone"],
+                        OutAttributes = ["XMP-iptcCore:CreatorWorkTelephone"]
+                    }
+                },
+                {
+                    ElementAttribute.CreatorEmail, new ElementAttributeMapping
+                    {
+                        Name = "CreatorEmail",
+                        TypeOfElement = typeof(string),
+                        InAttributes = ["XMP:CreatorWorkEmail"],
+                        OutAttributes = ["XMP-iptcCore:CreatorWorkEmail"]
+                    }
+                },
+                {
+                    ElementAttribute.CreatorURL, new ElementAttributeMapping
+                    {
+                        Name = "CreatorURL",
+                        TypeOfElement = typeof(string),
+                        InAttributes = ["XMP:CreatorWorkURL"],
+                        OutAttributes = ["XMP-iptcCore:CreatorWorkURL"]
+                    }
+                }
         };
 
         // Populate the unique pre-filter hashset directly from the dictionary just filled
         _globalInAttributesCache = [with(comparer: StringComparer.OrdinalIgnoreCase)];
+
+        // The creator contact fields are flattened tags that ExifTool does not print when run with -struct; it prints
+        // this one structure instead, and ExifTagSetParser expands it back into the flattened tags.
+        _ = _globalInAttributesCache.Add(item: "XMP:CreatorContactInfo");
 
         foreach (KeyValuePair<ElementAttribute, ElementAttributeMapping> kvp in TagsToAttributes)
         {

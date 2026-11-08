@@ -100,6 +100,8 @@ internal static class ExifTagSetParser
             tags[key: kvp.Key.ToUpper()] = kvp.Value;
         }
 
+        ExifStructTags.ExpandCreatorContactInfo(tagsKeyedUpper: tags);
+
         IDictionary<ElementAttribute, IConvertible> parsedValues =
             new Dictionary<ElementAttribute, IConvertible>();
         List<ElementAttribute> parsedFails = [];

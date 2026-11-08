@@ -314,7 +314,8 @@ internal static class AppStartup
             [key: "tpg_Application"] = new Dictionary<string, string>
             {
 
-                { "UserSettingAlwaysRecenterMap", "ckb_AlwaysRecenterMap"}
+                { "UserSettingAlwaysRecenterMap", "ckb_AlwaysRecenterMap"},
+                { "UserSettingSyncGeoKeywords", "ckb_SyncGeoKeywords"}
             }
         };
 

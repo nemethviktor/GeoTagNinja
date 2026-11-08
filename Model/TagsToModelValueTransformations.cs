@@ -433,6 +433,18 @@ internal class TagsToModelValueTransformations
     }
 
     /// <summary>
+    ///     A single-text attribute whose tags are lists in ExifTool (the by-line may name several people): shows the items
+    ///     joined by "; " instead of ExifTool's bracketed form.
+    /// </summary>
+    internal static IConvertible? T2M_ListAsText(string parseResult)
+    {
+        return parseResult == null
+            ? null
+            : TagList.ParseExifToolOutput(text: parseResult)
+                     .Join(separator: "; ");
+    }
+
+    /// <summary>
     ///     Applies the clean-up an attribute needs to the raw text ExifTool produced for it, and returns the result
     ///     as the CLR type <see cref="SourcesAndAttributes.GetElementAttributesType" /> declares for that attribute.
     /// </summary>
@@ -497,12 +509,23 @@ internal class TagsToModelValueTransformations
             case ElementAttribute.CreateDate:
                 return T2M_TakenCreatedDate(parseResult: parseResult);
 
+            case ElementAttribute.Byline:
+                return T2M_ListAsText(parseResult: parseResult);
+
             default:
 
                 // No bespoke transformation for this attribute: convert the raw ExifTool text straight into the
                 // declared type. Anything unparseable becomes the blank value for that type, which is what the
                 // rest of the pipeline treats as "the file did not have this".
                 Type typeOfAttribute = GetElementAttributesType(attributeToFind: attribute);
+
+                // Multi-value tags arrive as ExifTool's bracketed, escaped list, not as the app's canonical text.
+                if (typeOfAttribute == typeof(TagList))
+                {
+                    return parseResult == null
+                        ? null
+                        : TagList.ParseExifToolOutput(text: parseResult);
+                }
 
                 _ = AttributeValueFormatter.TryParse(value: parseResult,
                     targetType: typeOfAttribute,

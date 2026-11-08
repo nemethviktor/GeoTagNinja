@@ -16,10 +16,14 @@ Model/                         the domain: what a file's metadata is, independen
   ExifTagSetParser             raw ExifTool tags -> typed values; the only reader, see architecture-values.md
   TagsToModelValueTransformations  per-attribute clean-up of raw ExifTool output
   ExifToolWrapper              the stay_open ExifTool process
+  TagList / ExifStructTags     a multi-value tag (keywords, categories) as one immutable value; reader for the XMP structure ExifTool prints for the creator contact fields
   Favourite / GeoSetterFavourite / MapWebMessage / AppSettingContainer   plain data carriers (FavouriteKeywords turns a favourite's keyword list into its stored text and back)
 
 View/
-  Forms/      every Frm* dialog, plus EditFileFormLauncher. FrmMainApp is split into partial files:
+  Forms/      every Frm* dialog, plus EditFileFormLauncher. FrmEditFileData is split into partial files: .MetadataTabs (the
+              Keywords, Source/Description and Contact tabs, built in code), .FieldMenus (the "..." menus and field history),
+              .Templates (Load/Save template, Load from Image) and .LocationExtras (sexagesimal, direction, destination, altitude
+              from web). FrmEditTemplateDialog is the picker behind the template buttons. FrmMainApp is split into partial files:
               .Startup (start-up steps) and .ViewMenu (the View menu, mode switching, thumbnail size)
   Controls/   custom controls: ImagePreview, and the thumbnail view (ThumbnailView, its pure layout maths in
               ThumbnailLayout, FolderIcons)

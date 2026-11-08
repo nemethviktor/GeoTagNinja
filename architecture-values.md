@@ -19,7 +19,7 @@ been turned into text - usually a date, usually only on a non-English machine.
         |    -> TagsToModelValueTransformations.TransformTagValue (per-attribute clean-up)
         |    -> AttributeValueFormatter.TryParse
         v
-   typed value in memory    DateTime / double / int / string, held per AttributeVersion
+   typed value in memory    DateTime / double / int / string / TagList, held per AttributeVersion
         |  AttributeValueFormatter.Format(value, context)
         v
    text at the edges        list view cell / text box / clipboard / ExifTool argument file
@@ -105,6 +105,19 @@ divided by 3.28084 on the way back out, writing roughly a third of the real alti
 still declared in metres.
 
 That is precisely what the track-file path used to do, which is what the merge below fixed.
+
+## Multi-value tags are a `TagList`
+
+`Keywords`, `Subject` and the other list-valued tags hold a `TagList` (`Model/TagList.cs`): immutable, trimmed,
+blank-free and de-duplicated with an *ordinal* comparison (never culture-sensitive; a Turkish `I` must not merge two
+keywords). It implements `IConvertible` only so it fits `AttributeValues<T>`; its text form is one item per line, or the
+`-` blank sentinel when empty, so the edit form's text round trip still works. Items therefore cannot contain a line break.
+
+- **Read:** ExifTool is run with `-struct -args`, which prints lists as `[a,b,c]` with `|` escaping inside items;
+  `TagList.ParseExifToolOutput` reads that, so a keyword containing a comma stays one keyword.
+- **Write:** `WriteSaveToFile` calls `ListTagArguments.Build`, which emits one `-Tag=item` per entry (repeated assignments build the list and replace the old one; an empty list is a single `-Tag=`, which deletes it. `-Tag=` followed by `-Tag+=item` does *not* replace - ExifTool keeps the old items).
+  `-Tag=a, b` would store a single keyword.
+- **File list:** the cell shows the items joined with `, ` (the list text is newline-separated everywhere else).
 
 ## Known rough edges
 

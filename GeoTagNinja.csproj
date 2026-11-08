@@ -136,6 +136,15 @@
   <ItemGroup>
     <Compile Include="Model\ExifTagSetParser.cs" />
     <Compile Include="Model\NullEquivalents.cs" />
+    <Compile Include="Model\TagList.cs" />
+    <Compile Include="Helpers\Data\FieldHistory.cs" />
+    <Compile Include="Helpers\Geo\Sexagesimal.cs" />
+    <Compile Include="Helpers\Geo\GeoKeywordSync.cs" />
+    <Compile Include="Helpers\Data\EditTemplates.cs" />
+    <Compile Include="Helpers\Exif\EditTemplateGroups.cs" />
+    <Compile Include="View\Forms\FrmEditTemplateDialog.cs" />
+    <Compile Include="Model\ExifStructTags.cs" />
+    <Compile Include="Helpers\Exif\ListTagArguments.cs" />
     <Compile Include="View\Forms\FrmCustomiseFormControls.cs">
       <SubType>Form</SubType>
     </Compile>
@@ -299,6 +308,18 @@
     <Compile Include="Helpers\API\GeoNamesToponomyJSONParser.cs" />
     <Compile Include="View\Forms\FrmEditFileData.cs">
       <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="View\Forms\FrmEditFileData.MetadataTabs.cs">
+      <DependentUpon>FrmEditFileData.cs</DependentUpon>
+    </Compile>
+    <Compile Include="View\Forms\FrmEditFileData.FieldMenus.cs">
+      <DependentUpon>FrmEditFileData.cs</DependentUpon>
+    </Compile>
+    <Compile Include="View\Forms\FrmEditFileData.Templates.cs">
+      <DependentUpon>FrmEditFileData.cs</DependentUpon>
+    </Compile>
+    <Compile Include="View\Forms\FrmEditFileData.LocationExtras.cs">
+      <DependentUpon>FrmEditFileData.cs</DependentUpon>
     </Compile>
     <Compile Include="View\Forms\FrmEditFileData.Designer.cs">
       <DependentUpon>FrmEditFileData.cs</DependentUpon>
