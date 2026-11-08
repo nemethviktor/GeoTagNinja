@@ -112,6 +112,7 @@ internal static class ThemeHelper
         }
 
         ApplyScrollbars(root: control);
+        DarkDisabledText.ApplyTo(root: control);
     }
 
     /// <summary>

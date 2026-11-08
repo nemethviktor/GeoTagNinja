@@ -178,6 +178,7 @@
     <Compile Include="Helpers\Text\StringOperations.cs" />
     <Compile Include="Helpers\UI\ControlTraversal.cs" />
     <Compile Include="Helpers\UI\FormPositioning.cs" />
+    <Compile Include="Helpers\UI\DarkDisabledText.cs" />
     <Compile Include="Helpers\UI\ThemeHelper.cs" />
     <Compile Include="Helpers\UI\ThumbnailWorker.cs" />
     <Compile Include="View\Controls\ThumbnailLayout.cs" />
@@ -213,10 +214,14 @@
     <Compile Include="View\Forms\FrmManageFavourites.designer.cs">
       <DependentUpon>FrmManageFavourites.cs</DependentUpon>
     </Compile>
+    <Compile Include="Helpers\Geo\FavouriteAutoAssign.cs" />
+    <Compile Include="Helpers\Geo\FavouriteGrouping.cs" />
+    <Compile Include="Helpers\Geo\FavouriteMatcher.cs" />
     <Compile Include="Helpers\Geo\GeoCalculations.cs" />
     <Compile Include="Helpers\Localisation\ResourceManager.cs" />
     <Compile Include="Model\AppSettingContainer.cs" />
     <Compile Include="Model\Favourite.cs" />
+    <Compile Include="Model\FavouriteKeywords.cs" />
     <Compile Include="Model\GeoSetterFavourite.cs" />
     <Compile Include="Model\MapWebMessage.cs" />
     <Compile Include="Helpers\Localisation\LanguageManager.cs" />

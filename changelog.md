@@ -1,5 +1,16 @@
 ﻿# GeoTagNinja Changelog
 
+**Build 9xxx [202xxxxx]** (upcoming release)
+- NEW & UPDATED:
+	- Manage Favourites has been rebuilt (modelled on GeoSetter's Edit Location Favorites): a tree of all favourites on the left, grouped by Country, State/Province and City by default (Group By also offers Country Code and Coordinates, or No Groupings), and the selected favourite's details on the right. Duplicate and Delete act on the selected favourite and Add from selected photo makes a new one from the photo selected in the main window. The dialog now opens even when you have no favourites yet.
+	- Edits are staged: Accept / Discard apply to the favourite you are on (and you are asked if you move off it with edits pending); nothing is saved until OK, and Cancel throws the lot away.
+	- Favourites gained Radius [m], Auto Assign, Snap Images to Favourite Position, Altitude, Time Zone and Keywords. The radius, auto-assign, snap and time zone are now also kept when you import favourites from GeoSetter (they used to be dropped). Existing favourites keep working unchanged: the new columns are added to your settings database on first start.
+	- Auto Assign works: when a photo that has coordinates is read and lies inside the radius of an auto-assign favourite (the nearest one wins), that favourite's country, state, city and sublocation are staged on the photo, and with Snap its coordinates and altitude too. They are staged like any other edit, so you review and save them as usual; photos that already have pending edits are left alone.
+	- Get from Web fills a favourite's country, state, city, sublocation and time zone from GeoNames for its position, using the same lookup and custom rules as the Edit file(s) form.
+	- Time Zone and Keywords are stored with the favourite only for now; loading a favourite onto photos does not apply them.
+- BUGS & FIXES:
+	- In Dark Mode the text of disabled labels, check boxes, radio buttons, buttons and group box captions was near-black on near-black and unreadable; it is now drawn in a muted grey (`DarkDisabledText`, applied by `ThemeHelper.ApplyTo`, so it covers every themed form).
+	- Saving a photo's location over an existing favourite no longer stores the app's "no value" marker (-) in empty location fields.
 **Build 9807 [20261107]**
 - NEW & UPDATED:
 	- `Export` track as `KML` as well as GPX: in the `Import/Export GPX` form's `Export` tab the save dialog now offers `GPX` and `KML`, and the extension you choose picks the format. The KML is a Google Earth track (a single line through the selected photos), based on ExifTool's `kml_track.fmt`. `Include altitude` writes absolute altitudes, and photos without an altitude are then left out of the track. KML has no timestamps, so the timestamp-type choice is greyed out for it.

@@ -129,7 +129,11 @@ internal static class Favourites
                         CountryCode = geoSetterFavourite.ctrycode,
                         Country = geoSetterFavourite.ctry,
                         State = geoSetterFavourite.state,
-                        Sublocation = geoSetterFavourite.subloc
+                        Sublocation = geoSetterFavourite.subloc,
+                        Radius = Math.Max(val1: 0, val2: geoSetterFavourite.radius),
+                        AutoAssign = geoSetterFavourite.autoassign != 0,
+                        Snap = geoSetterFavourite.snap != 0,
+                        TimeZoneId = geoSetterFavourite.tz ?? ""
                     };
 
                     Favourite existingFavouriteWithThisName =
@@ -222,11 +226,80 @@ internal static class Favourites
                 CountryCode = row[columnName: "CountryCode"]?.ToString(),
                 Country = row[columnName: "Country"]?.ToString(),
                 State = row[columnName: "State"]?.ToString(),
-                Sublocation = row[columnName: "Sublocation"]?.ToString()
+                Sublocation = row[columnName: "Sublocation"]?.ToString(),
+                Radius = ReadInt(row: row, columnName: "Radius"),
+                AutoAssign = ReadInt(row: row, columnName: "AutoAssign") != 0,
+                Snap = ReadInt(row: row, columnName: "Snap") != 0,
+                TimeZoneId = ReadText(row: row, columnName: "TimeZoneId"),
+                Keywords = FavouriteKeywords.Split(stored: ReadText(row: row, columnName: "Keywords"))
             };
 
             _ = FrmMainApp.Favourites.Add(item: favourite);
         }
+    }
+
+    /// <summary>
+    ///     Makes a favourite out of a photo: its position, altitude and location names. The auto-assign settings start
+    ///     off (no radius, nothing assigned), for the user to choose.
+    /// </summary>
+    /// <param name="directoryElement">The photo.</param>
+    /// <param name="favouriteName">The name to give the favourite.</param>
+    internal static Favourite FromDirectoryElement(DirectoryElement directoryElement,
+                                                   string favouriteName)
+    {
+        return new Favourite
+        {
+            FavouriteName = favouriteName,
+            GPSLatitude = AttributeText(de: directoryElement, attribute: SourcesAndAttributes.ElementAttribute.GPSLatitude),
+            GPSLatitudeRef = AttributeText(de: directoryElement, attribute: SourcesAndAttributes.ElementAttribute.GPSLatitudeRef),
+            GPSLongitude = AttributeText(de: directoryElement, attribute: SourcesAndAttributes.ElementAttribute.GPSLongitude),
+            GPSLongitudeRef = AttributeText(de: directoryElement, attribute: SourcesAndAttributes.ElementAttribute.GPSLongitudeRef),
+            GPSAltitude = AttributeText(de: directoryElement, attribute: SourcesAndAttributes.ElementAttribute.GPSAltitude),
+            GPSAltitudeRef = AttributeText(de: directoryElement, attribute: SourcesAndAttributes.ElementAttribute.GPSAltitudeRef),
+            Coordinates = AttributeText(de: directoryElement, attribute: SourcesAndAttributes.ElementAttribute.Coordinates),
+            City = AttributeText(de: directoryElement, attribute: SourcesAndAttributes.ElementAttribute.City),
+            CountryCode = AttributeText(de: directoryElement, attribute: SourcesAndAttributes.ElementAttribute.CountryCode),
+            Country = AttributeText(de: directoryElement, attribute: SourcesAndAttributes.ElementAttribute.Country),
+            State = AttributeText(de: directoryElement, attribute: SourcesAndAttributes.ElementAttribute.State),
+            Sublocation = AttributeText(de: directoryElement, attribute: SourcesAndAttributes.ElementAttribute.Sublocation)
+        };
+    }
+
+    /// <summary>
+    ///     An attribute as text for storing, with the app's "blank" marker turned into an actual blank.
+    /// </summary>
+    private static string AttributeText(DirectoryElement de,
+                                        SourcesAndAttributes.ElementAttribute attribute)
+    {
+        string text = de.GetAttributeValueAsString(attribute: attribute, notFoundValue: "",
+            context: ValueFormatContext.RoundTrip);
+
+        return text == NullEquivalents.StringGeneric
+            ? ""
+            : text;
+    }
+
+    /// <summary>
+    ///     Reads a text column that an older database may not have yet (or may hold NULL in).
+    /// </summary>
+    private static string ReadText(DataRow row,
+                                   string columnName)
+    {
+        return row.Table.Columns.Contains(name: columnName) && row[columnName: columnName] is not DBNull
+            ? row[columnName: columnName].ToString()
+            : "";
+    }
+
+    /// <summary>
+    ///     Reads an integer column that an older database may not have yet (or may hold NULL in).
+    /// </summary>
+    private static int ReadInt(DataRow row,
+                               string columnName)
+    {
+        return int.TryParse(s: ReadText(row: row, columnName: columnName), style: NumberStyles.Integer,
+            provider: CultureInfo.InvariantCulture, result: out int value)
+            ? value
+            : 0;
     }
 
     /// <summary>
@@ -295,7 +368,12 @@ internal static class Favourites
                 CountryCode,
                 Country,
                 State,
-                Sublocation
+                Sublocation,
+                Radius,
+                AutoAssign,
+                Snap,
+                TimeZoneId,
+                Keywords
             ) VALUES (
                 @favouriteName,
                 @GPSAltitude,
@@ -309,7 +387,12 @@ internal static class Favourites
                 @CountryCode,
                 @Country,
                 @State,
-                @Sublocation
+                @Sublocation,
+                @Radius,
+                @AutoAssign,
+                @Snap,
+                @TimeZoneId,
+                @Keywords
             );", connection: SQLiteDB, transaction: SQLiteTransaction))
             {
                 // Add parameters once — values will be updated inside the loop
@@ -326,6 +409,11 @@ internal static class Favourites
                 _ = insertCommand.Parameters.Add(parameterName: "@Country", parameterType: DbType.String);
                 _ = insertCommand.Parameters.Add(parameterName: "@State", parameterType: DbType.String);
                 _ = insertCommand.Parameters.Add(parameterName: "@Sublocation", parameterType: DbType.String);
+                _ = insertCommand.Parameters.Add(parameterName: "@Radius", parameterType: DbType.Int32);
+                _ = insertCommand.Parameters.Add(parameterName: "@AutoAssign", parameterType: DbType.Int32);
+                _ = insertCommand.Parameters.Add(parameterName: "@Snap", parameterType: DbType.Int32);
+                _ = insertCommand.Parameters.Add(parameterName: "@TimeZoneId", parameterType: DbType.String);
+                _ = insertCommand.Parameters.Add(parameterName: "@Keywords", parameterType: DbType.String);
 
                 foreach (Favourite favourite in FrmMainApp.Favourites)
                 {
@@ -342,6 +430,12 @@ internal static class Favourites
                     insertCommand.Parameters[parameterName: "@Country"].Value = favourite.Country;
                     insertCommand.Parameters[parameterName: "@State"].Value = favourite.State;
                     insertCommand.Parameters[parameterName: "@Sublocation"].Value = favourite.Sublocation;
+                    insertCommand.Parameters[parameterName: "@Radius"].Value = Math.Max(val1: 0, val2: favourite.Radius);
+                    insertCommand.Parameters[parameterName: "@AutoAssign"].Value = favourite.AutoAssign ? 1 : 0;
+                    insertCommand.Parameters[parameterName: "@Snap"].Value = favourite.Snap ? 1 : 0;
+                    insertCommand.Parameters[parameterName: "@TimeZoneId"].Value = favourite.TimeZoneId ?? "";
+                    insertCommand.Parameters[parameterName: "@Keywords"].Value =
+                        FavouriteKeywords.Join(keywords: favourite.Keywords);
 
                     _ = insertCommand.ExecuteNonQuery();
                 }

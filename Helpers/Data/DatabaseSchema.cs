@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Data.SQLite;
 using System.IO;
+using System.Linq;
 
 namespace GeoTagNinja.Helpers.Data;
 
@@ -82,7 +83,12 @@ internal static class DatabaseSchema
                                          CountryCode NTEXT,
                                          Country NTEXT,
                                          State NTEXT,
-                                         Sublocation NTEXT
+                                         Sublocation NTEXT,
+                                         Radius INTEGER NOT NULL DEFAULT 0,
+                                         AutoAssign INTEGER NOT NULL DEFAULT 0,
+                                         Snap INTEGER NOT NULL DEFAULT 0,
+                                         TimeZoneId NTEXT,
+                                         Keywords NTEXT
                                      );
                                      """
             },
@@ -176,6 +182,7 @@ internal static class DatabaseSchema
         SQLiteDB.Open();
 
         EnsureAllTablesExist(connection: SQLiteDB);
+        EnsureFavouritesColumnsExist(connection: SQLiteDB);
     }
 
     /// <summary>
@@ -187,6 +194,44 @@ internal static class DatabaseSchema
         foreach (string tableName in AllTableNames)
         {
             EnsureTableExists(connection: connection, tableName: tableName);
+        }
+    }
+
+    /// <summary>
+    ///     The columns the Favourites table gained after it was first released, with the definition to add each with.
+    /// </summary>
+    private static readonly (string Name, string Definition)[] FavouritesAddedColumns =
+    [
+        ("Radius", "INTEGER NOT NULL DEFAULT 0"),
+        ("AutoAssign", "INTEGER NOT NULL DEFAULT 0"),
+        ("Snap", "INTEGER NOT NULL DEFAULT 0"),
+        ("TimeZoneId", "NTEXT"),
+        ("Keywords", "NTEXT")
+    ];
+
+    /// <summary>
+    ///     Adds whichever of the later Favourites columns (radius, auto-assign, snap, time zone, keywords) a database
+    ///     written by an earlier version doesn't have. A new column is filled with its default, so existing
+    ///     favourites keep working exactly as before.
+    /// </summary>
+    /// <param name="connection">An open connection to the settings database.</param>
+    internal static void EnsureFavouritesColumnsExist(SQLiteConnection connection)
+    {
+        List<string> existingColumns = GetColumnNames(connection: connection, schemaName: "main",
+            tableName: TableNameFavourites);
+
+        foreach ((string name, string definition) in FavouritesAddedColumns)
+        {
+            if (existingColumns.Contains(value: name, comparer: StringComparer.OrdinalIgnoreCase))
+            {
+                continue;
+            }
+
+            using SQLiteCommand alterCommand = new(
+                commandText:
+                $"ALTER TABLE {QuoteIdentifier(identifier: TableNameFavourites)} ADD COLUMN {QuoteIdentifier(identifier: name)} {definition};",
+                connection: connection);
+            _ = alterCommand.ExecuteNonQuery();
         }
     }
 

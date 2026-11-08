@@ -22,6 +22,14 @@ the form does not need to get bigger. Grow `gbx_AppSettings` by the height of th
 controls below it down; keep the group box's bottom within the tab to avoid a scrollbar until it is
 actually needed.
 
+## Adding a column to a settings-database table
+
+`DatabaseSchema` is the one place a table's shape is written, but `CREATE TABLE IF NOT EXISTS` leaves an existing table alone, so a
+new column needs two things: the column in the `CREATE` statement (for new databases) and an `ALTER TABLE ... ADD COLUMN` for ones an
+older build made. The Favourites table is the example: `DatabaseSchema.FavouritesAddedColumns` lists the later columns and
+`EnsureFavouritesColumnsExist` adds the missing ones when the database is opened (a settings import recreates the table in its canonical shape and copies only the columns the file has). Give the column a `DEFAULT` (or allow NULL)
+so existing rows stay valid, and read it tolerantly (`Favourites.ReadText` / `ReadInt` accept a missing column or NULL), because a
+settings file exported by an older build has no such column either.
 ## Telling upgrading users about a change
 
 `Helpers/Startup/UpgradeNotices.cs` shows a one-off message to users who upgrade from an older build. The app stores the build it last ran (just `Version.Build`, e.g. `9778`, as `generic` / `lastRunBuild` in the settings table) and compares it with `UpgradeNotices.Registry` at startup.

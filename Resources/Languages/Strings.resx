@@ -1618,4 +1618,140 @@ That said the code _should_ be able to comprehend other layouts. Note if the cli
     <value>Descending</value>
     <comment>View menu, Sort By: descending order</comment>
   </data>
+  <data name="gbx_AllFavourites" xml:space="preserve">
+    <value>All favourites</value>
+    <comment>Manage Favourites dialog: heading of the list</comment>
+  </data>
+  <data name="gbx_FavouriteDetails" xml:space="preserve">
+    <value>Details</value>
+    <comment>Manage Favourites dialog: heading of the selected favourite&apos;s details</comment>
+  </data>
+  <data name="gbx_FavouriteAdditionalInfo" xml:space="preserve">
+    <value>Additional info</value>
+    <comment>Manage Favourites dialog</comment>
+  </data>
+  <data name="lbl_FavouriteName" xml:space="preserve">
+    <value>Name:</value>
+    <comment>Manage Favourites dialog</comment>
+  </data>
+  <data name="lbl_FavouriteCoordinates" xml:space="preserve">
+    <value>Coordinates:</value>
+    <comment>Manage Favourites dialog</comment>
+  </data>
+  <data name="lbl_FavouriteRadius" xml:space="preserve">
+    <value>Radius [m]:</value>
+    <comment>Manage Favourites dialog: how far from the favourite a photo may be and still count as there, in metres</comment>
+  </data>
+  <data name="ckb_FavouriteAutoAssign" xml:space="preserve">
+    <value>Auto assign</value>
+    <comment>Manage Favourites dialog: photos inside the radius get this favourite&apos;s location details automatically</comment>
+  </data>
+  <data name="ckb_FavouriteSnap" xml:space="preserve">
+    <value>Snap images to favourite position</value>
+    <comment>Manage Favourites dialog: auto-assigned photos also take the favourite&apos;s coordinates</comment>
+  </data>
+  <data name="lbl_FavouriteTimeZone" xml:space="preserve">
+    <value>Time zone:</value>
+    <comment>Manage Favourites dialog</comment>
+  </data>
+  <data name="lbl_FavouriteKeywords" xml:space="preserve">
+    <value>Keywords:</value>
+    <comment>Manage Favourites dialog</comment>
+  </data>
+  <data name="btn_FavouriteGetFromWeb" xml:space="preserve">
+    <value>Get from web</value>
+    <comment>Manage Favourites dialog: fills country, state, city, sublocation and time zone from GeoNames</comment>
+  </data>
+  <data name="btn_FavouriteClearAll" xml:space="preserve">
+    <value>Clear all values</value>
+    <comment>Manage Favourites dialog: empties the optional details of the selected favourite, not its name or position</comment>
+  </data>
+  <data name="btn_FavouriteAccept" xml:space="preserve">
+    <value>Accept</value>
+    <comment>Manage Favourites dialog: keep the edits to the selected favourite</comment>
+  </data>
+  <data name="btn_FavouriteDiscard" xml:space="preserve">
+    <value>Discard</value>
+    <comment>Manage Favourites dialog: throw away the edits to the selected favourite</comment>
+  </data>
+  <data name="btn_FavouriteAddKeyword" xml:space="preserve">
+    <value>Add</value>
+    <comment>Manage Favourites dialog: adds the typed keyword to the list</comment>
+  </data>
+  <data name="btn_FavouriteRemoveKeyword" xml:space="preserve">
+    <value>Remove</value>
+    <comment>Manage Favourites dialog: removes the selected keyword from the list</comment>
+  </data>
+  <data name="lbl_FavouritesCount" xml:space="preserve">
+    <value>{0} items ({1} selected)</value>
+    <comment>Manage Favourites dialog: {0} is how many favourites there are, {1} how many are selected</comment>
+  </data>
+  <data name="tsd_GroupBy" xml:space="preserve">
+    <value>Group by</value>
+    <comment>Manage Favourites dialog: drop-down that chooses how the list is grouped</comment>
+  </data>
+  <data name="tmi_GroupByCountryCode" xml:space="preserve">
+    <value>Country code</value>
+    <comment>Manage Favourites dialog: Group by</comment>
+  </data>
+  <data name="tmi_GroupByCountry" xml:space="preserve">
+    <value>Country</value>
+    <comment>Manage Favourites dialog: Group by</comment>
+  </data>
+  <data name="tmi_GroupByState" xml:space="preserve">
+    <value>State/province</value>
+    <comment>Manage Favourites dialog: Group by</comment>
+  </data>
+  <data name="tmi_GroupByCity" xml:space="preserve">
+    <value>City</value>
+    <comment>Manage Favourites dialog: Group by</comment>
+  </data>
+  <data name="tmi_GroupByCoordinates" xml:space="preserve">
+    <value>Coordinates</value>
+    <comment>Manage Favourites dialog: Group by</comment>
+  </data>
+  <data name="tmi_GroupByNone" xml:space="preserve">
+    <value>No groupings</value>
+    <comment>Manage Favourites dialog: Group by</comment>
+  </data>
+  <data name="tmi_GroupByBlank" xml:space="preserve">
+    <value>(none)</value>
+    <comment>Manage Favourites dialog: heading of the group of favourites that have no value for the field they are grouped by</comment>
+  </data>
+  <data name="tsb_Duplicate" xml:space="preserve">
+    <value>Duplicate</value>
+    <comment>Manage Favourites dialog: copies the selected favourite</comment>
+  </data>
+  <data name="tsb_Delete" xml:space="preserve">
+    <value>Delete</value>
+    <comment>Manage Favourites dialog: deletes the selected favourite</comment>
+  </data>
+  <data name="tsb_AddFromSelection" xml:space="preserve">
+    <value>Add from selected photo</value>
+    <comment>Manage Favourites dialog: makes a new favourite from the photo selected in the main window</comment>
+  </data>
+  <data name="mbx_FrmManageFavourites_WarningNameTaken" xml:space="preserve">
+    <value>Another favourite already has this name.</value>
+    <comment>Location: Favourites</comment>
+  </data>
+  <data name="mbx_FrmManageFavourites_WarningAltitudeInvalid" xml:space="preserve">
+    <value>The altitude must be a number.</value>
+    <comment>Location: Favourites</comment>
+  </data>
+  <data name="mbx_FrmManageFavourites_WarningNoCoordinates" xml:space="preserve">
+    <value>There are no coordinates to use. Pick a photo that has a position.</value>
+    <comment>Location: Favourites</comment>
+  </data>
+  <data name="mbx_FrmManageFavourites_QuestionAcceptChanges" xml:space="preserve">
+    <value>Accept the changes to this favourite?</value>
+    <comment>Location: Favourites</comment>
+  </data>
+  <data name="mbx_FrmManageFavourites_QuestionDiscardAll" xml:space="preserve">
+    <value>Close without saving your changes to the favourites?</value>
+    <comment>Location: Favourites</comment>
+  </data>
+  <data name="mbx_FrmManageFavourites_InfoWebNothingFound" xml:space="preserve">
+    <value>The web service has nothing for this position.</value>
+    <comment>Location: Favourites</comment>
+  </data>
 </root>

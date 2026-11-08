@@ -16,7 +16,7 @@ Model/                         the domain: what a file's metadata is, independen
   ExifTagSetParser             raw ExifTool tags -> typed values; the only reader, see architecture-values.md
   TagsToModelValueTransformations  per-attribute clean-up of raw ExifTool output
   ExifToolWrapper              the stay_open ExifTool process
-  Favourite / GeoSetterFavourite / MapWebMessage / AppSettingContainer   plain data carriers
+  Favourite / GeoSetterFavourite / MapWebMessage / AppSettingContainer   plain data carriers (FavouriteKeywords turns a favourite's keyword list into its stored text and back)
 
 View/
   Forms/      every Frm* dialog, plus EditFileFormLauncher. FrmMainApp is split into partial files:
@@ -32,7 +32,7 @@ Helpers/
                  and preview caches (in memory, plus ThumbnailStore in SQLite) and the session's in-memory DataTables
   Exif/          reading, writing and track-file handling via ExifTool; thumbnail and preview extraction
   FileSystem/    enumeration, checksums, locking, cloud placeholders, supported extensions
-  Geo/           coordinate and field-of-view maths
+  Geo/           coordinate and field-of-view maths, and the favourites logic (which favourite a position falls in, tree grouping, auto-assign onto photos)
   Localisation/  languages, countries, time zones, resource lookup
   Map/           the Leaflet layer list
   Startup/       first-run and per-launch setup

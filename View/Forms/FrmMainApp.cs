@@ -3292,6 +3292,9 @@ public partial class FrmMainApp : Form
 
                     // Action B: Re-calculate the global counts for the status label
                     FileListViewReadWrite.ListViewCountItemsWithGeoData();
+
+                    // Action C: If the photo lies inside a favourite that is set to auto-assign, stage that favourite's details.
+                    AutoAssignFavourites(directoryElement: de);
                 },
                 ct: _token,
                 onProgress: (int completed, int total) =>
@@ -3371,6 +3374,38 @@ public partial class FrmMainApp : Form
             // window is revealed now, and the metadata cells fill in afterwards. (Also covers an empty or failed load.)
             _startupFolderLoaded = true;
             RevealWhenLayoutRestored();
+        }
+    }
+
+    /// <summary>
+    ///     Stages the details of the auto-assign favourite (see <see cref="FavouriteAutoAssign" />) whose area a photo
+    ///     falls in, once its metadata has been read. Runs on the UI thread, because it reads the favourites list and
+    ///     updates the list row; the metadata read calls it from a worker.
+    /// </summary>
+    /// <param name="directoryElement">The photo that has just been read.</param>
+    private void AutoAssignFavourites(DirectoryElement directoryElement)
+    {
+        if (InvokeRequired)
+        {
+            _ = BeginInvoke(method: new Action(() => AutoAssignFavourites(directoryElement: directoryElement)));
+            return;
+        }
+
+        try
+        {
+            if (!Favourites.Any(predicate: favourite => favourite.AutoAssign) ||
+                !FavouriteAutoAssign.TryApply(directoryElement: directoryElement, favourites: Favourites))
+            {
+                return;
+            }
+
+            lvw_FileList.UpdateListItemData(de: directoryElement);
+            _ = FileListViewReadWrite.ListViewUpdateRowFromDEStage3ReadyToWrite(dirElemFileToModify: directoryElement);
+        }
+        catch (Exception ex)
+        {
+            // never let a favourite get in the way of showing the folder.
+            Log.Error(ex, message: $"Auto-assigning favourites failed for {directoryElement?.FileNameWithPath}");
         }
     }
 
@@ -3878,20 +3913,17 @@ context: ValueFormatContext.Display));
     private void tmi_Settings_Favourites_Click(object sender,
                                                EventArgs e)
     {
-        if (Favourites.Any())
-        {
-            FrmManageFavourites frmManageFavouritesInstance = new();
-            _ = frmManageFavouritesInstance.ShowDialog();
-        }
-        else
-        {
-            Themer.ShowMessageBox(message:
-                HelperControlAndMessageBoxHandling.ReturnControlText(
-                    controlName: "mbx_FrmMainApp_NoFavouritesDefined",
-                    fakeControlType: HelperControlAndMessageBoxHandling.FakeControlTypes.MessageBox),
-                icon: MessageBoxIcon.Warning,
-                buttons: MessageBoxButtons.OK);
-        }
+        ShowManageFavourites();
+    }
+
+    /// <summary>
+    ///     Opens the Manage Favourites dialog. It opens even with no favourites, since it is also where the first one is
+    ///     made (from the photo selected here).
+    /// </summary>
+    private void ShowManageFavourites()
+    {
+        using FrmManageFavourites frmManageFavouritesInstance = new();
+        _ = frmManageFavouritesInstance.ShowDialog(owner: this);
     }
 
     /// <summary>
@@ -4027,24 +4059,23 @@ context: ValueFormatContext.Display));
                 DirectoryElement directoryElement = lvi.Tag as DirectoryElement;
 
                 string favouriteName = cbx_Favourites.Text;
-                Favourite favourite = GetFavouriteByName(favouriteName: favouriteName) ??
-                                      new Favourite { FavouriteName = favouriteName };
+                Favourite favourite = Helpers.Data.Favourites.FromDirectoryElement(
+                    directoryElement: directoryElement, favouriteName: favouriteName);
+
+                // saving over an existing favourite refreshes its position and location names but keeps what the
+                // photo cannot tell us: radius, auto-assign, snap, time zone and keywords.
+                Favourite existingFavourite = GetFavouriteByName(favouriteName: favouriteName);
+                if (existingFavourite != null)
+                {
+                    favourite.Radius = existingFavourite.Radius;
+                    favourite.AutoAssign = existingFavourite.AutoAssign;
+                    favourite.Snap = existingFavourite.Snap;
+                    favourite.TimeZoneId = existingFavourite.TimeZoneId;
+                    favourite.Keywords = existingFavourite.Keywords;
+                }
 
                 // remove if exists, we'll add it back again
                 RemoveFavouriteByName(favouriteName: favouriteName);
-
-                favourite.GPSLatitude = directoryElement.GetAttributeValueAsString(attribute: ElementAttribute.GPSLatitude, notFoundValue: "");
-                favourite.GPSLatitudeRef = directoryElement.GetAttributeValueAsString(attribute: ElementAttribute.GPSLatitudeRef, notFoundValue: "");
-                favourite.GPSLongitude = directoryElement.GetAttributeValueAsString(attribute: ElementAttribute.GPSLongitude, notFoundValue: "");
-                favourite.GPSLongitudeRef = directoryElement.GetAttributeValueAsString(attribute: ElementAttribute.GPSLongitudeRef, notFoundValue: "");
-                favourite.GPSAltitude = directoryElement.GetAttributeValueAsString(attribute: ElementAttribute.GPSAltitude, notFoundValue: "");
-                favourite.GPSAltitudeRef = directoryElement.GetAttributeValueAsString(attribute: ElementAttribute.GPSAltitudeRef, notFoundValue: "");
-                favourite.Coordinates = directoryElement.GetAttributeValueAsString(attribute: ElementAttribute.Coordinates, notFoundValue: "");
-                favourite.City = directoryElement.GetAttributeValueAsString(attribute: ElementAttribute.City, notFoundValue: "");
-                favourite.CountryCode = directoryElement.GetAttributeValueAsString(attribute: ElementAttribute.CountryCode, notFoundValue: "");
-                favourite.Country = directoryElement.GetAttributeValueAsString(attribute: ElementAttribute.Country, notFoundValue: "");
-                favourite.State = directoryElement.GetAttributeValueAsString(attribute: ElementAttribute.State, notFoundValue: "");
-                favourite.Sublocation = directoryElement.GetAttributeValueAsString(attribute: ElementAttribute.Sublocation, notFoundValue: "");
 
                 _ = Favourites.Add(item: favourite);
                 Helpers.Data.Favourites.DataWriteSQLiteClearAndUpdateFavourites();
@@ -4225,20 +4256,7 @@ context: ValueFormatContext.Display));
     private void btn_ManageFavourites_Click(object sender,
                                             EventArgs e)
     {
-        if (Favourites.Any())
-        {
-            FrmManageFavourites frmManageFavouritesInstance = new();
-            _ = frmManageFavouritesInstance.ShowDialog();
-        }
-        else
-        {
-            Themer.ShowMessageBox(message:
-                HelperControlAndMessageBoxHandling.ReturnControlText(
-                    controlName: "mbx_FrmMainApp_NoFavouritesDefined",
-                    fakeControlType: HelperControlAndMessageBoxHandling.FakeControlTypes.MessageBox),
-                icon: MessageBoxIcon.Warning,
-                buttons: MessageBoxButtons.OK);
-        }
+        ShowManageFavourites();
     }
 
     /// <summary>

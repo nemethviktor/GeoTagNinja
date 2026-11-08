@@ -37,7 +37,7 @@ There is a "short" (15 mins) demo on [YouTube](https://youtu.be/ulP1ZG7mH-I) if 
 ## Features at-a-glance
 
 - Tag the location coordinates and City/State/etc details of multiple photos with the help of a map
-- Save and retrieve favourite locations
+- Save and retrieve favourite locations, organised in a grouped tree, with an optional radius so photos taken there are labelled automatically (`Auto Assign`)
 - Import Track (GPX etc) files and associate them with the photos
 - Export coordinate tracks of photos to GPX or KML
 - Ability to define custom rules/logic wrt naming of places at country level
