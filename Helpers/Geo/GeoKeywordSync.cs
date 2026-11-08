@@ -96,8 +96,10 @@ internal static class GeoKeywordSync
         }
 
         HashSet<string> newNames = new(collection: after.Names, comparer: StringComparer.OrdinalIgnoreCase);
+        newNames.UnionWith(other: CountryAliases(country: after.Country, code: after.CountryCode));
         HashSet<string> goneNames = new(
-            collection: before.Names.Where(predicate: name => !newNames.Contains(item: name)),
+            collection: before.Names.Concat(second: CountryAliases(country: before.Country, code: before.CountryCode))
+                              .Where(predicate: name => !newNames.Contains(item: name)),
             comparer: StringComparer.OrdinalIgnoreCase);
 
         List<string> kept = keywords.Where(predicate: keyword => !goneNames.Contains(item: keyword) &&
@@ -127,6 +129,57 @@ internal static class GeoKeywordSync
         }
 
         return TagList.From(items: kept);
+    }
+
+    private static readonly Lazy<List<RegionInfo>> Regions = new(valueFactory: () =>
+        CultureInfo.GetCultures(types: CultureTypes.SpecificCultures)
+                   .Select(selector: culture =>
+                   {
+                       try
+                       {
+                           return new RegionInfo(name: culture.Name);
+                       }
+                       catch (ArgumentException)
+                       {
+                           return null;
+                       }
+                   })
+                   .Where(predicate: region => region != null)
+                   .GroupBy(keySelector: region => region.TwoLetterISORegionName,
+                       comparer: StringComparer.OrdinalIgnoreCase)
+                   .Select(selector: group => group.First())
+                   .ToList());
+
+    /// <summary>
+    ///     The other ways the same country is written: its two- and three-letter codes and its English name, found
+    ///     from whichever of the country or its code the photo has. Empty if the country is not recognised.
+    /// </summary>
+    /// <remarks>
+    ///     Only ever used to recognise an old country keyword so it can be swapped; it is never added to a photo.
+    /// </remarks>
+    internal static IEnumerable<string> CountryAliases(string country,
+                                                       string code)
+    {
+        string name = (country ?? string.Empty).Trim();
+        string abbreviation = (code ?? string.Empty).Trim();
+
+        RegionInfo region = Regions.Value.FirstOrDefault(predicate: candidate =>
+            abbreviation.Length > 0 &&
+            (string.Equals(a: candidate.TwoLetterISORegionName, b: abbreviation,
+                 comparisonType: StringComparison.OrdinalIgnoreCase) ||
+             string.Equals(a: candidate.ThreeLetterISORegionName, b: abbreviation,
+                 comparisonType: StringComparison.OrdinalIgnoreCase)));
+        region ??= Regions.Value.FirstOrDefault(predicate: candidate =>
+            name.Length > 0 &&
+            (string.Equals(a: candidate.EnglishName, b: name, comparisonType: StringComparison.OrdinalIgnoreCase) ||
+             string.Equals(a: candidate.NativeName, b: name, comparisonType: StringComparison.OrdinalIgnoreCase)));
+
+        return region == null
+            ? []
+            : new[]
+            {
+                region.TwoLetterISORegionName, region.ThreeLetterISORegionName, region.EnglishName
+            };
     }
 
     private static string Coordinate(double value)
@@ -167,7 +220,7 @@ internal static class GeoKeywordSync
             : null;
     }
 
-    private static GeoKeywordLocation Snapshot(DirectoryElement element,
+    internal static GeoKeywordLocation Snapshot(DirectoryElement element,
                                                DirectoryElement.AttributeVersion? version)
     {
         return new GeoKeywordLocation
@@ -182,6 +235,14 @@ internal static class GeoKeywordSync
             Longitude = NumberOf(text: TextOf(element: element, attribute: ElementAttribute.GPSLongitude,
                 version: version))
         };
+    }
+
+    /// <summary>The keywords a photo has now, counting pending edits.</summary>
+    internal static TagList CurrentKeywords(DirectoryElement element)
+    {
+        return TagList.Parse(text: element.GetAttributeValueAsString(attribute: ElementAttribute.IPTCKeywords,
+            notFoundValue: string.Empty,
+            context: ValueFormatContext.RoundTrip));
     }
 
     /// <summary>

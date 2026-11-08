@@ -321,6 +321,9 @@
     <Compile Include="View\Forms\FrmEditFileData.LocationExtras.cs">
       <DependentUpon>FrmEditFileData.cs</DependentUpon>
     </Compile>
+    <Compile Include="View\Forms\FrmEditFileData.KeywordSync.cs">
+      <DependentUpon>FrmEditFileData.cs</DependentUpon>
+    </Compile>
     <Compile Include="View\Forms\FrmEditFileData.Designer.cs">
       <DependentUpon>FrmEditFileData.cs</DependentUpon>
     </Compile>

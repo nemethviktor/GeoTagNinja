@@ -50,6 +50,7 @@ public partial class FrmEditFileData : Form
         Log.Trace(message: "InitializeComponent OK");
 
         BuildMetadataTabs();
+        HookKeywordSync();
 
     }
 
@@ -1319,6 +1320,7 @@ public partial class FrmEditFileData : Form
                     whichAttributeVersion: DirectoryElement.AttributeVersion
                                                            .Stage1EditFormIntraTabTransferQueue))
             {
+                SyncKeywordsWithLocation(element: dirElemFileToModify);
                 RememberFieldHistory(element: dirElemFileToModify);
 
                 foreach (ElementAttribute attribute in (ElementAttribute[])
@@ -1369,6 +1371,7 @@ public partial class FrmEditFileData : Form
             }
         }
 
+        ForgetKeywordSync();
         TaskbarManagerInstance.SetProgressState(
             state: TaskbarProgressBarState.NoProgress);
         // re-center map on new data.
@@ -1384,6 +1387,8 @@ public partial class FrmEditFileData : Form
     private void btn_Generic_Cancel_Click(object sender,
         EventArgs e)
     {
+        ForgetKeywordSync();
+
         // clear the queues
         foreach (DirectoryElement dirElemFileToModify in DirectoryElements)
         {
@@ -1441,6 +1446,9 @@ public partial class FrmEditFileData : Form
              attributeVersion: DirectoryElement.AttributeVersion.Stage1EditFormIntraTabTransferQueue);
         }
 
+        _frmEditFileDataNowLoadingFileData = false;
+        SyncKeywordsWithLocation(element: lvw_FileListEditImages.SelectedItems[0].Tag as DirectoryElement);
+        _frmEditFileDataNowLoadingFileData = true;
         ShowDEDataInRelevantControls(
             dirElemFileToModify: lvw_FileListEditImages.SelectedItems[0].Tag as DirectoryElement);
         _frmEditFileDataNowLoadingFileData = false;

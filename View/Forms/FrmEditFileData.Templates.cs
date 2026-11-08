@@ -228,6 +228,7 @@ public partial class FrmEditFileData
                 context: ValueFormatContext.RoundTrip);
         }
 
+        SyncKeywordsWithLocation(element: element);
         ShowDEDataInRelevantControls(dirElemFileToModify: element);
     }
 }

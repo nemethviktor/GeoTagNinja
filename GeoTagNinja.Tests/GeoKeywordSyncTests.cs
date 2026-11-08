@@ -119,4 +119,37 @@ public class GeoKeywordSyncTests
 
         CollectionAssert.AreEqual(expected: new[] { "geo:lat=1.50000000", "geo:lon=-2.25000000" }, actual: result);
     }
+
+    [Test]
+    public void OldCountry_IsRecognisedByItsOtherSpellings_ButNeverAddedBack()
+    {
+        // the photo's fields say "United Kingdom"/"GB"; the keywords came from a tool that wrote "GBR" and "UK" is not one of them
+        GeoKeywordLocation before = new() { Country = "United Kingdom", CountryCode = "GB" };
+        GeoKeywordLocation after = new() { Country = "France", CountryCode = "FR" };
+        string[] result = Run(keywords: ["GBR", "gb", "United Kingdom", "mum"], before: before, after: after);
+
+        CollectionAssert.AreEqual(expected: new[] { "mum", "France", "FR" }, actual: result);
+    }
+
+    [Test]
+    public void CountryAliases_CanBeFoundFromEitherTheNameOrTheCode_AndIgnoreUnknownOnes()
+    {
+        CollectionAssert.Contains(collection: GeoKeywordSync.CountryAliases(country: "", code: "HUN").ToArray(),
+            actual: "HU");
+        CollectionAssert.Contains(collection: GeoKeywordSync.CountryAliases(country: "Hungary", code: "").ToArray(),
+            actual: "HUN");
+        CollectionAssert.IsEmpty(collection: GeoKeywordSync.CountryAliases(country: "Narnia", code: "").ToArray());
+    }
+
+    [Test]
+    public void UnchangedCountry_KeepsItsAliasKeywords()
+    {
+        string[] keywords = ["GBR", "Stratford"];
+        string[] result = Run(keywords: keywords,
+            before: new GeoKeywordLocation { Country = "United Kingdom", CountryCode = "GB", City = "Stratford" },
+            after: new GeoKeywordLocation { Country = "United Kingdom", CountryCode = "GB", City = "Leyton" });
+
+        CollectionAssert.Contains(collection: result, actual: "GBR");
+        CollectionAssert.DoesNotContain(collection: result, actual: "Stratford");
+    }
 }
