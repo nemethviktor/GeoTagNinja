@@ -1,4 +1,4 @@
-using GeoTagNinja.Helpers;
+﻿using GeoTagNinja.Helpers;
 using GeoTagNinja.Helpers.Geo;
 using GeoTagNinja.Model;
 using System;
