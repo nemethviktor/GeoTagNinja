@@ -281,6 +281,12 @@ namespace GeoTagNinja.View.Forms
             this.flp_GeoCoords.Controls.Add(this.btn_LoadFavourite);
             this.flp_GeoCoords.Controls.Add(this.btn_ManageFavourites);
             resources.ApplyResources(this.flp_GeoCoords, "flp_GeoCoords");
+            // three fixed rows: coordinates / what to do with them / favourites
+            this.flp_GeoCoords.AutoSize = true;
+            this.flp_GeoCoords.AutoSizeMode = System.Windows.Forms.AutoSizeMode.GrowAndShrink;
+            this.flp_GeoCoords.Padding = new System.Windows.Forms.Padding(0, 3, 0, 3);
+            this.flp_GeoCoords.SetFlowBreak(this.nud_lng, true);
+            this.flp_GeoCoords.SetFlowBreak(this.btn_loctToFileDestination, true);
             this.flp_GeoCoords.Name = "flp_GeoCoords";
             // 
             // lbl_lat
@@ -329,6 +335,8 @@ namespace GeoTagNinja.View.Forms
             // 
             this.btn_NavigateMapGo.BackColor = System.Drawing.SystemColors.Menu;
             resources.ApplyResources(this.btn_NavigateMapGo, "btn_NavigateMapGo");
+            this.btn_NavigateMapGo.AutoSize = true;
+            this.btn_NavigateMapGo.AutoSizeMode = System.Windows.Forms.AutoSizeMode.GrowAndShrink;
             this.btn_NavigateMapGo.Name = "btn_NavigateMapGo";
             this.btn_NavigateMapGo.UseVisualStyleBackColor = false;
             this.btn_NavigateMapGo.Click += new System.EventHandler(this.btn_NavigateMapGo_Click);
@@ -336,6 +344,8 @@ namespace GeoTagNinja.View.Forms
             // btn_loctToFile
             // 
             resources.ApplyResources(this.btn_loctToFile, "btn_loctToFile");
+            this.btn_loctToFile.AutoSize = true;
+            this.btn_loctToFile.AutoSizeMode = System.Windows.Forms.AutoSizeMode.GrowAndShrink;
             this.btn_loctToFile.Name = "btn_loctToFile";
             this.btn_loctToFile.UseVisualStyleBackColor = true;
             this.btn_loctToFile.Click += new System.EventHandler(this.btn_loctToFile_Click);
@@ -343,6 +353,8 @@ namespace GeoTagNinja.View.Forms
             // btn_loctToFileDestination
             // 
             resources.ApplyResources(this.btn_loctToFileDestination, "btn_loctToFileDestination");
+            this.btn_loctToFileDestination.AutoSize = true;
+            this.btn_loctToFileDestination.AutoSizeMode = System.Windows.Forms.AutoSizeMode.GrowAndShrink;
             this.btn_loctToFileDestination.Name = "btn_loctToFileDestination";
             this.btn_loctToFileDestination.UseVisualStyleBackColor = true;
             this.btn_loctToFileDestination.Click += new System.EventHandler(this.btn_loctToFile_Click);
@@ -362,6 +374,8 @@ namespace GeoTagNinja.View.Forms
             // btn_SaveFavourite
             // 
             resources.ApplyResources(this.btn_SaveFavourite, "btn_SaveFavourite");
+            this.btn_SaveFavourite.AutoSize = true;
+            this.btn_SaveFavourite.AutoSizeMode = System.Windows.Forms.AutoSizeMode.GrowAndShrink;
             this.btn_SaveFavourite.Name = "btn_SaveFavourite";
             this.btn_SaveFavourite.UseVisualStyleBackColor = true;
             this.btn_SaveFavourite.Click += new System.EventHandler(this.btn_SaveFavourite_Click);
@@ -369,6 +383,8 @@ namespace GeoTagNinja.View.Forms
             // btn_LoadFavourite
             // 
             resources.ApplyResources(this.btn_LoadFavourite, "btn_LoadFavourite");
+            this.btn_LoadFavourite.AutoSize = true;
+            this.btn_LoadFavourite.AutoSizeMode = System.Windows.Forms.AutoSizeMode.GrowAndShrink;
             this.btn_LoadFavourite.Name = "btn_LoadFavourite";
             this.btn_LoadFavourite.UseVisualStyleBackColor = true;
             this.btn_LoadFavourite.Click += new System.EventHandler(this.btn_LoadFavourite_Click);
@@ -376,6 +392,8 @@ namespace GeoTagNinja.View.Forms
             // btn_ManageFavourites
             // 
             resources.ApplyResources(this.btn_ManageFavourites, "btn_ManageFavourites");
+            this.btn_ManageFavourites.AutoSize = true;
+            this.btn_ManageFavourites.AutoSizeMode = System.Windows.Forms.AutoSizeMode.GrowAndShrink;
             this.btn_ManageFavourites.Name = "btn_ManageFavourites";
             this.btn_ManageFavourites.UseVisualStyleBackColor = true;
             this.btn_ManageFavourites.Click += new System.EventHandler(this.btn_ManageFavourites_Click);

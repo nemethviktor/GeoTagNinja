@@ -370,7 +370,7 @@
     <value>10, 7</value>
   </data>
   <data name="lbl_lat.Margin" type="System.Windows.Forms.Padding, System.Windows.Forms">
-    <value>10, 0, 2, 0</value>
+    <value>6, 6, 2, 0</value>
   </data>
   <data name="lbl_lat.Size" type="System.Drawing.Size, System.Drawing">
     <value>34, 13</value>
@@ -424,7 +424,7 @@
     <value>162, 7</value>
   </data>
   <data name="lbl_lng.Margin" type="System.Windows.Forms.Padding, System.Windows.Forms">
-    <value>20, 0, 2, 0</value>
+    <value>20, 6, 2, 0</value>
   </data>
   <data name="lbl_lng.Size" type="System.Drawing.Size, System.Drawing">
     <value>37, 13</value>
@@ -468,27 +468,11 @@
   <data name="&gt;&gt;nud_lng.ZOrder" xml:space="preserve">
     <value>3</value>
   </data>
-  <data name="btn_NavigateMapGo.BackgroundImage" type="System.Drawing.Bitmap, System.Drawing" mimetype="application/x-microsoft.net.object.bytearray.base64">
-    <value>
-        iVBORw0KGgoAAAANSUhEUgAAABAAAAAQCAYAAAAf8/9hAAAABGdBTUEAALGPC/xhBQAAACBjSFJNAAB6
-        JgAAgIQAAPoAAACA6AAAdTAAAOpgAAA6mAAAF3CculE8AAAACXBIWXMAAA68AAAOvAGVvHJJAAABbUlE
-        QVQ4T6WTyUoDURBFg7pxFgUFbfPurfdChyCNISIOkWxFl04bdaUSd4oSUDTmR+J3mI/R4I8YKfM6ZCAG
-        seBC9+2qQw10IuEjm6+WVPH7nyObf62prLXLJB8BvJNs/KK6L6yWVrerb9l89Uvln7WTIQBnAJ6dc0EY
-        hpMikkylUkthGC4qZBAgQXJBOwJg0un0HMkLkrcAnloADU2KR2iZp7WSqlAojPjiCMCxdkSy0gEg+dCx
-        xGbxp5d6wwDOAdyLSFFErrsBH0EQzIrIvDFmphuQyWQmFOCc2xCRfREpdwMaxphdY8yeLimXy421j6Ct
-        +7YrIvJijLnpATjnpkRkJZlMZqy1m0EQjOoloigaJ3ngF/cDIXnXA9AzqUiua5LOa4zJxr4KwKX/dtIX
-        oCMAKPl2i+0AkofeX+sLiBMBlK21rt231m5Za6903EGAI5I77Z5KRKa12Of0B+g14sR+6gbU1fijmj/T
-        f+MbKyS7B+Ja2QsAAAAASUVORK5CYII=
-</value>
-  </data>
-  <data name="btn_NavigateMapGo.BackgroundImageLayout" type="System.Windows.Forms.ImageLayout, System.Windows.Forms">
-    <value>Zoom</value>
-  </data>
   <data name="btn_NavigateMapGo.Location" type="System.Drawing.Point, System.Drawing">
     <value>317, 2</value>
   </data>
   <data name="btn_NavigateMapGo.Margin" type="System.Windows.Forms.Padding, System.Windows.Forms">
-    <value>20, 2, 2, 2</value>
+    <value>6, 3, 3, 3</value>
   </data>
   <data name="btn_NavigateMapGo.Size" type="System.Drawing.Size, System.Drawing">
     <value>24, 24</value>
@@ -511,28 +495,11 @@
   <data name="&gt;&gt;btn_NavigateMapGo.ZOrder" xml:space="preserve">
     <value>4</value>
   </data>
-  <data name="btn_loctToFile.BackgroundImage" type="System.Drawing.Bitmap, System.Drawing" mimetype="application/x-microsoft.net.object.bytearray.base64">
-    <value>
-        iVBORw0KGgoAAAANSUhEUgAAABgAAAAYCAYAAADgdz34AAAABGdBTUEAALGPC/xhBQAAABl0RVh0U29m
-        dHdhcmUAQWRvYmUgSW1hZ2VSZWFkeXHJZTwAAAHZSURBVEhLY/j//z8DLTGGALUxhgC1MYYAtTGGgKKi
-        4n8q4X58FqRhwemKioobFRUVe4nAjxQVFfcTsgDERhZnUlRUlELG6f585n0ZzL0dKawFaHLHSLEg4e/f
-        vwsOHz7shW74jDyGjzPzGf6DMMgiki0AGT7/0NP/CbOu/P/06dNKZEtABsIMB+GpOYwgQ0m2YD7IcIbY
-        XRiWNCeyJSFbMCmbaSU+C8L+//8PEth//Pjx/0+ePLkJ4//8+fMIuiVBQUEKMF+AXA4yPMBBRAOfBfsd
-        2k7/x4dBFoBw/46H/58+fVqPHB9YMPUsELGM1eDwnxYMovFZgBJEl65cf3/m/kcwvv/y823kILrz7P1O
-        WBCBDGWM2XYFJAeikSzBsAAlkoVs0v6LZR/4f/r2m5PIhi868vSXReOJL1ze3a7IhrOtN3qHZgl+C9R8
-        i/+/efPm/+/fv/8jJ1O3c4FXGGJ3fgRhuOEbdZ5yHObYzb5dAe4TeTWdK3gtkNEyP6xySuUg/1H+PeX3
-        yq9ufrv5qfdl75Ngg/aKnoBYgjAchmGWCNrngZI6bgt4VvHcRdaIgfcLHGbfLXEGQxxqCeUWEMAE44Dm
-        FlAJ47QgQFFRsYEK2ACrBdTGGALUxgDVvttz0fIqEQAAAABJRU5ErkJggg==
-</value>
-  </data>
-  <data name="btn_loctToFile.BackgroundImageLayout" type="System.Windows.Forms.ImageLayout, System.Windows.Forms">
-    <value>Zoom</value>
-  </data>
   <data name="btn_loctToFile.Location" type="System.Drawing.Point, System.Drawing">
     <value>345, 2</value>
   </data>
   <data name="btn_loctToFile.Margin" type="System.Windows.Forms.Padding, System.Windows.Forms">
-    <value>2, 2, 2, 2</value>
+    <value>3, 3, 3, 3</value>
   </data>
   <data name="btn_loctToFile.Size" type="System.Drawing.Size, System.Drawing">
     <value>24, 24</value>
@@ -555,32 +522,11 @@
   <data name="&gt;&gt;btn_loctToFile.ZOrder" xml:space="preserve">
     <value>5</value>
   </data>
-  <data name="btn_loctToFileDestination.BackgroundImage" type="System.Drawing.Bitmap, System.Drawing" mimetype="application/x-microsoft.net.object.bytearray.base64">
-    <value>
-        iVBORw0KGgoAAAANSUhEUgAAABgAAAAYCAYAAADgdz34AAAABGdBTUEAALGPC/xhBQAAABl0RVh0U29m
-        dHdhcmUAQWRvYmUgSW1hZ2VSZWFkeXHJZTwAAALUSURBVEhLvZNvSFNRGIe3pLaksKJEJMgTKikGalBZ
-        gftiH1qWikhCwihQqOUMEyGJFkFRsSahZVYaUkIKggqlzpo6derVEL1ac6JZrsgmzjWa+3P3i7saTbec
-        5erC8+H8zrnvw3nPORwAnH+JR+BvPAJ/4xH8BTwAIQACvcx5CgghWAkSiQQURWFhYQGzszMwm79Bq9VC
-        KpW61siXE2R7IYcQUk8IkYnF4mqr1YqUE0Wgio/CRiXA/GkPJt6KwTAM8vLy9IQQ5bICL/kaQkgoi9Fo
-        rM2VPcEdUQHqUwmEewlelR8HM7IWVPcZDA4OGv5EIGIY5rFKpTriEjAMYxQ8oFB9uhABAQHgcDjg8fgo
-        Fmeg7+EGdheOlQpElR06iMppGI3GZy6Jw+GwRNWMI+nCU/D5fKeAy+VCkHgV9KVosN9KBZVscU5WyyKJ
-        3W7X7azqw/pH7yEQyxC1Ox7HUs8hPa4EHecLYDAYrEsFGQDYQKlWqzE9Pa1xjS0WS+dSyczMzM3W0XcI
-        qplCcMkoYvNbkH3wPm7ElWK0qRcVFRUflgqUgmsUloMVsMibpqDT6S6bTKbGlvI2XA+VozhEjrJgOapy
-        ymA2m7siIiLUqxYMDAyks72uziyBYuNtlB64CLvdjrGxMfZKdy8VLGrREP1mrn9y3snk569a9xaNf5xr
-        TktLC2toaBBoNBrU1dVBknwKtbW1oGkaCoUiyZtg0SFvOZSN4LNtoLT6XvfiVZ066/4rPaZA4a2krQlZ
-        u+KLOrWZd4fQ/qXfdvLeMBKk3eNs7lMQmZwPvV4Pm80G92t6+HUqzclqnmfhnnxOs+J19TE6voqv4L0I
-        c47ZfEdkDL2sYHv0PlV4X3h7UFdQa+FE4UjjbKNOOCzsdRZ6ua3nh+RXcRcuyebEXJ/vQOb+owfKTSqe
-        IqTfI/8pWb3ABz7P4H8I/MFvBSmEEKkfiPUq8Dcegb/5DmzYdUSDOcoqAAAAAElFTkSuQmCC
-</value>
-  </data>
-  <data name="btn_loctToFileDestination.BackgroundImageLayout" type="System.Windows.Forms.ImageLayout, System.Windows.Forms">
-    <value>Zoom</value>
-  </data>
   <data name="btn_loctToFileDestination.Location" type="System.Drawing.Point, System.Drawing">
     <value>373, 2</value>
   </data>
   <data name="btn_loctToFileDestination.Margin" type="System.Windows.Forms.Padding, System.Windows.Forms">
-    <value>2, 2, 2, 2</value>
+    <value>3, 3, 3, 3</value>
   </data>
   <data name="btn_loctToFileDestination.Size" type="System.Drawing.Size, System.Drawing">
     <value>24, 24</value>
@@ -613,7 +559,7 @@
     <value>10, 35</value>
   </data>
   <data name="lbl_Favourites.Margin" type="System.Windows.Forms.Padding, System.Windows.Forms">
-    <value>10, 0, 2, 0</value>
+    <value>6, 6, 2, 0</value>
   </data>
   <data name="lbl_Favourites.Size" type="System.Drawing.Size, System.Drawing">
     <value>72, 13</value>
@@ -657,24 +603,11 @@
   <data name="&gt;&gt;cbx_Favourites.ZOrder" xml:space="preserve">
     <value>8</value>
   </data>
-  <data name="btn_SaveFavourite.BackgroundImage" type="System.Drawing.Bitmap, System.Drawing" mimetype="application/x-microsoft.net.object.bytearray.base64">
-    <value>
-        iVBORw0KGgoAAAANSUhEUgAAABAAAAAQCAYAAAAf8/9hAAAABGdBTUEAALGPC/xhBQAAACBjSFJNAAB6
-        JgAAgIQAAPoAAACA6AAAdTAAAOpgAAA6mAAAF3CculE8AAAACXBIWXMAAA68AAAOvAGVvHJJAAAApklE
-        QVQ4T2NgiNn5gCF21380/JEhercDA1EApCF6uyQKHbvbnyFm1yuGmJ1O6MoxATYDQHTMjmCQS4yNjVkV
-        FRX/Y8EPUA2I2fUIzAbRID7MMAYGBjk5OUl0DDIE1QBsGGoAFtvBmGgDYDaS7QL8BsTswhaNEAySY2Bg
-        RHc6qhcIABUVFT78LoACbAoI8TEMIBVjGIBuAyE+1Q14gO5EAhialAcaAACvkNN/7z5UfAAAAABJRU5E
-        rkJggg==
-</value>
-  </data>
-  <data name="btn_SaveFavourite.BackgroundImageLayout" type="System.Windows.Forms.ImageLayout, System.Windows.Forms">
-    <value>Zoom</value>
-  </data>
   <data name="btn_SaveFavourite.Location" type="System.Drawing.Point, System.Drawing">
     <value>240, 30</value>
   </data>
   <data name="btn_SaveFavourite.Margin" type="System.Windows.Forms.Padding, System.Windows.Forms">
-    <value>2, 2, 2, 2</value>
+    <value>3, 3, 3, 3</value>
   </data>
   <data name="btn_SaveFavourite.Size" type="System.Drawing.Size, System.Drawing">
     <value>24, 24</value>
@@ -697,28 +630,11 @@
   <data name="&gt;&gt;btn_SaveFavourite.ZOrder" xml:space="preserve">
     <value>9</value>
   </data>
-  <data name="btn_LoadFavourite.BackgroundImage" type="System.Drawing.Bitmap, System.Drawing" mimetype="application/x-microsoft.net.object.bytearray.base64">
-    <value>
-        iVBORw0KGgoAAAANSUhEUgAAABgAAAAYCAYAAADgdz34AAAABGdBTUEAALGPC/xhBQAAABl0RVh0U29m
-        dHdhcmUAQWRvYmUgSW1hZ2VSZWFkeXHJZTwAAAHZSURBVEhLY/j//z8DLTGGALUxhgC1MYYAtTGGgKKi
-        4n8q4X58FqRhwemKioobFRUVe4nAjxQVFfcTsgDERhZnUlRUlELG6f585n0ZzL0dKawFaHLHSLEg4e/f
-        vwsOHz7shW74jDyGjzPzGf6DMMgiki0AGT7/0NP/CbOu/P/06dNKZEtABsIMB+GpOYwgQ0m2YD7IcIbY
-        XRiWNCeyJSFbMCmbaSU+C8L+//8PEth//Pjx/0+ePLkJ4//8+fMIuiVBQUEKMF+AXA4yPMBBRAOfBfsd
-        2k7/x4dBFoBw/46H/58+fVqPHB9YMPUsELGM1eDwnxYMovFZgBJEl65cf3/m/kcwvv/y823kILrz7P1O
-        WBCBDGWM2XYFJAeikSzBsAAlkoVs0v6LZR/4f/r2m5PIhi868vSXReOJL1ze3a7IhrOtN3qHZgl+C9R8
-        i/+/efPm/+/fv/8jJ1O3c4FXGGJ3fgRhuOEbdZ5yHObYzb5dAe4TeTWdK3gtkNEyP6xySuUg/1H+PeX3
-        yq9ufrv5qfdl75Ngg/aKnoBYgjAchmGWCNrngZI6bgt4VvHcRdaIgfcLHGbfLXEGQxxqCeUWEMAE44Dm
-        FlAJ47QgQFFRsYEK2ACrBdTGGALUxgDVvttz0fIqEQAAAABJRU5ErkJggg==
-</value>
-  </data>
-  <data name="btn_LoadFavourite.BackgroundImageLayout" type="System.Windows.Forms.ImageLayout, System.Windows.Forms">
-    <value>Zoom</value>
-  </data>
   <data name="btn_LoadFavourite.Location" type="System.Drawing.Point, System.Drawing">
     <value>268, 30</value>
   </data>
   <data name="btn_LoadFavourite.Margin" type="System.Windows.Forms.Padding, System.Windows.Forms">
-    <value>2, 2, 2, 2</value>
+    <value>3, 3, 3, 3</value>
   </data>
   <data name="btn_LoadFavourite.Size" type="System.Drawing.Size, System.Drawing">
     <value>24, 24</value>
@@ -741,25 +657,11 @@
   <data name="&gt;&gt;btn_LoadFavourite.ZOrder" xml:space="preserve">
     <value>10</value>
   </data>
-  <data name="btn_ManageFavourites.BackgroundImage" type="System.Drawing.Bitmap, System.Drawing" mimetype="application/x-microsoft.net.object.bytearray.base64">
-    <value>
-        iVBORw0KGgoAAAANSUhEUgAAABAAAAAQCAYAAAAf8/9hAAAABGdBTUEAALGPC/xhBQAAACBjSFJNAAB6
-        JgAAgIQAAPoAAACA6AAAdTAAAOpgAAA6mAAAF3CculE8AAAACXBIWXMAAA68AAAOvAGVvHJJAAAA9klE
-        QVQ4T41SMWpCQRA1jZ3pIqQZ31sWPnxym1zCC6SMhZWFkCpexwtYKWKRxgQsQv4dlFl2cR3/kn0wvGVn
-        3pthZwcDA5JHkmdlm6uCikXkWdnmqpBP0DTNCMCG5Inkom3boa0vwnv/qOycewHwG00Xtq4IknsV6xnA
-        ZzQ42boiSHbaGcAqis8Avm1dEQCWSZjF0Tk3trX/4YHkB4CfOMXuxiR79VKE/+C9fwKwjXcHXXUyCHsv
-        heZTM+2sE6RJ+g2m8irv8hW450NlJuurQRRN3iZzmclf5E7vrcEdgkESZZ0Dz6SrM0giG9UTWGHhEXtR
-        u8YSLgmvhMwkzfiVAAAAAElFTkSuQmCC
-</value>
-  </data>
-  <data name="btn_ManageFavourites.BackgroundImageLayout" type="System.Windows.Forms.ImageLayout, System.Windows.Forms">
-    <value>Zoom</value>
-  </data>
   <data name="btn_ManageFavourites.Location" type="System.Drawing.Point, System.Drawing">
     <value>296, 30</value>
   </data>
   <data name="btn_ManageFavourites.Margin" type="System.Windows.Forms.Padding, System.Windows.Forms">
-    <value>2, 2, 2, 2</value>
+    <value>3, 3, 3, 3</value>
   </data>
   <data name="btn_ManageFavourites.Size" type="System.Drawing.Size, System.Drawing">
     <value>24, 24</value>

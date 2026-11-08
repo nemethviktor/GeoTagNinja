@@ -3214,6 +3214,60 @@ namespace GeoTagNinja.Resources.Languages {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Show on Map.
+        /// </summary>
+        public static string btn_NavigateMapGo {
+            get {
+                return ResourceManager.GetString("btn_NavigateMapGo", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Save to File(s).
+        /// </summary>
+        public static string btn_loctToFile {
+            get {
+                return ResourceManager.GetString("btn_loctToFile", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Save to Destination.
+        /// </summary>
+        public static string btn_loctToFileDestination {
+            get {
+                return ResourceManager.GetString("btn_loctToFileDestination", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Save Photo.
+        /// </summary>
+        public static string btn_SaveFavourite {
+            get {
+                return ResourceManager.GetString("btn_SaveFavourite", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Apply to Photos.
+        /// </summary>
+        public static string btn_LoadFavourite {
+            get {
+                return ResourceManager.GetString("btn_LoadFavourite", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Manage....
+        /// </summary>
+        public static string btn_ManageFavourites {
+            get {
+                return ResourceManager.GetString("btn_ManageFavourites", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Load metadata for the selected file(s) from your Favourites.
         /// </summary>
         public static string ttp_LoadFavourite {

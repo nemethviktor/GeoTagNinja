@@ -1312,6 +1312,30 @@ The clipboard should contain only a pair of decimals, preferably in "invariant" 
 That said the code _should_ be able to comprehend other layouts. Note if the clipboard has anything apart from the above the operation will fail (nothing will happen.)</value>
     <comment>These are labels. Refer to the English for translation pls.</comment>
   </data>
+  <data name="btn_NavigateMapGo" xml:space="preserve">
+    <value>Show on Map</value>
+    <comment>Button caption under the map. Keep it short. Refer to the English for translation pls.</comment>
+  </data>
+  <data name="btn_loctToFile" xml:space="preserve">
+    <value>Save to File(s)</value>
+    <comment>Button caption under the map. Keep it short. Refer to the English for translation pls.</comment>
+  </data>
+  <data name="btn_loctToFileDestination" xml:space="preserve">
+    <value>Save to Destination</value>
+    <comment>Button caption under the map. Keep it short. Refer to the English for translation pls.</comment>
+  </data>
+  <data name="btn_SaveFavourite" xml:space="preserve">
+    <value>Save Photo</value>
+    <comment>Button caption under the map. Keep it short. Refer to the English for translation pls.</comment>
+  </data>
+  <data name="btn_LoadFavourite" xml:space="preserve">
+    <value>Apply to Photos</value>
+    <comment>Button caption under the map. Keep it short. Refer to the English for translation pls.</comment>
+  </data>
+  <data name="btn_ManageFavourites" xml:space="preserve">
+    <value>Manage...</value>
+    <comment>Button caption under the map. Keep it short. Refer to the English for translation pls.</comment>
+  </data>
   <data name="ttp_LoadFavourite" xml:space="preserve">
     <value>Load metadata for the selected file(s) from your Favourites</value>
     <comment>These are labels. Refer to the English for translation pls.</comment>

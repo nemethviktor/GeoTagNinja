@@ -2,6 +2,7 @@
 
 **Build 9xxx [202xxxxx]** (upcoming release)
 - NEW & UPDATED:
+	- The strip under the map is tidied into three rows: the coordinates (`Latitude` / `Longitude`), what to do with them, and `Favourites`. The six icon-only buttons now carry captions (`Show on Map`, `Save to File(s)`, `Save to Destination`, `Save Photo`, `Apply to Photos`, `Manage...`) and keep their tooltips. The new captions are English-only until translated.
 	- Manage Favourites has been rebuilt (modelled on GeoSetter's Edit Location Favorites): a tree of all favourites on the left, grouped by Country, State/Province and City by default (Group By also offers Country Code and Coordinates, or No Groupings), and the selected favourite's details on the right. Duplicate and Delete act on the selected favourite and Add from selected photo makes a new one from the photo selected in the main window. The dialog now opens even when you have no favourites yet.
 	- Edits are staged: Accept / Discard apply to the favourite you are on (and you are asked if you move off it with edits pending); nothing is saved until OK, and Cancel throws the lot away.
 	- Favourites gained Radius [m], Auto Assign, Snap Images to Favourite Position, Altitude, Time Zone and Keywords. The radius, auto-assign, snap and time zone are now also kept when you import favourites from GeoSetter (they used to be dropped). Existing favourites keep working unchanged: the new columns are added to your settings database on first start.
