@@ -88,6 +88,12 @@ internal class WriteTrackDataToTrackFile
                 ExifToolInititators
                                                  .ExifGetTrackSyncDataWriteTrackPath);
 
+            // ExifTool prints KML points as when/coord pairs; other software expects all whens, then all coords
+            if (KmlExportOptions.IsKmlPath(outFilePath: outFilePath))
+            {
+                KmlExportOptions.GroupTrackPoints(outFilePath: outFilePath);
+            }
+
             ///////////////
 
             Themer.ShowMessageBox(

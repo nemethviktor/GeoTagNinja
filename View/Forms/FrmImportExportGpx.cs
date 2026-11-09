@@ -440,7 +440,8 @@ public partial class FrmImportExportGpx : Form
                 // the format follows the extension of the chosen file: .kml -> KML track, anything else -> GPX
                 if (KmlExportOptions.IsKmlPath(outFilePath: tbx_SaveTrackTo.Text))
                 {
-                    KmlExportOptions.GenerateFMTFile(includeAltitude: ckb_ExportTrackIncludeAltitude.Checked);
+                    KmlExportOptions.GenerateFMTFile(includeAltitude: ckb_ExportTrackIncludeAltitude.Checked,
+                        exportFileFMTTimeBasis: cbx_ExportTrackTimeStampType.Text);
                 }
                 else
                 {
@@ -734,10 +735,6 @@ public partial class FrmImportExportGpx : Form
         if (ofd_SaveTrackTo.ShowDialog() == DialogResult.OK)
         {
             tbx_SaveTrackTo.Text = ofd_SaveTrackTo.FileName;
-
-            // KML tracks carry no timestamps, so the time-basis choice only applies to GPX
-            cbx_ExportTrackTimeStampType.Enabled =
-                !KmlExportOptions.IsKmlPath(outFilePath: ofd_SaveTrackTo.FileName);
         }
     }
 
