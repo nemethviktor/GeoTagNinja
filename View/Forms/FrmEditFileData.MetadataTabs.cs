@@ -72,6 +72,7 @@ public partial class FrmEditFileData
         tpg_Keywords = NewTabPage(name: "tpg_Keywords", english: "Categories/Keywords");
         tpg_SourceDescription = NewTabPage(name: "tpg_SourceDescription", english: "Source/Description");
         tpg_Contact = NewTabPage(name: "tpg_Contact", english: "Contact");
+        WidenTabHeaders();
 
         // Categories / Keywords: categories on the left, keywords on the right.
         AddTextField(page: tpg_Keywords, attribute: ElementAttribute.Category, english: "Category",
@@ -136,6 +137,22 @@ public partial class FrmEditFileData
 
         BuildLocationExtras();
         BuildTemplateButtons();
+    }
+
+    /// <summary>
+    ///     In dark mode the tabs are owner-drawn at one fixed size, which clips a long caption such as
+    ///     "Categories/Keywords" onto a second line. Make every header as wide as the longest caption needs.
+    ///     (Light mode sizes each tab to its own text and ignores the width.)
+    /// </summary>
+    private void WidenTabHeaders()
+    {
+        int widest = tcr_EditData.TabPages.Cast<TabPage>()
+                                 .Select(selector: page => TextRenderer.MeasureText(text: page.Text,
+                                     font: tcr_EditData.Font)
+                                                                       .Width)
+                                 .Max();
+        // icon, its gap and the padding either side
+        tcr_EditData.ItemSize = new System.Drawing.Size(width: widest + 40, height: tcr_EditData.ItemSize.Height);
     }
 
     private TabPage NewTabPage(string name,

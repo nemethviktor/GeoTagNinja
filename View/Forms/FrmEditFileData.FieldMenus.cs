@@ -208,20 +208,35 @@ public partial class FrmEditFileData
 
         ToolStripMenuItem recent = new(text: FieldCaption(controlName: "tmi_FieldMenu_MostRecentlyUsed",
             fallback: "Most Recently Used Items"));
-        foreach (string value in FieldHistory.Read(
-                     attributeName: GetElementAttributesName(attributeToFind: attribute)))
+        ToolStripMenuItem forget = new(text: FieldCaption(controlName: "tmi_FieldMenu_ForgetRemembered",
+            fallback: "Forget a Remembered Item"));
+        string attributeName = GetElementAttributesName(attributeToFind: attribute);
+        foreach (string value in FieldHistory.Read(attributeName: attributeName))
         {
             string captured = value;
-            ToolStripMenuItem item = new(text: captured.Length > 60
+            string shown = captured.Length > 60
                 ? captured.Substring(startIndex: 0, length: 57) + "..."
-                : captured);
+                : captured;
+
+            ToolStripMenuItem item = new(text: shown);
             item.Click += (_,
                            _) => SetFieldValue(attribute: attribute, text: captured);
             _ = recent.DropDownItems.Add(value: item);
+
+            ToolStripMenuItem forgetItem = new(text: shown);
+            forgetItem.Click += (_,
+                                 _) =>
+            {
+                FieldHistory.Forget(attributeName: attributeName, value: captured);
+                FillFieldHistory();
+            };
+            _ = forget.DropDownItems.Add(value: forgetItem);
         }
 
         recent.Enabled = recent.DropDownItems.Count > 0;
+        forget.Enabled = forget.DropDownItems.Count > 0;
         _ = menu.Items.Add(value: recent);
+        _ = menu.Items.Add(value: forget);
 
         menu.ShowImageMargin = false;
         ThemeHelper.StyleMenu(menu: menu);

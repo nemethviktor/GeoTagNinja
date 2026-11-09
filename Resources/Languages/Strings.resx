@@ -1910,6 +1910,10 @@ That said the code _should_ be able to comprehend other layouts. Note if the cli
     <value>Most Recently Used Items</value>
     <comment>Location: Edit Data field menu</comment>
   </data>
+  <data name="tmi_FieldMenu_ForgetRemembered" xml:space="preserve">
+    <value>Forget a Remembered Item</value>
+    <comment>Location: Edit Data field menu; lists the remembered values so one (a typo, say) can be removed</comment>
+  </data>
   <data name="lbl_ContactPrefix" xml:space="preserve">
     <value>Contact</value>
     <comment>Location: Edit Data field menu</comment>

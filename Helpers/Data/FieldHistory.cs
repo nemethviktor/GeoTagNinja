@@ -67,6 +67,28 @@ internal static class FieldHistory
         return values;
     }
 
+    /// <summary>Removes one remembered value, e.g. a typo or a test entry, so it is no longer offered.</summary>
+    /// <param name="attributeName">The attribute's name, as in <c>SourcesAndAttributes</c>.</param>
+    /// <param name="value">The value to forget, exactly as listed.</param>
+    internal static void Forget(string attributeName,
+                                string value)
+    {
+        try
+        {
+            using SQLiteConnection connection = Open();
+            using SQLiteCommand command = new(
+                commandText: "DELETE FROM FieldHistory WHERE attributeName = @attributeName AND fieldValue = @fieldValue;",
+                connection: connection);
+            _ = command.Parameters.AddWithValue(parameterName: "@attributeName", value: attributeName);
+            _ = command.Parameters.AddWithValue(parameterName: "@fieldValue", value: value);
+            _ = command.ExecuteNonQuery();
+        }
+        catch (Exception ex)
+        {
+            Log.Warn(exception: ex, message: $"Could not forget a value of '{attributeName}'");
+        }
+    }
+
     /// <summary>Notes values as just used, so they head the field's list. Blank values and the blank marker are ignored.</summary>
     /// <param name="attributeName">The attribute's name, as in <c>SourcesAndAttributes</c>.</param>
     /// <param name="values">The values, in the order they should rank (the last one becomes the newest).</param>
