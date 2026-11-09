@@ -55,7 +55,7 @@ public partial class FrmSettings : Form
     ];
 
     private readonly List<string> _checkBoxesWithTrueDefaultValue =
-        ["ckb_AlwaysRecenterMap", "ckb_SyncGeoKeywords"];
+        ["ckb_AlwaysRecenterMap", "ckb_SyncGeoKeywords", "ckb_ShowChangelogAfterUpdate"];
 
     /// <summary>
     ///     This Form provides an interface for the user to edit various app and file-specific settings.
@@ -63,7 +63,8 @@ public partial class FrmSettings : Form
     public FrmSettings()
     {
         InitializeComponent();
-        AddSyncGeoKeywordsCheckBox();
+        AddCodeCreatedCheckBox(name: "ckb_SyncGeoKeywords");
+        AddCodeCreatedCheckBox(name: "ckb_ShowChangelogAfterUpdate");
 
         // this one is largely responsible for disabling the detection of "new" (changed) data. (ie when going from "noting" to "something")
         _nowLoadingSettingsData = true;
@@ -80,12 +81,14 @@ public partial class FrmSettings : Form
     /// language if available. It also assigns text values to other controls as needed. This method should be called
     /// during form initialization to ensure controls are properly configured for user interaction.</remarks>
     /// <summary>
-    ///     Adds the "keep keywords in step with the location" checkbox under the others in the Application group. It is
-    ///     added in code (before the controls are read and labelled, which finds it by name like any other) rather
-    ///     than in the designer so the designer file stays untouched; the group grows if the new row does not fit and the
-    ///     tab page scrolls.
+    ///     Adds a checkbox (the "keep keywords in step with the location" one, the "show what changed after an update"
+    ///     one) under the others in the Application group. They are added in code (before the controls are read and
+    ///     labelled, which finds them by name like any other; the caption is the Strings.resx entry of the same name)
+    ///     rather than in the designer so the designer file stays untouched; the group grows if the new row does not
+    ///     fit and the tab page scrolls.
     /// </summary>
-    private void AddSyncGeoKeywordsCheckBox()
+    /// <param name="name">The control's name, which is also its setting id and its caption's resource name.</param>
+    private void AddCodeCreatedCheckBox(string name)
     {
         int bottom = 0;
         foreach (Control child in gbx_AppSettings.Controls)
@@ -99,7 +102,7 @@ public partial class FrmSettings : Form
 
         CheckBox checkBox = new()
         {
-            Name = "ckb_SyncGeoKeywords",
+            Name = name,
             AutoSize = true,
             UseVisualStyleBackColor = true,
             Location = new Point(x: 15, y: bottom + 6)

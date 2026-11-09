@@ -56,7 +56,7 @@ There is a "short" (15 mins) demo on [YouTube](https://youtu.be/ulP1ZG7mH-I) if 
 - Optionally leave a file's modified date untouched when saving (`Settings`), so a photo keeps showing when it was taken rather than when its location was added
 - Export and import Settings and Custom Rules
 - Translatable via Weblate; currently available in several languages (see [Translation Progress](#translation-progress))
-- Automatic ExifTool updates and in-app update checks
+- Automatic ExifTool updates and in-app update checks; the update prompt shows what has changed since your version, and after an update the new entries are shown once (switch off in Settings)
 
 ## Parameters
 

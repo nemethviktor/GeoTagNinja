@@ -43,7 +43,14 @@ internal static class AutoUpdaterCallbacks
             return;
         }
 
-        DialogResult dialogResult = Themer.ShowMessageBoxWithResult(
+        // Show what the update brings (only released entries, see ChangelogNotes). If that isn't possible (offline,
+        // no notes for the range) the plain question is asked instead.
+        DialogResult? withNotes =
+            Version.TryParse(input: args.CurrentVersion, result: out Version newVersion)
+                ? ChangelogNotes.AskToUpdate(installedBuild: args.InstalledVersion.Build, newBuild: newVersion.Build)
+                : null;
+
+        DialogResult dialogResult = withNotes ?? Themer.ShowMessageBoxWithResult(
             message:
             $@"There is a new version ({args.CurrentVersion}) available. You are using version {args.InstalledVersion}.{Environment.NewLine}Do you want to update the application now?",
             icon: MessageBoxIcon.Question,

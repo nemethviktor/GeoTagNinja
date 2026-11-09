@@ -43,7 +43,7 @@ Helpers/
   Text/          string odds and ends
   UI/            control-tree walking, form placement, localised control text, and ThemeHelper
                  (the single entry point for dark mode - call it rather than styling controls by hand)
-  Update/        AutoUpdater.NET callbacks
+  Update/        AutoUpdater.NET callbacks, and the changelog shown before/after an update (ChangelogParser is pure and tested; ChangelogNotes fetches/reads it; the dialog is View/Forms/FrmChangelog)
   HelperVariables.cs   application-wide mutable state (see below)
 
 GeoTagNinja.Tests/             NUnit tests for the value-handling logic; see its README.md

@@ -315,7 +315,8 @@ internal static class AppStartup
             {
 
                 { "UserSettingAlwaysRecenterMap", "ckb_AlwaysRecenterMap"},
-                { "UserSettingSyncGeoKeywords", "ckb_SyncGeoKeywords"}
+                { "UserSettingSyncGeoKeywords", "ckb_SyncGeoKeywords"},
+                { "UserSettingShowChangelogAfterUpdate", "ckb_ShowChangelogAfterUpdate"}
             }
         };
 

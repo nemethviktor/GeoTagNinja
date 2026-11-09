@@ -82,6 +82,12 @@ internal static class HelperVariables
     /// </summary>
     internal static bool UserSettingSyncGeoKeywords = true;
 
+    /// <summary>
+    ///     When true, the first start after an update shows what changed since the build last run (see
+    ///     <c>ChangelogNotes</c>). On by default; the notes' own dialog can switch it off.
+    /// </summary>
+    internal static bool UserSettingShowChangelogAfterUpdate = true;
+
     internal static bool UserSettingDoNotDownloadAltitude = false;
 
     /// <summary>

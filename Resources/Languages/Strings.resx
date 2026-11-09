@@ -2034,6 +2034,10 @@ That said the code _should_ be able to comprehend other layouts. Note if the cli
     <value>Keep keywords in step with the location (place names and geo: keywords)</value>
     <comment>Location: Settings</comment>
   </data>
+  <data name="ckb_ShowChangelogAfterUpdate" xml:space="preserve">
+    <value>After an update, show what has changed</value>
+    <comment>Location: Settings</comment>
+  </data>
   <data name="mbx_Helper_InfoRemoveGeoDataKeywordsRemain" xml:space="preserve">
     <value>The location data has been removed, but your keywords have not been touched: any place names or "geo:" keywords in them stay as they were. To have them follow location changes, turn on "Keep keywords in step with the location" in Settings.</value>
     <comment>Location: Remove geodata</comment>

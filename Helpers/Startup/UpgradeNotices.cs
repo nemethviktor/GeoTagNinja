@@ -1,6 +1,7 @@
 ﻿using NLog;
 using GeoTagNinja.Helpers.Data;
 using GeoTagNinja.Helpers.UI;
+using GeoTagNinja.Helpers.Update;
 using GeoTagNinja.Model;
 using GeoTagNinja.View.Forms;
 using System;
@@ -70,6 +71,31 @@ internal static class UpgradeNotices
 
     private static List<UpgradeNotice> _pending = [];
     private static int _buildToStoreAfterShowing;
+
+    /// <summary>The build the app ran last time, for the "what's new" notes (see <see cref="ChangelogNotes" />).</summary>
+    private static int _lastRunBuild;
+
+    /// <summary>True when this start follows an update, so the build must be stored only after the notes were shown.</summary>
+    private static bool _upgradedSinceLastRun;
+
+    /// <summary>
+    ///     The build the app ran last time: the current one for a brand-new user (so there is nothing to catch up on),
+    ///     <see cref="LastBuildBeforeTracking" /> for an existing user from before the build was stored.
+    /// </summary>
+    internal static int ResolveLastRunBuild(string storedBuild,
+                                            bool settingsAlreadyExist,
+                                            int currentBuild)
+    {
+        if (IsNewInstall(storedBuild: storedBuild, settingsAlreadyExist: settingsAlreadyExist))
+        {
+            return currentBuild;
+        }
+
+        return int.TryParse(s: storedBuild, style: NumberStyles.Integer, provider: CultureInfo.InvariantCulture,
+            result: out int lastRunBuild)
+            ? lastRunBuild
+            : LastBuildBeforeTracking;
+    }
 
     /// <summary>
     ///     True for the run in which the settings database was brand new (set by <see cref="EvaluateAtStartup" />).
@@ -145,10 +171,15 @@ internal static class UpgradeNotices
 
             _pending = pending;
             _buildToStoreAfterShowing = buildToStore;
+            _lastRunBuild = ResolveLastRunBuild(storedBuild: storedBuild, settingsAlreadyExist: settingsAlreadyExist,
+                currentBuild: CurrentBuild());
+            _upgradedSinceLastRun = _lastRunBuild < CurrentBuild();
 
             // With nothing to show there is no reason to wait. (If there is, the build is stored once the user has seen it,
-            // so a crash before then doesn't swallow the message.)
+            // so a crash before then doesn't swallow the message. After an update there is always the changelog to
+            // show, unless the user has turned that off, which is only known later.)
             if (pending.Count == 0 &&
+                !_upgradedSinceLastRun &&
                 storedBuild != buildToStore.ToString(provider: CultureInfo.InvariantCulture))
             {
                 WriteStoredBuild(build: buildToStore);
@@ -167,19 +198,25 @@ internal static class UpgradeNotices
     /// </summary>
     internal static void ShowPendingNotices()
     {
-        if (_pending.Count == 0)
+        if (_pending.Count == 0 && !_upgradedSinceLastRun)
         {
             return;
         }
 
         try
         {
-            ThemeHelper.ShowMessageBox(
-                message: string.Join(separator: Environment.NewLine + Environment.NewLine + "----" +
-                                                Environment.NewLine + Environment.NewLine,
-                    values: _pending.Select(selector: notice => notice.Message)),
-                caption: "GeoTagNinja",
-                icon: System.Windows.Forms.MessageBoxIcon.Information);
+            if (_pending.Count > 0)
+            {
+                ThemeHelper.ShowMessageBox(
+                    message: string.Join(separator: Environment.NewLine + Environment.NewLine + "----" +
+                                                    Environment.NewLine + Environment.NewLine,
+                        values: _pending.Select(selector: notice => notice.Message)),
+                    caption: "GeoTagNinja",
+                    icon: System.Windows.Forms.MessageBoxIcon.Information);
+            }
+
+            // what changed since the build last run (does nothing if the user has turned it off, or on a first install)
+            ChangelogNotes.ShowAfterUpdate(lastRunBuild: _lastRunBuild, currentBuild: CurrentBuild());
 
             WriteStoredBuild(build: _buildToStoreAfterShowing);
         }

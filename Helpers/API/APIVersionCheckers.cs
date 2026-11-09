@@ -351,7 +351,8 @@ internal static class APIVersionCheckers
             url =
                 $"https://github.com/nemethviktor/GeoTagNinja/releases/download/b{remoteBuild}/GeoTagNinja_Setup.msi",
             changelog =
-                $"https://github.com/nemethviktor/GeoTagNinja/blob/b{remoteBuild}/changeLog.md"
+                // the file is changelog.md (GitHub paths are case-sensitive)
+                $"https://github.com/nemethviktor/GeoTagNinja/blob/b{remoteBuild}/changelog.md"
         };
 
         string jsonContent =
