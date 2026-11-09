@@ -19,6 +19,7 @@
 	- The update prompt now shows what the new version brings: the changelog entries newer than your version, rendered in a window, with `Update now` / `Later`. Only released entries are ever shown (it reads the changelog as it was at the release, not the in-progress one). If the notes can't be fetched you get the plain question as before.
 	- Users who take pre-releases (`Check for pre-releases`) are shown the in-progress entry as that pre-release (`Build N (pre-release)`); everyone else never sees an unreleased entry.
 	- After an update, the first start shows what changed since the version you used last (once). There is a new setting, `After an update, show what has changed` (on by default), and the window has a tick to switch it off.
+	- Windows 7 users are told, once, that support for Windows 7 ends in 2027 (the planned move to Avalonia needs .NET 8 or newer). Nobody on a newer Windows sees it.
 - BUGS & FIXES:
 	- The changelog link in the update information pointed at `changeLog.md`, which doesn't exist on GitHub (paths are case-sensitive); it is `changelog.md`.
 	- In Dark Mode the text of disabled labels, check boxes, radio buttons, buttons and group box captions was near-black on near-black and unreadable; it is now drawn in a muted grey (`DarkDisabledText`, applied by `ThemeHelper.ApplyTo`, so it covers every themed form).

@@ -47,6 +47,8 @@ To announce something, add an entry to `Registry` with the build to compare agai
 - Users from before the tracking existed have no stored build and count as `LastBuildBeforeTracking` (9778).
 - The stored build is never lowered, so running an older build doesn't make a notice reappear.
 
+`Helpers/Startup/LegacyWindowsNotice.cs` is a separate, build-independent one-off: a Windows 7 (6.1) warning that support ends in 2027, shown once and remembered as `generic` / `win7EndOfSupportNoticeShown`. Delete it when Windows 7 support is dropped.
+
 ## Showing the changelog (before and after an update)
 
 `changelog.md` is shown to the user in two places, both through `Helpers/Update/ChangelogNotes.cs` and the code-only dialog `View/Forms/FrmChangelog.cs` (an HTML view in WebView2, scripts off, links opened in the browser; plain text if WebView2 can't start).

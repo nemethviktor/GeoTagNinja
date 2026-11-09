@@ -481,6 +481,8 @@ public partial class FrmMainApp : Form
         // }
         // one-off "this changed" messages for users upgrading from older builds
         UpgradeNotices.ShowPendingNotices();
+        // Windows 7 users: once, support for it ends in 2027
+        LegacyWindowsNotice.ShowIfNeeded();
 
         await APIVersionCheckers.CheckForNewVersions();
 
