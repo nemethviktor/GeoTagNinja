@@ -155,6 +155,25 @@ public class BatchRenamePlannerTests
     }
 
     [Test]
+    public void NewPathLongerThanTheGivenLimit_IsAProblem()
+    {
+        // The limit is a parameter (259 by default, much larger once long paths work; see LongPathSupport). A real
+        // 260-character path can't be used here: the test host is not long-path aware, so .NET itself would throw.
+        List<BatchRenameSource> sources = [Source(path: @"C:\photos\a.jpg")];
+        BatchRenameSettings settings = Settings(Text(text: "x"), new BatchRenameComponent { Kind = BatchRenameKind.NewExtension, Text = "jpg" });
+        DateTime now = new(year: 2026, month: 11, day: 11);
+
+        BatchRenameEntry tooLong = BatchRenamePlanner.Plan(sources: sources, settings: settings, pathExists: _ => false, now: now,
+            maxPathLength: 10)[index: 0];
+        BatchRenameEntry fits = BatchRenamePlanner.Plan(sources: sources, settings: settings, pathExists: _ => false, now: now,
+            maxPathLength: 32000)[index: 0];
+        BatchRenameEntry byDefault = BatchRenamePlanner.Plan(sources: sources, settings: settings, pathExists: _ => false, now: now)[index: 0];
+
+        Assert.That(actual: tooLong.Problem, expression: Is.Not.Null);
+        Assert.That(actual: fits.Problem, expression: Is.Null);
+        Assert.That(actual: byDefault.Problem, expression: Is.Null);
+    }
+    [Test]
     public void SameNewNameForTwoFiles_IsAProblemForBoth()
     {
         List<BatchRenameEntry> plan = Plan(settings: Settings(Text(text: "same")), exists: null,

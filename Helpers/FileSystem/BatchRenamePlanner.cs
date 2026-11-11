@@ -86,8 +86,9 @@ internal sealed class BatchRenameEntry
 /// </summary>
 internal static class BatchRenamePlanner
 {
-    // ExifTool, which this app uses for everything, cannot open a path of 260 characters or more.
-    private const int MaxPathLength = 259;
+    // ExifTool 12.x, which older builds shipped, cannot open a path of 260 characters or more; 13.x can. The caller says
+    // which applies (see LongPathSupport); this is the safe default.
+    private const int DefaultMaxPathLength = LongPathSupport.ClassicMaxPathLength;
     private const int MaxFileNameLength = 255;
 
     private static readonly char[] WindowsIllegal = ['\\', '/', ':', '*', '?', '"', '<', '>', '|'];
@@ -108,16 +109,18 @@ internal static class BatchRenamePlanner
     /// <param name="settings">What the user asked for.</param>
     /// <param name="pathExists">Whether a file exists on disk.</param>
     /// <param name="now">The moment "Today" means (and "Yesterday" is the day before).</param>
+    /// <param name="maxPathLength">The longest full path a new name may produce.</param>
     /// <returns>One entry per source, in the same order.</returns>
     internal static List<BatchRenameEntry> Plan(IReadOnlyList<BatchRenameSource> sources,
                                                 BatchRenameSettings settings,
                                                 Func<string, bool> pathExists,
-                                                DateTime now)
+                                                DateTime now,
+                                                int maxPathLength = DefaultMaxPathLength)
     {
         List<BatchRenameEntry> entries = [];
         for (int index = 0; index < sources.Count; index++)
         {
-            entries.Add(item: PlanOne(source: sources[index: index], index: index, settings: settings, now: now));
+            entries.Add(item: PlanOne(source: sources[index: index], index: index, settings: settings, now: now, maxPathLength: maxPathLength));
         }
 
         MarkClashes(entries: entries, settings: settings, pathExists: pathExists);
@@ -127,7 +130,8 @@ internal static class BatchRenamePlanner
     private static BatchRenameEntry PlanOne(BatchRenameSource source,
                                             int index,
                                             BatchRenameSettings settings,
-                                            DateTime now)
+                                            DateTime now,
+                                            int maxPathLength)
     {
         BatchRenameEntry entry = new() { Source = source };
         string currentName = Path.GetFileName(path: source.FullPath);
@@ -198,7 +202,7 @@ internal static class BatchRenamePlanner
 
         entry.NewPath = Path.Combine(path1: folder, path2: entry.NewFileName);
         if (entry.Problem == null &&
-            entry.NewPath.Length > MaxPathLength)
+            entry.NewPath.Length > maxPathLength)
         {
             entry.Problem = BatchRenameText.Get(key: "mbx_BatchRename_Problem_PathTooLong");
         }

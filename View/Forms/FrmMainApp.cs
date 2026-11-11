@@ -655,50 +655,22 @@ public partial class FrmMainApp : Form
         // Unzip new exiftool version if there is one
         if (File.Exists(path: HelperVariables.ExifToolExeZippedPathRoamingTemp) && extractNewExifTool)
         {
-            try
+            // The ExifTool distribution is no longer a single file: the zip holds exiftool(-k).exe plus an exiftool_files
+            // folder. ExifToolInstaller unpacks it, renames the launcher and records the version. If that fails and the
+            // old install is already gone, the app reverts to the prepackaged exiftool.exe next time.
+            if (ExifToolInstaller.ExtractZip(
+                    zipPath: HelperVariables.ExifToolExeZippedPathRoamingTemp,
+                    userDataFolder: HelperVariables.UserDataFolderPath,
+                    installedExePath: HelperVariables.ExifToolExePathRoamingPerm))
             {
-                // okay this is a bit silly now but given that the ET distrib is no longer a single-file there's a lot of fuckery to be dealt with
-                // the zip file has a structure such as c:\Users\username\AppData\Roaming\GeoTagNinja\exiftool-12.89_64.zip\exiftool-12.89_64\exiftool(-k).exe 
-                // i swear to all the f...king gods this has been the most useless move i've seen with ET development in the last decade.
-                // so we do the following
-                // 1: delete exiftool
-                File.Delete(path: HelperVariables.ExifToolExePathRoamingPerm);
-
-                // 2: delete the exiftool_files folder and anything in it.
-                string exifToolFilesDir =
-                    Path.Combine(path1: HelperVariables.UserDataFolderPath, path2: "exiftool_files");
-                if (Directory.Exists(path: exifToolFilesDir))
+                try
                 {
-                    Directory.Delete(path: exifToolFilesDir, recursive: true);
+                    File.Delete(path: HelperVariables.ExifToolExeZippedPathRoamingTemp);
                 }
-
-                // 2b: this shouldn't really happen but anyway:
-                string tempExtractDir = Path.Combine(path1: HelperVariables.UserDataFolderPath,
-                    path2: Path.GetFileNameWithoutExtension(path: HelperVariables.ExifToolExeZippedPathRoamingTemp));
-                if (Directory.Exists(path: tempExtractDir))
+                catch
                 {
-                    Directory.Delete(path: tempExtractDir, recursive: true);
+                    // nothing: FsoCleanUpUserFolder only keeps exiftool-*.zip, so a stray zip is retried or removed later
                 }
-
-                // 3: unzip
-                ZipFile.ExtractToDirectory(
-                    sourceArchiveFileName: HelperVariables.ExifToolExeZippedPathRoamingTemp,
-                    destinationDirectoryName: HelperVariables.UserDataFolderPath);
-
-                // 4: move to parent
-                Directory.Move(
-                    sourceDirName: Path.Combine(path1: tempExtractDir, path2: "exiftool_files"),
-                    destDirName: Path.Combine(path1: HelperVariables.UserDataFolderPath, path2: "exiftool_files"));
-
-                File.Move(sourceFileName: Path.Combine(path1: tempExtractDir, path2: "exiftool(-k).exe"),
-                    destFileName: HelperVariables.ExifToolExePathRoamingPerm);
-
-                // 5: delete zip
-                File.Delete(path: HelperVariables.ExifToolExeZippedPathRoamingTemp);
-            }
-            catch
-            {
-                // nothing. basically if there's no exiftool.exe in this folder the app will temporarily revert to the prepackaged one.
             }
         }
 
@@ -3319,7 +3291,10 @@ public partial class FrmMainApp : Form
                         TaskbarManagerInstance.SetProgressValue(currentValue: completed, maximumValue: total);
                     }
 
-                    if (InvokeRequired)
+                    // Every report is queued, even from the UI thread. The final (0, 0) comes from there, and running it at
+                    // once would overtake the still-queued reports of the last files, leaving the bar stuck part-way
+                    // ("1 of 2") after a fast read.
+                    if (IsHandleCreated)
                     {
                         _ = BeginInvoke(method: Report);
                     }

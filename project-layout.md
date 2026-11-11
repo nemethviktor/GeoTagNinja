@@ -34,8 +34,8 @@ Helpers/
   API/           GeoNames and GitHub HTTP calls and their response types
   Data/          SQLite settings (and MenuSettings, for settings changed from menus), custom rules, Edit Data templates and Batch Rename presets, the thumbnail
                  and preview caches (in memory, plus ThumbnailStore in SQLite) and the session's in-memory DataTables
-  Exif/          reading, writing and track-file handling via ExifTool; thumbnail and preview extraction
-  FileSystem/    enumeration, checksums, locking, cloud placeholders, supported extensions; Batch Rename (BatchRenameModel the settings, BatchRenamePlanner the pure "what would each file be called and what clashes", BatchRenamePreflight the disk checks before it starts, BatchRenameExecutor the all-or-nothing file moves)
+  Exif/          reading, writing and track-file handling via ExifTool; thumbnail and preview extraction; ExifToolInstaller unpacks the shipped/downloaded ExifTool zip into Roaming
+  FileSystem/    enumeration, checksums, locking, cloud placeholders, supported extensions, whether long paths work (LongPathSupport); Batch Rename (BatchRenameModel the settings, BatchRenamePlanner the pure "what would each file be called and what clashes", BatchRenamePreflight the disk checks before it starts, BatchRenameExecutor the all-or-nothing file moves)
   Geo/           coordinate and field-of-view maths, and the favourites logic (which favourite a position falls in, tree grouping, auto-assign onto photos)
   Localisation/  languages, countries, time zones, resource lookup (BatchRenameText: the Batch Rename text, looked up in Strings.resx)
   Map/           the Leaflet layer list

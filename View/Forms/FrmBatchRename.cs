@@ -555,7 +555,7 @@ internal sealed class FrmBatchRename : Form
 
     private void Refresh_()
     {
-        _plan = BatchRenamePlanner.Plan(sources: _sources, settings: Collect(), pathExists: File.Exists, now: DateTime.Now);
+        _plan = BatchRenamePlanner.Plan(sources: _sources, settings: Collect(), pathExists: File.Exists, now: DateTime.Now, maxPathLength: LongPathSupport.MaxPathLength);
 
         BatchRenameEntry first = _plan.Count > 0
             ? _plan[index: 0]

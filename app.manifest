@@ -46,6 +46,14 @@
   </application>
   -->
 
+  <!-- Long-path aware: lets .NET open paths over 259 characters when Windows allows it (LongPathsEnabled). Kept apart from the
+       commented-out block above so that DPI behaviour is unchanged. See Helpers/FileSystem/LongPathSupport.cs. -->
+  <application xmlns="urn:schemas-microsoft-com:asm.v3">
+    <windowsSettings>
+      <longPathAware xmlns="http://schemas.microsoft.com/SMI/2016/WindowsSettings">true</longPathAware>
+    </windowsSettings>
+  </application>
+
   <!-- Enable themes for Windows common controls and dialogs (Windows XP and later) -->
   <dependency>
     <dependentAssembly>

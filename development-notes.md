@@ -105,6 +105,13 @@ Things that bite: ExifTool run with `-struct` prints the creator contact fields 
 not the flattened `XMP:CreatorCity` tags (`ExifStructTags` expands it); and a list tag must be written as repeated
 `-Tag=item` (an empty `-Tag=` followed by `-Tag+=item` keeps the old items).
 
+## The ExifTool distribution
+
+- ExifTool 13.x ships as a folder of about 600 files (`exiftool(-k).exe` plus `exiftool_files`); the last single-file build is 12.87, which cannot open paths of 260 characters or more (13.x can; verified with 300-character paths, in `stay_open` mode too).
+- The app ships the official zip (`Resources/exiftool-13.63_64.zip`, also listed in `GeoTagNinja_Setup`) plus the old `Resources/exiftool.exe` as a fallback. `HelperVariables.GetExifToolExePathToUse` calls `ExifToolInstaller.EnsureBundledVersionInstalled` first: it unpacks the zip into `%APPDATA%\GeoTagNinja` when nothing is installed there or the installed version is older. The version comes from `exiftool_files\gtn_version.txt` (written on every unpack; an install without one, from an older GTN, is asked once with `-ver`). A newer ExifTool put there by the online update is never downgraded.
+- To ship a newer ExifTool: replace the zip in `Resources` (the version is read from its file name, `exiftool-X.YY_64.zip`), then update the `.csproj` `Content` entry and the `GeoTagNinja_Setup` file entry (both name the zip).
+- The unpacked launcher is renamed to `exiftool.exe`: the `(-k)` in the shipped name makes ExifTool wait for a key press on exit.
+
 ## Still outstanding
 
 - **`Helpers/HelperVariables.cs`** is the last loose file at the `Helpers/` root, and deliberately so:
@@ -155,6 +162,8 @@ not the flattened `XMP:CreatorCity` tags (`ExifStructTags` expands it); and a li
     scaled decode would be quicker for very large files); the metadata read is still strictly sequential within the priority order.
 - **`HelperControlAndMessageBoxHandling`** kept its name while moving to `Helpers/UI/`. Renaming it
   touches 253 references and is pure churn on top of an already large diff; worth doing on its own.
+- Long paths: `LongPathSupport.MaxPathLength` is 259 unless ExifTool 13+ is the installed one *and* a probe (create and delete a 270-character folder in `%TEMP%`) succeeds, then 32000; Batch Rename passes it to `BatchRenamePlanner.Plan`. The probe depends on the manifest's `longPathAware` and Windows' `LongPathsEnabled`. Nothing else checks it yet: other places that build paths (the file list, previews, track files) are untested above 259 characters, and the unit tests can't cover it because the test host is not long-path aware.
+
 
 ## Moving a setting into a menu
 

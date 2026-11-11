@@ -148,6 +148,7 @@
     <Compile Include="View\Forms\FrmMainApp.BatchRename.cs" />
     <Compile Include="View\FileList\FileListView.BatchRename.cs" />
     <Compile Include="Helpers\FileSystem\BatchRenameModel.cs" />
+    <Compile Include="Helpers\FileSystem\LongPathSupport.cs" />
     <Compile Include="Helpers\FileSystem\BatchRenamePlanner.cs" />
     <Compile Include="Helpers\FileSystem\BatchRenameExecutor.cs" />
     <Compile Include="Helpers\FileSystem\BatchRenamePreflight.cs" />
@@ -282,6 +283,7 @@
     <Compile Include="Helpers\Data\LanguageTZ.cs" />
     <Compile Include="Helpers\Data\SessionDataTables.cs" />
     <Compile Include="Helpers\Exif\DataPointInteractions.cs" />
+    <Compile Include="Helpers\Exif\ExifToolInstaller.cs" />
     <Compile Include="Helpers\Exif\ExifToolOperator.cs" />
     <Compile Include="Helpers\Exif\ReadExifData.cs" />
     <Compile Include="Helpers\Exif\ReadGetImagePreviews.cs" />
@@ -503,6 +505,9 @@
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </EmbeddedResource>
     <Content Include="Resources\exiftool.exe">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Resources\exiftool-13.63_64.zip">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
     <Content Include="Resources\leaflet.polylineDecorator.js">

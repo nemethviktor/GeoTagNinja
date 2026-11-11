@@ -718,6 +718,15 @@ public class DirectoryElementCollection : List<DirectoryElement>
                     continue;
                 }
 
+                // A path beyond what this setup supports (see LongPathSupport: ExifTool 12.x or Windows without long paths) would only
+                // make ExifTool answer "File not found", so say why in the log and spare the round trip.
+                if (fileToRead.Length > LongPathSupport.MaxPathLength)
+                {
+                    Log.Warn(message: $"Skipping metadata read: the path has {fileToRead.Length} characters but only {LongPathSupport.MaxPathLength} are supported here (long paths need ExifTool 13+ and Windows long path support): {fileToRead}");
+                    onUpdated?.Invoke(de);
+                    continue;
+                }
+
                 de.IsCloudOffline = false;
                 List<KeyValuePair<string, string>> props = [];
 

@@ -1,4 +1,5 @@
-﻿using System;
+﻿using GeoTagNinja.Helpers.Exif;
+using System;
 using System.Collections.Concurrent;
 using System.Collections.Generic;
 using System.Data;
@@ -240,6 +241,13 @@ internal static class HelperVariables
     /// <returns></returns>
     private static string GetExifToolExePathToUse()
     {
+        // The app ships an ExifTool 13.x zip (13.x can open paths over 260 characters; the single-file 12.x cannot).
+        // Unpack it into Roaming unless something at least as new is already there (e.g. from the online update).
+        ExifToolInstaller.EnsureBundledVersionInstalled(
+            resourcesFolder: ResourcesFolderPath,
+            userDataFolder: UserDataFolderPath,
+            installedExePath: ExifToolExePathRoamingPerm);
+
         if (File.Exists(
                 path: ExifToolExePathRoamingPerm))
         {
