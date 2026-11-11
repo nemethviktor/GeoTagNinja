@@ -246,28 +246,6 @@ internal static class ExifToolOperator
                         }
                     };
                     break;
-                case ExifToolInititators.GenericCheckForNewVersions:
-                    prcExifTool.OutputDataReceived += (_,
-                                                       data) =>
-                    {
-                        if (data.Data != null &&
-                            data.Data.Length > 0)
-                        {
-                            HelperVariables._sOutputAndErrorMsg +=
-                                data.Data.ToString() + Environment.NewLine;
-                        }
-
-                        _ = decimal.TryParse(s: HelperVariables._sOutputAndErrorMsg
-                                                           .Replace(oldValue: "\r", newValue: "")
-                                                           .Replace(oldValue: "\n", newValue: ""),
-                            provider: CultureInfo.InvariantCulture,
-                            style: NumberStyles.Any,
-                            result: out HelperVariables
-                               .CurrentExifToolVersionLocal
-                        );
-                    };
-
-                    break;
                 case ExifToolInititators.ExifGetTrackSyncDataReadSyncPhotos:
                     prcExifTool.OutputDataReceived += (_,
                                                        data) =>
@@ -331,17 +309,6 @@ internal static class ExifToolOperator
             prcExifTool.Close();
             Log.Trace(message: "Closing exifTool");
 
-            // if still here then exorcise
-            try
-            {
-                Log.Trace(message: "Killing exifTool");
-                prcExifTool.Kill();
-            }
-            catch
-            {
-                // "funnily" enough this seems to persist for some reason. Unsure why.
-                Log.Error(message: "Killing exifTool failed");
-            }
         });
     }
 

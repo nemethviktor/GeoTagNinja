@@ -194,12 +194,11 @@ internal static class APIVersionCheckers
 
         // this needs to run each time the app runs because it's part of the info in the About box.
         // get current exiftool version
-        string exiftoolCmd = "-ver";
-        await ExifToolOperator.RunExifTool(exiftoolCmd: exiftoolCmd,
-            frmMainAppInstance: null,
-            initiator:
-            ExifToolInititators
-                                             .GenericCheckForNewVersions);
+        // ...asked of the long-running stay_open process (the same one that reads the files) rather than of a new one.
+        ExifTool runningExifTool = FrmMainApp.DirectoryElements.ExifTool;
+        HelperVariables.CurrentExifToolVersionLocal = runningExifTool == null
+            ? 0
+            : await Task.Run(function: runningExifTool.GetVersion);
 
         if (nowUnixTime > lastCheckUnixTime + checkUpdateVal ||
             strLastOnlineVersionCheck == null)

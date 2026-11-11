@@ -44,6 +44,7 @@ using NLog;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel;
+using System.Globalization;
 using System.Diagnostics;
 using System.IO;
 using System.Linq;
@@ -262,6 +263,58 @@ public class ExifTool : IDisposable
             Log.Warn(exception: ex, message: $"Could not get an embedded preview via ExifTool for '{filename}'");
             jpeg = null;
             return false;
+        }
+    }
+
+    /// <summary>
+    ///     Asks the running process which ExifTool version it is (<c>-ver</c>), so no second process has to be started
+    ///     for it. Applies the same lock as every other request: there is one stdin/stdout pair.
+    /// </summary>
+    /// <returns>The version (for example 13.63), or 0 if the process is gone or does not answer sensibly.</returns>
+    public decimal GetVersion()
+    {
+        try
+        {
+            lock (m_sync)
+            {
+                if (m_in == null ||
+                    m_out == null ||
+                    m_exifTool == null ||
+                    m_exifTool.HasExited)
+                {
+                    return 0;
+                }
+
+                m_in.Write(value: "-ver\n-execute\n");
+                m_in.Flush();
+
+                decimal version = 0;
+                for (; ; )
+                {
+                    string line = m_out.ReadLine();
+                    if (line == null ||
+                        line.StartsWith(value: "{ready"))
+                    {
+                        break;
+                    }
+
+                    // The block's output is just the version; take the first line that parses as one.
+                    if (version == 0)
+                    {
+                        _ = decimal.TryParse(s: line.Trim(),
+                            style: NumberStyles.AllowDecimalPoint,
+                            provider: CultureInfo.InvariantCulture,
+                            result: out version);
+                    }
+                }
+
+                return version;
+            }
+        }
+        catch (Exception ex)
+        {
+            Log.Warn(exception: ex, message: "Could not get the ExifTool version from the running process");
+            return 0;
         }
     }
 
