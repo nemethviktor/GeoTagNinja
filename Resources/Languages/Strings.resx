@@ -1176,6 +1176,484 @@ Save the API key when prompted. If you don't do it at the time you'll have to ge
     <value>Copy All Geodata</value>
     <comment>Button to copy all geodata from a file (to the clipboard)</comment>
   </data>
+  <data name="frm_BatchRename" xml:space="preserve">
+    <value>Batch Rename</value>
+    <comment>Location: Batch Rename: window title and message box caption</comment>
+  </data>
+  <data name="frm_BatchRename_Preview" xml:space="preserve">
+    <value>Batch Rename - Preview</value>
+    <comment>Location: Batch Rename: the list of every file's new name</comment>
+  </data>
+  <data name="gbx_BatchRename_Presets" xml:space="preserve">
+    <value>Presets</value>
+    <comment>Location: Batch Rename</comment>
+  </data>
+  <data name="gbx_BatchRename_Destination" xml:space="preserve">
+    <value>Destination Folder</value>
+    <comment>Location: Batch Rename</comment>
+  </data>
+  <data name="gbx_BatchRename_Names" xml:space="preserve">
+    <value>New Filenames</value>
+    <comment>Location: Batch Rename</comment>
+  </data>
+  <data name="gbx_BatchRename_Options" xml:space="preserve">
+    <value>Options</value>
+    <comment>Location: Batch Rename</comment>
+  </data>
+  <data name="gbx_BatchRename_Preview" xml:space="preserve">
+    <value>Preview</value>
+    <comment>Location: Batch Rename</comment>
+  </data>
+  <data name="lbl_BatchRename_Preset" xml:space="preserve">
+    <value>Preset</value>
+    <comment>Location: Batch Rename</comment>
+  </data>
+  <data name="lbl_BatchRename_Modified" xml:space="preserve">
+    <value>(Modified)</value>
+    <comment>Location: Batch Rename: shown beside a preset whose settings have been changed</comment>
+  </data>
+  <data name="btn_BatchRename_Save" xml:space="preserve">
+    <value>Save...</value>
+    <comment>Location: Batch Rename: save the settings as a preset</comment>
+  </data>
+  <data name="btn_BatchRename_Delete" xml:space="preserve">
+    <value>Delete</value>
+    <comment>Location: Batch Rename: delete the chosen preset</comment>
+  </data>
+  <data name="rbt_BatchRename_SameFolder" xml:space="preserve">
+    <value>Rename In Same Folder</value>
+    <comment>Location: Batch Rename</comment>
+  </data>
+  <data name="rbt_BatchRename_MoveToFolder" xml:space="preserve">
+    <value>Move to Other Folder</value>
+    <comment>Location: Batch Rename</comment>
+  </data>
+  <data name="rbt_BatchRename_CopyToFolder" xml:space="preserve">
+    <value>Copy to Other Folder</value>
+    <comment>Location: Batch Rename</comment>
+  </data>
+  <data name="btn_BatchRename_Browse" xml:space="preserve">
+    <value>Browse...</value>
+    <comment>Location: Batch Rename</comment>
+  </data>
+  <data name="lbl_BatchRename_Compatibility" xml:space="preserve">
+    <value>Compatibility</value>
+    <comment>Location: Batch Rename: which systems' file name rules to keep to</comment>
+  </data>
+  <data name="ckb_BatchRename_Windows" xml:space="preserve">
+    <value>Windows</value>
+    <comment>Location: Batch Rename</comment>
+  </data>
+  <data name="ckb_BatchRename_Mac" xml:space="preserve">
+    <value>Mac</value>
+    <comment>Location: Batch Rename</comment>
+  </data>
+  <data name="ckb_BatchRename_Unix" xml:space="preserve">
+    <value>Unix</value>
+    <comment>Location: Batch Rename</comment>
+  </data>
+  <data name="lbl_BatchRename_CurrentFilename" xml:space="preserve">
+    <value>Current Filename</value>
+    <comment>Location: Batch Rename</comment>
+  </data>
+  <data name="lbl_BatchRename_NewFilename" xml:space="preserve">
+    <value>New Filename</value>
+    <comment>Location: Batch Rename</comment>
+  </data>
+  <data name="lbl_BatchRename_Note" xml:space="preserve">
+    <value>Note</value>
+    <comment>Location: Batch Rename: column of the preview list</comment>
+  </data>
+  <data name="lbl_BatchRename_Unchanged" xml:space="preserve">
+    <value>Unchanged</value>
+    <comment>Location: Batch Rename: the file keeps its name</comment>
+  </data>
+  <data name="btn_BatchRename_Rename" xml:space="preserve">
+    <value>Rename</value>
+    <comment>Location: Batch Rename</comment>
+  </data>
+  <data name="btn_BatchRename_PreviewAll" xml:space="preserve">
+    <value>Preview</value>
+    <comment>Location: Batch Rename: show every file's new name</comment>
+  </data>
+  <data name="lbl_BatchRename_Find" xml:space="preserve">
+    <value>Find</value>
+    <comment>Location: Batch Rename: find and replace</comment>
+  </data>
+  <data name="lbl_BatchRename_ReplaceWith" xml:space="preserve">
+    <value>Replace With</value>
+    <comment>Location: Batch Rename: find and replace</comment>
+  </data>
+  <data name="ckb_BatchRename_IgnoreCase" xml:space="preserve">
+    <value>Ignore Case</value>
+    <comment>Location: Batch Rename</comment>
+  </data>
+  <data name="ckb_BatchRename_ReplaceAll" xml:space="preserve">
+    <value>Replace All</value>
+    <comment>Location: Batch Rename</comment>
+  </data>
+  <data name="ckb_BatchRename_UseRegex" xml:space="preserve">
+    <value>Use Regular Expression</value>
+    <comment>Location: Batch Rename</comment>
+  </data>
+  <data name="lbl_BatchRename_Kind_Text" xml:space="preserve">
+    <value>Text</value>
+    <comment>Location: Batch Rename: a piece of the new name</comment>
+  </data>
+  <data name="lbl_BatchRename_Kind_NewExtension" xml:space="preserve">
+    <value>New Extension</value>
+    <comment>Location: Batch Rename: a piece of the new name</comment>
+  </data>
+  <data name="lbl_BatchRename_Kind_CurrentFilename" xml:space="preserve">
+    <value>Current Filename</value>
+    <comment>Location: Batch Rename: a piece of the new name</comment>
+  </data>
+  <data name="lbl_BatchRename_Kind_PreservedFilename" xml:space="preserve">
+    <value>Preserved Filename</value>
+    <comment>Location: Batch Rename: a piece of the new name</comment>
+  </data>
+  <data name="lbl_BatchRename_Kind_SequenceNumber" xml:space="preserve">
+    <value>Sequence Number</value>
+    <comment>Location: Batch Rename: a piece of the new name</comment>
+  </data>
+  <data name="lbl_BatchRename_Kind_SequenceLetter" xml:space="preserve">
+    <value>Sequence Letter</value>
+    <comment>Location: Batch Rename: a piece of the new name</comment>
+  </data>
+  <data name="lbl_BatchRename_Kind_DateTime" xml:space="preserve">
+    <value>Date Time</value>
+    <comment>Location: Batch Rename: a piece of the new name</comment>
+  </data>
+  <data name="lbl_BatchRename_Kind_Metadata" xml:space="preserve">
+    <value>Metadata</value>
+    <comment>Location: Batch Rename: a piece of the new name</comment>
+  </data>
+  <data name="lbl_BatchRename_Kind_FolderName" xml:space="preserve">
+    <value>Folder Name</value>
+    <comment>Location: Batch Rename: a piece of the new name</comment>
+  </data>
+  <data name="lbl_BatchRename_Kind_StringSubstitution" xml:space="preserve">
+    <value>String Substitution</value>
+    <comment>Location: Batch Rename: a piece of the new name</comment>
+  </data>
+  <data name="lbl_BatchRename_Case_Original" xml:space="preserve">
+    <value>Original Case</value>
+    <comment>Location: Batch Rename</comment>
+  </data>
+  <data name="lbl_BatchRename_Case_Lower" xml:space="preserve">
+    <value>Lowercase</value>
+    <comment>Location: Batch Rename</comment>
+  </data>
+  <data name="lbl_BatchRename_Case_Upper" xml:space="preserve">
+    <value>Uppercase</value>
+    <comment>Location: Batch Rename</comment>
+  </data>
+  <data name="lbl_BatchRename_Part_NameAndExtension" xml:space="preserve">
+    <value>Name + Extension</value>
+    <comment>Location: Batch Rename: which part of the file name</comment>
+  </data>
+  <data name="lbl_BatchRename_Part_Name" xml:space="preserve">
+    <value>Name</value>
+    <comment>Location: Batch Rename: which part of the file name</comment>
+  </data>
+  <data name="lbl_BatchRename_Part_Extension" xml:space="preserve">
+    <value>Extension</value>
+    <comment>Location: Batch Rename: which part of the file name</comment>
+  </data>
+  <data name="lbl_BatchRename_Part_NumberSuffix" xml:space="preserve">
+    <value>Number Suffix</value>
+    <comment>Location: Batch Rename: the digits the file name ends with</comment>
+  </data>
+  <data name="lbl_BatchRename_DateSource_DateTaken" xml:space="preserve">
+    <value>Date Taken</value>
+    <comment>Location: Batch Rename</comment>
+  </data>
+  <data name="lbl_BatchRename_DateSource_DateCreated" xml:space="preserve">
+    <value>Date Created</value>
+    <comment>Location: Batch Rename</comment>
+  </data>
+  <data name="lbl_BatchRename_DateSource_FileModified" xml:space="preserve">
+    <value>Date File Modified</value>
+    <comment>Location: Batch Rename</comment>
+  </data>
+  <data name="lbl_BatchRename_DateSource_FileCreated" xml:space="preserve">
+    <value>Date File Created</value>
+    <comment>Location: Batch Rename</comment>
+  </data>
+  <data name="lbl_BatchRename_DateSource_Today" xml:space="preserve">
+    <value>Today</value>
+    <comment>Location: Batch Rename</comment>
+  </data>
+  <data name="lbl_BatchRename_DateSource_Yesterday" xml:space="preserve">
+    <value>Yesterday</value>
+    <comment>Location: Batch Rename</comment>
+  </data>
+  <data name="lbl_BatchRename_Digits_1" xml:space="preserve">
+    <value>One Digit</value>
+    <comment>Location: Batch Rename: sequence number</comment>
+  </data>
+  <data name="lbl_BatchRename_Digits_2" xml:space="preserve">
+    <value>Two Digits</value>
+    <comment>Location: Batch Rename: sequence number</comment>
+  </data>
+  <data name="lbl_BatchRename_Digits_3" xml:space="preserve">
+    <value>Three Digits</value>
+    <comment>Location: Batch Rename: sequence number</comment>
+  </data>
+  <data name="lbl_BatchRename_Digits_4" xml:space="preserve">
+    <value>Four Digits</value>
+    <comment>Location: Batch Rename: sequence number</comment>
+  </data>
+  <data name="lbl_BatchRename_Digits_5" xml:space="preserve">
+    <value>Five Digits</value>
+    <comment>Location: Batch Rename: sequence number</comment>
+  </data>
+  <data name="lbl_BatchRename_Digits_6" xml:space="preserve">
+    <value>Six Digits</value>
+    <comment>Location: Batch Rename: sequence number</comment>
+  </data>
+  <data name="lbl_BatchRename_SubstituteSource_OriginalFilename" xml:space="preserve">
+    <value>Original Filename</value>
+    <comment>Location: Batch Rename</comment>
+  </data>
+  <data name="lbl_BatchRename_SubstituteSource_PreservedFilename" xml:space="preserve">
+    <value>Preserved Filename</value>
+    <comment>Location: Batch Rename</comment>
+  </data>
+  <data name="lbl_BatchRename_Field_Country" xml:space="preserve">
+    <value>Country</value>
+    <comment>Location: Batch Rename: metadata that can be put in a name</comment>
+  </data>
+  <data name="lbl_BatchRename_Field_CountryCode" xml:space="preserve">
+    <value>Country Code</value>
+    <comment>Location: Batch Rename: metadata that can be put in a name</comment>
+  </data>
+  <data name="lbl_BatchRename_Field_State" xml:space="preserve">
+    <value>State/Province</value>
+    <comment>Location: Batch Rename: metadata that can be put in a name</comment>
+  </data>
+  <data name="lbl_BatchRename_Field_City" xml:space="preserve">
+    <value>City</value>
+    <comment>Location: Batch Rename: metadata that can be put in a name</comment>
+  </data>
+  <data name="lbl_BatchRename_Field_Sublocation" xml:space="preserve">
+    <value>Sublocation</value>
+    <comment>Location: Batch Rename: metadata that can be put in a name</comment>
+  </data>
+  <data name="lbl_BatchRename_Field_Make" xml:space="preserve">
+    <value>Camera Make</value>
+    <comment>Location: Batch Rename: metadata that can be put in a name</comment>
+  </data>
+  <data name="lbl_BatchRename_Field_Model" xml:space="preserve">
+    <value>Camera Model</value>
+    <comment>Location: Batch Rename: metadata that can be put in a name</comment>
+  </data>
+  <data name="lbl_BatchRename_Field_LensSpec" xml:space="preserve">
+    <value>Lens</value>
+    <comment>Location: Batch Rename: metadata that can be put in a name</comment>
+  </data>
+  <data name="lbl_BatchRename_Field_Rating" xml:space="preserve">
+    <value>Rating</value>
+    <comment>Location: Batch Rename: metadata that can be put in a name</comment>
+  </data>
+  <data name="lbl_BatchRename_Field_ExposureTime" xml:space="preserve">
+    <value>Exposure Time</value>
+    <comment>Location: Batch Rename: metadata that can be put in a name</comment>
+  </data>
+  <data name="lbl_BatchRename_Field_Fnumber" xml:space="preserve">
+    <value>Aperture (F-number)</value>
+    <comment>Location: Batch Rename: metadata that can be put in a name</comment>
+  </data>
+  <data name="lbl_BatchRename_Field_FocalLength" xml:space="preserve">
+    <value>Focal Length</value>
+    <comment>Location: Batch Rename: metadata that can be put in a name</comment>
+  </data>
+  <data name="lbl_BatchRename_Field_ISO" xml:space="preserve">
+    <value>ISO</value>
+    <comment>Location: Batch Rename: metadata that can be put in a name</comment>
+  </data>
+  <data name="lbl_BatchRename_Field_Artist" xml:space="preserve">
+    <value>Artist</value>
+    <comment>Location: Batch Rename: metadata that can be put in a name</comment>
+  </data>
+  <data name="lbl_BatchRename_Field_Byline" xml:space="preserve">
+    <value>Creator (Byline)</value>
+    <comment>Location: Batch Rename: metadata that can be put in a name</comment>
+  </data>
+  <data name="lbl_BatchRename_Field_Copyright" xml:space="preserve">
+    <value>Copyright</value>
+    <comment>Location: Batch Rename: metadata that can be put in a name</comment>
+  </data>
+  <data name="lbl_BatchRename_Field_Credit" xml:space="preserve">
+    <value>Credit</value>
+    <comment>Location: Batch Rename: metadata that can be put in a name</comment>
+  </data>
+  <data name="lbl_BatchRename_Field_Source" xml:space="preserve">
+    <value>Source</value>
+    <comment>Location: Batch Rename: metadata that can be put in a name</comment>
+  </data>
+  <data name="lbl_BatchRename_Field_ObjectName" xml:space="preserve">
+    <value>Title (Object Name)</value>
+    <comment>Location: Batch Rename: metadata that can be put in a name</comment>
+  </data>
+  <data name="lbl_BatchRename_Field_Headline" xml:space="preserve">
+    <value>Headline</value>
+    <comment>Location: Batch Rename: metadata that can be put in a name</comment>
+  </data>
+  <data name="lbl_BatchRename_Field_Category" xml:space="preserve">
+    <value>Category</value>
+    <comment>Location: Batch Rename: metadata that can be put in a name</comment>
+  </data>
+  <data name="mbx_BatchRename_OneFile" xml:space="preserve">
+    <value>One file will be processed</value>
+    <comment>Location: Batch Rename</comment>
+  </data>
+  <data name="mbx_BatchRename_ManyFiles" xml:space="preserve">
+    <value>{0} files will be processed</value>
+    <comment>Location: Batch Rename: {0} is a number</comment>
+  </data>
+  <data name="mbx_BatchRename_SomeBlocked" xml:space="preserve">
+    <value>{0} of {1} file(s) can't be renamed: see Preview</value>
+    <comment>Location: Batch Rename: {0} and {1} are numbers</comment>
+  </data>
+  <data name="mbx_BatchRename_PresetNamePrompt" xml:space="preserve">
+    <value>Name of the preset:</value>
+    <comment>Location: Batch Rename</comment>
+  </data>
+  <data name="mbx_BatchRename_PresetUnreadable" xml:space="preserve">
+    <value>The preset '{0}' could not be read.</value>
+    <comment>Location: Batch Rename: {0} is the preset's name</comment>
+  </data>
+  <data name="mbx_BatchRename_PresetReplace" xml:space="preserve">
+    <value>A preset called '{0}' already exists. Replace it?</value>
+    <comment>Location: Batch Rename: {0} is the preset's name</comment>
+  </data>
+  <data name="mbx_BatchRename_PresetSaveFailed" xml:space="preserve">
+    <value>The preset could not be saved.</value>
+    <comment>Location: Batch Rename</comment>
+  </data>
+  <data name="mbx_BatchRename_PresetDelete" xml:space="preserve">
+    <value>Delete the preset '{0}'?</value>
+    <comment>Location: Batch Rename: {0} is the preset's name</comment>
+  </data>
+  <data name="mbx_BatchRename_Preflight" xml:space="preserve">
+    <value>Nothing has been renamed. These need sorting out first:
+
+{0}</value>
+    <comment>Location: Batch Rename: {0} is a list of problems, one per line</comment>
+  </data>
+  <data name="mbx_BatchRename_MoreProblems" xml:space="preserve">
+    <value>... and {0} more (Preview lists them all)</value>
+    <comment>Location: Batch Rename: {0} is a number</comment>
+  </data>
+  <data name="mbx_BatchRename_SelectFiles" xml:space="preserve">
+    <value>Select the files to rename first.</value>
+    <comment>Location: Batch Rename</comment>
+  </data>
+  <data name="mbx_BatchRename_NothingRenamed" xml:space="preserve">
+    <value>Nothing was renamed (anything already done has been put back).
+
+{0}</value>
+    <comment>Location: Batch Rename: {0} is the reason</comment>
+  </data>
+  <data name="mbx_BatchRename_StepFailed" xml:space="preserve">
+    <value>{0}
+
+Everything done so far has been put back, so no file has been touched.
+
+Carry on without {1} (and any file that was going to take its name)?
+Yes: rename the rest.  No: stop; all files stay as they were.</value>
+    <comment>Location: Batch Rename: {0} is the reason, {1} the name of the file that failed</comment>
+  </data>
+  <data name="mbx_BatchRename_NothingLeft" xml:space="preserve">
+    <value>There is nothing left to rename.</value>
+    <comment>Location: Batch Rename</comment>
+  </data>
+  <data name="mbx_BatchRename_DoneSkipped" xml:space="preserve">
+    <value>{0} file(s) processed. Left as they were:
+{1}</value>
+    <comment>Location: Batch Rename: {0} is a number, {1} a list of file names</comment>
+  </data>
+  <data name="mbx_BatchRename_AndMore" xml:space="preserve">
+    <value>... and {0} more</value>
+    <comment>Location: Batch Rename: {0} is a number</comment>
+  </data>
+  <data name="mbx_BatchRename_Problem_NoDestination" xml:space="preserve">
+    <value>No destination folder chosen</value>
+    <comment>Location: Batch Rename</comment>
+  </data>
+  <data name="mbx_BatchRename_Problem_EmptyName" xml:space="preserve">
+    <value>The new name is empty</value>
+    <comment>Location: Batch Rename</comment>
+  </data>
+  <data name="mbx_BatchRename_Problem_Reserved" xml:space="preserve">
+    <value>'{0}' is a reserved name in Windows</value>
+    <comment>Location: Batch Rename: {0} is the name</comment>
+  </data>
+  <data name="mbx_BatchRename_Problem_NameTooLong" xml:space="preserve">
+    <value>The new name is too long</value>
+    <comment>Location: Batch Rename</comment>
+  </data>
+  <data name="mbx_BatchRename_Problem_PathTooLong" xml:space="preserve">
+    <value>The new path is too long</value>
+    <comment>Location: Batch Rename: longer than ExifTool can open</comment>
+  </data>
+  <data name="mbx_BatchRename_Problem_NoDate" xml:space="preserve">
+    <value>There is no {0} to use</value>
+    <comment>Location: Batch Rename: {0} is the kind of date, e.g. Date Taken</comment>
+  </data>
+  <data name="mbx_BatchRename_Problem_BadRegex" xml:space="preserve">
+    <value>The regular expression is not valid</value>
+    <comment>Location: Batch Rename</comment>
+  </data>
+  <data name="mbx_BatchRename_Problem_RegexTimeout" xml:space="preserve">
+    <value>The regular expression takes too long</value>
+    <comment>Location: Batch Rename</comment>
+  </data>
+  <data name="mbx_BatchRename_Problem_NameClaimed" xml:space="preserve">
+    <value>Another file gets (or already has) this name</value>
+    <comment>Location: Batch Rename</comment>
+  </data>
+  <data name="mbx_BatchRename_Problem_FileExists" xml:space="preserve">
+    <value>A file with this name already exists</value>
+    <comment>Location: Batch Rename</comment>
+  </data>
+  <data name="mbx_BatchRename_Problem_SidecarExists" xml:space="preserve">
+    <value>An XMP sidecar with this name already exists</value>
+    <comment>Location: Batch Rename</comment>
+  </data>
+  <data name="mbx_BatchRename_Problem_Gone" xml:space="preserve">
+    <value>The file is no longer there</value>
+    <comment>Location: Batch Rename</comment>
+  </data>
+  <data name="mbx_BatchRename_Problem_BeingSaved" xml:space="preserve">
+    <value>The file is being saved by GeoTagNinja</value>
+    <comment>Location: Batch Rename</comment>
+  </data>
+  <data name="mbx_BatchRename_Problem_InUse" xml:space="preserve">
+    <value>The file is in use by another program</value>
+    <comment>Location: Batch Rename</comment>
+  </data>
+  <data name="mbx_BatchRename_Problem_FolderNotWritable" xml:space="preserve">
+    <value>Cannot write to the folder '{0}'</value>
+    <comment>Location: Batch Rename: {0} is the folder</comment>
+  </data>
+  <data name="mbx_BatchRename_Problem_NoSpace" xml:space="preserve">
+    <value>Not enough space on {0}: {1} MB needed, {2} MB free</value>
+    <comment>Location: Batch Rename: {0} is the drive, {1} and {2} are numbers</comment>
+  </data>
+  <data name="mbx_BatchRename_Problem_Unfixed" xml:space="preserve">
+    <value>The batch has problems that need fixing first.</value>
+    <comment>Location: Batch Rename</comment>
+  </data>
+  <data name="tmi_File_BatchRename" xml:space="preserve">
+    <value>Batch Rename...</value>
+    <comment>File menu: rename, move or copy the selected files by a pattern</comment>
+  </data>
+  <data name="cmi_BatchRename" xml:space="preserve">
+    <value>Batch Rename...</value>
+    <comment>File list right-click menu: rename, move or copy the selected files by a pattern</comment>
+  </data>
   <data name="tmi_File_EditFiles" xml:space="preserve">
     <value>Edit Files...</value>
     <comment>Edit Files Button</comment>
@@ -1371,6 +1849,22 @@ That said the code _should_ be able to comprehend other layouts. Note if the cli
   <data name="ckb_ImportExport_CustomRulesSettings" xml:space="preserve">
     <value>CustomRulesSettings</value>
     <comment>Location: Settings</comment>
+  </data>
+  <data name="ckb_ImportExport_Favourites" xml:space="preserve">
+    <value>Favourites</value>
+    <comment>Location: Settings, import/export</comment>
+  </data>
+  <data name="ckb_ImportExport_EditTemplates" xml:space="preserve">
+    <value>Edit Data templates</value>
+    <comment>Location: Settings, import/export</comment>
+  </data>
+  <data name="ckb_ImportExport_FieldHistory" xml:space="preserve">
+    <value>Edit Data field history</value>
+    <comment>Location: Settings, import/export</comment>
+  </data>
+  <data name="ckb_ImportExport_BatchRenamePresets" xml:space="preserve">
+    <value>Batch Rename presets</value>
+    <comment>Location: Settings, import/export</comment>
   </data>
   <data name="Generic_TimeZoneID" xml:space="preserve">
     <value>Time Zone ID</value>

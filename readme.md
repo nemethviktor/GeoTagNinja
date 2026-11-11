@@ -48,6 +48,7 @@ There is a "short" (15 mins) demo on [YouTube](https://youtu.be/ulP1ZG7mH-I) if 
 - Show the direction a photo was taken in (`GPSImgDirection`) and its destination on the map
 - Read and edit `GPSDOP` and `GPSHPositioningError`, and see `GPSDateTime` (read-only)
 - Filter list columns, rename (`F2`) and delete (`Del`) files from the list, and copy/paste tags between files
+- Batch Rename (`Ctrl+Shift+R`): rename, move or copy many files at once from a pattern (folder name, text, sequence number, dates, metadata, find-and-replace), with presets, a preview and XMP sidecars following along
 - Remove all geodata from files in one go
 - Flat Mode: load all subfolders of the current folder at once
 - Thumbnail View (switch from the `View` menu at any time; resize with `Ctrl` + mouse wheel, the slider or the menu), plus previews for common image types including RAW, HEIC, PNG and WEBP

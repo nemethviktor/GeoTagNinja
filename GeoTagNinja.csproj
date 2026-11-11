@@ -144,6 +144,15 @@
     <Compile Include="Helpers\Exif\EditTemplateGroups.cs" />
     <Compile Include="View\Forms\FrmChangelog.cs" />
     <Compile Include="View\Forms\FrmEditTemplateDialog.cs" />
+    <Compile Include="View\Forms\FrmBatchRename.cs" />
+    <Compile Include="View\Forms\FrmMainApp.BatchRename.cs" />
+    <Compile Include="View\FileList\FileListView.BatchRename.cs" />
+    <Compile Include="Helpers\FileSystem\BatchRenameModel.cs" />
+    <Compile Include="Helpers\FileSystem\BatchRenamePlanner.cs" />
+    <Compile Include="Helpers\FileSystem\BatchRenameExecutor.cs" />
+    <Compile Include="Helpers\FileSystem\BatchRenamePreflight.cs" />
+    <Compile Include="Helpers\Data\BatchRenamePresets.cs" />
+    <Compile Include="Helpers\Localisation\BatchRenameText.cs" />
     <Compile Include="Model\ExifStructTags.cs" />
     <Compile Include="Helpers\Exif\ListTagArguments.cs" />
     <Compile Include="View\Forms\FrmCustomiseFormControls.cs">

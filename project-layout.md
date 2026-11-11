@@ -23,7 +23,7 @@ View/
   Forms/      every Frm* dialog, plus EditFileFormLauncher. FrmEditFileData is split into partial files: .MetadataTabs (the
               Keywords, Source/Description and Contact tabs, built in code), .FieldMenus (the "..." menus and field history),
               .Templates (Load/Save template, Load from Image) and .LocationExtras (sexagesimal, direction, destination, altitude
-              from web). FrmEditTemplateDialog is the picker behind the template buttons. FrmMainApp is split into partial files:
+              from web). FrmEditTemplateDialog is the picker behind the template buttons. FrmBatchRename is the code-only Batch Rename dialog. FrmMainApp is split into partial files:
               .Startup (start-up steps) and .ViewMenu (the View menu, mode switching, thumbnail size)
   Controls/   custom controls: ImagePreview, and the thumbnail view (ThumbnailView, its pure layout maths in
               ThumbnailLayout, FolderIcons)
@@ -32,12 +32,12 @@ View/
 
 Helpers/
   API/           GeoNames and GitHub HTTP calls and their response types
-  Data/          SQLite settings (and MenuSettings, for settings changed from menus), custom rules, the thumbnail
+  Data/          SQLite settings (and MenuSettings, for settings changed from menus), custom rules, Edit Data templates and Batch Rename presets, the thumbnail
                  and preview caches (in memory, plus ThumbnailStore in SQLite) and the session's in-memory DataTables
   Exif/          reading, writing and track-file handling via ExifTool; thumbnail and preview extraction
-  FileSystem/    enumeration, checksums, locking, cloud placeholders, supported extensions
+  FileSystem/    enumeration, checksums, locking, cloud placeholders, supported extensions; Batch Rename (BatchRenameModel the settings, BatchRenamePlanner the pure "what would each file be called and what clashes", BatchRenamePreflight the disk checks before it starts, BatchRenameExecutor the all-or-nothing file moves)
   Geo/           coordinate and field-of-view maths, and the favourites logic (which favourite a position falls in, tree grouping, auto-assign onto photos)
-  Localisation/  languages, countries, time zones, resource lookup
+  Localisation/  languages, countries, time zones, resource lookup (BatchRenameText: the Batch Rename text, looked up in Strings.resx)
   Map/           the Leaflet layer list
   Startup/       first-run and per-launch setup
   Text/          string odds and ends

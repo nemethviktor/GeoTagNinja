@@ -34,6 +34,7 @@ internal static class DatabaseSchema
     internal const string TableNameCustomCityAllocationLogic = "customCityAllocationLogic";
     internal const string TableNameFieldHistory = "FieldHistory";
     internal const string TableNameEditTemplates = "EditTemplates";
+    internal const string TableNameBatchRenamePresets = "BatchRenamePresets";
 
     /// <summary>
     ///     Every table the settings database is expected to have, in creation order.
@@ -46,7 +47,8 @@ internal static class DatabaseSchema
         TableNameCustomRules,
         TableNameCustomCityAllocationLogic,
         TableNameFieldHistory,
-        TableNameEditTemplates
+        TableNameEditTemplates,
+        TableNameBatchRenamePresets
     ];
 
     private static readonly Dictionary<string, string> CreateTableStatements =
@@ -140,6 +142,15 @@ internal static class DatabaseSchema
                                             PRIMARY KEY(templateName, attributeName)
                                         );
                                         """
+            },
+            {
+                // saved Batch Rename setups: one row per named preset, the settings as JSON
+                TableNameBatchRenamePresets, """
+                                             CREATE TABLE IF NOT EXISTS BatchRenamePresets(
+                                                 presetName NTEXT NOT NULL PRIMARY KEY,
+                                                 presetJson NTEXT NOT NULL
+                                             );
+                                             """
             }
         };
 

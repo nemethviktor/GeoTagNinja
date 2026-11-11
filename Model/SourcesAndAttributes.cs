@@ -105,6 +105,9 @@ public static class SourcesAndAttributes
         CreateDateSecondsShift,
         RemoveAllGPS,
         GUID,
+
+        /// <summary>XMP-xmpMM:PreservedFileName: the name a file had before Bridge/Lightroom renamed it. Read only (Batch Rename's "Preserved Filename").</summary>
+        PreservedFileName,
     }
 
     /// <summary>
@@ -927,6 +930,15 @@ public static class SourcesAndAttributes
                         TypeOfElement = typeof(string),
                         InAttributes = ["EXIF:Artist", "XMP:Artist"],
                         OutAttributes = ["EXIF:Artist", "XMP-tiff:Artist"]
+                    }
+                },
+                {
+                    ElementAttribute.PreservedFileName, new ElementAttributeMapping
+                    {
+                        Name = "PreservedFileName",
+                        TypeOfElement = typeof(string),
+                        InAttributes = ["XMP-xmpMM:PreservedFileName"],
+                        OutAttributes = ["XMP-xmpMM:PreservedFileName"]
                     }
                 },
                 {

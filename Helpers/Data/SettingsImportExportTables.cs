@@ -21,7 +21,11 @@ internal static class SettingsImportExportTables
         {
             { "ApplicationSettings", "settings" },
             { "CityRulesSettings", "customCityAllocationLogic" },
-            { "CustomRulesSettings", "customRules" }
+            { "CustomRulesSettings", "customRules" },
+            { "Favourites", DatabaseSchema.TableNameFavourites },
+            { "EditTemplates", DatabaseSchema.TableNameEditTemplates },
+            { "FieldHistory", DatabaseSchema.TableNameFieldHistory },
+            { "BatchRenamePresets", DatabaseSchema.TableNameBatchRenamePresets }
         };
 
         return SettingsImportExportTableNames.TryGetValue(

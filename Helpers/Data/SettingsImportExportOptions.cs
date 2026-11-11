@@ -25,5 +25,17 @@ internal enum SettingsImportExportOptions
     CityRulesSettings,
 
     /// <summary>The user-defined toponomy override rules.</summary>
-    CustomRulesSettings
+    CustomRulesSettings,
+
+    /// <summary>The saved favourite locations.</summary>
+    Favourites,
+
+    /// <summary>The saved Edit Data templates.</summary>
+    EditTemplates,
+
+    /// <summary>The values last typed into the Edit Data form's text fields.</summary>
+    FieldHistory,
+
+    /// <summary>The saved Batch Rename presets.</summary>
+    BatchRenamePresets
 }

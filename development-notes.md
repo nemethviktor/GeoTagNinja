@@ -27,6 +27,29 @@ Note: `ckb_SyncGeoKeywords` ("Keep keywords in step with the location") is the e
 form reads its controls by name, so it needs only points 2 to 4. Its logic is `Helpers/Geo/GeoKeywordSync`, called from
 `WriteSaveToFile` just before the write queue is built.
 
+## Adding a table to the settings database
+
+A table that holds something the user made must be importable and exportable, or moving to another machine loses it. Four things:
+
+1. The `CREATE TABLE IF NOT EXISTS` statement in `DatabaseSchema` and the name in `AllTableNames`.
+2. A member in `SettingsImportExportOptions`, a row in `SettingsImportExportTables`, and a `ckb_ImportExport_<Member>` caption in `Strings.resx`. The import/export dialog lists the enum, so it needs nothing else.
+3. `SettingsImportExportCoverageTests` fails if a table has no option, an option has no table or no caption. Only `appLayout` (window positions, specific to one machine) is exempt.
+4. Import replaces a table with the one in the file and copies only the columns both have (`RecreateTableEmpty` uses the canonical `CREATE`), so a column added later needs to be in that statement too (see below).
+
+## Batch Rename
+
+`Helpers/FileSystem/BatchRename*.cs`, `View/Forms/FrmBatchRename.cs` (code-only; the rows swap their controls with the kind of piece), `View/FileList/FileListView.BatchRename.cs` (builds the sources from the selected rows, runs the plan, updates the list) and `Helpers/Data/BatchRenamePresets.cs` (presets: one row per name, the settings as JSON).
+
+- **Text is translatable.** Every caption, message and reason a file can't be renamed is a `Strings.resx` entry, read with `Helpers/Localisation/BatchRenameText.Get(key, args...)` (not `ReturnControlText`: that returns nothing when no language is set, as in the tests, and changes the thread's UI culture). Languages that haven't translated a key fall back to English; a key missing altogether shows as itself. Keys: `frm_`/`gbx_`/`lbl_`/`btn_`/`rbt_`/`ckb_BatchRename_...` for controls, `mbx_BatchRename_...` for messages (`{0}`, `{1}` are filled in), `mbx_BatchRename_Problem_...` for the reasons. The drop-down captions are built from enum names (`lbl_BatchRename_Kind_<BatchRenameKind>`, `_Case_`, `_Part_`, `_DateSource_`, `_SubstituteSource_`, `_Digits_<n>`, `_Field_<attribute name>`), so a new enum member or metadata field needs its entry; `BatchRenameTextTests` fails if it is missing. Log lines stay English in code.
+- **The planner is pure** (`BatchRenamePlanner.Plan`; the disk is reached only through a `pathExists` callback) and tested under every culture: sequence digits, dates (`FormatDate` is hand-written, Bridge's `YYYY YY MM DD hh mm ss`, so Thai years or Arabic digits can't reach a file name) and letter case (invariant, so a Turkish `i` stays an `I`) must not depend on the user's culture. A problem on any entry blocks the batch.
+- **Problems are caught in two places.** `BatchRenamePlanner` finds what the names alone show; `BatchRenamePreflight` (run when Rename is clicked, before anything moves) finds what the disk shows: source gone, locked (opened with `FileShare.None`; cloud-only placeholders are not probed, as opening one downloads it), in use by the app's own save (`FileLocking`), an unwritable folder (a hidden probe file, one per folder) and too little free space (copies and cross-drive moves). Both just set `BatchRenameEntry.Problem`, and any problem blocks the start. These are estimates, so a step can still fail later.
+- **The executor is all-or-nothing, and says who failed.** Every move is logged and undone in exact reverse on failure (undoing in another order can find a name still occupied). The failure comes back as `BatchRenameResult.FailedEntry`; `FileListView.ShowBatchRenameDialog` then asks whether to carry on without it. `BatchRenameExecutor.ExcludeWithDependents` marks it `Unchanged` along with every file that was to take a name it keeps (a chain a→b→c→d with d failing drops all three), and the batch is run again, so a retry is still all-or-nothing for what remains. Chains, swaps and case-only renames (Windows sees `a.jpg` and `A.jpg` as one file) go through temporary names (`*.gtn-rename`).
+- **XMP sidecars** are `name.xmp` next to `name.ext`, the convention `DirectoryElementCollection` reads (ExifTool's own examples use the same). A sidecar can be shared: `x.nef` and `x.jpg` both use `x.xmp`. If a file that is not being renamed still uses it (`BatchRenameSource.SidecarShared`) it is copied, not moved, so nobody loses theirs.
+- **Old file names that live inside XMP**, which Batch Rename does not touch (checked against ExifTool's tag tables and Adobe forum threads; the xmpMM structures `DerivedFrom` and `History` were *not* verified):
+  - `XMP-xmpMM:PreservedFileName`: the name a file had before Bridge or a Lightroom export renamed it. This is what Bridge's `Preserve current filename in XMP Metadata` writes and its `Preserved Filename` piece reads; here it is read (`ElementAttribute.PreservedFileName`) but not yet written. Writing it should go through the normal staged-edit and write queue rather than a second ExifTool call.
+  - `XMP-crs:RawFileName`: "the name of the raw file the settings apply to", in Camera Raw and Lightroom sidecars. A sidecar renamed with its raw file still names the old file inside; whether Adobe's tools mind is not known.
+  - `XMP-photoshop:SidecarForExtension`: the extension of the file a sidecar belongs to (used when a sidecar must not attach to a same-named file of another type). Extensions are never changed by Batch Rename (only their case), so it stays right.
+
 ## Adding a column to a settings-database table
 
 `DatabaseSchema` is the one place a table's shape is written, but `CREATE TABLE IF NOT EXISTS` leaves an existing table alone, so a
