@@ -1273,4 +1273,265 @@ Zapisz klucz API, gdy zostaniesz o to poproszony. Jeśli tego nie zrobisz od raz
   <data name="tmi_View_SortBy_Descending" xml:space="preserve">
     <value>Malejąco</value>
   </data>
+  <data name="btn_NavigateMapGo" xml:space="preserve">
+    <value>Pokaż na mapie</value>
+  </data>
+  <data name="btn_loctToFile" xml:space="preserve">
+    <value>Zapisz do pliku</value>
+  </data>
+  <data name="btn_loctToFileDestination" xml:space="preserve">
+    <value>Zapisz w miejscu docelowym</value>
+  </data>
+  <data name="btn_SaveFavourite" xml:space="preserve">
+    <value>Zapisz zdjęcie</value>
+  </data>
+  <data name="btn_LoadFavourite" xml:space="preserve">
+    <value>Zastosuj do zdjęć</value>
+  </data>
+  <data name="btn_ManageFavourites" xml:space="preserve">
+    <value>Zarządzaj...</value>
+  </data>
+  <data name="gbx_AllFavourites" xml:space="preserve">
+    <value>Wszystkie ulubione</value>
+  </data>
+  <data name="gbx_FavouriteDetails" xml:space="preserve">
+    <value>Szczegóły</value>
+  </data>
+  <data name="gbx_FavouriteAdditionalInfo" xml:space="preserve">
+    <value>Dodatkowe info</value>
+  </data>
+  <data name="lbl_FavouriteName" xml:space="preserve">
+    <value>Nazwa:</value>
+  </data>
+  <data name="lbl_FavouriteCoordinates" xml:space="preserve">
+    <value>Współrzędne:</value>
+  </data>
+  <data name="lbl_FavouriteRadius" xml:space="preserve">
+    <value>Promień [m]:</value>
+  </data>
+  <data name="ckb_FavouriteAutoAssign" xml:space="preserve">
+    <value>Auto przypisanie</value>
+  </data>
+  <data name="ckb_FavouriteSnap" xml:space="preserve">
+    <value>Dopasuj zdjęcia do ulubionej pozycji</value>
+  </data>
+  <data name="lbl_FavouriteTimeZone" xml:space="preserve">
+    <value>Strefa czasowa:</value>
+  </data>
+  <data name="lbl_FavouriteKeywords" xml:space="preserve">
+    <value>Słowa kluczowe:</value>
+  </data>
+  <data name="btn_FavouriteGetFromWeb" xml:space="preserve">
+    <value>Pobierz ze strony</value>
+  </data>
+  <data name="btn_FavouriteClearAll" xml:space="preserve">
+    <value>Wyczyść wszystko</value>
+  </data>
+  <data name="btn_FavouriteAccept" xml:space="preserve">
+    <value>Akcepruj</value>
+  </data>
+  <data name="btn_FavouriteDiscard" xml:space="preserve">
+    <value>Odrzuć</value>
+  </data>
+  <data name="btn_FavouriteAddKeyword" xml:space="preserve">
+    <value>Dodaj</value>
+  </data>
+  <data name="btn_FavouriteRemoveKeyword" xml:space="preserve">
+    <value>Usuń</value>
+  </data>
+  <data name="lbl_FavouritesCount" xml:space="preserve">
+    <value>{0} elementów ({1} zaznaczonych)</value>
+  </data>
+  <data name="tsd_GroupBy" xml:space="preserve">
+    <value>Grupuj po</value>
+  </data>
+  <data name="tmi_GroupByCountryCode" xml:space="preserve">
+    <value>Kod kraju</value>
+  </data>
+  <data name="tmi_GroupByCountry" xml:space="preserve">
+    <value>Kraj</value>
+  </data>
+  <data name="tmi_GroupByState" xml:space="preserve">
+    <value>Województwo/region</value>
+  </data>
+  <data name="tmi_GroupByCity" xml:space="preserve">
+    <value>Miasto</value>
+  </data>
+  <data name="tmi_GroupByCoordinates" xml:space="preserve">
+    <value>Współrzedne</value>
+  </data>
+  <data name="tmi_GroupByNone" xml:space="preserve">
+    <value>Bez grupowania</value>
+  </data>
+  <data name="tmi_GroupByBlank" xml:space="preserve">
+    <value>(brak)</value>
+  </data>
+  <data name="tsb_Duplicate" xml:space="preserve">
+    <value>Kopiuj</value>
+  </data>
+  <data name="tsb_Delete" xml:space="preserve">
+    <value>Usuń</value>
+  </data>
+  <data name="tsb_AddFromSelection" xml:space="preserve">
+    <value>Dodaj z zaznaczonego zdjęcia</value>
+  </data>
+  <data name="mbx_FrmManageFavourites_WarningNameTaken" xml:space="preserve">
+    <value>Inny ulubiony element ma już tę nazwę.</value>
+  </data>
+  <data name="mbx_FrmManageFavourites_WarningAltitudeInvalid" xml:space="preserve">
+    <value>Wysokość musi być liczbą.</value>
+  </data>
+  <data name="mbx_FrmManageFavourites_WarningNoCoordinates" xml:space="preserve">
+    <value>Brak współrzędnych. Wybierz zdjęcie zawierające dane lokalizacji.</value>
+  </data>
+  <data name="mbx_FrmManageFavourites_QuestionAcceptChanges" xml:space="preserve">
+    <value>Zaakceptować zmiany w ulubionym?</value>
+  </data>
+  <data name="mbx_FrmManageFavourites_QuestionDiscardAll" xml:space="preserve">
+    <value>Zamknąć bez zapisywania zmian w ulubionych?</value>
+  </data>
+  <data name="mbx_FrmManageFavourites_InfoWebNothingFound" xml:space="preserve">
+    <value>Brak wyników dla tej lokalizacji.</value>
+  </data>
+  <data name="tpg_Keywords" xml:space="preserve">
+    <value>Kategorie/Słowa kluczowe</value>
+  </data>
+  <data name="tpg_SourceDescription" xml:space="preserve">
+    <value>Źródło/Opis</value>
+  </data>
+  <data name="tpg_Contact" xml:space="preserve">
+    <value>Kontakt</value>
+  </data>
+  <data name="lbl_SectionSource" xml:space="preserve">
+    <value>Żródło</value>
+  </data>
+  <data name="lbl_SectionDescription" xml:space="preserve">
+    <value>Opis</value>
+  </data>
+  <data name="lbl_Category" xml:space="preserve">
+    <value>Kategoria</value>
+  </data>
+  <data name="lbl_SupplementalCategories" xml:space="preserve">
+    <value>Kategorie dodatkowe</value>
+  </data>
+  <data name="lbl_IPTCKeywords" xml:space="preserve">
+    <value>Słowa kluczowe</value>
+  </data>
+  <data name="lbl_Artist" xml:space="preserve">
+    <value>Twórca</value>
+  </data>
+  <data name="lbl_Source" xml:space="preserve">
+    <value>Źródło</value>
+  </data>
+  <data name="lbl_Credit" xml:space="preserve">
+    <value>Twórca</value>
+  </data>
+  <data name="lbl_SourceURL" xml:space="preserve">
+    <value>URL</value>
+  </data>
+  <data name="lbl_Copyright" xml:space="preserve">
+    <value>Prawa autorskie</value>
+  </data>
+  <data name="lbl_ObjectName" xml:space="preserve">
+    <value>Nazwa</value>
+  </data>
+  <data name="lbl_Headline" xml:space="preserve">
+    <value>Nagłówek</value>
+  </data>
+  <data name="lbl_Caption" xml:space="preserve">
+    <value>Podpis</value>
+  </data>
+  <data name="lbl_SpecialInstructions" xml:space="preserve">
+    <value>Instrukcje specjalne</value>
+  </data>
+  <data name="lbl_Byline" xml:space="preserve">
+    <value>Autor</value>
+  </data>
+  <data name="lbl_CreatorAddress" xml:space="preserve">
+    <value>Adres</value>
+  </data>
+  <data name="lbl_CreatorCity" xml:space="preserve">
+    <value>Miasto</value>
+  </data>
+  <data name="lbl_CreatorPostalCode" xml:space="preserve">
+    <value>Kod pocztowy</value>
+  </data>
+  <data name="lbl_CreatorRegion" xml:space="preserve">
+    <value>Województwo/region</value>
+  </data>
+  <data name="lbl_CreatorCountry" xml:space="preserve">
+    <value>Kraj</value>
+  </data>
+  <data name="lbl_BylineTitle" xml:space="preserve">
+    <value>Stopka autorska</value>
+  </data>
+  <data name="tmi_FieldMenu_CopyTo" xml:space="preserve">
+    <value>Kopiuj do</value>
+  </data>
+  <data name="tmi_FieldMenu_InsertFrom" xml:space="preserve">
+    <value>Wstaw z</value>
+  </data>
+  <data name="lbl_CreatorURL" xml:space="preserve">
+    <value>URL</value>
+  </data>
+  <data name="lbl_CreatorPhone" xml:space="preserve">
+    <value>Telefon</value>
+  </data>
+  <data name="lbl_CreatorEmail" xml:space="preserve">
+    <value>E-Mail</value>
+  </data>
+  <data name="tmi_FieldMenu_CopySelectionToCategories" xml:space="preserve">
+    <value>Kopij zaznaczone do kategorii</value>
+  </data>
+  <data name="lbl_CaptionWriter" xml:space="preserve">
+    <value>Autor podpisów</value>
+  </data>
+  <data name="tmi_FieldMenu_CopySelectionToKeywords" xml:space="preserve">
+    <value>Kopiuj zaznaczone słowa kluczowe</value>
+  </data>
+  <data name="tmi_FieldMenu_MostRecentlyUsed" xml:space="preserve">
+    <value>Ostatnio używane elementy</value>
+  </data>
+  <data name="tmi_FieldMenu_ForgetRemembered" xml:space="preserve">
+    <value>Usuń zapamiętany element</value>
+  </data>
+  <data name="lbl_ContactPrefix" xml:space="preserve">
+    <value>Kontakt</value>
+  </data>
+  <data name="btn_LoadFromTemplate" xml:space="preserve">
+    <value>Wczytaj z szablonu...</value>
+  </data>
+  <data name="btn_LoadFromImage" xml:space="preserve">
+    <value>Wczytaj z obrazu...</value>
+  </data>
+  <data name="btn_SaveAsTemplate" xml:space="preserve">
+    <value>Zapisz jako szablon...</value>
+  </data>
+  <data name="lbl_TemplateName" xml:space="preserve">
+    <value>Szablon:</value>
+  </data>
+  <data name="lbl_TemplateInclude" xml:space="preserve">
+    <value>Użyj tych:</value>
+  </data>
+  <data name="btn_TemplateDelete" xml:space="preserve">
+    <value>Usuń</value>
+  </data>
+  <data name="chk_TemplateGroup_Country" xml:space="preserve">
+    <value>Kraj</value>
+  </data>
+  <data name="chk_TemplateGroup_State" xml:space="preserve">
+    <value>Województwo/region</value>
+  </data>
+  <data name="chk_TemplateGroup_City" xml:space="preserve">
+    <value>Miasto</value>
+  </data>
+  <data name="chk_TemplateGroup_Sublocation" xml:space="preserve">
+    <value>Podlokalizacja</value>
+  </data>
+  <data name="chk_TemplateGroup_Position" xml:space="preserve">
+    <value>Pozycja GPS</value>
+  </data>
+  <data name="chk_TemplateGroup_Altitude" xml:space="preserve">
+    <value>Wysokość n.p.m.</value>
+  </data>
 </root>
