@@ -3,7 +3,7 @@ using Sdcb.LibRaw;
 using Sdcb.LibRaw.Natives;
 using System;
 using System.Collections.Generic;
-using System.Drawing;
+using SkiaSharp;
 using System.IO;
 using System.Linq;
 using System.Reflection;
@@ -111,50 +111,61 @@ internal static class RawPreview
     }
 
     /// <summary>
-    ///     Decodes JPEG bytes into a standalone bitmap with the orientation applied: from the JPEG's own EXIF tag if it
-    ///     has one, otherwise from <paramref name="exifOrientation" />. (Embedded RAW previews usually have no tag of
-    ///     their own, so without the file's orientation portrait shots show sideways.)
+    ///     Decodes an embedded JPEG and turns it upright. The orientation the JPEG itself carries wins; the RAW's own
+    ///     (<paramref name="exifOrientation" />) is used when the JPEG has none.
     /// </summary>
-    /// <param name="jpeg">The JPEG bytes.</param>
-    /// <param name="exifOrientation">EXIF orientation 1-8 of the source file; 0 if unknown.</param>
-    internal static Image DecodeOriented(byte[] jpeg,
-                                         int exifOrientation)
+    /// <returns>The upright bitmap (caller owns it), or null if the bytes can't be decoded.</returns>
+    internal static SKBitmap DecodeOriented(byte[] jpeg,
+                                            int exifOrientation)
     {
-        using MemoryStream stream = new(buffer: jpeg);
-        using Image decoded = Image.FromStream(stream: stream);
-
-        if (decoded.PropertyIdList.Contains(value: HelperVariables.exifOrientationID))
-        {
-            decoded.ExifRotate();
-        }
-        else
-        {
-            RotateFlipType rotation = exifOrientation switch
-            {
-                2 => RotateFlipType.RotateNoneFlipX,
-                3 => RotateFlipType.Rotate180FlipNone,
-                4 => RotateFlipType.Rotate180FlipX,
-                5 => RotateFlipType.Rotate90FlipX,
-                6 => RotateFlipType.Rotate90FlipNone,
-                7 => RotateFlipType.Rotate270FlipX,
-                8 => RotateFlipType.Rotate270FlipNone,
-                _ => RotateFlipType.RotateNoneFlipNone
-            };
-
-            if (rotation != RotateFlipType.RotateNoneFlipNone)
-            {
-                decoded.RotateFlip(rotateFlipType: rotation);
-            }
-        }
-
-        // copy so the result doesn't depend on the stream
-        return new Bitmap(original: decoded);
+        return ImageOps.DecodeOriented(data: jpeg, fallbackExifOrientation: exifOrientation);
     }
 
     /// <summary>
-    ///     Embedded-image indexes to try, best first: JPEGs at least <paramref name="minLongEdge" /> long, smallest
-    ///     first, then the smaller ones, biggest first. If LibRaw's list can't be read, the blind range.
+    ///     Full demosaic with LibRaw, written out as a JPEG. Very slow: only for RAWs with no usable embedded preview.
+    ///     Failures are swallowed; the caller checks whether the file appeared.
     /// </summary>
+    /// <param name="originalImagePath">The RAW file.</param>
+    /// <param name="generatedJpegPath">Where to write the JPEG.</param>
+    internal static void GenerateFullImageJpeg(string originalImagePath,
+                                               string generatedJpegPath)
+    {
+        try
+        {
+            using RawContext raw = RawContext.OpenFile(filePath: originalImagePath);
+            raw.Unpack();
+            raw.DcrawProcess();
+            using ProcessedImage image = raw.MakeDcrawMemoryImage();
+
+            // LibRaw hands back 8-bit RGB, three bytes a pixel, rows tightly packed.
+            int width = image.Width;
+            int height = image.Height;
+            byte[] rgb = new byte[width * height * 3];
+            System.Runtime.InteropServices.Marshal.Copy(source: image.DataPointer, destination: rgb, startIndex: 0,
+                length: rgb.Length);
+
+            using SKBitmap bitmap = new(info: new SKImageInfo(width: width, height: height,
+                colorType: SKColorType.Rgba8888, alphaType: SKAlphaType.Opaque));
+            byte[] rgba = new byte[width * height * 4];
+            for (int pixel = 0, source = 0, target = 0; pixel < width * height; pixel++)
+            {
+                rgba[target++] = rgb[source++];
+                rgba[target++] = rgb[source++];
+                rgba[target++] = rgb[source++];
+                rgba[target++] = 255;
+            }
+
+            System.Runtime.InteropServices.Marshal.Copy(source: rgba, startIndex: 0, destination: bitmap.GetPixels(),
+                length: rgba.Length);
+
+            File.WriteAllBytes(path: generatedJpegPath, bytes: ImageOps.EncodeJpeg(bitmap: bitmap, quality: 92));
+        }
+        catch
+        {
+            // ignored
+        }
+    }
+
     private static IEnumerable<int> CandidateIndexes(RawContext raw,
                                                      int minLongEdge)
     {

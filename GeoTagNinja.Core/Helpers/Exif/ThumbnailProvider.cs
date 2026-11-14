@@ -1,9 +1,7 @@
 ﻿using NLog;
 using GeoTagNinja.Helpers.Data;
 using GeoTagNinja.Model;
-using GeoTagNinja.View.Forms;
 using System;
-using System.Drawing;
 
 namespace GeoTagNinja.Helpers.Exif;
 
@@ -50,13 +48,13 @@ internal static class ThumbnailProvider
         Log.Info(message: $"Thumbnail generation started for {path}");
         try
         {
-            using Image? thumbnail = ThumbnailGenerator.Create(fileNameWithPath: path, size: bucket);
+            byte[]? thumbnail = ThumbnailGenerator.CreateJpeg(fileNameWithPath: path, size: bucket);
             if (thumbnail == null)
             {
                 return false;
             }
 
-            ThumbnailCache.Add(fileNameWithPath: path, size: bucket, thumbnail: thumbnail);
+            ThumbnailCache.Add(fileNameWithPath: path, size: bucket, jpeg: thumbnail);
             Log.Info(message: $"Thumbnail generation finished for {path}");
             return true;
         }

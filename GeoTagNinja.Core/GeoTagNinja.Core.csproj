@@ -31,10 +31,14 @@
 
   <ItemGroup>
     <PackageReference Include="CsvHelper" Version="33.1.0" />
+    <PackageReference Include="Magick.NET-Q16-OpenMP-x64" Version="15.0.0" />
     <PackageReference Include="Markdig" Version="1.6.0" />
     <PackageReference Include="Newtonsoft.Json" Version="13.0.4" />
     <PackageReference Include="NLog" Version="6.2.2" />
     <PackageReference Include="RestSharp" Version="114.1.0" />
+    <PackageReference Include="Sdcb.LibRaw" Version="0.21.1.7" />
+    <PackageReference Include="Sdcb.LibRaw.runtime.win64" Version="0.21.1" />
+    <PackageReference Include="SkiaSharp" Version="3.119.4" />
     <PackageReference Include="System.Data.SQLite" Version="2.0.4" />
     <PackageReference Include="System.IO.Hashing" Version="10.0.13" />
   </ItemGroup>

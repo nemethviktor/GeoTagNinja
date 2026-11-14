@@ -168,9 +168,10 @@
     </Compile>
     <Compile Include="Helpers\UI\ControlTextApplier.cs" />
     <Compile Include="Helpers\UI\WinFormsDialogs.cs" />
+    <Compile Include="Helpers\UI\SkiaBridge.cs" />
+    <Compile Include="Helpers\Data\ThumbnailImages.cs" />
     <Compile Include="Helpers\UI\ReportBox.cs" />
     <Compile Include="Helpers\UI\ToponomyPicker.cs" />
-    <Compile Include="Helpers\Data\ThumbnailCache.cs" />
     <Compile Include="Helpers\Data\MenuSettings.cs" />
     <Compile Include="Helpers\UI\ControlTraversal.cs" />
     <Compile Include="Helpers\UI\FormPositioning.cs" />
@@ -217,9 +218,6 @@
     <Compile Include="Helpers\Data\Favourites.cs" />
     <Compile Include="Helpers\Exif\DataPointInteractions.cs" />
     <Compile Include="Helpers\Exif\ReadGetImagePreviews.cs" />
-    <Compile Include="Helpers\Exif\ThumbnailGenerator.cs" />
-    <Compile Include="Helpers\Exif\RawPreview.cs" />
-    <Compile Include="Helpers\Exif\ThumbnailProvider.cs" />
     <Compile Include="View\Forms\FrmColumnSelection.cs">
       <SubType>Form</SubType>
     </Compile>

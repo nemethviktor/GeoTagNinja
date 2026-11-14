@@ -1,7 +1,4 @@
-﻿using System.Drawing;
-using System.Drawing.Imaging;
-using System.IO;
-
+﻿
 namespace GeoTagNinja.Helpers.Data;
 
 /// <summary>
@@ -50,37 +47,23 @@ internal static class ThumbnailCache
     }
 
     /// <summary>
-    ///     A fresh <see cref="Image" /> from the in-memory tier only, or null. Never touches the database or the disk,
-    ///     so it is safe to call while painting. The caller owns the image.
+    ///     The cached thumbnail's JPEG bytes, or null when it isn't in memory.
     /// </summary>
-    internal static Image? TryGetMemory(string fileNameWithPath,
+    internal static byte[]? TryGetBytes(string fileNameWithPath,
                                         int size)
     {
         string? key = FileKeyedCache<byte[]>.KeyFor(fileNameWithPath: fileNameWithPath, variant: size.ToString());
-        byte[]? bytes = key == null
+        return key == null
             ? null
             : Cache.TryGetByKey(key: key);
-        if (bytes == null)
-        {
-            return null;
-        }
-
-        try
-        {
-            using MemoryStream stream = new(buffer: bytes);
-            using Image decoded = Image.FromStream(stream: stream);
-            // copy so the returned image doesn't depend on the stream
-            return new Bitmap(original: decoded);
-        }
-        catch
-        {
-            return null;
-        }
     }
 
+    /// <summary>
+    ///     Puts a freshly made thumbnail (JPEG bytes) into the memory cache and the database.
+    /// </summary>
     internal static void Add(string fileNameWithPath,
                              int size,
-                             Image thumbnail)
+                             byte[] jpeg)
     {
         string? key = FileKeyedCache<byte[]>.KeyFor(fileNameWithPath: fileNameWithPath, variant: size.ToString());
         if (key == null)
@@ -90,11 +73,8 @@ internal static class ThumbnailCache
 
         try
         {
-            using MemoryStream stream = new();
-            thumbnail.Save(stream: stream, format: ImageFormat.Jpeg);
-            byte[] bytes = stream.ToArray();
-            Cache.AddByKey(key: key, value: bytes);
-            ThumbnailStore.Add(key: key, jpeg: bytes);
+            Cache.AddByKey(key: key, value: jpeg);
+            ThumbnailStore.Add(key: key, jpeg: jpeg);
         }
         catch
         {
