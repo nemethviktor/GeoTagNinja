@@ -1,11 +1,10 @@
-﻿using NLog;
+﻿using TagList = GeoTagNinja.Model.TagList;
+using NLog;
 using GeoTagNinja.Helpers.Data;
 using GeoTagNinja.Helpers.FileSystem;
 using GeoTagNinja.Helpers.Geo;
 using GeoTagNinja.Helpers.UI;
 using GeoTagNinja.Model;
-using GeoTagNinja.View.Forms;
-using Microsoft.WindowsAPICodePack.Taskbar;
 using System;
 using System.Collections.Generic;
 using System.Data;
@@ -15,8 +14,6 @@ using System.IO;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
-using System.Windows.Forms;
-using WinFormsDarkThemerNinja;
 using static GeoTagNinja.Model.SourcesAndAttributes;
 
 namespace GeoTagNinja.Helpers.Exif;
@@ -34,10 +31,7 @@ internal static class WriteSaveToFile
         string exiftoolCmd =
             $" -charset utf8 -charset filename=utf8 -charset photoshop=utf8 -charset exif=utf8 -charset iptc=utf8 -@ {HelperVariables.DoubleQuoteStr}{argsFile}{HelperVariables.DoubleQuoteStr}";
 
-        FrmMainApp frmMainAppInstance = FrmMainApp.Instance;
-
         // if user switches folder in the process of writing this will keep it standard
-        Debug.Assert(condition: frmMainAppInstance != null, message: $"{nameof(frmMainAppInstance)} != null");
 
         File.Delete(path: argsFile);
 
@@ -49,13 +43,13 @@ internal static class WriteSaveToFile
         bool failWriteNothingEnabled = false;
         bool queueWasEmpty = true;
 
-        FrmMainApp.TaskbarManagerInstance.SetProgressState(state: TaskbarProgressBarState.Indeterminate);
+        UiServices.SetTaskbarProgress(state: UiTaskbarProgress.Indeterminate);
         string exifArgsForOriginalFile = "";
         string exifArgsForSidecar = "";
 
         foreach (string GUID in distinctGUIDs)
         {
-            DirectoryElement dirElemFileToModify = FrmMainApp.DirectoryElements.FindElementByItemGUID(GUID: GUID);
+            DirectoryElement dirElemFileToModify = HelperVariables.DirectoryElements.FindElementByItemGUID(GUID: GUID);
             Log.Trace(message: dirElemFileToModify.FileNameWithPath);
 
             if (dirElemFileToModify != null)
@@ -537,12 +531,12 @@ internal static class WriteSaveToFile
                     {
                         failWriteNothingEnabled = true;
                         Log.Info(message: "Both file-writes disabled. Nothing Written.");
-                        Themer.ShowMessageBox(
+                        UiServices.ShowMessageBox(
                             message: HelperControlAndMessageBoxHandling.ReturnControlText(
                                 controlName: "mbx_Helper_WarningNoWriteSettingEnabled",
                                 fakeControlType: HelperControlAndMessageBoxHandling.FakeControlTypes.MessageBox),
-                            icon: MessageBoxIcon.Warning,
-                            buttons: MessageBoxButtons.OK);
+                            icon: UiMessageIcon.Warning,
+                            buttons: UiMessageButtons.OK);
                     }
                 }
             }
@@ -555,7 +549,6 @@ internal static class WriteSaveToFile
             ///////////////
 
             await ExifToolOperator.RunExifTool(exiftoolCmd: exiftoolCmd,
-                                                         frmMainAppInstance: frmMainAppInstance,
                                                          initiator: ExifToolInititators.ExifWriteExifToFile,
                                                          processOriginalFile: processOriginalFile,
                                                          writeXmpSideCar: writeXMPSideCar
@@ -564,27 +557,27 @@ internal static class WriteSaveToFile
         else if (!queueWasEmpty)
         {
             Log.Info(message: "Both file-writes disabled. Nothing Written.");
-            Themer.ShowMessageBox(
+            UiServices.ShowMessageBox(
                 message: HelperControlAndMessageBoxHandling.ReturnControlText(
                     controlName: "mbx_Helper_WarningNoWriteSettingEnabled",
                     fakeControlType: HelperControlAndMessageBoxHandling.FakeControlTypes.MessageBox),
-                icon: MessageBoxIcon.Warning,
-                buttons: MessageBoxButtons.OK);
+                icon: UiMessageIcon.Warning,
+                buttons: UiMessageButtons.OK);
         }
         else
         {
             Log.Info(message: "Queue was empty. Nothing Written.");
-            Themer.ShowMessageBox(
+            UiServices.ShowMessageBox(
                 message: HelperControlAndMessageBoxHandling.ReturnControlText(
                     controlName: "mbx_Helper_WarningNothingInWriteQueue",
                     fakeControlType: HelperControlAndMessageBoxHandling.FakeControlTypes.MessageBox),
-                icon: MessageBoxIcon.Warning,
-                buttons: MessageBoxButtons.OK);
+                icon: UiMessageIcon.Warning,
+                buttons: UiMessageButtons.OK);
         }
 
         ///////////////
-        FrmMainApp.TaskbarManagerInstance.SetProgressState(state: TaskbarProgressBarState.NoProgress);
-        FrmMainApp.HandlerUpdateLabelText(label: frmMainAppInstance.lbl_ParseProgress, text: $"{HelperControlAndMessageBoxHandling.ReturnControlText("Generic_Ready", HelperControlAndMessageBoxHandling.FakeControlTypes.Generic)}.");
+        UiServices.SetTaskbarProgress(state: UiTaskbarProgress.NoProgress);
+        UiServices.SetStatusText(text: $"{HelperControlAndMessageBoxHandling.ReturnControlText("Generic_Ready", HelperControlAndMessageBoxHandling.FakeControlTypes.Generic)}.");
         FileLocking.FilesAreBeingSaved = false;
     }
 

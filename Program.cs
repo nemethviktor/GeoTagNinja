@@ -17,7 +17,12 @@ internal static class Program
     private const string PipeErrorAccessDenied = "Access Denied: ";
     private const string PipeErrorCouldNotConnect = "Could not connect to other GTN instance";
     private const string PipeErrorUnexpectedError = "Unexpected Error: ";
-    public static string CollectionFileLocation;
+    public static string CollectionFileLocation
+    {
+        get => GeoTagNinja.Helpers.HelperVariables.CollectionFileLocation;
+        set => GeoTagNinja.Helpers.HelperVariables.CollectionFileLocation = value;
+    }
+
     public static string FolderToLaunchIn;
     public static bool CollectionModeEnabled;
 
@@ -41,7 +46,7 @@ internal static class Program
     private static void Main(string[] args)
     {
         GeoTagNinja.Helpers.Data.ApplicationSettings.ReloadSettingTables = () => _ = GeoTagNinja.Helpers.Startup.AppStartup.AppStartupReadSQLiteTables();
-        GeoTagNinja.Helpers.UI.UiServices.Dialogs = new GeoTagNinja.Helpers.UI.WinFormsDialogs();
+        GeoTagNinja.Helpers.UI.UiServices.Host = new GeoTagNinja.Helpers.UI.WinFormsDialogs();
         Application.EnableVisualStyles();
         Application.SetCompatibleTextRenderingDefault(defaultValue: false);
 

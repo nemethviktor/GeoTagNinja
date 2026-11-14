@@ -170,9 +170,6 @@
     <Compile Include="Helpers\UI\WinFormsDialogs.cs" />
     <Compile Include="Helpers\Data\ThumbnailCache.cs" />
     <Compile Include="Helpers\Data\MenuSettings.cs" />
-    <Compile Include="Helpers\Exif\ReadTrackFilePath.cs" />
-    <Compile Include="Helpers\Exif\WriteTrackDataToTrackFile.cs" />
-    <Compile Include="Helpers\Exif\WriteTrackDataToSideCar.cs" />
     <Compile Include="Helpers\UI\ControlTraversal.cs" />
     <Compile Include="Helpers\UI\FormPositioning.cs" />
     <Compile Include="Helpers\UI\DarkDisabledText.cs" />
@@ -180,7 +177,6 @@
     <Compile Include="View\Controls\ThumbnailLayout.cs" />
     <Compile Include="View\Controls\ThumbnailView.cs" />
     <Compile Include="View\Controls\FolderIcons.cs" />
-    <Compile Include="Helpers\FileSystem\FileEnumeration.cs" />
     <Compile Include="Helpers\Update\AutoUpdaterCallbacks.cs" />
     <Compile Include="Helpers\Update\ChangelogNotes.cs" />
     <Compile Include="Helpers\Startup\AppStartup.cs" />
@@ -219,16 +215,12 @@
     <Compile Include="Helpers\Data\Favourites.cs" />
     <Compile Include="Helpers\Data\SessionDataTables.cs" />
     <Compile Include="Helpers\Exif\DataPointInteractions.cs" />
-    <Compile Include="Helpers\Exif\ExifToolOperator.cs" />
     <Compile Include="Helpers\Exif\ReadExifData.cs" />
     <Compile Include="Helpers\Exif\ReadGetImagePreviews.cs" />
     <Compile Include="Helpers\Exif\ThumbnailGenerator.cs" />
     <Compile Include="Helpers\Exif\RawPreview.cs" />
     <Compile Include="Helpers\Exif\ThumbnailProvider.cs" />
     <Compile Include="Helpers\Exif\ReadTrackFile.cs" />
-    <Compile Include="Helpers\Exif\WriteSaveToFile.cs" />
-    <Compile Include="Helpers\FileSystem\Operators.cs" />
-    <Compile Include="Model\DirectoryElementCollection.cs" />
     <Compile Include="View\Forms\FrmColumnSelection.cs">
       <SubType>Form</SubType>
     </Compile>

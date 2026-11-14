@@ -1,6 +1,5 @@
 ﻿using NLog;
 using GeoTagNinja.Helpers.UI;
-using GeoTagNinja.View.Forms;
 using System;
 using System.Collections.Generic;
 using System.Diagnostics;
@@ -9,8 +8,6 @@ using System.IO;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
-using System.Windows.Forms;
-using WinFormsDarkThemerNinja;
 
 namespace GeoTagNinja.Helpers.Exif;
 
@@ -44,10 +41,7 @@ internal class ReadTrackFilePath
         string exiftoolCmd =
             $" -charset utf8 -charset filename=utf8 -charset photoshop=utf8 -charset exif=utf8 -charset iptc=utf8 -@ {HelperVariables.DoubleQuoteStr}{argsFile}{HelperVariables.DoubleQuoteStr}";
 
-        FrmMainApp frmMainAppInstance = FrmMainApp.Instance;
-
         // if user switches folder in the process of writing this will keep it standard
-        Debug.Assert(condition: frmMainAppInstance != null, message: $"{nameof(frmMainAppInstance)} != null");
         string exifArgsForOriginalFile = "";
 
         // as per https://exiftool.org/forum/index.php?topic=16184.msg86958#msg86958 the logic needs to be
@@ -67,7 +61,6 @@ internal class ReadTrackFilePath
         File.WriteAllText(path: argsFile, contents: exifArgsForOriginalFile, encoding: Encoding.UTF8);
         ///////////////
         await ExifToolOperator.RunExifTool(exiftoolCmd: exiftoolCmd,
-            frmMainAppInstance: null,
             initiator:
             ExifToolInititators
                                              .ExifGetTrackSyncDataReadTrackPath);
@@ -189,12 +182,12 @@ internal class ReadTrackFilePath
 
         static void ShowTrackImportFailedMessageBox()
         {
-            Themer.ShowMessageBox(
+            UiServices.ShowMessageBox(
                 message: HelperControlAndMessageBoxHandling.ReturnControlText(
                     controlName: "mbx_FrmImportExportGpx_TrackContainsNoData",
                     fakeControlType: HelperControlAndMessageBoxHandling.FakeControlTypes.MessageBox),
-                icon: MessageBoxIcon.Error,
-                buttons: MessageBoxButtons.OK);
+                icon: UiMessageIcon.Error,
+                buttons: UiMessageButtons.OK);
         }
     }
 

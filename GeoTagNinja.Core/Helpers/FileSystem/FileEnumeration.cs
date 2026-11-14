@@ -1,9 +1,9 @@
-﻿using System;
+﻿using GeoTagNinja.Helpers.UI;
+using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Threading;
-using System.Windows.Forms;
 
 namespace GeoTagNinja.Helpers.FileSystem;
 
@@ -83,7 +83,7 @@ internal static class FileEnumeration
             // Keep the UI breathing during a long scan without pumping messages for every single file.
             if (counter % 10 == 0)
             {
-                Application.DoEvents();
+                UiServices.ProcessUiEvents();
             }
 
             yield return new FileInfo(fileName: file);

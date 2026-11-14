@@ -2,8 +2,6 @@
 using GeoTagNinja.Helpers.Data;
 using GeoTagNinja.Helpers.FileSystem;
 using GeoTagNinja.Helpers.UI;
-using GeoTagNinja.View.Forms;
-using Microsoft.WindowsAPICodePack.Taskbar;
 using NLog;
 using System;
 using System.Collections.Generic;
@@ -11,8 +9,6 @@ using System.IO;
 using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
-using System.Windows.Forms;
-using WinFormsDarkThemerNinja;
 using static System.Environment;
 
 namespace GeoTagNinja.Model;
@@ -22,7 +18,6 @@ public class DirectoryElementCollection : List<DirectoryElement>
     private static readonly Logger Log = LogManager.GetCurrentClassLogger();
 
     private ExifTool _ExifTool;
-    private FrmPleaseWaitBox _frmPleaseWaitBoxInstance;
 
     private readonly object _hydrationLock = new();
     private IReadOnlyList<DirectoryElement> _hydrationPriority = [];
@@ -292,7 +287,7 @@ public class DirectoryElementCollection : List<DirectoryElement>
                     tmpStrParent != SpecialFolder.MyComputer.ToString())
                 {
                     DirectoryElement de = new(
-                        itemNameWithoutPath: FrmMainApp.ParentFolder,
+                        itemNameWithoutPath: HelperVariables.ParentFolder,
                         type: DirectoryElement.ElementType.ParentDirectory,
                         fileNameWithPath: tmpStrParent);
 
@@ -305,12 +300,12 @@ public class DirectoryElementCollection : List<DirectoryElement>
             catch (Exception ex)
             {
                 Log.Error(message: $"Could not add parent. Error: {ex.Message}");
-                Themer.ShowMessageBox(
+                UiServices.ShowMessageBox(
                     message: HelperControlAndMessageBoxHandling.ReturnControlText(
                         controlName: "mbx_DirectoryElementCollection_ErrorParsing",
                         fakeControlType: HelperControlAndMessageBoxHandling.FakeControlTypes.MessageBox),
-                    icon: MessageBoxIcon.Error,
-                    buttons: MessageBoxButtons.OK);
+                    icon: UiMessageIcon.Error,
+                    buttons: UiMessageButtons.OK);
             }
 
             #endregion
@@ -367,12 +362,12 @@ public class DirectoryElementCollection : List<DirectoryElement>
             catch (Exception ex)
             {
                 Log.Error(message: $"Error: {ex.Message}");
-                Themer.ShowMessageBox(
+                UiServices.ShowMessageBox(
                     message: HelperControlAndMessageBoxHandling.ReturnControlText(
                         controlName: "mbx_DirectoryElementCollection_ErrorParsing",
                         fakeControlType: HelperControlAndMessageBoxHandling.FakeControlTypes.MessageBox),
-                    icon: MessageBoxIcon.Error,
-                    buttons: MessageBoxButtons.OK);
+                    icon: UiMessageIcon.Error,
+                    buttons: UiMessageButtons.OK);
             }
 
             Log.Trace(message: "Listing Folders - OK");
@@ -405,7 +400,7 @@ public class DirectoryElementCollection : List<DirectoryElement>
         if (collectionModeEnabled)
         {
             List<FileInfo> filesInCollection = [];
-            foreach (string collectItemWithPath in File.ReadLines(path: Program.CollectionFileLocation))
+            foreach (string collectItemWithPath in File.ReadLines(path: HelperVariables.CollectionFileLocation))
             {
                 if (File.Exists(path: collectItemWithPath))
                 {
@@ -438,10 +433,7 @@ public class DirectoryElementCollection : List<DirectoryElement>
         if (!collectionModeEnabled ||
             (collectionModeEnabled && filesThatExistWithinCollection == 0))
         {
-            _frmPleaseWaitBoxInstance =
-                (FrmPleaseWaitBox)Application.OpenForms[name: "FrmPleaseWaitBox"];
-
-            _frmPleaseWaitBoxInstance?.UpdateControlsVisibility(stage: FrmPleaseWaitBox.ActionStages.SCANNING);
+            UiServices.SetWaitStage(stage: UiWaitStage.Scanning);
 
             try
             {
@@ -565,14 +557,14 @@ public class DirectoryElementCollection : List<DirectoryElement>
                 overlappingXmpFileStr += fi.FullName + NewLine;
             }
 
-            Themer.ShowMessageBox(
+            UiServices.ShowMessageBox(
                 message: HelperControlAndMessageBoxHandling.ReturnControlText(
                     controlName: "mbx_FrmMainApp_WarningMultipleImageFilesForXMP",
                     fakeControlType: HelperControlAndMessageBoxHandling.FakeControlTypes.MessageBox
                     ) +
                     Environment.NewLine + $"{overlappingXmpFileStr}",
-                icon: MessageBoxIcon.Warning,
-                buttons: MessageBoxButtons.OK);
+                icon: UiMessageIcon.Warning,
+                buttons: UiMessageButtons.OK);
         }
 
         // ******************************
@@ -581,8 +573,7 @@ public class DirectoryElementCollection : List<DirectoryElement>
         int fileCount = 0;
         _ExifTool ??= new ExifTool();
 
-        _frmPleaseWaitBoxInstance?.UpdateControlsVisibility(stage: FrmPleaseWaitBox.ActionStages
-                                                                          .PARSING);
+        UiServices.SetWaitStage(stage: UiWaitStage.Parsing);
         await Task.Run(action: () =>
         {
             ParseImagesToDirectoryElements(updateProgressHandler: updateProgressHandler,
@@ -598,7 +589,7 @@ public class DirectoryElementCollection : List<DirectoryElement>
         // on a thread-pool thread regardless (it's the Task.Run delegate), and parallelizes its own checksum work
         // internally, so nothing is lost by resuming the continuation here on the UI thread.
 
-        FrmMainApp.TaskbarManagerInstance.SetProgressState(state: TaskbarProgressBarState.NoProgress);
+        UiServices.SetTaskbarProgress(state: UiTaskbarProgress.NoProgress);
 
         Log.Info(message: "Files: Extracting File Data - OK");
 

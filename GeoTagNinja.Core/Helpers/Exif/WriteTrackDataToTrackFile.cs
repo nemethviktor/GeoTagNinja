@@ -1,6 +1,5 @@
 ﻿using NLog;
 using GeoTagNinja.Helpers.UI;
-using GeoTagNinja.View.Forms;
 using System;
 using System.Collections.Generic;
 using System.Diagnostics;
@@ -8,8 +7,6 @@ using System.IO;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
-using System.Windows.Forms;
-using WinFormsDarkThemerNinja;
 
 namespace GeoTagNinja.Helpers.Exif;
 
@@ -51,10 +48,7 @@ internal class WriteTrackDataToTrackFile
             string exiftoolCmd =
                 $" -charset utf8 -charset filename=utf8 -charset photoshop=utf8 -charset exif=utf8 -charset iptc=utf8 -W+ {HelperVariables.DoubleQuoteStr}{outFilePath}{HelperVariables.DoubleQuoteStr}  -@ {HelperVariables.DoubleQuoteStr}{argsFile}{HelperVariables.DoubleQuoteStr}";
 
-            FrmMainApp frmMainAppInstance = FrmMainApp.Instance;
-
             // if user switches folder in the process of writing this will keep it standard
-            Debug.Assert(condition: frmMainAppInstance != null, message: $"{nameof(frmMainAppInstance)} != null");
 
             // run file as exiftool -@ args.args -W+ out.gpx
             // as per https://exiftool.org/forum/index.php?topic=16222.0 the logic needs to be
@@ -83,7 +77,6 @@ internal class WriteTrackDataToTrackFile
             File.WriteAllText(path: argsFile, contents: exifArgsForOriginalFile, encoding: Encoding.UTF8);
             ///////////////
             await ExifToolOperator.RunExifTool(exiftoolCmd: exiftoolCmd,
-                frmMainAppInstance: null,
                 initiator:
                 ExifToolInititators
                                                  .ExifGetTrackSyncDataWriteTrackPath);
@@ -96,21 +89,21 @@ internal class WriteTrackDataToTrackFile
 
             ///////////////
 
-            Themer.ShowMessageBox(
+            UiServices.ShowMessageBox(
                 message: HelperControlAndMessageBoxHandling.ReturnControlText(
                     controlName: "mbx_FrmImportExportGpx_ExportCompleted",
                     fakeControlType: HelperControlAndMessageBoxHandling.FakeControlTypes.MessageBox),
-                icon: MessageBoxIcon.Information,
-                buttons: MessageBoxButtons.OK);
+                icon: UiMessageIcon.Information,
+                buttons: UiMessageButtons.OK);
         }
         else
         {
-            Themer.ShowMessageBox(
+            UiServices.ShowMessageBox(
                 message: HelperControlAndMessageBoxHandling.ReturnControlText(
                     controlName: "mbx_FrmImportExportGpx_FileOrFolderDoesntExist",
                     fakeControlType: HelperControlAndMessageBoxHandling.FakeControlTypes.MessageBox),
-                icon: MessageBoxIcon.Error,
-                buttons: MessageBoxButtons.OK);
+                icon: UiMessageIcon.Error,
+                buttons: UiMessageButtons.OK);
         }
     }
 }

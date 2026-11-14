@@ -54,7 +54,7 @@ public partial class FrmMainApp : Form
 
     internal const string DoubleQuote = "\"";
 
-    internal const string ParentFolder = "..";
+    internal const string ParentFolder = HelperVariables.ParentFolder;
     // The sentinels live in Model/NullEquivalents; these forward to them so this form's own code reads as before.
     internal const string NullStringEquivalentGeneric = NullEquivalents.StringGeneric;
     internal const string NullStringEquivalentBlank = NullEquivalents.StringBlank;
@@ -94,7 +94,7 @@ public partial class FrmMainApp : Form
     /// <summary>
     ///     Returns the list of elements in the currently opened directory.
     /// </summary>
-    public static DirectoryElementCollection DirectoryElements { get; } = [];
+    public static DirectoryElementCollection DirectoryElements => HelperVariables.DirectoryElements;
 
     #endregion
 

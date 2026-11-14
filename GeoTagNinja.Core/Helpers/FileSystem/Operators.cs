@@ -2,14 +2,11 @@
 using GeoTagNinja.Helpers.Exif;
 using GeoTagNinja.Helpers.UI;
 using GeoTagNinja.Model;
-using GeoTagNinja.View.Forms;
 using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
-using System.Windows.Forms;
-using WinFormsDarkThemerNinja;
 using static System.Environment;
 
 namespace GeoTagNinja.Helpers.FileSystem;
@@ -33,7 +30,7 @@ internal static class Operators
 
         // check if there's anything in the write-Q
         bool dataToWrite = false;
-        foreach (DirectoryElement dirElemFileToModify in FrmMainApp.DirectoryElements)
+        foreach (DirectoryElement dirElemFileToModify in HelperVariables.DirectoryElements)
         {
             {
                 foreach (SourcesAndAttributes.ElementAttribute attribute in (SourcesAndAttributes.ElementAttribute[])
@@ -65,28 +62,28 @@ internal static class Operators
                 HelperVariables.AppIsClosingAndWriteFileQuestionHasBeenAsked = true;
             }
 
-            DialogResult dialogResult = Themer.ShowMessageBoxWithResult(
+            UiDialogResult dialogResult = UiServices.ShowMessageBoxWithResult(
                 message: HelperControlAndMessageBoxHandling.ReturnControlText(
                     controlName: "mbx_Helper_QuestionFileQIsNotEmpty",
                     fakeControlType: HelperControlAndMessageBoxHandling.FakeControlTypes.MessageBox),
-                icon: MessageBoxIcon.Question,
-                buttons: MessageBoxButtons.YesNoCancel);
+                icon: UiMessageIcon.Question,
+                buttons: UiMessageButtons.YesNoCancel);
 
-            if (dialogResult == DialogResult.Yes)
+            if (dialogResult == UiDialogResult.Yes)
             {
                 while (FileLocking.FileListBeingUpdated || FileLocking.FilesAreBeingSaved)
                 {
                     await Task.Delay(millisecondsDelay: 10);
                 }
 
-                HashSet<string> distinctGUIDs = FrmMainApp.DirectoryElements.FindDirtyElements();
+                HashSet<string> distinctGUIDs = HelperVariables.DirectoryElements.FindDirtyElements();
                 await WriteSaveToFile.ExifWriteExifToFile(distinctGUIDs: distinctGUIDs);
 
                 HelperVariables.OperationChangeFolderIsOkay = true;
             }
-            else if (dialogResult == DialogResult.No)
+            else if (dialogResult == UiDialogResult.No)
             {
-                foreach (DirectoryElement dirElemFileToModify in FrmMainApp.DirectoryElements)
+                foreach (DirectoryElement dirElemFileToModify in HelperVariables.DirectoryElements)
                 {
                     {
                         foreach (SourcesAndAttributes.ElementAttribute attribute in (

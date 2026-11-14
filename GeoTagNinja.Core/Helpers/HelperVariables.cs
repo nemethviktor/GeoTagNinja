@@ -44,6 +44,21 @@ internal static class HelperVariables
     /// </summary>
     internal static bool FlatMode { get; set; }
 
+    /// <summary>
+    ///     The list entry that stands for the folder above the open one.
+    /// </summary>
+    internal const string ParentFolder = "..";
+
+    /// <summary>
+    ///     The collection (.txt) file the app was started with, when it was started in collection mode.
+    /// </summary>
+    internal static string CollectionFileLocation { get; set; }
+
+    /// <summary>
+    ///     The elements of the currently opened directory.
+    /// </summary>
+    public static DirectoryElementCollection DirectoryElements { get; } = [];
+
     internal const int exifOrientationID = 0x112; //274
     internal const double MetreToFeet = 3.28084;
     internal const string DoubleQuoteStr = "\"";

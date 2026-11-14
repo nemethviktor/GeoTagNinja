@@ -1,13 +1,16 @@
 ﻿using GeoTagNinja.Helpers.Update;
+using GeoTagNinja.Model;
+using GeoTagNinja.View.Forms;
+using Microsoft.WindowsAPICodePack.Taskbar;
 using System.Windows.Forms;
 
 namespace GeoTagNinja.Helpers.UI;
 
 /// <summary>
-///     The WinForms host's answer to <see cref="IUserDialogs" />: the themed message box of <see cref="ThemeHelper" />.
+///     The WinForms host's answer to <see cref="IUiHost" />: the themed message box of <see cref="ThemeHelper" />.
 ///     The Core enums share their numeric values with the WinForms ones, hence the casts.
 /// </summary>
-internal sealed class WinFormsDialogs : IUserDialogs
+internal sealed class WinFormsDialogs : IUiHost
 {
     public UiDialogResult ShowMessage(string message,
                                       string caption,
@@ -25,5 +28,50 @@ internal sealed class WinFormsDialogs : IUserDialogs
                                          int currentBuild)
     {
         ChangelogNotes.ShowAfterUpdate(lastRunBuild: lastRunBuild, currentBuild: currentBuild);
+    }
+
+    public void SetWaitStage(UiWaitStage stage)
+    {
+        FrmPleaseWaitBox waitBox = (FrmPleaseWaitBox)Application.OpenForms[name: "FrmPleaseWaitBox"];
+        waitBox?.UpdateControlsVisibility(stage: stage == UiWaitStage.Scanning
+            ? FrmPleaseWaitBox.ActionStages.SCANNING
+            : FrmPleaseWaitBox.ActionStages.PARSING);
+    }
+
+    public void SetTaskbarProgress(UiTaskbarProgress state)
+    {
+        FrmMainApp.TaskbarManagerInstance.SetProgressState(state: state switch
+        {
+            UiTaskbarProgress.Indeterminate => TaskbarProgressBarState.Indeterminate,
+            UiTaskbarProgress.Normal => TaskbarProgressBarState.Normal,
+            UiTaskbarProgress.Error => TaskbarProgressBarState.Error,
+            UiTaskbarProgress.Paused => TaskbarProgressBarState.Paused,
+            _ => TaskbarProgressBarState.NoProgress
+        });
+    }
+
+    public void ProcessUiEvents()
+    {
+        Application.DoEvents();
+    }
+
+    public void SetStatusText(string text)
+    {
+        FrmMainApp main = FrmMainApp.Instance;
+        if (main != null)
+        {
+            FrmMainApp.HandlerUpdateLabelText(label: main.lbl_ParseProgress, text: text);
+        }
+    }
+
+    public void ScrollFileListTo(string itemText)
+    {
+        FrmMainApp.Instance?.lvw_FileList.ScrollToDataPoint(itemText: itemText);
+    }
+
+    public void MarkFileListItemClean(DirectoryElement directoryElement)
+    {
+        FrmMainApp.Instance?.lvw_FileList.UpdateDirectoryElementItemColour(
+            directoryElement: directoryElement, color: System.Drawing.Color.Black);
     }
 }

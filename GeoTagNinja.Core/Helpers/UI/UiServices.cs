@@ -1,4 +1,5 @@
-﻿using NLog;
+﻿using GeoTagNinja.Model;
+using NLog;
 
 namespace GeoTagNinja.Helpers.UI;
 
@@ -46,10 +47,31 @@ internal enum UiDialogResult
 }
 
 /// <summary>
-///     What UI-free code needs from whichever UI hosts it. Each app registers its own implementation at start-up
-///     through <see cref="UiServices.Dialogs" />.
+///     Which stage the "please wait" box shows while a folder is read.
 /// </summary>
-internal interface IUserDialogs
+internal enum UiWaitStage
+{
+    Scanning,
+    Parsing
+}
+
+/// <summary>
+///     State of the taskbar button's progress indicator.
+/// </summary>
+internal enum UiTaskbarProgress
+{
+    NoProgress,
+    Indeterminate,
+    Normal,
+    Error,
+    Paused
+}
+
+/// <summary>
+///     What UI-free code needs from whichever UI hosts it. Each app registers its own implementation at start-up
+///     through <see cref="UiServices.Host" />.
+/// </summary>
+internal interface IUiHost
 {
     /// <summary>
     ///     Shows a message box and waits. Must be safe to call from worker threads.
@@ -64,6 +86,36 @@ internal interface IUserDialogs
     /// </summary>
     void ShowChangelogAfterUpdate(int lastRunBuild,
                                   int currentBuild);
+
+    /// <summary>
+    ///     Tells the "please wait" box (if one is open) which stage the folder read has reached.
+    /// </summary>
+    void SetWaitStage(UiWaitStage stage);
+
+    /// <summary>
+    ///     Sets the taskbar button's progress indicator. Must be called on the UI thread.
+    /// </summary>
+    void SetTaskbarProgress(UiTaskbarProgress state);
+
+    /// <summary>
+    ///     Lets the UI repaint and answer input during a long loop on the UI thread (WinForms: Application.DoEvents).
+    /// </summary>
+    void ProcessUiEvents();
+
+    /// <summary>
+    ///     Sets the status text next to the progress bar. Safe to call from any thread.
+    /// </summary>
+    void SetStatusText(string text);
+
+    /// <summary>
+    ///     Scrolls the file list so the entry with this file name is visible.
+    /// </summary>
+    void ScrollFileListTo(string itemText);
+
+    /// <summary>
+    ///     Shows a file's list entry in the normal colour again (its pending edits have been written).
+    /// </summary>
+    void MarkFileListItemClean(DirectoryElement directoryElement);
 }
 
 /// <summary>
@@ -78,16 +130,16 @@ internal static class UiServices
     ///     logged and the answer is <see cref="UiDialogResult.OK" /> (or <see cref="UiDialogResult.None" /> when the box
     ///     offers more than OK).
     /// </summary>
-    internal static IUserDialogs Dialogs { get; set; }
+    internal static IUiHost Host { get; set; }
 
     internal static UiDialogResult ShowMessageBoxWithResult(string message,
                                                             string caption = null,
                                                             UiMessageButtons buttons = UiMessageButtons.OK,
                                                             UiMessageIcon icon = UiMessageIcon.None)
     {
-        if (Dialogs != null)
+        if (Host != null)
         {
-            return Dialogs.ShowMessage(message: message, caption: caption, buttons: buttons, icon: icon);
+            return Host.ShowMessage(message: message, caption: caption, buttons: buttons, icon: icon);
         }
 
         Log.Warn(message: $"No dialog host registered. Message not shown: {message}");
@@ -107,6 +159,36 @@ internal static class UiServices
     internal static void ShowChangelogAfterUpdate(int lastRunBuild,
                                                   int currentBuild)
     {
-        Dialogs?.ShowChangelogAfterUpdate(lastRunBuild: lastRunBuild, currentBuild: currentBuild);
+        Host?.ShowChangelogAfterUpdate(lastRunBuild: lastRunBuild, currentBuild: currentBuild);
+    }
+
+    internal static void SetWaitStage(UiWaitStage stage)
+    {
+        Host?.SetWaitStage(stage: stage);
+    }
+
+    internal static void SetTaskbarProgress(UiTaskbarProgress state)
+    {
+        Host?.SetTaskbarProgress(state: state);
+    }
+
+    internal static void ProcessUiEvents()
+    {
+        Host?.ProcessUiEvents();
+    }
+
+    internal static void SetStatusText(string text)
+    {
+        Host?.SetStatusText(text: text);
+    }
+
+    internal static void ScrollFileListTo(string itemText)
+    {
+        Host?.ScrollFileListTo(itemText: itemText);
+    }
+
+    internal static void MarkFileListItemClean(DirectoryElement directoryElement)
+    {
+        Host?.MarkFileListItemClean(directoryElement: directoryElement);
     }
 }
