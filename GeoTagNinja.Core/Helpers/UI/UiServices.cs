@@ -1,5 +1,8 @@
 ﻿using GeoTagNinja.Model;
 using NLog;
+using System.Collections.Generic;
+using System.Data;
+using System.Threading.Tasks;
 
 namespace GeoTagNinja.Helpers.UI;
 
@@ -116,6 +119,39 @@ internal interface IUiHost
     ///     Shows a file's list entry in the normal colour again (its pending edits have been written).
     /// </summary>
     void MarkFileListItemClean(DirectoryElement directoryElement);
+
+    /// <summary>
+    ///     GeoNames returned several places for a coordinate: lets the user choose one (the host may first show the file
+    ///     in question). Blocks until chosen.
+    /// </summary>
+    /// <returns>Zero-based index of the chosen row; zero when nothing could be asked.</returns>
+    int PickToponomyRow(DataTable choices,
+                        string fileNameWithoutPath);
+
+    /// <summary>
+    ///     The files currently selected in the file list.
+    /// </summary>
+    IReadOnlyList<DirectoryElement> GetSelectedDirectoryElements();
+
+    /// <summary>
+    ///     Shows a file's list entry in the "has pending changes / problem" colour.
+    /// </summary>
+    void MarkFileListItemChanged(DirectoryElement directoryElement);
+
+    /// <summary>
+    ///     Re-draws a file's list row from its Stage3ReadyToWrite values.
+    /// </summary>
+    Task RefreshFileListRowAsync(DirectoryElement directoryElement);
+
+    /// <summary>
+    ///     Asks the map to re-read and redraw (for example after track overlay data changed).
+    /// </summary>
+    void RequestMapRefresh();
+
+    /// <summary>
+    ///     Shows a block of text (a report) in a dialog and waits for it to be closed.
+    /// </summary>
+    void ShowReport(string text);
 }
 
 /// <summary>
@@ -190,5 +226,36 @@ internal static class UiServices
     internal static void MarkFileListItemClean(DirectoryElement directoryElement)
     {
         Host?.MarkFileListItemClean(directoryElement: directoryElement);
+    }
+
+    internal static int PickToponomyRow(DataTable choices,
+                                        string fileNameWithoutPath)
+    {
+        return Host?.PickToponomyRow(choices: choices, fileNameWithoutPath: fileNameWithoutPath) ?? 0;
+    }
+
+    internal static IReadOnlyList<DirectoryElement> GetSelectedDirectoryElements()
+    {
+        return Host?.GetSelectedDirectoryElements() ?? [];
+    }
+
+    internal static void MarkFileListItemChanged(DirectoryElement directoryElement)
+    {
+        Host?.MarkFileListItemChanged(directoryElement: directoryElement);
+    }
+
+    internal static Task RefreshFileListRowAsync(DirectoryElement directoryElement)
+    {
+        return Host?.RefreshFileListRowAsync(directoryElement: directoryElement) ?? Task.CompletedTask;
+    }
+
+    internal static void RequestMapRefresh()
+    {
+        Host?.RequestMapRefresh();
+    }
+
+    internal static void ShowReport(string text)
+    {
+        Host?.ShowReport(text: text);
     }
 }

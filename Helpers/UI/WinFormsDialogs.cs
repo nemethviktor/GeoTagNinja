@@ -2,6 +2,11 @@
 using GeoTagNinja.Model;
 using GeoTagNinja.View.Forms;
 using Microsoft.WindowsAPICodePack.Taskbar;
+using GeoTagNinja.View.FileList;
+using System.Collections.Generic;
+using System.Data;
+using System.Linq;
+using System.Threading.Tasks;
 using System.Windows.Forms;
 
 namespace GeoTagNinja.Helpers.UI;
@@ -73,5 +78,43 @@ internal sealed class WinFormsDialogs : IUiHost
     {
         FrmMainApp.Instance?.lvw_FileList.UpdateDirectoryElementItemColour(
             directoryElement: directoryElement, color: System.Drawing.Color.Black);
+    }
+
+    public int PickToponomyRow(DataTable choices,
+                               string fileNameWithoutPath)
+    {
+        return ToponomyPicker.Pick(dtSQLToponomyData: choices, fileNameWithoutPath: fileNameWithoutPath);
+    }
+
+    public IReadOnlyList<DirectoryElement> GetSelectedDirectoryElements()
+    {
+        FrmMainApp main = FrmMainApp.Instance;
+        return main == null
+            ? []
+            : main.lvw_FileList.SelectedItems.Cast<ListViewItem>()
+                  .Select(selector: item => item.Tag as DirectoryElement)
+                  .Where(predicate: element => element != null)
+                  .ToList();
+    }
+
+    public void MarkFileListItemChanged(DirectoryElement directoryElement)
+    {
+        FrmMainApp.Instance?.lvw_FileList.UpdateDirectoryElementItemColour(
+            directoryElement: directoryElement, color: ThemeHelper.ErrorColour);
+    }
+
+    public Task RefreshFileListRowAsync(DirectoryElement directoryElement)
+    {
+        return FileListViewReadWrite.ListViewUpdateRowFromDEStage3ReadyToWrite(dirElemFileToModify: directoryElement);
+    }
+
+    public void RequestMapRefresh()
+    {
+        FrmMainApp.Instance?.Request_Map_NavigateGo();
+    }
+
+    public void ShowReport(string text)
+    {
+        ReportBox.Show(text: text);
     }
 }

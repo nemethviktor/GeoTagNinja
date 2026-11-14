@@ -1,7 +1,7 @@
-﻿using NLog;
+﻿using GeoTagNinja.Helpers.UI;
+using NLog;
 using GeoTagNinja.Helpers.FileSystem;
 using GeoTagNinja.Helpers.Localisation;
-using GeoTagNinja.View.Forms;
 using System.Collections.Generic;
 using System.Data;
 using System.Linq;
@@ -29,28 +29,28 @@ internal static class SessionDataTables
         Log.Info(message: "Starting");
 
         // DTLanguageMapping
-        FrmMainApp.DTLanguageMapping = new DataTable();
-        FrmMainApp.DTLanguageMapping.Clear();
+        HelperVariables.DTLanguageMapping = new DataTable();
+        HelperVariables.DTLanguageMapping.Clear();
         //  "ab", "аҧсуа бызшәа [Abkhaz]" 
-        _ = FrmMainApp.DTLanguageMapping.Columns.Add(columnName: "languageCode");
-        _ = FrmMainApp.DTLanguageMapping.Columns.Add(columnName: "languageNative");
-        _ = FrmMainApp.DTLanguageMapping.Columns.Add(columnName: "languageEnglish");
+        _ = HelperVariables.DTLanguageMapping.Columns.Add(columnName: "languageCode");
+        _ = HelperVariables.DTLanguageMapping.Columns.Add(columnName: "languageNative");
+        _ = HelperVariables.DTLanguageMapping.Columns.Add(columnName: "languageEnglish");
 
         FillDTLanguageMapping();
 
         // DTToponomySessionData;
-        FrmMainApp.DTToponomySessionData = new DataTable();
-        FrmMainApp.DTToponomySessionData.Clear();
-        _ = FrmMainApp.DTToponomySessionData.Columns.Add(columnName: "lat");
-        _ = FrmMainApp.DTToponomySessionData.Columns.Add(columnName: "lng");
-        _ = FrmMainApp.DTToponomySessionData.Columns.Add(columnName: "AdminName1");
-        _ = FrmMainApp.DTToponomySessionData.Columns.Add(columnName: "AdminName2");
-        _ = FrmMainApp.DTToponomySessionData.Columns.Add(columnName: "AdminName3");
-        _ = FrmMainApp.DTToponomySessionData.Columns.Add(columnName: "AdminName4");
-        _ = FrmMainApp.DTToponomySessionData.Columns.Add(columnName: "ToponymName");
-        _ = FrmMainApp.DTToponomySessionData.Columns.Add(columnName: "CountryCode");
-        _ = FrmMainApp.DTToponomySessionData.Columns.Add(columnName: "GPSAltitude");
-        _ = FrmMainApp.DTToponomySessionData.Columns.Add(columnName: "timezoneId");
+        HelperVariables.DTToponomySessionData = new DataTable();
+        HelperVariables.DTToponomySessionData.Clear();
+        _ = HelperVariables.DTToponomySessionData.Columns.Add(columnName: "lat");
+        _ = HelperVariables.DTToponomySessionData.Columns.Add(columnName: "lng");
+        _ = HelperVariables.DTToponomySessionData.Columns.Add(columnName: "AdminName1");
+        _ = HelperVariables.DTToponomySessionData.Columns.Add(columnName: "AdminName2");
+        _ = HelperVariables.DTToponomySessionData.Columns.Add(columnName: "AdminName3");
+        _ = HelperVariables.DTToponomySessionData.Columns.Add(columnName: "AdminName4");
+        _ = HelperVariables.DTToponomySessionData.Columns.Add(columnName: "ToponymName");
+        _ = HelperVariables.DTToponomySessionData.Columns.Add(columnName: "CountryCode");
+        _ = HelperVariables.DTToponomySessionData.Columns.Add(columnName: "GPSAltitude");
+        _ = HelperVariables.DTToponomySessionData.Columns.Add(columnName: "timezoneId");
         return Task.CompletedTask;
     }
 
@@ -83,17 +83,17 @@ internal static class SessionDataTables
     /// </summary>
     private static void FillDTLanguageMapping()
     {
-        FrmMainApp.DTLanguageMapping.Rows.Clear();
+        HelperVariables.DTLanguageMapping.Rows.Clear();
 
         //{ "lo", "ພາສາ [Lao]" },
         foreach (KeyValuePair<string, string> iso6391Language in LanguageLists.GetISO_639_1_Languages())
         {
-            DataRow dr = FrmMainApp.DTLanguageMapping.NewRow();
+            DataRow dr = HelperVariables.DTLanguageMapping.NewRow();
             dr[columnName: "languageCode"] = iso6391Language.Key;
             dr[columnName: "languageNative"] = iso6391Language.Value.Split('[')[0].Trim();
             dr[columnName: "languageEnglish"] =
                 iso6391Language.Value.Split('[')[1].Trim().Replace(oldValue: "]", newValue: "");
-            FrmMainApp.DTLanguageMapping.Rows.Add(row: dr);
+            HelperVariables.DTLanguageMapping.Rows.Add(row: dr);
         }
     }
 
@@ -126,9 +126,9 @@ internal static class SessionDataTables
         lock (FileLocking.TableLock)
         {
             // delete any existing rows with the current combination
-            for (int i = FrmMainApp.DTToponomySessionData.Rows.Count - 1; i >= 0; i--)
+            for (int i = HelperVariables.DTToponomySessionData.Rows.Count - 1; i >= 0; i--)
             {
-                DataRow thisDr = FrmMainApp.DTToponomySessionData.Rows[index: i];
+                DataRow thisDr = HelperVariables.DTToponomySessionData.Rows[index: i];
                 if (
                     thisDr[columnName: "lat"]
                        .ToString() ==
@@ -142,10 +142,10 @@ internal static class SessionDataTables
                 }
             }
 
-            FrmMainApp.DTToponomySessionData.AcceptChanges();
+            HelperVariables.DTToponomySessionData.AcceptChanges();
 
             // add new
-            DataRow newDr = FrmMainApp.DTToponomySessionData.NewRow();
+            DataRow newDr = HelperVariables.DTToponomySessionData.NewRow();
             newDr[columnName: "lat"] = lat;
             newDr[columnName: "lng"] = lng;
             newDr[columnName: "AdminName1"] = adminName1;
@@ -157,8 +157,8 @@ internal static class SessionDataTables
             newDr[columnName: "GPSAltitude"] = altitude;
             newDr[columnName: "timezoneId"] = timezoneId;
 
-            FrmMainApp.DTToponomySessionData.Rows.Add(row: newDr);
-            FrmMainApp.DTToponomySessionData.AcceptChanges();
+            HelperVariables.DTToponomySessionData.Rows.Add(row: newDr);
+            HelperVariables.DTToponomySessionData.AcceptChanges();
         }
     }
 }

@@ -1,21 +1,16 @@
-﻿using ExCSS;
+﻿
 using GeoTagNinja.Helpers.API;
 using GeoTagNinja.Helpers.Data;
 using GeoTagNinja.Helpers.UI;
 using GeoTagNinja.Model;
-using GeoTagNinja.View.Forms;
 using System;
 using System.Collections.Generic;
 using System.Data;
-using System.Drawing;
 using System.Globalization;
 using System.IO;
 using System.Linq;
 using System.Text.RegularExpressions;
-using System.Windows.Forms;
-using WinFormsDarkThemerNinja;
 using static GeoTagNinja.Model.SourcesAndAttributes;
-using Point = System.Drawing.Point;
 
 namespace GeoTagNinja.Helpers.Exif;
 
@@ -44,7 +39,7 @@ internal static class ReadExifData
         AddColumnsToToponomyDataTable(dtSQLToponomyData);
 
         EnumerableRowCollection<DataRow> drDataTableData =
-            from DataRow dataRow in FrmMainApp.DTToponomySessionData.AsEnumerable()
+            from DataRow dataRow in HelperVariables.DTToponomySessionData.AsEnumerable()
             where dataRow.Field<string>(columnName: "lat") == lat && dataRow.Field<string>(columnName: "lng") == lng
             select dataRow;
 
@@ -390,12 +385,12 @@ internal static class ReadExifData
                 {
                     if (!HelperVariables.errorsAlreadyShownHashSet.Contains(item: ctrlNameForLocalError))
                     {
-                        Themer.ShowMessageBox(
+                        UiServices.ShowMessageBox(
                             message: HelperControlAndMessageBoxHandling.ReturnControlText(
                                 controlName: ctrlNameForLocalError,
                                 fakeControlType: HelperControlAndMessageBoxHandling.FakeControlTypes.MessageBox),
-                            icon: MessageBoxIcon.Error,
-                            buttons: MessageBoxButtons.OK);
+                            icon: UiMessageIcon.Error,
+                            buttons: UiMessageButtons.OK);
 
                         _ = HelperVariables.errorsAlreadyShownHashSet.Add(item: ctrlNameForLocalError);
                     }
@@ -405,12 +400,12 @@ internal static class ReadExifData
             {
                 if (!HelperVariables.errorsAlreadyShownHashSet.Contains(item: ctrlNameForLocalError))
                 {
-                    Themer.ShowMessageBox(
+                    UiServices.ShowMessageBox(
                         message: HelperControlAndMessageBoxHandling.ReturnControlText(
                             controlName: ctrlNameForLocalError,
                             fakeControlType: HelperControlAndMessageBoxHandling.FakeControlTypes.MessageBox),
-                        icon: MessageBoxIcon.Error,
-                        buttons: MessageBoxButtons.OK);
+                        icon: UiMessageIcon.Error,
+                        buttons: UiMessageButtons.OK);
 
                     _ = HelperVariables.errorsAlreadyShownHashSet.Add(item: ctrlNameForLocalError);
                 }
@@ -802,25 +797,8 @@ internal static class ReadExifData
                     }
                     else
                     {
-                        FrmMainApp frmMainAppInstance = FrmMainApp.Instance;
-                        // scroll to the file in question and show the image of it...makes life a lot easier
-                        if (!string.IsNullOrEmpty(value: fileNameWithoutPath))
-                        {
-                            string fileNameWithPath =
-                                Path.Combine(path1: FrmMainApp.FolderName, path2: fileNameWithoutPath);
-                            ListViewItem lvi =
-                                frmMainAppInstance.lvw_FileList.FindItemWithText(text: fileNameWithoutPath);
-                            frmMainAppInstance.lvw_FileList.FocusedItem = lvi;
-                            DirectoryElement directoryElement = lvi.Tag as DirectoryElement;
-                            frmMainAppInstance.lvw_FileList.EnsureVisible(index: lvi.Index);
-                            _ = ReadGetImagePreviews.GenericCreateImagePreview(
-                                directoryElement: directoryElement,
-                                initiator: ReadGetImagePreviews.Initiator.FrmMainAppAPIDataSelection
-                            );
-                            Application.DoEvents();
-                        }
-
-                        int useDr = showDataFromAPIPicker(dtIn: dtSQLToponomyData);
+                        int useDr = UiServices.PickToponomyRow(choices: dtSQLToponomyData,
+                            fileNameWithoutPath: fileNameWithoutPath);
                         dtSQLToponomyData = dtSQLToponomyData.AsEnumerable()
                                            .Where(predicate: (row,
                                                               index) => index == useDr)
@@ -845,118 +823,6 @@ internal static class ReadExifData
                             timezoneId: $"{dtWriteToSQLite.Rows[index: 0][columnName: "timezoneId"]}"
                         );
 
-                        int showDataFromAPIPicker(DataTable dtIn)
-                        {
-                            Form FrmPickDataFromAPIBox = new()
-                            {
-                                Text = HelperControlAndMessageBoxHandling.ReturnControlText(
-                                    controlName: "FrmPickDataFromAPIBox",
-                                    fakeControlType: HelperControlAndMessageBoxHandling.FakeControlTypes.Form),
-                                MinimizeBox = false,
-                                MaximizeBox = false,
-                                ShowIcon = false,
-                                ShowInTaskbar = false,
-                                StartPosition = FormStartPosition.CenterScreen
-                            };
-
-                            FlowLayoutPanel panel = new();
-
-                            ListView lvwDataChoices = new()
-                            {
-                                Size = new Size(width: 800, height: 200),
-                                View = System.Windows.Forms.View.Details,
-                                MultiSelect = false,
-                                FullRowSelect = true
-                            };
-
-                            _ = lvwDataChoices.Columns.Add(text: "Index");
-
-                            foreach (DataColumn dc in dtIn.Columns)
-                            {
-                                _ = lvwDataChoices.Columns.Add(text: dc.ColumnName, width: -2);
-                            }
-
-                            lvwDataChoices.MouseDoubleClick += (sender,
-                                                                args) =>
-                            {
-                                ListViewHitTestInfo info = lvwDataChoices.HitTest(x: args.X, y: args.Y);
-                                ListViewItem item = info.Item;
-
-                                if (item != null)
-                                {
-                                    FrmPickDataFromAPIBox.Close();
-                                }
-                            };
-
-                            foreach (DataRow drItem in dtSQLToponomyData.Rows)
-                            {
-                                // make it not-zero based.
-                                ListViewItem lvi = new(text: (dtSQLToponomyData.Rows.IndexOf(row: drItem) +
-                                                              1)
-                                   .ToString());
-                                foreach (DataColumn dc in dtIn.Columns)
-                                {
-                                    string dataToAdd = $"{drItem[column: dc]}";
-
-                                    _ = lvi.SubItems.Add(text: dataToAdd);
-                                }
-
-                                _ = lvwDataChoices.Items.Add(value: lvi);
-                            }
-
-                            lvwDataChoices.Items[index: 0]
-                                          .Selected = true;
-                            lvwDataChoices.Select();
-
-                            lvwDataChoices.KeyUp += (sender,
-                                                     args) =>
-                            {
-                                if (args.KeyCode == Keys.Enter)
-                                {
-                                    if (lvwDataChoices.SelectedItems.Count == 1)
-                                    {
-                                        FrmPickDataFromAPIBox.Close();
-                                    }
-                                }
-                            };
-
-                            panel.Controls.Add(value: lvwDataChoices);
-                            panel.SetFlowBreak(control: lvwDataChoices, value: true);
-
-                            Button btn_Generic_OK = new()
-                            {
-                                Text = HelperControlAndMessageBoxHandling.ReturnControlText(
-                                    controlName: "Generic_OK",
-                                    fakeControlType: HelperControlAndMessageBoxHandling.FakeControlTypes.Button)
-                            };
-                            btn_Generic_OK.Click += (sender,
-                                                     e) =>
-                            {
-                                FrmPickDataFromAPIBox.Close();
-                            };
-                            btn_Generic_OK.Location = new Point(x: 10, y: lvwDataChoices.Bottom + 15);
-                            btn_Generic_OK.AutoSize = true;
-                            panel.Controls.Add(value: btn_Generic_OK);
-
-                            panel.Padding = new Padding(all: 5);
-                            panel.AutoSize = true;
-
-                            FrmPickDataFromAPIBox.Controls.Add(value: panel);
-                            FrmPickDataFromAPIBox.MinimumSize = new Size(width: lvwDataChoices.Width + 40,
-                                height: btn_Generic_OK.Bottom + 20);
-
-                            _ = FrmPickDataFromAPIBox.ShowDialog();
-
-                            try
-                            {
-                                return lvwDataChoices.SelectedItems[index: 0]
-                                                     .Index;
-                            }
-                            catch
-                            {
-                                return 0;
-                            }
-                        }
                     }
                 }
                 else if (HelperVariables.OperationAPIReturnedOKResponse)

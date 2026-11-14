@@ -1,26 +1,18 @@
-﻿using ExCSS;
-using GeoTagNinja.Helpers.API;
+﻿using GeoTagNinja.Helpers.API;
 using GeoTagNinja.Helpers.Data;
 using GeoTagNinja.Helpers.FileSystem;
 using GeoTagNinja.Helpers.UI;
 using GeoTagNinja.Model;
-using GeoTagNinja.View.FileList;
-using GeoTagNinja.View.Forms;
 using System;
 using System.Collections.Generic;
 using System.Data;
-using System.Drawing;
 using System.Globalization;
 using System.IO;
 using System.Linq;
 using System.Reflection;
 using System.Threading.Tasks;
-using System.Windows.Forms;
 using System.Xml.Serialization;
-using WinFormsDarkThemerNinja;
 using static GeoTagNinja.Model.SourcesAndAttributes;
-using Color = System.Drawing.Color;
-using Point = System.Drawing.Point;
 
 namespace GeoTagNinja.Helpers.Exif;
 
@@ -54,15 +46,10 @@ internal static class ReadTrackFile
     {
         //HelperVariables._sErrorMsg = "";
         HelperVariables._sOutputAndErrorMsg = "";
-        FrmMainApp frmMainAppInstance =
-            FrmMainApp.Instance;
-
         Directory.CreateDirectory(path: $@"{HelperVariables.UserDataFolderPath}\tmpLocFiles");
         List<string> trackFileList = [];
         List<string> imageFileList = [];
-        ListView lvw = frmMainAppInstance.lvw_FileList;
-
-        if (frmMainAppInstance != null)
+        if (UiServices.Host != null)
         {
             // trackFileList
             if (trackFileLocationType == "file")
@@ -80,10 +67,8 @@ internal static class ReadTrackFile
             }
 
             // imageFileList
-            foreach (ListViewItem lvi in frmMainAppInstance.lvw_FileList.SelectedItems)
+            foreach (DirectoryElement dirElemFileToModify in UiServices.GetSelectedDirectoryElements())
             {
-                DirectoryElement dirElemFileToModify =
-                    lvi.Tag as DirectoryElement;
                 string pathToTag = dirElemFileToModify.FileNameWithPath;
                 if (File.Exists(path: pathToTag))
                 {
@@ -161,16 +146,20 @@ internal static class ReadTrackFile
                                 dtFileExifTable.DefaultView.ToTable(distinct: true);
 
                             // note to self -> should find a way to handle multiple identically-named files somehow.
-                            ListViewItem lvi =
-                                frmMainAppInstance.lvw_FileList.FindItemWithText(
-                                    text: exifFileIn.Name.Substring(
-                                        startIndex: 0,
-                                        length: exifFileIn.Name.Length - 4));
+                            string trackedFileName = exifFileIn.Name.Substring(
+                                startIndex: 0,
+                                length: exifFileIn.Name.Length - 4);
+                            // exact name first; the list control used to match on the start of the name
+                            DirectoryElement matchedElement =
+                                HelperVariables.DirectoryElements.FirstOrDefault(predicate: element => string.Equals(
+                                    a: element.ItemNameWithoutPath, b: trackedFileName,
+                                    comparisonType: StringComparison.OrdinalIgnoreCase)) ??
+                                HelperVariables.DirectoryElements.FirstOrDefault(predicate: element =>
+                                    element.ItemNameWithoutPath.StartsWith(value: trackedFileName,
+                                        comparisonType: StringComparison.OrdinalIgnoreCase));
 
-                            if (lvi != null)
+                            if (matchedElement != null)
                             {
-                                ListView.ColumnHeaderCollection lvchs =
-                                    frmMainAppInstance.ListViewColumnHeaders;
 
                                 ElementAttribute[] trackFileOverwrites =
                                 {
@@ -190,7 +179,7 @@ internal static class ReadTrackFile
                                     ElementAttribute.Sublocation
                                 };
 
-                                DirectoryElement dirElemFileToModify = lvi.Tag as DirectoryElement;
+                                DirectoryElement dirElemFileToModify = matchedElement;
                                 string fileNameWithoutPath = dirElemFileToModify.ItemNameWithoutPath;
 
                                 // get the current stuff, either from DE3 or Orig or just blank if none.
@@ -227,11 +216,9 @@ internal static class ReadTrackFile
                                       currentAltitude == altitudeInTrackFile);
                                 if (coordinatesHaveChanged)
                                 {
-                                    FrmMainApp.HandlerUpdateLabelText(label: frmMainAppInstance.lbl_ParseProgress,
-                                        text: $"Processing: {fileNameWithoutPath}");
+                                    UiServices.SetStatusText(text: $"Processing: {fileNameWithoutPath}");
 
-                                    frmMainAppInstance.lvw_FileList.UpdateDirectoryElementItemColour(
-                                        directoryElement: dirElemFileToModify, color: ThemeHelper.ErrorColour);
+                                    UiServices.MarkFileListItemChanged(directoryElement: dirElemFileToModify);
 
                                     foreach (ElementAttribute attribute in trackFileOverwrites)
                                     {
@@ -308,9 +295,7 @@ internal static class ReadTrackFile
                                         }
                                     }
 
-                                    await FileListViewReadWrite
-                                       .ListViewUpdateRowFromDEStage3ReadyToWrite(
-                                            dirElemFileToModify: dirElemFileToModify);
+                                    await UiServices.RefreshFileListRowAsync(directoryElement: dirElemFileToModify);
                                 }
                             }
                         }
@@ -334,64 +319,21 @@ internal static class ReadTrackFile
             {
                 await ReadTrackFilePath.ExifReadTrackFileForMapping(trackFileList: trackFileList,
                     overlayDateSetting: getTrackDataOverlay, overlayDateList: overlayDateList, TZVal: TZVal);
-                frmMainAppInstance.Request_Map_NavigateGo();
+                UiServices.RequestMapRefresh();
             }
         }
 
-        DialogResult dialogResult =
-            Themer.ShowMessageBoxWithResult(
+        UiDialogResult dialogResult =
+            UiServices.ShowMessageBoxWithResult(
                 message: HelperControlAndMessageBoxHandling.ReturnControlText(
                     controlName: "mbx_FrmImportExportGpx_AskUserWantsReport",
                     fakeControlType: HelperControlAndMessageBoxHandling.FakeControlTypes.MessageBox),
-                icon: MessageBoxIcon.Question,
-                buttons: MessageBoxButtons.YesNo);
+                icon: UiMessageIcon.Question,
+                buttons: UiMessageButtons.YesNo);
 
-        if (dialogResult == DialogResult.Yes)
+        if (dialogResult == UiDialogResult.Yes)
         {
-            Form reportBox = new()
-            {
-                ControlBox = false
-            };
-            FlowLayoutPanel panel = new();
-
-            TextBox tbxText = new()
-            {
-                Size = new Size(width: 700, height: 400),
-
-                Text = HelperVariables._sOutputAndErrorMsg,
-                ScrollBars = ScrollBars.Vertical,
-                Multiline = true,
-                WordWrap = true,
-                ReadOnly = true,
-                SelectionStart = 1,
-                SelectionLength = 0
-            };
-
-            panel.SetFlowBreak(control: tbxText, value: true);
-            panel.Controls.Add(value: tbxText);
-
-            Button btnOk = new()
-            { Text = "OK" };
-            btnOk.Click += (sender,
-                            e) =>
-            {
-                reportBox.Close();
-            };
-            btnOk.Location = new Point(x: 10, y: tbxText.Bottom + 5);
-            btnOk.AutoSize = true;
-            panel.Controls.Add(value: btnOk);
-
-            panel.Padding = new Padding(all: 5);
-            panel.AutoSize = true;
-
-            reportBox.Controls.Add(value: panel);
-            reportBox.MinimumSize =
-                new Size(width: tbxText.Width + 40, height: btnOk.Bottom + 50);
-            reportBox.ShowInTaskbar = false;
-
-            reportBox.StartPosition = FormStartPosition.CenterScreen;
-            ThemeHelper.ApplyTo(control: reportBox);
-            reportBox.ShowDialog();
+            UiServices.ShowReport(text: HelperVariables._sOutputAndErrorMsg);
         }
 
         string GetCurrentValue(DirectoryElement dirElemFileToModify,
