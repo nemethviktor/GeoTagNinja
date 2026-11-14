@@ -100,12 +100,27 @@ public partial class FrmMainApp : Form
 
     #region Variables
 
-    internal static DataTable DTLanguageMapping;
-    public static HashSet<Favourite> Favourites = [];
+    // Session state now lives in Core (HelperVariables) so UI-free code can reach it; these forward to it.
+    internal static DataTable DTLanguageMapping
+    {
+        get => HelperVariables.DTLanguageMapping;
+        set => HelperVariables.DTLanguageMapping = value;
+    }
+
+    public static HashSet<Favourite> Favourites
+    {
+        get => HelperVariables.Favourites;
+        set => HelperVariables.Favourites = value;
+    }
 
     // CustomCityLogic
 
-    internal static string FolderName;
+    internal static string FolderName
+    {
+        get => HelperVariables.FolderName;
+        set => HelperVariables.FolderName = value;
+    }
+
     internal static string AppLanguage // default to english
     {
         get => HelperVariables.AppLanguage;
@@ -144,7 +159,11 @@ public partial class FrmMainApp : Form
     internal static Dictionary<ElementAttribute, Tuple<string, bool>> CopyPoolDict = [];
 
     // this is for checking if files need to be re-parsed.
-    internal static DataTable DTToponomySessionData;
+    internal static DataTable DTToponomySessionData
+    {
+        get => HelperVariables.DTToponomySessionData;
+        set => HelperVariables.DTToponomySessionData = value;
+    }
 
     internal static List<string> filesToEditGUIDStringList = [];
 
@@ -153,7 +172,12 @@ public partial class FrmMainApp : Form
 
     internal CancellationTokenSource _cts = new();
     private CancellationToken _token;
-    internal static bool FlatMode;
+    internal static bool FlatMode
+    {
+        get => HelperVariables.FlatMode;
+        set => HelperVariables.FlatMode = value;
+    }
+
     private static bool _ignoreFlatMode;
 
     internal enum ListViewDisplayMode

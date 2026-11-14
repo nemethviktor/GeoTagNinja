@@ -153,7 +153,7 @@ public partial class FrmPasteWhat : Form
     private void FrmPasteWhat_Load(object sender,
                                    EventArgs e)
     {
-        HelperControlAndMessageBoxHandling.ReturnControlText(
+        ControlTextApplier.ReturnControlText(
             control: this, senderForm: this);
 
         IEnumerable<Control> controls = ControlTraversal.GetAllControls(control: this);
@@ -168,7 +168,7 @@ public partial class FrmPasteWhat : Form
                )
 
             {
-                HelperControlAndMessageBoxHandling.ReturnControlText(
+                ControlTextApplier.ReturnControlText(
                     control: control, senderForm: this);
             }
         }

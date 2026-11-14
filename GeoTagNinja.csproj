@@ -166,7 +166,7 @@
     <Compile Include="View\Forms\FrmSplashScreen.Designer.cs">
       <DependentUpon>FrmSplashScreen.cs</DependentUpon>
     </Compile>
-    <Compile Include="Helpers\UI\ControlTextAndMessageBoxes.cs" />
+    <Compile Include="Helpers\UI\ControlTextApplier.cs" />
     <Compile Include="Helpers\Data\ThumbnailCache.cs" />
     <Compile Include="Helpers\Data\MenuSettings.cs" />
     <Compile Include="Helpers\Data\SettingsExport.cs" />
@@ -198,7 +198,7 @@
     <Compile Include="View\Forms\FrmManageFavourites.designer.cs">
       <DependentUpon>FrmManageFavourites.cs</DependentUpon>
     </Compile>
-    <Compile Include="Helpers\Localisation\ResourceManager.cs" />
+    <Compile Include="Helpers\UI\ControlResourceManager.cs" />
     <Compile Include="Properties\Resources.Designer.cs">
       <AutoGen>True</AutoGen>
       <DesignTime>True</DesignTime>

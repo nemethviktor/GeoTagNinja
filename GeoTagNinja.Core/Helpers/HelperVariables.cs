@@ -1,4 +1,5 @@
 ﻿using GeoTagNinja.Helpers.Exif;
+using GeoTagNinja.Model;
 using System;
 using System.Collections.Concurrent;
 using System.Collections.Generic;
@@ -17,6 +18,31 @@ internal static class HelperVariables
     ///     Null until the start-up read of the language setting has run.
     /// </summary>
     internal static string AppLanguage { get; set; }
+
+    /// <summary>
+    ///     The language mapping table (see <see cref="SessionDataTables" />), read once per session.
+    /// </summary>
+    internal static DataTable DTLanguageMapping { get; set; }
+
+    /// <summary>
+    ///     The user's favourites, loaded from the settings database.
+    /// </summary>
+    internal static HashSet<Favourite> Favourites { get; set; } = [];
+
+    /// <summary>
+    ///     The folder currently open in the file list.
+    /// </summary>
+    internal static string FolderName { get; set; }
+
+    /// <summary>
+    ///     Used to check whether files need re-parsing for toponomy data.
+    /// </summary>
+    internal static DataTable DTToponomySessionData { get; set; }
+
+    /// <summary>
+    ///     True while the file list shows the open folder and all its sub-folders as one flat list.
+    /// </summary>
+    internal static bool FlatMode { get; set; }
 
     internal const int exifOrientationID = 0x112; //274
     internal const double MetreToFeet = 3.28084;

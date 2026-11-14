@@ -54,7 +54,7 @@ namespace GeoTagNinja.View.Forms
 
         private void FrmCustomiseFormControls_Load(object sender, EventArgs e)
         {
-            HelperControlAndMessageBoxHandling.ReturnControlText(
+            ControlTextApplier.ReturnControlText(
                 control: this, senderForm: this);
 
             IEnumerable<Control> controls = ControlTraversal.GetAllControls(control: this);
@@ -69,7 +69,7 @@ namespace GeoTagNinja.View.Forms
                    )
 
                 {
-                    HelperControlAndMessageBoxHandling.ReturnControlText(
+                    ControlTextApplier.ReturnControlText(
                         control: control, senderForm: this);
                 }
             }

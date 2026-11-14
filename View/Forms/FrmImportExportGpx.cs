@@ -41,7 +41,7 @@ public partial class FrmImportExportGpx : Form
     {
         InitializeComponent();
 
-        ReturnControlText(control: this, senderForm: this);
+        ControlTextApplier.ReturnControlText(control: this, senderForm: this);
 
         // load TZ-CBX
         FillTZComboBox(cbxToFill: cbx_ImportUseTimeZone);
@@ -67,7 +67,7 @@ public partial class FrmImportExportGpx : Form
         IEnumerable<Control> controls = ControlTraversal.GetAllControls(control: this);
         foreach (Control control in controls)
         {
-            ReturnControlText(control: control, senderForm: this);
+            ControlTextApplier.ReturnControlText(control: control, senderForm: this);
 
             switch (control.Name)
             {

@@ -115,7 +115,7 @@ public partial class FrmSettings : Form
 
     private void AssignControlLabelsAndValues()
     {
-        ReturnControlText(
+        ControlTextApplier.ReturnControlText(
             control: this, senderForm: this);
 
         // Gets the various controls' labels and values (eg "latitude" and "51.002")
@@ -207,7 +207,7 @@ public partial class FrmSettings : Form
 
                 else
                 {
-                    ReturnControlText(control: control,
+                    ControlTextApplier.ReturnControlText(control: control,
                         senderForm: this,
                         parentNameToUse: parentNameToUse);
                 }
@@ -1193,7 +1193,7 @@ public partial class FrmSettings : Form
         if (nud == nud_ChoiceRadius)
         {
             string tmpLabelText =
-                ResourceManager.GetResourceValue(control: lbl_Generic_Miles,
+                ControlResourceManager.GetResourceValue(control: lbl_Generic_Miles,
                     location: "Strings");
 
             lbl_Generic_Miles.Text =

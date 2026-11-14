@@ -123,7 +123,7 @@ public partial class FrmEditFileData : Form
         nud_CreateDateSecondsShift.Enabled = false;
         dtp_CreateDate.CustomFormat =
             $"{CultureInfo.CurrentCulture.DateTimeFormat.ShortDatePattern} {CultureInfo.CurrentCulture.DateTimeFormat.LongTimePattern}";
-        ReturnControlText(
+        ControlTextApplier.ReturnControlText(
             control: this, senderForm: this);
 
         // fills the countries box
@@ -243,7 +243,7 @@ public partial class FrmEditFileData : Form
                     if (lstControlTypesNoDEValue.Contains(item: control.GetType()))
                     {
                         // gets logged inside.
-                        ReturnControlText(control: control, senderForm: this);
+                        ControlTextApplier.ReturnControlText(control: control, senderForm: this);
                     }
 
                     else if (lstControlTypesWithDEValue.Contains(item: control.GetType()))
