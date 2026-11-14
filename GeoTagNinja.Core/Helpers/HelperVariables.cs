@@ -12,6 +12,12 @@ namespace GeoTagNinja.Helpers;
 
 internal static class HelperVariables
 {
+    /// <summary>
+    ///     The UI language code (for example "en", "de"). Held here, not on the main form, so Core can read it.
+    ///     Null until the start-up read of the language setting has run.
+    /// </summary>
+    internal static string AppLanguage { get; set; }
+
     internal const int exifOrientationID = 0x112; //274
     internal const double MetreToFeet = 3.28084;
     internal const string DoubleQuoteStr = "\"";

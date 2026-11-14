@@ -2,7 +2,7 @@
 
 This file provides guidance to Claude Code (claude.ai/code) when working with code in this repository.
 
-GeoTagNinja is a Windows WinForms photo geotagger (.NET Framework 4.8, x64, `LangVersion` preview) that reads and writes metadata through a long-running ExifTool process. Do not propose upgrading off .NET Framework 4.8.
+GeoTagNinja is a Windows WinForms photo geotagger (.NET Framework 4.8, x64, `LangVersion` preview) that reads and writes metadata through a long-running ExifTool process. Do not propose upgrading the WinForms app off .NET Framework 4.8. The one exception is `GeoTagNinja.Avalonia/`, the in-progress Avalonia rewrite (branch `avalonia-port`, `net10.0-windows`, Windows 10 and 11, a pre-release until it replaces the WinForms app in early 2027); it deliberately targets modern .NET, and any code shared with it must keep compiling for net48 as well. Do not use Avalonia Accelerate components (WebView, TreeDataGrid and so on): the free Community licence does not include them.
 
 ## Build and test
 

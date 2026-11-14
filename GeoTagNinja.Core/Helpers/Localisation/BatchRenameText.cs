@@ -1,4 +1,4 @@
-﻿using GeoTagNinja.View.Forms;
+﻿
 using System;
 using System.Globalization;
 
@@ -50,7 +50,7 @@ internal static class BatchRenameText
     {
         try
         {
-            string language = FrmMainApp.AppLanguage;
+            string language = HelperVariables.AppLanguage;
             return string.IsNullOrEmpty(value: language)
                 ? CultureInfo.CurrentUICulture
                 : CultureInfo.GetCultureInfo(name: language);

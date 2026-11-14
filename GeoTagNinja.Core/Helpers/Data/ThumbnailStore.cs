@@ -1,5 +1,4 @@
 ﻿using NLog;
-using GeoTagNinja.View.Forms;
 using System;
 using System.Collections.Concurrent;
 using System.Collections.Generic;

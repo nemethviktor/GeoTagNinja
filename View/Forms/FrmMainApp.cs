@@ -106,7 +106,11 @@ public partial class FrmMainApp : Form
     // CustomCityLogic
 
     internal static string FolderName;
-    internal static string AppLanguage; // default to english
+    internal static string AppLanguage // default to english
+    {
+        get => HelperVariables.AppLanguage;
+        set => HelperVariables.AppLanguage = value;
+    }
 
     private static bool _showLocToMapDialogChoice = true;
     private static bool _rememberLocToMapDialogChoice;
@@ -835,10 +839,10 @@ public partial class FrmMainApp : Form
         // if the user zooms out too much they can encounter an "unreal" coordinate.
 
         double correctedDblLat =
-            DataPointInteractions.GenericCorrectInvalidCoordinate(
+            CoordinateParsing.GenericCorrectInvalidCoordinate(
                 coordHalfPair: dblLat);
         double correctedDblLng =
-            DataPointInteractions.GenericCorrectInvalidCoordinate(
+            CoordinateParsing.GenericCorrectInvalidCoordinate(
                 coordHalfPair: dblLng);
         nud_lat.Text = correctedDblLat.ToString(provider: CultureInfo.InvariantCulture);
         nud_lng.Text = correctedDblLng.ToString(provider: CultureInfo.InvariantCulture);
@@ -2631,7 +2635,7 @@ public partial class FrmMainApp : Form
                                                         index: lvw
                                                               .Columns[
                                                                    key: HelperVariables.COL_NAME_PREFIX +
-                                                                        FileListView.FileListColumns
+                                                                        FileListColumns
                                                                            .GPS_LATITUDE]
                                                               .Index]
                                                    .Text.ToString(
@@ -2641,7 +2645,7 @@ public partial class FrmMainApp : Form
                                                          index: lvw
                                                                .Columns[
                                                                     key: HelperVariables.COL_NAME_PREFIX +
-                                                                         FileListView.FileListColumns
+                                                                         FileListColumns
                                                                             .GPS_LONGITUDE]
                                                                .Index]
                                                     .Text.ToString(
@@ -2974,7 +2978,7 @@ public partial class FrmMainApp : Form
                                                   index: lvw_FileList
                                                         .Columns[
                                                              key: HelperVariables.COL_NAME_PREFIX +
-                                                                  FileListView.FileListColumns.GPS_ALTITUDE]
+                                                                  FileListColumns.GPS_ALTITUDE]
                                                         .Index]
                                              .Text.ToString(
                                                   provider: CultureInfo.InvariantCulture);
@@ -3029,7 +3033,7 @@ public partial class FrmMainApp : Form
                 _ = AttributeValueFormatter.TryParseDateTime(
                     value: lvi.SubItems[index: lvw_FileList
                                               .Columns[key: HelperVariables.COL_NAME_PREFIX +
-                                                            FileListView.FileListColumns.CREATE_DATE]
+                                                            FileListColumns.CREATE_DATE]
                                               .Index]
                               .Text,
                     context: ValueFormatContext.Display,

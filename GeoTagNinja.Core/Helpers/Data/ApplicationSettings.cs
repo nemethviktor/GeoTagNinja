@@ -1,4 +1,4 @@
-﻿using GeoTagNinja.Helpers.Startup;
+﻿using System;
 using GeoTagNinja.Model;
 using System.Collections.Generic;
 using System.Data;
@@ -11,6 +11,12 @@ namespace GeoTagNinja.Helpers.Data;
 
 internal static class ApplicationSettings
 {
+    /// <summary>
+    ///     Set by the host app at start-up: re-reads the settings tables into memory after settings are written.
+    ///     A hook rather than a call, because the code that does this lives in the UI project.
+    /// </summary>
+    internal static Action ReloadSettingTables { get; set; }
+
     #region Read
 
     /// <summary>
@@ -162,7 +168,7 @@ internal static class ApplicationSettings
         SQLiteTransaction.Commit();
 
         // refresh main datatables
-        _ = AppStartup.AppStartupReadSQLiteTables();
+        ReloadSettingTables?.Invoke();
     }
 
     #endregion

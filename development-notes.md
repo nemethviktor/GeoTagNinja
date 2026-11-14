@@ -221,3 +221,11 @@ state.
 ## SQLite native library
 
 `System.Data.SQLite` 2.x P/Invokes `e_sqlite3` but ships no native binary. `GeoTagNinja.csproj` references `SQLitePCLRaw.lib.e_sqlite3` with its build assets excluded (they reject AnyCPU and copy to a subfolder .NET Framework never probes) and copies the win-x64 DLL flat via a `Content` item. Bump the version in both places together. If the DLL is missing, startup now shows an error and exits (`FrmMainApp.AbortStartup`) instead of hanging.
+
+## Moving code into GeoTagNinja.Core (Avalonia port, phase 2)
+
+`GeoTagNinja.Core` is SDK style and multi-targets net48 and net10. Move a file with `git mv` (keep its folder, so its namespace stays), delete its `<Compile Include>` line from `GeoTagNinja.csproj` (the legacy project lists files explicitly, Core globs them), then build Core on both frameworks with `dotnet build GeoTagNinja.Core\GeoTagNinja.Core.csproj`. A file can move once it uses no WinForms, `System.Drawing`, `FrmMainApp`, `ThemeHelper` or message boxes.
+
+Seams already cut for this: `FileListColumns` (was nested in `FileListView`), `HelperVariables.AppLanguage` (`FrmMainApp.AppLanguage` forwards to it), `ApplicationSettings.ReloadSettingTables` (a hook `Program.Main` fills in), and `CoordinateParsing` (the pure part of `DataPointInteractions`).
+
+Still stuck in the WinForms project, in rough order of effort: files that only show a message box (needs a UI-services interface), files using `System.Drawing` images (thumbnails, previews), files reading `FrmMainApp.DirectoryElements`/`Instance`/`DTToponomySessionData`, `DirectoryElementCollection`, `ReadExifData`, and the SQLite start-up code (`DatabaseAndStartup`, `AppStartup`).

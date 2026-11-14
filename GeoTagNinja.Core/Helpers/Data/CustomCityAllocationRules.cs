@@ -1,6 +1,5 @@
 ﻿using NLog;
 using GeoTagNinja.Helpers.Localisation;
-using GeoTagNinja.View.Forms;
 using System;
 using System.Data;
 using System.Data.SQLite;

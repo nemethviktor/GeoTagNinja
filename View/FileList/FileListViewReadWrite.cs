@@ -11,6 +11,7 @@ using System.Threading.Tasks;
 using System.Windows.Forms;
 using static GeoTagNinja.Model.SourcesAndAttributes;
 using static GeoTagNinja.View.FileList.FileListView;
+using static GeoTagNinja.Model.FileListColumns;
 
 namespace GeoTagNinja.View.FileList;
 

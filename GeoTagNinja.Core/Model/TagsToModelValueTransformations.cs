@@ -1,6 +1,5 @@
 ﻿using GeoTagNinja.Helpers;
-using GeoTagNinja.Helpers.Exif;
-using GeoTagNinja.View.Forms;
+using GeoTagNinja.Helpers.Geo;
 using System;
 using System.Collections.Generic;
 using System.Globalization;
@@ -47,7 +46,7 @@ internal class TagsToModelValueTransformations
         // 2. Parse the numeric coordinate. This goes through DataPointInteractions rather than double.TryParse
         // because the track-file path used to, and ExifTool does emit WGS84 degrees-and-minutes ("41,53.239N")
         // as well as plain signed decimals.
-        if (!DataPointInteractions.TryAdjustLatLongNegative(
+        if (!CoordinateParsing.TryAdjustLatLongNegative(
             point: parseResult,
             coordinate: out double baseValue))
         {

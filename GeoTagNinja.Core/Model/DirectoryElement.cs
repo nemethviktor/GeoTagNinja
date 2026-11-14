@@ -2,14 +2,9 @@
 using GeoTagNinja.Helpers;
 using GeoTagNinja.Helpers.Data;
 using GeoTagNinja.Helpers.Exif;
-using GeoTagNinja.View.FileList;
-using GeoTagNinja.View.Forms;
 using NLog;
 using System;
 using System.Collections.Generic;
-using System.Drawing;
-using System.Drawing.Drawing2D;
-using System.Drawing.Imaging;
 using System.IO;
 using static GeoTagNinja.Model.SourcesAndAttributes;
 

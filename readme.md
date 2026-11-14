@@ -10,6 +10,7 @@ There is a "short" (15 mins) demo on [YouTube](https://youtu.be/ulP1ZG7mH-I) if 
 
 - [Welcome to GeoTagNinja](#welcome-to-geotagninja)
   - [Download & Install (Windows 7+ x64 only)](#download-&-install-(windows-7+-x64-only))
+  - [System Requirements](#system-requirements)
   - [Features at-a-glance](#features-at-a-glance)
   - [Parameters](#parameters)
   - [Quirks and Things to Note](#quirks-and-things-to-note)
@@ -23,16 +24,23 @@ There is a "short" (15 mins) demo on [YouTube](https://youtu.be/ulP1ZG7mH-I) if 
   - [ToDos](#todos)
   - [Roadmap](#roadmap)
   - [When reporting bugs please specify](#when-reporting-bugs-please-specify)
-  - [System Requirements](#system-requirements)
 
 ## Download & Install (Windows 7+ x64 only)
 
 - Download the .msi file from [Releases (latest)](https://github.com/nemethviktor/GeoTagNinja/releases/latest) - Click on `Assets` if they are not showing. 
-- As of `Build 8371 [20221202]` I've removed the built-in webView2 installer because it was more of a pain in the backside than benefit. If the app breaks complaining about the lack of webView2, it's available [here](https://go.microsoft.com/fwlink/p/?LinkId=2124703)
 - The app is unsigned. This is because a certificate costs in the vicinity of £250 per year but the app is free, and I don't particularly feel like splurging out on this at the moment.
 	- Due to the lack of a signed certificate, when installing SmartScreen will complain that the app is unsafe. SmartScreen is meant to be called StupidScreen but MS made a typo there.
 	- Just run the installer. As the code is public and people may compile on their own, everyone is welcome to ascertain the app is safe should they feel like.
 - The app comes prepackaged with ExifTool as the official `exiftool-13.63_64.zip` (one file in the install folder). On first start GTN unpacks it into `%APPDATA%\GeoTagNinja` (that's where ExifTool lives, as an `exiftool.exe` plus an `exiftool_files` folder). GTN will automatically update ExifTool to whatever the current version is. You can always check the version it uses in the `Help/About` section. (Older GTN builds shipped the single-file 12.87, which cannot open paths of 260 characters or more; that build's `Resources\exiftool.exe` is kept only as a fallback.)
+- The initially bundled webView2 installer has been removed because it had been more of a pain in the backside than benefit. If the app breaks complaining about the lack of webView2, it's available [here](https://go.microsoft.com/fwlink/p/?LinkId=2124703); This is likely to only happen on Win7 systems.
+
+## System Requirements
+
+- Windows 7+ x64 is needed. As I mentioned in the Roadmap support for Win7 will end in early 2027; existing compatible builds will be retained on GitHub.
+- **IMPORTANT:** You'll need a GeoNames username and password to use toponym search (the username is also used first by the map's search box). Register for free [here](https://www.geonames.org/)
+    - Copypaste from above: I've been told that by default the GeoNames API usage is disabled for (some?) new accounts. In that case you have to activate the free web service ---> After registering and clicking the link in the activation email, you still need to activate your account for using web services. To do so, go to your `Manage Account` page [ [http://www.geonames.org/manageaccount](http://www.geonames.org/manageaccount) ] make sure your email shows up correctly. From here, click the `Free Webservice` activation link.
+- The map's search box no longer needs registration of its own. It tries [GeoNames](https://www.geonames.org/) first (using the username you've entered in `Settings`, place names only), then [Photon](https://photon.komoot.io/) (OpenStreetMap data, suggestions as you type), and finally [Nominatim](https://nominatim.openstreetmap.org/) (OpenStreetMap data, only when you press Enter). Street addresses are found by Photon and Nominatim. The old ArcGIS API key is no longer needed or offered in `Settings`.
+- WebView2 is required but should come with your OS most likely. If not, get it from [here](https://go.microsoft.com/fwlink/p/?LinkId=2124703)
 
 ## Features at-a-glance
 
@@ -59,6 +67,13 @@ There is a "short" (15 mins) demo on [YouTube](https://youtu.be/ulP1ZG7mH-I) if 
 - Translatable via Weblate; currently available in several languages (see [Translation Progress](#translation-progress))
 - Automatic ExifTool updates and in-app update checks; the update prompt shows what has changed since your version, and after an update the new entries are shown once (switch off in Settings)
 
+### Upcoming Features & Changes:
+
+The following are changes that are in the `master` branch but haven't been built as part of a release yet:
+
+- `Thumbnail View` has moved from `Settings` to the new `View` menu (`View` > `Details` / `Thumbnails`; your previous choice carries over) and can be switched at any time without restarting. The thumbnail size can be changed with `Ctrl` + mouse wheel, the slider under the list, or `View` > `Thumbnail Size`. Thumbnails are now generated in the background (the ones you can see first), are no longer slow on RAW files, and are remembered between sessions in `thumbnailcache.sqlite` in the Roaming folder (it is safe to delete). In Thumbnail View you can sort from `View` > `Sort By`, rename with `F2`, drag a rectangle over empty space to select several pictures, and right-click (or `Shift`+`F10`) for the usual actions; there are no column headers, so filtering by column is `Details` only.
+- `Edit File(s)` has three new tabs ported from the old GeoSetter-style dialog: `Categories/Keywords`, `Source/Description` and `Contact` (artist, credit, copyright, caption, headline, byline, creator address/phone/e-mail/URL and so on). The `...` button beside most text fields offers `Insert from`/`Copy to` another field, `Copy Selection to Categories/Keywords` the most recently used values of that field, and `Forget a Remembered Item` to drop a typo or test entry from that list. `Load from Template...`, `Save as Template...` and `Load from Image...` (under the tabs) move a chosen set of values between the photo, a saved template and another image; dates and the time zone are unticked by default. The `Location` tab also gained the coordinates as degrees-minutes-seconds, `Image Direction` (with a compass), `Dest. Latitude`/`Dest. Longitude` and `Get from Web` for the altitude.
+
 ## Parameters
 
 The app works without parameters, however you may add:
@@ -69,11 +84,10 @@ The app works without parameters, however you may add:
 
 ## Quirks and Things to Note
 
-- ~~`Build 8361 [20221122]`+: There is now a hold when the user enters a folder - it is kept on until the folder completes load. This is a bit annoying perhaps but is needed because otherwise people can start issuing write-commands before the read-process finishes and that can result in files being written the wrong info.~~
 - This is mentioned in Known Issues briefly but just to reiterate: if you have issues with file data not showing please try renaming/moving your files to a "simple" folder like `C:\temp` and make sure your file names don't contain umlauts, special characters and anything "odd". This is a limitation of ExifTool.
 - I have tried to test reasonably thoroughly but bugs probably remain. Do make backups of your files if you feel that's the right thing to do.
 - As per usual I don't accept any liability for damage and/or any other inconvenience you may suffer while/from using this app, no warranties and/or guarantees. The script is open source, and everyone is welcome to read it.
-- I'm kind of hoping this won't come up as a problem but don't bash me about country names please. I'm thinking disputed country names and areas here. They are ISO standards, the API returns those values, that's it. Being from the UK I do think that the long name of `United Kingdom of Great Britain and Northern Ireland (the)` is a bit of a mouthful but it is what it is (and it's relatively rarely disputed but for example Crimea does return `Ukraine` as a value, regardless of what's been going on there since 2014; again, this isn't a statement either way, it's the API reply).
+- I'm kind of hoping this won't come up as a problem but don't bash me about country names please. I'm thinking disputed country names and areas here. They are ISO standards, the API returns those values, that's it. Being from the UK I do think that the long name of `United Kingdom of Great Britain and Northern Ireland (the)` is a bit of a mouthful but it is what it is (and it's relatively rarely disputed but for example Crimea does return `Ukraine` as a value, regardless of what's been going on there since 2014; again, this isn't a statement either way, it's the GeoNames API's response).
 	- On this particular note above --> the script won't change existing country details in files unless you explicitly edit them. So, it may happen that your existing file has the `CountryCode` `GBR` and the `Country` `United Kingdom`, that won't be changed unless you do a `Get From Web` because the CountryCode-to-Country matching only runs in that case. That's a feature, not a bug.
 - Altitude: in some cases, the API returns `32K` or `-32K` as an altitude. Those are being blanked out.
 - Pressing `Get From Web` in Edit mode will always query the lat/long data for the file as in the main listview (the main page, in less geeky terms.). This is a feature. The assumption is that you aren't going to change coordinates manually by typing stuff in and _then_ query data. It's a lot more likely you'll change stuff using the map.
@@ -81,20 +95,13 @@ The app works without parameters, however you may add:
 - See my comment above re: the app being unsigned and SmartScreen getting derpy once in a while. On top of that...
 	- If you have Avast running or some other nightmare that tries to capture iframes within apps the app will most likely crash sooner rather than later, at least on the first run. I *think* it should be okay afterwards.
 	- I've seen once (and only once) ESET being silly about the app. Tbh no idea as to why. While I'd say the source code is open for public viewing and building it is probably clearer to just say: the app isn't tracking or recording your data and isn't doing anything that's not strictly related to its function. If I ever were to include any tracking (no such plans for the foreseeable future), it'd be entirely anonymised anyway.
-- `Build 8646 [20230903]`+: I've finally gotten around to displaying the `GPSImgDirection` on the map. The logic is, as not to clutter the map the direction "line" will only show when only one image (with GPSImgDirection) is selected; if more than one such image is selected then the lines don't show.
+- Regarding the `GPSImgDirection` on the map: 
+	- The logic is, as not to clutter the map the direction "line" will only show when only one image (with GPSImgDirection) is selected; if more than one such image is selected then the lines don't show.
 	- The way this is calculated requires a "distance" so that the target coordinate pair ("the image direction") can be calculated. This is defaulted to 10km for the line and 1km for the triangle and is unlikely to change at this point.
-- `Build 8651 [20230908]`+: The other thing I've gotten around to was adding some method of displaying the `Destination` in images.
-- `Build 8658 [20230915]`+: There is now some support for `Dark Mode`. This is a little "unbeautiful", however there is no proper API support in .NET Framework 4.8.x for "real" (read: Windows 11 style) Dark Mode.
-	- Some Borders and Scrollbars don't draw proper "dark" lines/brushes - so there's a discrepancy around the edges. From what I gather as an outcome of the above (lack of support).
-	- Point being Dark Mode is an option so that the app doesn't burn your eyes if you are the night owl type, rather than to be pretty, apologies.
-- `Build 8829 [20240304]`+: Added a feature to Paste coordinate pairs into the `GPSData` (Lat/Long) of the `Edit File`. 
+- Pasteing coordinate pairs into the `GPSData` (Lat/Long) of the `Edit File`:
 	- The logic is that a Clipboard of _only_ a pair of coordinates separated by (preferably) the Culture-invariant [aka comma] ListSeparator would be pasted into the Edit Form when pressing `CTRL+V` (e.g.: `56.1234, 12.5678`) <-- and nothing else. 
 	- I coded this in a relatively foolproof way but try not to outsmart it.
-- `Build 8831 [20240306]`+: ExifTool should now auto-update into the Roaming folder upon app shutdown. (that's `c:\Users\username\AppData\Roaming\GeoTagNinja\`)
-- `Build 9095 [20241125]`+: There is now an option for `Flat Mode` that can be triggered from within the `File` menu. This will parse and load all subfolders within the currently selected folder. It's a little experimental although should work.
-- ~~`Build 9276 [20250526]`+: There is now an option for `Thumbnail View` within `Settings`. It incurs a very heavy performance hit on RAW-type files and so I don't particularly recommend it but it works. Currently there's no option to customise the thumbnail size.~~
-- `Build 9xxx`+ (upcoming): `Thumbnail View` has moved from `Settings` to the new `View` menu (`View` > `Details` / `Thumbnails`; your previous choice carries over) and can be switched at any time without restarting. The thumbnail size can be changed with `Ctrl` + mouse wheel, the slider under the list, or `View` > `Thumbnail Size`. Thumbnails are now generated in the background (the ones you can see first), are no longer slow on RAW files, and are remembered between sessions in `thumbnailcache.sqlite` in the Roaming folder (it is safe to delete). In Thumbnail View you can sort from `View` > `Sort By`, rename with `F2`, drag a rectangle over empty space to select several pictures, and right-click (or `Shift`+`F10`) for the usual actions; there are no column headers, so filtering by column is `Details` only.
-- `Build 9xxx`+ (upcoming): `Edit File(s)` has three new tabs ported from the old GeoSetter-style dialog: `Categories/Keywords`, `Source/Description` and `Contact` (artist, credit, copyright, caption, headline, byline, creator address/phone/e-mail/URL and so on). The `...` button beside most text fields offers `Insert from`/`Copy to` another field, `Copy Selection to Categories/Keywords` the most recently used values of that field, and `Forget a Remembered Item` to drop a typo or test entry from that list. `Load from Template...`, `Save as Template...` and `Load from Image...` (under the tabs) move a chosen set of values between the photo, a saved template and another image; dates and the time zone are unticked by default. The `Location` tab also gained the coordinates as degrees-minutes-seconds, `Image Direction` (with a compass), `Dest. Latitude`/`Dest. Longitude` and `Get from Web` for the altitude.
+- `Flat Mode` can be triggered from within the `File` menu. This will parse and load all subfolders within the currently selected folder. It's a little experimental although should work.
 
 ### A Particular Note on Working with Adobe Bridge (ACR) and RAW files > Saving as JPGs or Other Formats.
 
@@ -107,7 +114,7 @@ GTN allows to set a `Process the original image` on a per-extension basis. If se
 
 ### Collection Mode - Hooking up GTN with Jeffrey Friedl's Lightroom Classic Plugin "Run Any Command"
 
-As of `Build 8475 [20230316]` onwards we now have a `CollectionMode`. The initial logic/usage is as follows:
+There is an optional `CollectionMode` - logic & usage are as follows:
 
 1. Download (and install) the plugin from http://regex.info/blog/lightroom-goodies/run-any-command - there are installation notes in Jeffrey's website, if you are having issues with this part, please nudge him, not me.
 2. Within LRC under `File | Plug-in Extras | jf Run Any Command | Configure...` -> Configure the plugin as such:
@@ -141,7 +148,10 @@ The repo includes VS Code workspace files under `.vscode/` for the main app:
 - `Restore GeoTagNinja packages`
 - `Build GeoTagNinja (Debug x64)`
 - `Run GeoTagNinja (Debug x64)`
+- `Run GeoTagNinja Avalonia pre-release (Debug x64)` (builds the solution, then starts the Avalonia exe from `%LOCALAPPDATA%\build\GeoTagNinja\GeoTagNinja.Avalonia\`)
 - `Test GeoTagNinja` (runs the NUnit tests against the Debug build)
+
+`GeoTagNinja.Avalonia/` is the in-progress Avalonia rewrite (modern .NET, `net10.0-windows`, Windows 10 and 11). It builds as part of the same solution build. It is a pre-release effort and the WinForms app stays the main app for now. Avalonia itself is MIT and needs no licence key.
 
 The tasks call `.vscode\msbuild.ps1`, which finds MSBuild through `vswhere`. F5 launches the exe from `%LOCALAPPDATA%\build\GeoTagNinja\`.
 
@@ -171,9 +181,9 @@ As for code updates, I'm generally happy for anyone competent to add pull reques
 - There is a likelihood that the app will struggle to read file data if your files are kept in folders with accent marks (umlauts, non-standard English, Asian, Russian, Unicode, etc. characters) in the path and/or filename. This is a limitation of ExifTool + cmd. If you encounter a problem, move your files to something like `C:\temp` and see if it works better.
 	- Paths of 260 characters or more only work with ExifTool 13 or newer, which GTN installs (see above). If GTN had to fall back to the packaged 12.87 they will fail: rename your files or temporarily move them to `C:\temp`. Windows itself must also allow long paths (`LongPathsEnabled`) for GTN to open and rename such files.
 	- Alternatively, you can enable [this](https://stackoverflow.com/questions/56419639/what-does-beta-use-unicode-utf-8-for-worldwide-language-support-actually-do) feature if you're running v1903 Windows 10 or later but it may have some unwanted effects so keep an eye out for changes caused by it.
-- The API has its rather odd ways of dealing with the `City` tag [not the least because there isn't such a tag in the API].
+- The GeoNames API has its rather odd ways of dealing with the `City` tag [not the least because there isn't such a tag in the API].
 	- For a detailed rundown on the above see the code if interested + an overall discussion [here](https://github.com/nemethviktor/GeoTagNinja/issues/38)
-	- As of 20230105 there is now a `Custom Rules` section in `Settings` where users can amend their own rules and [there is](https://github.com/nemethviktor/GeoTagNinja/wiki/Settings-&-Custom-Rules) a wiki on the overall workings of this.
+	- There is a `Custom Rules` section in `Settings` where users can amend their own rules and [there is](https://github.com/nemethviktor/GeoTagNinja/wiki/Settings-&-Custom-Rules) a wiki on the overall workings of this.
 - Pressing `Get From Web` either in Edit mode or on the map will always set the affected file to write-queue even if the values don't actually change.
 - If user zooms "too far out" on Map they will get odd longitude values. The code handles this internally but map feedback is what it is.
 - I didn't really manage to test this but for Nikon D5 the camera outputs NEF files with a built-in "Rating=0" tag. This becomes an issue in Adobe Bridge if an XMP is created and then the NEF file is subsequently overwritten by GTN because Bridge would ignore the Rating value in the XMP file going forward. For this reason, `Rating` is always sent back to the RAW files if they are saved. I don't think this would be a problem but more of a heads-up that there are some oddities like this. Btw this force-save-Rating isn't limited to Nikon camera saves in GTN.
@@ -216,9 +226,10 @@ As for code updates, I'm generally happy for anyone competent to add pull reques
 
 ## Roadmap
 
-~~I'm hoping to eventually move away from WinForms to something visually more pleasing. Currently there's no Visual Designer for WinUI3~~ Well the original plan was to eventually move to something nicer (like WinUI3) but Microsoft keeps killing off their newer platforms and I don't want to learn an entirely different language just for the sake of this so WinForms it will be till the time protons decay. However...
-The UI is the other thing that's due an overhaul: the `Edit File(s)` form in particular has grown a lot of tabs and the fixed-position WinForms layout shows its age (the newer tabs are built in code for that reason, see `development-notes.md`). At some point I'd like to move to [Avalonia](https://avaloniaui.net/) for something visually better and resizable, but not today.
-The current .NET Framework 4.8 is a little obsolete. I haven't switched to 4.8.1 because that doesn't work on Win 7 and also offers nothing that's relevant for this app, but it's likely that eventually the codebase will move to some more current version of .NET.
+The UI is due for an overhaul - I started on WinForms back in 2022 because I was largely familiar with it but with AI around coding has become a lot faster and more efficient and so I'll be moving to a more modern UI, [Avalonia](https://avaloniaui.net/) in early 2027 most likely. 
+On top of that, the `Edit File(s)` form in particular has grown a lot of tabs and the fixed-position WinForms layout shows its age (the newer tabs are built in code for that reason, see `development-notes.md`). 
+
+Furthermore: The current .NET Framework 4.8 is a little obsolete. I haven't switched to 4.8.1 because that doesn't work on Win 7 and also offers nothing that's relevant for this app, but Avalonia doesn't support anything under .NET 8 and in all fairness Win7 is now very old. Existing releases will be retained on GitHub though.
 
 ## When reporting bugs please specify
 
@@ -226,11 +237,3 @@ The current .NET Framework 4.8 is a little obsolete. I haven't switched to 4.8.1
 - The OS's language (incl region such as English/UK or English/USA),
 - Full path of your photo if the bug is related to reading or writing data,
 - Possibly upload the picture somewhere if not sensitive so I can test.
-
-## System Requirements
-
-- Windows 7+ x64 is needed. As I mentioned in the Roadmap it's likely that support for pre-Win10 OSs will eventually be dropped.
-- The map's search box needs no registration of its own. It tries [GeoNames](https://www.geonames.org/) first (using the username you've entered in `Settings`, place names only), then [Photon](https://photon.komoot.io/) (OpenStreetMap data, suggestions as you type), and finally [Nominatim](https://nominatim.openstreetmap.org/) (OpenStreetMap data, only when you press Enter). Street addresses are found by Photon and Nominatim. The old ArcGIS API key is no longer needed or offered in `Settings`.
-- You'll need a GeoNames username and password to use toponym search (the username is also used first by the map's search box). Register for free [here](https://www.geonames.org/)
-    - Copypaste from above: I've been told that by default the GeoNames API usage is disabled for (some?) new accounts. In that case you have to activate the free web service ---> After registering and clicking the link in the activation email, you still need to activate your account for using web services. To do so, go to your `Manage Account` page [ [http://www.geonames.org/manageaccount](http://www.geonames.org/manageaccount) ] make sure your email shows up correctly. From here, click the `Free Webservice` activation link.
-- WebView2 is required but should come with your OS most likely. If not, get it from [here](https://go.microsoft.com/fwlink/p/?LinkId=2124703)

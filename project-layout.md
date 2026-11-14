@@ -8,6 +8,10 @@ namespace with it; the build will not warn you, but the next reader will suffer.
 Program.cs                     entry point
 SingleInstance_PipeServer.cs   named-pipe guard that forwards a second launch to the running instance
 
+GeoTagNinja.Avalonia/        in-progress Avalonia rewrite (net10.0-windows, Windows 10 and 11); pre-release, replaces the WinForms app in early 2027. Empty shell so far: App, MainWindow, Fluent theme
+
+GeoTagNinja.Core/             UI-free library (net48 + net10) shared by both apps. Same folders and namespaces as below: Model/ (most of it), Helpers/ (Data, Geo, FileSystem, API, Exif reading/writing helpers that need no UI) and Resources/Languages (Strings.resx and its translations). Rule: nothing here may reference WinForms, System.Drawing or FrmMainApp. Still to move: the files that show message boxes, touch images or read FrmMainApp (see development-notes.md)
+
 Model/                         the domain: what a file's metadata is, independent of how it is shown
   DirectoryElement             one file, its attributes, and the pending edits to them
   DirectoryElementCollection   the folder being browsed; also drives the ExifTool read pass

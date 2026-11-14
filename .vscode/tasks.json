@@ -56,6 +56,23 @@
       "problemMatcher": []
     },
     {
+      "label": "Run GeoTagNinja Avalonia pre-release (Debug x64)",
+      "type": "process",
+      "command": "powershell",
+      "args": [
+        "-NoProfile",
+        "-ExecutionPolicy",
+        "Bypass",
+        "-File",
+        "${workspaceFolder}\.vscode\msbuild.ps1",
+        "-Action",
+        "RunAvalonia"
+      ],
+      "dependsOn": "Build GeoTagNinja (Debug x64)",
+      "dependsOrder": "sequence",
+      "problemMatcher": []
+    },
+    {
       "label": "Test GeoTagNinja",
       "type": "process",
       "command": "powershell",

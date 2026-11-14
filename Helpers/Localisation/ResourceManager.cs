@@ -75,7 +75,7 @@ internal static class ResourceManager
         string resourceValue = string.Empty;
 
         System.Resources.ResourceManager resourceManager = new(baseName: $"GeoTagNinja.Resources.Languages.{location}",
-            assembly: typeof(ResourceManager).Assembly);
+            assembly: typeof(Strings).Assembly);
 
         if (resourceKey.Contains(value: "Generic") ||
             location == HelperVariables.ResourceNameForGenericControlItems)

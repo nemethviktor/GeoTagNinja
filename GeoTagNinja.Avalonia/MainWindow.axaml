@@ -1,0 +1,8 @@
+﻿<Window xmlns="https://github.com/avaloniaui"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        x:Class="GeoTagNinja.Avalonia.MainWindow"
+        Title="GeoTagNinja (Avalonia pre-release)"
+        Width="1200" Height="800">
+  <TextBlock HorizontalAlignment="Center" VerticalAlignment="Center"
+             Text="GeoTagNinja Avalonia pre-release - work in progress" />
+</Window>

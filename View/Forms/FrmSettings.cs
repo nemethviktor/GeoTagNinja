@@ -20,6 +20,7 @@ using System.Windows.Forms;
 using WinFormsDarkThemerNinja;
 using static GeoTagNinja.Helpers.UI.HelperControlAndMessageBoxHandling;
 using static GeoTagNinja.View.FileList.FileListView;
+using static GeoTagNinja.Model.FileListColumns;
 using static System.String;
 
 namespace GeoTagNinja.View.Forms;

@@ -1,13 +1,16 @@
 # Helper for the VS Code tasks: locates full-framework MSBuild (the legacy csproj cannot be built with
 # `dotnet build`) and runs one action. Keep in step with the Build and test section of CLAUDE.md.
 param(
-    [Parameter(Mandatory)][ValidateSet('Restore', 'Build', 'Run', 'Test')][string]$Action
+    [Parameter(Mandatory)][ValidateSet('Restore', 'Build', 'Run', 'RunAvalonia', 'Test')][string]$Action
 )
 $ErrorActionPreference = 'Stop'
 Set-Location -LiteralPath (Split-Path -Parent $PSScriptRoot)
 
 # Output lives outside the repo (see Directory.Build.props).
 $exe = Join-Path $env:LOCALAPPDATA 'build\GeoTagNinja\GeoTagNinja\bin\Debug\GeoTagNinja.exe'
+
+# The Avalonia pre-release exe (net10.0-windows, win-x64 RuntimeIdentifier puts it one folder deeper).
+$avaloniaBin = Join-Path $env:LOCALAPPDATA 'build\GeoTagNinja\GeoTagNinja.Avalonia\bin\Debug'
 
 function Stop-StaleExifTool {
     # A leftover stay_open exiftool locks files in the build output.
@@ -48,6 +51,11 @@ switch ($Action) {
         Stop-StaleExifTool
         if (-not (Test-Path $exe)) { throw "Build output not found at $exe. Run the build task first." }
         Start-Process -FilePath $exe -WorkingDirectory (Split-Path -Parent $exe)
+    }
+    'RunAvalonia' {
+        $avaloniaExe = Get-ChildItem -LiteralPath $avaloniaBin -Recurse -Filter 'GeoTagNinja.Avalonia.exe' -ErrorAction SilentlyContinue | Select-Object -First 1
+        if (-not $avaloniaExe) { throw "Build output not found under $avaloniaBin. Run the build task first." }
+        Start-Process -FilePath $avaloniaExe.FullName -WorkingDirectory $avaloniaExe.DirectoryName
     }
     'Test' {
         # --no-build --no-restore is mandatory: dotnet cannot build the main project.

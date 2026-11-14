@@ -5,6 +5,7 @@ using System;
 using System.Windows.Forms;
 using WinFormsDarkThemerNinja;
 using static GeoTagNinja.View.FileList.FileListView;
+using static GeoTagNinja.Model.FileListColumns;
 
 namespace GeoTagNinja.View.Forms;
 

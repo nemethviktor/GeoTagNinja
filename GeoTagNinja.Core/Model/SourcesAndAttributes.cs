@@ -1,8 +1,7 @@
 ﻿using GeoTagNinja.Helpers;
-using GeoTagNinja.View.Forms;
 using System;
 using System.Collections.Generic;
-using static GeoTagNinja.View.FileList.FileListView;
+using static GeoTagNinja.Model.FileListColumns;
 
 // ReSharper disable InconsistentNaming
 
