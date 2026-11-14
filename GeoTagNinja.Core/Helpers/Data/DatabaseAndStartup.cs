@@ -3,7 +3,6 @@ using GeoTagNinja.Helpers.FileSystem;
 using GeoTagNinja.Helpers.Startup;
 using GeoTagNinja.Helpers.UI;
 using GeoTagNinja.Model;
-using GeoTagNinja.View.Forms;
 using System;
 using System.Collections.Generic;
 using System.Data;
@@ -11,7 +10,6 @@ using System.Data.SQLite;
 using System.Diagnostics;
 using System.IO;
 using System.Linq;
-using System.Windows.Forms;
 using static GeoTagNinja.Helpers.UI.HelperControlAndMessageBoxHandling;
 
 namespace GeoTagNinja.Helpers.Data;
@@ -70,7 +68,7 @@ internal static class DatabaseAndStartup
         catch (Exception ex)
         {
             Log.Fatal(message: $"Error: {ex.Message}");
-            ThemeHelper.ShowMessageBox(message: ex.Message);
+            UiServices.ShowMessageBox(message: ex.Message);
         }
     }
 
@@ -209,7 +207,7 @@ internal static class DatabaseAndStartup
         // them have no row for this yet, and writing one would flip their theme on the next start.
         if (UpgradeNotices.IsFreshInstall)
         {
-            bool windowsIsDark = ThemeHelper.WindowsPrefersDarkApps();
+            bool windowsIsDark = WindowsAppearance.PrefersDarkApps();
             Log.Info(message: $"New install - starting in {(windowsIsDark ? "dark" : "light")} mode to match Windows");
             settingsToWriteTmp.Add(item: new AppSettingContainer
             {

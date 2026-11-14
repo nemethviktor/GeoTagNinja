@@ -167,9 +167,9 @@
       <DependentUpon>FrmSplashScreen.cs</DependentUpon>
     </Compile>
     <Compile Include="Helpers\UI\ControlTextApplier.cs" />
+    <Compile Include="Helpers\UI\WinFormsDialogs.cs" />
     <Compile Include="Helpers\Data\ThumbnailCache.cs" />
     <Compile Include="Helpers\Data\MenuSettings.cs" />
-    <Compile Include="Helpers\Data\SettingsExport.cs" />
     <Compile Include="Helpers\Exif\ReadTrackFilePath.cs" />
     <Compile Include="Helpers\Exif\WriteTrackDataToTrackFile.cs" />
     <Compile Include="Helpers\Exif\WriteTrackDataToSideCar.cs" />
@@ -184,8 +184,6 @@
     <Compile Include="Helpers\Update\AutoUpdaterCallbacks.cs" />
     <Compile Include="Helpers\Update\ChangelogNotes.cs" />
     <Compile Include="Helpers\Startup\AppStartup.cs" />
-    <Compile Include="Helpers\Startup\LegacyWindowsNotice.cs" />
-    <Compile Include="Helpers\Startup\UpgradeNotices.cs" />
     <Compile Include="View\Forms\FrmAboutBox.cs">
       <SubType>Form</SubType>
     </Compile>
@@ -215,11 +213,9 @@
     <Compile Include="View\FileList\FileListViewCopyPaste.cs" />
     <Compile Include="View\FileList\FileListViewReadWrite.cs" />
     <Compile Include="View\Forms\EditFileFormLauncher.cs" />
-    <Compile Include="Helpers\API\GeoNamesToponomyExtractor.cs" />
     <Compile Include="Helpers\API\APIVersionCheckers.cs">
       <SubType>Component</SubType>
     </Compile>
-    <Compile Include="Helpers\Data\DatabaseAndStartup.cs" />
     <Compile Include="Helpers\Data\Favourites.cs" />
     <Compile Include="Helpers\Data\SessionDataTables.cs" />
     <Compile Include="Helpers\Exif\DataPointInteractions.cs" />

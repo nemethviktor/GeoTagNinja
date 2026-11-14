@@ -3,7 +3,6 @@ using GeoTagNinja.Helpers.Data;
 using GeoTagNinja.Helpers.UI;
 using GeoTagNinja.Helpers.Update;
 using GeoTagNinja.Model;
-using GeoTagNinja.View.Forms;
 using System;
 using System.Collections.Generic;
 using System.Globalization;
@@ -207,16 +206,16 @@ internal static class UpgradeNotices
         {
             if (_pending.Count > 0)
             {
-                ThemeHelper.ShowMessageBox(
+                UiServices.ShowMessageBox(
                     message: string.Join(separator: Environment.NewLine + Environment.NewLine + "----" +
                                                     Environment.NewLine + Environment.NewLine,
                         values: _pending.Select(selector: notice => notice.Message)),
                     caption: "GeoTagNinja",
-                    icon: System.Windows.Forms.MessageBoxIcon.Information);
+                    icon: UiMessageIcon.Information);
             }
 
             // what changed since the build last run (does nothing if the user has turned it off, or on a first install)
-            ChangelogNotes.ShowAfterUpdate(lastRunBuild: _lastRunBuild, currentBuild: CurrentBuild());
+            UiServices.ShowChangelogAfterUpdate(lastRunBuild: _lastRunBuild, currentBuild: CurrentBuild());
 
             WriteStoredBuild(build: _buildToStoreAfterShowing);
         }

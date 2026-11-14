@@ -6,8 +6,6 @@ using RestSharp;
 using RestSharp.Authenticators;
 using System;
 using System.Diagnostics;
-using System.Windows.Forms;
-using WinFormsDarkThemerNinja;
 
 namespace GeoTagNinja.Helpers.API;
 
@@ -64,14 +62,14 @@ internal static class GeoNamesToponomyExtractor
                 Debug.Print(ex.Message);
             }
             HelperVariables.OperationAPIReturnedOKResponse = false;
-            Themer.ShowMessageBox(
+            UiServices.ShowMessageBox(
                 message: HelperControlAndMessageBoxHandling.ReturnControlText(
                     controlName: "mbx_Helper_WarningGeoNamesAPIResponse",
                     fakeControlType: HelperControlAndMessageBoxHandling.FakeControlTypes.MessageBox)
                     + Environment.NewLine
                     + apiMessage,
-                icon: MessageBoxIcon.Warning,
-                buttons: MessageBoxButtons.OK);
+                icon: UiMessageIcon.Warning,
+                buttons: UiMessageButtons.OK);
         }
 
         // If we have any data we make some changes (to altitude).
@@ -99,12 +97,12 @@ internal static class GeoNamesToponomyExtractor
             }
             catch (Exception)
             {
-                Themer.ShowMessageBox(
+                UiServices.ShowMessageBox(
                     message: HelperControlAndMessageBoxHandling.ReturnControlText(
                         controlName: "mbx_Helper_ErrorCantReadDefaultSQLiteDB",
                         fakeControlType: HelperControlAndMessageBoxHandling.FakeControlTypes.MessageBox),
-                    icon: MessageBoxIcon.Error,
-                    buttons: MessageBoxButtons.OK);
+                    icon: UiMessageIcon.Error,
+                    buttons: UiMessageButtons.OK);
             }
         }
     }

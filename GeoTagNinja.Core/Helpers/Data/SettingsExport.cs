@@ -2,8 +2,6 @@
 using System;
 using System.Collections.Generic;
 using System.Data.SQLite;
-using System.Windows.Forms;
-using WinFormsDarkThemerNinja;
 
 namespace GeoTagNinja.Helpers.Data;
 
@@ -40,12 +38,12 @@ internal static class SettingsExport
         KeepSQLiteTables(tablesToKeep: settingsTablesToBeKeptList, exportFilePath: exportFilePath);
 
         // finally
-        Themer.ShowMessageBox(
+        UiServices.ShowMessageBox(
             message: HelperControlAndMessageBoxHandling.ReturnControlText(
                 controlName: "mbx_GenericDone",
                 fakeControlType: HelperControlAndMessageBoxHandling.FakeControlTypes.MessageBox),
-            icon: MessageBoxIcon.Information,
-            buttons: MessageBoxButtons.OK);
+            icon: UiMessageIcon.Information,
+            buttons: UiMessageButtons.OK);
         return;
 
         static void KeepSQLiteTables(List<string> tablesToKeep,

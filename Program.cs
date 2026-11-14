@@ -41,6 +41,7 @@ internal static class Program
     private static void Main(string[] args)
     {
         GeoTagNinja.Helpers.Data.ApplicationSettings.ReloadSettingTables = () => _ = GeoTagNinja.Helpers.Startup.AppStartup.AppStartupReadSQLiteTables();
+        GeoTagNinja.Helpers.UI.UiServices.Dialogs = new GeoTagNinja.Helpers.UI.WinFormsDialogs();
         Application.EnableVisualStyles();
         Application.SetCompatibleTextRenderingDefault(defaultValue: false);
 

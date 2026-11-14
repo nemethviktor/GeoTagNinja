@@ -4,7 +4,6 @@ using GeoTagNinja.Helpers.UI;
 using GeoTagNinja.Model;
 using System;
 using System.Globalization;
-using System.Windows.Forms;
 
 namespace GeoTagNinja.Helpers.Startup;
 
@@ -56,7 +55,7 @@ internal static class LegacyWindowsNotice
                 return;
             }
 
-            ThemeHelper.ShowMessageBox(message: Message, caption: "GeoTagNinja", icon: MessageBoxIcon.Warning);
+            UiServices.ShowMessageBox(message: Message, caption: "GeoTagNinja", icon: UiMessageIcon.Warning);
 
             ApplicationSettings.DataWriteSQLiteSettings(settingsToWrite:
             [
