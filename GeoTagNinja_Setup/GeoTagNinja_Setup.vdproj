@@ -6401,7 +6401,7 @@
             }
             "{1FB2D0AE-D3B9-43D4-B9DD-F88EC61E35DE}:_48CBF14E4CBD46FDB357F0302DE0B6E6"
             {
-            "SourcePath" = "8:C:\Users\nemet\AppData\Local\build\GeoTagNinja\GeoTagNinja\bin\Release\libSkiaSharp.dll"
+            "SourcePath" = "8:C:\\Users\\nemet\\AppData\\Local\\build\\GeoTagNinja\\GeoTagNinja\\bin\\Release\\libSkiaSharp.dll"
             "TargetName" = "8:libSkiaSharp.dll"
             "Tag" = "8:"
             "Folder" = "8:_5C38588AFAE143409B41A6F28E88ADC9"
