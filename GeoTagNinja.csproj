@@ -137,11 +137,21 @@
     <ProjectReference Include="GeoTagNinja.Core\GeoTagNinja.Core.csproj" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="View\Forms\FrmChangelog.cs" />
-    <Compile Include="View\Forms\FrmEditTemplateDialog.cs" />
-    <Compile Include="View\Forms\FrmBatchRename.cs" />
-    <Compile Include="View\Forms\FrmMainApp.BatchRename.cs" />
-    <Compile Include="View\FileList\FileListView.BatchRename.cs" />
+    <Compile Include="View\Forms\FrmChangelog.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="View\Forms\FrmEditTemplateDialog.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="View\Forms\FrmBatchRename.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="View\Forms\FrmMainApp.BatchRename.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="View\FileList\FileListView.BatchRename.cs">
+      <SubType>Component</SubType>
+    </Compile>
     <Compile Include="View\Forms\FrmCustomiseFormControls.cs">
       <SubType>Form</SubType>
     </Compile>
@@ -178,7 +188,9 @@
     <Compile Include="Helpers\UI\DarkDisabledText.cs" />
     <Compile Include="Helpers\UI\ThemeHelper.cs" />
     <Compile Include="View\Controls\ThumbnailLayout.cs" />
-    <Compile Include="View\Controls\ThumbnailView.cs" />
+    <Compile Include="View\Controls\ThumbnailView.cs">
+      <SubType>Component</SubType>
+    </Compile>
     <Compile Include="View\Controls\FolderIcons.cs" />
     <Compile Include="Helpers\Update\AutoUpdaterCallbacks.cs" />
     <Compile Include="Helpers\Startup\WebView2Check.cs" />
@@ -236,18 +248,23 @@
     </Compile>
     <Compile Include="View\Forms\FrmEditFileData.MetadataTabs.cs">
       <DependentUpon>FrmEditFileData.cs</DependentUpon>
+      <SubType>Form</SubType>
     </Compile>
     <Compile Include="View\Forms\FrmEditFileData.FieldMenus.cs">
       <DependentUpon>FrmEditFileData.cs</DependentUpon>
+      <SubType>Form</SubType>
     </Compile>
     <Compile Include="View\Forms\FrmEditFileData.Templates.cs">
       <DependentUpon>FrmEditFileData.cs</DependentUpon>
+      <SubType>Form</SubType>
     </Compile>
     <Compile Include="View\Forms\FrmEditFileData.LocationExtras.cs">
       <DependentUpon>FrmEditFileData.cs</DependentUpon>
+      <SubType>Form</SubType>
     </Compile>
     <Compile Include="View\Forms\FrmEditFileData.KeywordSync.cs">
       <DependentUpon>FrmEditFileData.cs</DependentUpon>
+      <SubType>Form</SubType>
     </Compile>
     <Compile Include="View\Forms\FrmEditFileData.Designer.cs">
       <DependentUpon>FrmEditFileData.cs</DependentUpon>
@@ -482,6 +499,9 @@
          The package's own build assets refuse AnyCPU and copy into runtimes\win-x64
 ative, which a
          .NET Framework exe never probes, so they are excluded and the x64 DLL is copied flat below. -->
+    <PackageReference Include="SkiaSharp">
+      <Version>3.119.4</Version>
+    </PackageReference>
     <PackageReference Include="SQLitePCLRaw.lib.e_sqlite3">
       <Version>3.53.3</Version>
       <ExcludeAssets>build; buildTransitive</ExcludeAssets>
