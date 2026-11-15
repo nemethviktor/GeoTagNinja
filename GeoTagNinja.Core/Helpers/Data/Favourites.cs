@@ -1,7 +1,6 @@
 ﻿using NLog;
 using GeoTagNinja.Helpers.UI;
 using GeoTagNinja.Model;
-using GeoTagNinja.View.Forms;
 using System;
 using System.Collections.Generic;
 using System.Data;
@@ -10,15 +9,28 @@ using System.Globalization;
 using System.IO;
 using System.Linq;
 using System.Text;
-using System.Windows.Forms;
 using System.Xml.Linq;
-using WinFormsDarkThemerNinja;
 
 namespace GeoTagNinja.Helpers.Data;
 
 internal static class Favourites
 {
     private static readonly Logger Log = LogManager.GetCurrentClassLogger();
+
+    internal static Favourite GetFavouriteByName(string favouriteName)
+    {
+        return HelperVariables.Favourites.FirstOrDefault(predicate: f => f.FavouriteName == favouriteName);
+    }
+
+    internal static void RemoveFavouriteByName(string favouriteName)
+    {
+        Favourite itemToRemove = GetFavouriteByName(favouriteName: favouriteName);
+
+        if (itemToRemove != null)
+        {
+            _ = HelperVariables.Favourites.Remove(item: itemToRemove);
+        }
+    }
 
     #region GeoSetter Favourites/Import
 
@@ -31,7 +43,6 @@ internal static class Favourites
         bool updateFavouritesInSQLiteAtTheEnd = true;
         int itemsImported = 0;
 
-        FrmMainApp frmMainAppInstance = FrmMainApp.Instance;
         HashSet<GeoSetterFavourite> geoSetterFavourites = [];
         try
         {
@@ -93,14 +104,14 @@ internal static class Favourites
         }
         catch (Exception ex)
         {
-            Themer.ShowMessageBox(
+            UiServices.ShowMessageBox(
                 message: HelperControlAndMessageBoxHandling.ReturnControlText(
                     controlName: "mbx_FrmMainApp_ErrorImportGeoSetterFavourites",
                     fakeControlType: HelperControlAndMessageBoxHandling.FakeControlTypes.MessageBox
                     ) +
                     Environment.NewLine + $"{ex.Message}",
-                icon: MessageBoxIcon.Error,
-                buttons: MessageBoxButtons.OK);
+                icon: UiMessageIcon.Error,
+                buttons: UiMessageButtons.OK);
 
             updateFavouritesInSQLiteAtTheEnd = false;
         }
@@ -137,26 +148,26 @@ internal static class Favourites
                     };
 
                     Favourite existingFavouriteWithThisName =
-                        frmMainAppInstance.GetFavouriteByName(favouriteName: favourite.FavouriteName);
+                        GetFavouriteByName(favouriteName: favourite.FavouriteName);
                     if (existingFavouriteWithThisName != null)
                     {
-                        frmMainAppInstance.RemoveFavouriteByName(
+                        RemoveFavouriteByName(
                             favouriteName: existingFavouriteWithThisName.FavouriteName);
                     }
 
-                    _ = FrmMainApp.Favourites.Add(item: favourite);
+                    _ = HelperVariables.Favourites.Add(item: favourite);
                     itemsImported++;
                 }
                 catch (Exception ex)
                 {
-                    Themer.ShowMessageBox(
+                    UiServices.ShowMessageBox(
                         message: HelperControlAndMessageBoxHandling.ReturnControlText(
                             controlName: "mbx_FrmMainApp_ErrorImportGeoSetterFavourites",
                             fakeControlType: HelperControlAndMessageBoxHandling.FakeControlTypes.MessageBox
                             ) +
                             Environment.NewLine + $"{ex.Message}",
-                        icon: MessageBoxIcon.Error,
-                        buttons: MessageBoxButtons.OK);
+                        icon: UiMessageIcon.Error,
+                        buttons: UiMessageButtons.OK);
 
                     updateFavouritesInSQLiteAtTheEnd = false;
                 }
@@ -170,16 +181,16 @@ internal static class Favourites
         if (updateFavouritesInSQLiteAtTheEnd)
         {
             DataWriteSQLiteClearAndUpdateFavourites();
-            Themer.ShowMessageBox(
+            UiServices.ShowMessageBox(
                 message: HelperControlAndMessageBoxHandling.ReturnControlText(
                     controlName: "mbx_FrmMainApp_InfoImportGeoSetterFavouritesDone",
                     fakeControlType: HelperControlAndMessageBoxHandling.FakeControlTypes.MessageBox
                     ) +
                     Environment.NewLine + $"{itemsImported}",
-                icon: MessageBoxIcon.Information,
-                buttons: MessageBoxButtons.OK);
+                icon: UiMessageIcon.Information,
+                buttons: UiMessageButtons.OK);
 
-            frmMainAppInstance.ClearReloadFavouritesDropDownValues();
+            UiServices.ReloadFavouritesDropDown();
         }
     }
 
@@ -208,7 +219,7 @@ internal static class Favourites
         SQLiteDataReader reader = SQLiteCommand.ExecuteReader();
         DataTable dataTable = new();
         dataTable.Load(reader: reader);
-        FrmMainApp.Favourites.Clear();
+        HelperVariables.Favourites.Clear();
 
         foreach (DataRow row in dataTable.Rows)
         {
@@ -234,7 +245,7 @@ internal static class Favourites
                 Keywords = FavouriteKeywords.Split(stored: ReadText(row: row, columnName: "Keywords"))
             };
 
-            _ = FrmMainApp.Favourites.Add(item: favourite);
+            _ = HelperVariables.Favourites.Add(item: favourite);
         }
     }
 
@@ -415,7 +426,7 @@ internal static class Favourites
                 _ = insertCommand.Parameters.Add(parameterName: "@TimeZoneId", parameterType: DbType.String);
                 _ = insertCommand.Parameters.Add(parameterName: "@Keywords", parameterType: DbType.String);
 
-                foreach (Favourite favourite in FrmMainApp.Favourites)
+                foreach (Favourite favourite in HelperVariables.Favourites)
                 {
                     insertCommand.Parameters[parameterName: "@favouriteName"].Value = favourite.FavouriteName;
                     insertCommand.Parameters[parameterName: "@GPSLatitude"].Value = favourite.GPSLatitude;

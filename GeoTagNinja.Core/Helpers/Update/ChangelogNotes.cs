@@ -1,7 +1,7 @@
 ﻿using GeoTagNinja.Helpers.API;
 using GeoTagNinja.Helpers.Data;
 using GeoTagNinja.Model;
-using GeoTagNinja.View.Forms;
+using GeoTagNinja.Helpers.UI;
 using NLog;
 using System;
 using System.Collections.Generic;
@@ -9,7 +9,6 @@ using System.Globalization;
 using System.IO;
 using System.Linq;
 using System.Text;
-using System.Windows.Forms;
 
 namespace GeoTagNinja.Helpers.Update;
 
@@ -90,7 +89,7 @@ internal static class ChangelogNotes
     /// <param name="installedBuild">The running build.</param>
     /// <param name="newBuild">The release on offer.</param>
     /// <returns>Yes to update, No for later; null when there is nothing to show.</returns>
-    internal static DialogResult? AskToUpdate(int installedBuild,
+    internal static UiDialogResult? AskToUpdate(int installedBuild,
                                               int newBuild)
     {
         try
@@ -102,11 +101,10 @@ internal static class ChangelogNotes
                 return null;
             }
 
-            using FrmChangelog dialog = new(mode: FrmChangelog.Mode.BeforeUpdate,
+            return UiServices.ShowChangelog(beforeUpdate: true,
                 intro: $"Version {newBuild} is available. You are using version {installedBuild}. " +
                        "This is what has changed since then. Do you want to update now?",
-                sections: sections);
-            return dialog.ShowDialog(owner: FrmMainApp.Instance);
+                sections: sections, doNotShowAgain: out _);
         }
         catch (Exception ex)
         {
@@ -139,13 +137,12 @@ internal static class ChangelogNotes
                 return;
             }
 
-            using FrmChangelog dialog = new(mode: FrmChangelog.Mode.AfterUpdate,
+            _ = UiServices.ShowChangelog(beforeUpdate: false,
                 intro: $"GeoTagNinja has been updated to version {currentBuild}. " +
                        "This is what has changed since the version you used last.",
-                sections: sections);
-            _ = dialog.ShowDialog(owner: FrmMainApp.Instance);
+                sections: sections, doNotShowAgain: out bool doNotShowAgain);
 
-            if (dialog.DoNotShowAgain)
+            if (doNotShowAgain)
             {
                 HelperVariables.UserSettingShowChangelogAfterUpdate = false;
                 ApplicationSettings.DataWriteSQLiteSettings(settingsToWrite:

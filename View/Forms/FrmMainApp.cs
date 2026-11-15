@@ -397,7 +397,7 @@ public partial class FrmMainApp : Form
                 settingTabPage: "tpg_Application",
                 actuallyRunningAtStartup: true),
             LanguageTZ.DataReadCountryCodeDataFromWikipediaData(),
-            AppStartup.AppStartupCheckWebView2(),
+            WebView2Check.Run(),
             AppStartupInitializeComponentFrmMainApp(),
             AppStartupSetAppTheme(),
             AppStartupEnableDoubleBuffering()
@@ -472,8 +472,8 @@ public partial class FrmMainApp : Form
 
         if (!Program.CollectionModeEnabled)
         {
-            AppStartup.AppSetupInitialiseStartupFolder(
-                toolStripTextBox: tbx_FolderName);
+            tbx_FolderName.Text = AppStartup.AppSetupInitialiseStartupFolder(
+                folderToLaunchIn: Program.FolderToLaunchIn);
         }
 
         // initialise webView2
@@ -4608,19 +4608,12 @@ context: ValueFormatContext.Display));
 
     internal Favourite GetFavouriteByName(string favouriteName)
     {
-        Favourite match = Favourites.FirstOrDefault(predicate: f => f.FavouriteName == favouriteName);
-        return match ??
-               null;
+        return Helpers.Data.Favourites.GetFavouriteByName(favouriteName: favouriteName);
     }
 
     internal void RemoveFavouriteByName(string favouriteName)
     {
-        Favourite itemToRemove = Favourites.FirstOrDefault(predicate: f => f.FavouriteName == favouriteName);
-
-        if (itemToRemove != null)
-        {
-            _ = Favourites.Remove(item: itemToRemove);
-        }
+        Helpers.Data.Favourites.RemoveFavouriteByName(favouriteName: favouriteName);
     }
 
     /// <summary>

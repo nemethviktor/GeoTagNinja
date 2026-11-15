@@ -3,7 +3,6 @@ using GeoTagNinja.Helpers.Data;
 using GeoTagNinja.Helpers.Exif;
 using GeoTagNinja.Helpers.UI;
 using GeoTagNinja.Model;
-using GeoTagNinja.View.Forms;
 using Newtonsoft.Json;
 using RestSharp;
 using RestSharp.Authenticators;
@@ -17,8 +16,6 @@ using System.Net.Http;
 using System.Reflection;
 using System.Text.RegularExpressions;
 using System.Threading.Tasks;
-using System.Windows.Forms;
-using WinFormsDarkThemerNinja;
 using static GeoTagNinja.Helpers.API.GTNReleaseAPIResponse;
 
 namespace GeoTagNinja.Helpers.API;
@@ -123,14 +120,14 @@ internal static class APIVersionCheckers
         {
             HelperVariables.OperationAPIReturnedOKResponse = false;
             // this now runs off the UI thread, and ThemeHelper shows the box on it
-            ThemeHelper.ShowMessageBox(
+            UiServices.ShowMessageBox(
                 message: HelperControlAndMessageBoxHandling.ReturnControlText(
                     controlName: "mbx_Helper_WarningGTNVerAPIResponse",
                     fakeControlType: HelperControlAndMessageBoxHandling.FakeControlTypes.MessageBox
                     ) +
                     Environment.NewLine + $"{response_GTNVersionQuery.StatusCode}",
-                icon: MessageBoxIcon.Warning,
-                buttons: MessageBoxButtons.OK);
+                icon: UiMessageIcon.Warning,
+                buttons: UiMessageButtons.OK);
         }
 #endif
 
@@ -195,7 +192,7 @@ internal static class APIVersionCheckers
         // this needs to run each time the app runs because it's part of the info in the About box.
         // get current exiftool version
         // ...asked of the long-running stay_open process (the same one that reads the files) rather than of a new one.
-        ExifTool runningExifTool = FrmMainApp.DirectoryElements.ExifTool;
+        ExifTool runningExifTool = HelperVariables.DirectoryElements.ExifTool;
         HelperVariables.CurrentExifToolVersionLocal = runningExifTool == null
             ? 0
             : await Task.Run(function: runningExifTool.GetVersion);
@@ -313,7 +310,6 @@ internal static class APIVersionCheckers
     /// </summary>
     /// <param name="version">The (most current) version to download.</param>
     /// <returns></returns>
-    /// <see cref="FrmMainApp.FrmMainApp_FormClosing" />
     private static async Task DownloadCurrentExifToolVersion(string version)
     {
 

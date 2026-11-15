@@ -29,10 +29,17 @@ internal sealed class WinFormsDialogs : IUiHost
             icon: (MessageBoxIcon)(int)icon);
     }
 
-    public void ShowChangelogAfterUpdate(int lastRunBuild,
-                                         int currentBuild)
+    public UiDialogResult ShowChangelog(bool beforeUpdate,
+                                        string intro,
+                                        IReadOnlyList<ChangelogSection> sections,
+                                        out bool doNotShowAgain)
     {
-        ChangelogNotes.ShowAfterUpdate(lastRunBuild: lastRunBuild, currentBuild: currentBuild);
+        using FrmChangelog dialog = new(
+            mode: beforeUpdate ? FrmChangelog.Mode.BeforeUpdate : FrmChangelog.Mode.AfterUpdate,
+            intro: intro, sections: sections.ToList());
+        DialogResult result = dialog.ShowDialog(owner: FrmMainApp.Instance);
+        doNotShowAgain = dialog.DoNotShowAgain;
+        return (UiDialogResult)(int)result;
     }
 
     public void SetWaitStage(UiWaitStage stage)
@@ -116,5 +123,15 @@ internal sealed class WinFormsDialogs : IUiHost
     public void ShowReport(string text)
     {
         ReportBox.Show(text: text);
+    }
+
+    public void ExitApplication()
+    {
+        Application.Exit();
+    }
+
+    public void ReloadFavouritesDropDown()
+    {
+        FrmMainApp.Instance?.ClearReloadFavouritesDropDownValues();
     }
 }

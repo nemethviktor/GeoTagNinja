@@ -1,4 +1,5 @@
-﻿using GeoTagNinja.Model;
+﻿using GeoTagNinja.Helpers.Update;
+using GeoTagNinja.Model;
 using NLog;
 using System.Collections.Generic;
 using System.Data;
@@ -85,10 +86,14 @@ internal interface IUiHost
                                UiMessageIcon icon);
 
     /// <summary>
-    ///     Shows what changed since the build that last ran, when the user wants that (see ChangelogNotes).
+    ///     Shows the changelog sections in a dialog. Before an update the answer is Yes (update now) or No (later);
+    ///     after one it is just closed, and <paramref name="doNotShowAgain" /> says whether the user asked not to see
+    ///     it after future updates.
     /// </summary>
-    void ShowChangelogAfterUpdate(int lastRunBuild,
-                                  int currentBuild);
+    UiDialogResult ShowChangelog(bool beforeUpdate,
+                                 string intro,
+                                 IReadOnlyList<ChangelogSection> sections,
+                                 out bool doNotShowAgain);
 
     /// <summary>
     ///     Tells the "please wait" box (if one is open) which stage the folder read has reached.
@@ -152,6 +157,16 @@ internal interface IUiHost
     ///     Shows a block of text (a report) in a dialog and waits for it to be closed.
     /// </summary>
     void ShowReport(string text);
+
+    /// <summary>
+    ///     Closes the application (a start-up problem that can't be recovered from).
+    /// </summary>
+    void ExitApplication();
+
+    /// <summary>
+    ///     Re-reads the favourites into the favourites drop-down.
+    /// </summary>
+    void ReloadFavouritesDropDown();
 }
 
 /// <summary>
@@ -195,7 +210,22 @@ internal static class UiServices
     internal static void ShowChangelogAfterUpdate(int lastRunBuild,
                                                   int currentBuild)
     {
-        Host?.ShowChangelogAfterUpdate(lastRunBuild: lastRunBuild, currentBuild: currentBuild);
+        ChangelogNotes.ShowAfterUpdate(lastRunBuild: lastRunBuild, currentBuild: currentBuild);
+    }
+
+    internal static UiDialogResult ShowChangelog(bool beforeUpdate,
+                                                 string intro,
+                                                 IReadOnlyList<ChangelogSection> sections,
+                                                 out bool doNotShowAgain)
+    {
+        if (Host != null)
+        {
+            return Host.ShowChangelog(beforeUpdate: beforeUpdate, intro: intro, sections: sections,
+                doNotShowAgain: out doNotShowAgain);
+        }
+
+        doNotShowAgain = false;
+        return UiDialogResult.None;
     }
 
     internal static void SetWaitStage(UiWaitStage stage)
@@ -257,5 +287,15 @@ internal static class UiServices
     internal static void ShowReport(string text)
     {
         Host?.ShowReport(text: text);
+    }
+
+    internal static void ExitApplication()
+    {
+        Host?.ExitApplication();
+    }
+
+    internal static void ReloadFavouritesDropDown()
+    {
+        Host?.ReloadFavouritesDropDown();
     }
 }

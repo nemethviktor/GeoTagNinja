@@ -181,8 +181,7 @@
     <Compile Include="View\Controls\ThumbnailView.cs" />
     <Compile Include="View\Controls\FolderIcons.cs" />
     <Compile Include="Helpers\Update\AutoUpdaterCallbacks.cs" />
-    <Compile Include="Helpers\Update\ChangelogNotes.cs" />
-    <Compile Include="Helpers\Startup\AppStartup.cs" />
+    <Compile Include="Helpers\Startup\WebView2Check.cs" />
     <Compile Include="View\Forms\FrmAboutBox.cs">
       <SubType>Form</SubType>
     </Compile>
@@ -212,11 +211,7 @@
     <Compile Include="View\FileList\FileListViewCopyPaste.cs" />
     <Compile Include="View\FileList\FileListViewReadWrite.cs" />
     <Compile Include="View\Forms\EditFileFormLauncher.cs" />
-    <Compile Include="Helpers\API\APIVersionCheckers.cs">
-      <SubType>Component</SubType>
-    </Compile>
-    <Compile Include="Helpers\Data\Favourites.cs" />
-    <Compile Include="Helpers\Exif\DataPointInteractions.cs" />
+    <Compile Include="Helpers\Exif\ImageExifRotation.cs" />
     <Compile Include="Helpers\Exif\ReadGetImagePreviews.cs" />
     <Compile Include="View\Forms\FrmColumnSelection.cs">
       <SubType>Form</SubType>

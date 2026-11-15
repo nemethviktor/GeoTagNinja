@@ -30,6 +30,11 @@ internal static class HelperVariables
     internal static HashSet<Favourite> Favourites { get; set; } = [];
 
     /// <summary>
+    ///     The default order of the file-list columns (name without prefix, to order id).
+    /// </summary>
+    internal static Dictionary<string, int> ColumnOrderDefaults { get; } = [];
+
+    /// <summary>
     ///     The folder currently open in the file list.
     /// </summary>
     internal static string FolderName { get; set; }

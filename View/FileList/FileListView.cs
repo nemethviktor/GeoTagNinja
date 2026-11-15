@@ -342,7 +342,7 @@ public partial class FileListView : System.Windows.Forms.ListView
     /// <summary>
     ///     The default order of the columns to show (without prefix)
     /// </summary>
-    internal static Dictionary<string, int> _cfg_Col_Order_Default = [];
+    internal static Dictionary<string, int> _cfg_Col_Order_Default => HelperVariables.ColumnOrderDefaults;
 
     /// <summary>
     ///     The used sorter

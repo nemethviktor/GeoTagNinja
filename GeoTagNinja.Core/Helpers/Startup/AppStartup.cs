@@ -3,9 +3,6 @@ using GeoTagNinja.Helpers.Data;
 using GeoTagNinja.Helpers.Localisation;
 using GeoTagNinja.Helpers.UI;
 using GeoTagNinja.Model;
-using GeoTagNinja.View.FileList;
-using GeoTagNinja.View.Forms;
-using Microsoft.Web.WebView2.Core;
 using System;
 using System.Collections.Generic;
 using System.Data;
@@ -16,8 +13,6 @@ using System.Linq;
 using System.Reflection;
 using System.Threading;
 using System.Threading.Tasks;
-using System.Windows.Forms;
-using WinFormsDarkThemerNinja;
 
 namespace GeoTagNinja.Helpers.Startup;
 
@@ -42,16 +37,16 @@ internal static class AppStartup
         catch (Exception ex)
         {
             Log.Fatal(message: $"Could not create the settings database: {ex}");
-            Themer.ShowMessageBox(
+            UiServices.ShowMessageBox(
                 message: HelperControlAndMessageBoxHandling.ReturnControlText(
                     controlName: "mbx_FrmMainApp_ErrorCantCreateSQLiteDB",
                     fakeControlType: HelperControlAndMessageBoxHandling.FakeControlTypes.MessageBox
                     ) +
                     Environment.NewLine + $"{ex.Message}",
-                icon: MessageBoxIcon.Error,
-                buttons: MessageBoxButtons.OK);
+                icon: UiMessageIcon.Error,
+                buttons: UiMessageButtons.OK);
 
-            Application.Exit();
+            UiServices.ExitApplication();
         }
 
         return Task.CompletedTask;
@@ -75,16 +70,16 @@ internal static class AppStartup
         catch (Exception ex)
         {
             Log.Fatal(message: $"Could not write the default settings: {ex}");
-            Themer.ShowMessageBox(
+            UiServices.ShowMessageBox(
                 message: HelperControlAndMessageBoxHandling.ReturnControlText(
                     controlName: "mbx_FrmMainApp_ErrorCantWriteSQLiteDB",
                     fakeControlType: HelperControlAndMessageBoxHandling.FakeControlTypes.MessageBox
                     ) +
                     Environment.NewLine + $"{ex.Message}",
-                icon: MessageBoxIcon.Error,
-                buttons: MessageBoxButtons.OK);
+                icon: UiMessageIcon.Error,
+                buttons: UiMessageButtons.OK);
 
-            Application.Exit();
+            UiServices.ExitApplication();
         }
 
         return Task.CompletedTask;
@@ -128,7 +123,7 @@ internal static class AppStartup
 
             Log.Info(message: $"AppLanguage lang is{lang}");
 
-            FrmMainApp.AppLanguage = lang switch
+            HelperVariables.AppLanguage = lang switch
             {
                 // This is rather legacy poking. Basically if there is a remnant of the old database data this will convert it to "new".
                 // No need to add any further languages here.
@@ -138,25 +133,25 @@ internal static class AppStartup
                 _ => lang
             };
 
-            CultureInfo cultureInfo = CultureInfo.GetCultureInfo(name: FrmMainApp.AppLanguage);
+            CultureInfo cultureInfo = CultureInfo.GetCultureInfo(name: HelperVariables.AppLanguage);
 
             Thread.CurrentThread.CurrentUICulture = new CultureInfo(name: cultureInfo.ToString());
 
-            Log.Info(message: $"AppLanguage is{FrmMainApp.AppLanguage}");
+            Log.Info(message: $"AppLanguage is{HelperVariables.AppLanguage}");
         }
         catch (Exception ex)
         {
             Log.Fatal(message: $"Error: {ex.Message}");
-            Themer.ShowMessageBox(
+            UiServices.ShowMessageBox(
                 message: HelperControlAndMessageBoxHandling.ReturnControlText(
                     controlName: "mbx_FrmMainApp_ErrorCantLoadSQLiteDB",
                     fakeControlType: HelperControlAndMessageBoxHandling.FakeControlTypes.MessageBox
                     ) +
                     Environment.NewLine + $"{ex.Message}",
-                icon: MessageBoxIcon.Error,
-                buttons: MessageBoxButtons.OK);
+                icon: UiMessageIcon.Error,
+                buttons: UiMessageButtons.OK);
 
-            Application.Exit();
+            UiServices.ExitApplication();
         }
 
         return Task.CompletedTask;
@@ -475,46 +470,12 @@ internal static class AppStartup
         foreach (SourcesAndAttributes.ElementAttribute attr in attributes)
         {
             string key = SourcesAndAttributes.GetElementAttributesName(attributeToFind: attr);
-            if (!FileListView._cfg_Col_Order_Default.ContainsKey(key: key))
+            if (!HelperVariables.ColumnOrderDefaults.ContainsKey(key: key))
             {
-                FileListView._cfg_Col_Order_Default.Add(key: key,
+                HelperVariables.ColumnOrderDefaults.Add(key: key,
                     value: SourcesAndAttributes.GetElementAttributesOrderID(attributeToFind: attr));
             }
         }
-    }
-
-    /// <summary>
-    ///     Makes sure there is webview2 installed and working
-    /// </summary>
-    public static Task AppStartupCheckWebView2()
-    {
-        // Check webView2 availability
-        Log.Info(message: "Starting");
-
-        try
-        {
-            string webView2Version = "";
-            webView2Version =
-                CoreWebView2Environment.GetAvailableBrowserVersionString(
-                    browserExecutableFolder: null);
-            Log.Trace(message: $"Check webView2 version is: {webView2Version}");
-        }
-        catch (Exception ex)
-        {
-            Log.Fatal(message: $"Error: {ex.Message}");
-            Themer.ShowMessageBox(
-                message: HelperControlAndMessageBoxHandling.ReturnControlText(
-                    controlName: "mbx_FrmMainApp_ErrorCantLoadWebView2",
-                    fakeControlType: HelperControlAndMessageBoxHandling.FakeControlTypes.MessageBox
-                    ) +
-                    Environment.NewLine + $"{ex.Message}",
-                icon: MessageBoxIcon.Error,
-                buttons: MessageBoxButtons.OK);
-
-            Application.Exit();
-        }
-
-        return Task.CompletedTask;
     }
 
     /// <summary>
@@ -574,11 +535,10 @@ internal static class AppStartup
     {
         Log.Info(message: "Starting");
 
-        FrmMainApp.Favourites.Clear();
+        HelperVariables.Favourites.Clear();
         Favourites.DataReadSQLiteFavourites();
 
-        FrmMainApp frmMainAppInstance = FrmMainApp.Instance;
-        frmMainAppInstance.ClearReloadFavouritesDropDownValues();
+        UiServices.ReloadFavouritesDropDown();
     }
 
     /// <summary>
@@ -594,18 +554,19 @@ internal static class AppStartup
     ///     Sets the startup folder. Defaults to "MyPictures" if null.
     ///     Accepts value from the -f parameter upon launch.
     /// </summary>
-    /// <param name="toolStripTextBox"></param>
-    public static void AppSetupInitialiseStartupFolder(ToolStripTextBox toolStripTextBox)
+    /// <param name="folderToLaunchIn">The folder given on the command line, or null.</param>
+    /// <returns>The folder to open at start-up, always with a trailing backslash.</returns>
+    public static string AppSetupInitialiseStartupFolder(string folderToLaunchIn)
     {
         Log.Info(message: "Starting");
 
         // we first try to check if there is a parameter supplied with the application launch (command-line)
         string startupFolder = string.Empty;
-        if (!string.IsNullOrEmpty(value: Program.FolderToLaunchIn))
+        if (!string.IsNullOrEmpty(value: folderToLaunchIn))
         {
-            if (Directory.Exists(path: Program.FolderToLaunchIn))
+            if (Directory.Exists(path: folderToLaunchIn))
             {
-                startupFolder = Program.FolderToLaunchIn;
+                startupFolder = folderToLaunchIn;
             }
         }
 
@@ -642,14 +603,14 @@ internal static class AppStartup
             catch (Exception ex)
             {
                 Log.Fatal(message: $"Error: {ex.Message}");
-                Themer.ShowMessageBox(
+                UiServices.ShowMessageBox(
                     message: HelperControlAndMessageBoxHandling.ReturnControlText(
                         controlName: "mbx_FrmMainApp_ErrorSettingStartupFolder",
                         fakeControlType: HelperControlAndMessageBoxHandling.FakeControlTypes.MessageBox
                         ) +
                         Environment.NewLine + $"{ex.Message}",
-                    icon: MessageBoxIcon.Error,
-                    buttons: MessageBoxButtons.OK);
+                    icon: UiMessageIcon.Error,
+                    buttons: UiMessageButtons.OK);
             }
         }
 
@@ -660,6 +621,6 @@ internal static class AppStartup
                 $"Startup Folder is null, defaulting to SpecialFolder.MyPictures: {startupFolder}");
         }
 
-        toolStripTextBox.Text = startupFolder.EndsWith(value: "\\") ? startupFolder : $"{startupFolder}\\";
+        return startupFolder.EndsWith(value: "\\") ? startupFolder : $"{startupFolder}\\";
     }
 }
