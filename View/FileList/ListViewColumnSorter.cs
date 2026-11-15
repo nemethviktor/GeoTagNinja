@@ -110,23 +110,15 @@ internal class ListViewColumnSorter : IComparer
                     SourcesAndAttributes.GetElementAttributesElementAttribute(attributeToFind: colName);
                 Type attributeType = SourcesAndAttributes.GetElementAttributesType(attributeToFind: attribute);
 
-                // get the "highest" version available. In this case that will be either Stage3 or Orig
-                DirectoryElement.AttributeVersion deXHighestAttributeVersion;
-                DirectoryElement.AttributeVersion deYHighestAttributeVersion;
-                deXHighestAttributeVersion = deX.HasSpecificAttributeWithVersion(attribute: attribute, version: DirectoryElement.AttributeVersion.Stage3ReadyToWrite)
-                    ? DirectoryElement.AttributeVersion.Stage3ReadyToWrite
-                    : DirectoryElement.AttributeVersion.Original;
-                deYHighestAttributeVersion = deY.HasSpecificAttributeWithVersion(attribute: attribute, version: DirectoryElement.AttributeVersion.Stage3ReadyToWrite)
-                    ? DirectoryElement.AttributeVersion.Stage3ReadyToWrite
-                    : DirectoryElement.AttributeVersion.Original;
-
+                // Newest version available (null), the same one the grid cell shows. (This used to look at Stage3/Original
+                // only, so a value edited but not yet written sorted by its old value while displaying the new one.)
                 if (attributeType == typeof(string))
                 {
                     string? compareWhat = deX.GetAttributeValueAsString(
-                        attribute: attribute, version: deXHighestAttributeVersion,
+                        attribute: attribute, version: null,
                         context: ValueFormatContext.Display);
                     string? compareToWhat = deY.GetAttributeValueAsString(
-                        attribute: attribute, version: deYHighestAttributeVersion,
+                        attribute: attribute, version: null,
                         context: ValueFormatContext.Display);
 
                     result = Comparer.Compare(a: compareWhat, b: compareToWhat);
@@ -135,10 +127,10 @@ internal class ListViewColumnSorter : IComparer
                 {
                     double? compareWhat = deX.GetAttributeValue<double>(
                         attribute: attribute,
-                        version: deXHighestAttributeVersion);
+                        version: null);
                     double? compareToWhat = deY.GetAttributeValue<double>(
                         attribute: attribute,
-                        version: deYHighestAttributeVersion);
+                        version: null);
 
                     result = Comparer.Compare(a: compareWhat, b: compareToWhat);
                 }
@@ -146,10 +138,10 @@ internal class ListViewColumnSorter : IComparer
                 {
                     int? compareWhat = deX.GetAttributeValue<int>(
                         attribute: attribute,
-                        version: deXHighestAttributeVersion);
+                        version: null);
                     int? compareToWhat = deY.GetAttributeValue<int>(
                         attribute: attribute,
-                        version: deYHighestAttributeVersion);
+                        version: null);
 
                     result = Comparer.Compare(a: compareWhat, b: compareToWhat);
                 }
@@ -157,10 +149,10 @@ internal class ListViewColumnSorter : IComparer
                 {
                     DateTime? compareWhat = deX.GetAttributeValue<DateTime>(
                         attribute: attribute,
-                        version: deXHighestAttributeVersion);
+                        version: null);
                     DateTime? compareToWhat = deY.GetAttributeValue<DateTime>(
                         attribute: attribute,
-                        version: deYHighestAttributeVersion);
+                        version: null);
 
                     result = Comparer.Compare(a: compareWhat, b: compareToWhat);
                 }

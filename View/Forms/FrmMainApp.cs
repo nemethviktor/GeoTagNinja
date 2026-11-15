@@ -3333,6 +3333,10 @@ public partial class FrmMainApp : Form
                 }
             );
 
+            // Rows were sorted before their metadata arrived, so a click on a metadata column header during the read
+            // (or a remembered sort) only ordered the rows read so far. Sort again now that every value is in.
+            lvw_FileList.ResortAfterHydration();
+
             lvw_FileList.EndUpdate();
             try
             {

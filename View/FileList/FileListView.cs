@@ -1683,6 +1683,21 @@ public partial class FileListView : System.Windows.Forms.ListView
         ItemsVersion++;
     }
 
+    /// <summary>
+    ///     Sorts again once the background metadata read has filled in every row. Rows are only ordered when added or when
+    ///     a header is clicked, so values arriving later are otherwise never taken into account.
+    /// </summary>
+    internal void ResortAfterHydration()
+    {
+        if (LvwColumnSorter == null || ListViewItemSorter != LvwColumnSorter)
+        {
+            return;
+        }
+
+        Sort();
+        ItemsVersion++;
+    }
+
     private void FileList_ColumnClick(object sender,
         ColumnClickEventArgs e)
     {
