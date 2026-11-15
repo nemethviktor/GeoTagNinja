@@ -54,7 +54,7 @@ public partial class FrmMainApp : Form
 
     internal const string DoubleQuote = "\"";
 
-    internal const string ParentFolder = "..";
+    internal const string ParentFolder = HelperVariables.ParentFolder;
     // The sentinels live in Model/NullEquivalents; these forward to them so this form's own code reads as before.
     internal const string NullStringEquivalentGeneric = NullEquivalents.StringGeneric;
     internal const string NullStringEquivalentBlank = NullEquivalents.StringBlank;
@@ -94,19 +94,38 @@ public partial class FrmMainApp : Form
     /// <summary>
     ///     Returns the list of elements in the currently opened directory.
     /// </summary>
-    public static DirectoryElementCollection DirectoryElements { get; } = [];
+    public static DirectoryElementCollection DirectoryElements => HelperVariables.DirectoryElements;
 
     #endregion
 
     #region Variables
 
-    internal static DataTable DTLanguageMapping;
-    public static HashSet<Favourite> Favourites = [];
+    // Session state now lives in Core (HelperVariables) so UI-free code can reach it; these forward to it.
+    internal static DataTable DTLanguageMapping
+    {
+        get => HelperVariables.DTLanguageMapping;
+        set => HelperVariables.DTLanguageMapping = value;
+    }
+
+    public static HashSet<Favourite> Favourites
+    {
+        get => HelperVariables.Favourites;
+        set => HelperVariables.Favourites = value;
+    }
 
     // CustomCityLogic
 
-    internal static string FolderName;
-    internal static string AppLanguage; // default to english
+    internal static string FolderName
+    {
+        get => HelperVariables.FolderName;
+        set => HelperVariables.FolderName = value;
+    }
+
+    internal static string AppLanguage // default to english
+    {
+        get => HelperVariables.AppLanguage;
+        set => HelperVariables.AppLanguage = value;
+    }
 
     private static bool _showLocToMapDialogChoice = true;
     private static bool _rememberLocToMapDialogChoice;
@@ -140,7 +159,11 @@ public partial class FrmMainApp : Form
     internal static Dictionary<ElementAttribute, Tuple<string, bool>> CopyPoolDict = [];
 
     // this is for checking if files need to be re-parsed.
-    internal static DataTable DTToponomySessionData;
+    internal static DataTable DTToponomySessionData
+    {
+        get => HelperVariables.DTToponomySessionData;
+        set => HelperVariables.DTToponomySessionData = value;
+    }
 
     internal static List<string> filesToEditGUIDStringList = [];
 
@@ -149,7 +172,12 @@ public partial class FrmMainApp : Form
 
     internal CancellationTokenSource _cts = new();
     private CancellationToken _token;
-    internal static bool FlatMode;
+    internal static bool FlatMode
+    {
+        get => HelperVariables.FlatMode;
+        set => HelperVariables.FlatMode = value;
+    }
+
     private static bool _ignoreFlatMode;
 
     internal enum ListViewDisplayMode
@@ -369,7 +397,7 @@ public partial class FrmMainApp : Form
                 settingTabPage: "tpg_Application",
                 actuallyRunningAtStartup: true),
             LanguageTZ.DataReadCountryCodeDataFromWikipediaData(),
-            AppStartup.AppStartupCheckWebView2(),
+            WebView2Check.Run(),
             AppStartupInitializeComponentFrmMainApp(),
             AppStartupSetAppTheme(),
             AppStartupEnableDoubleBuffering()
@@ -444,8 +472,8 @@ public partial class FrmMainApp : Form
 
         if (!Program.CollectionModeEnabled)
         {
-            AppStartup.AppSetupInitialiseStartupFolder(
-                toolStripTextBox: tbx_FolderName);
+            tbx_FolderName.Text = AppStartup.AppSetupInitialiseStartupFolder(
+                folderToLaunchIn: Program.FolderToLaunchIn);
         }
 
         // initialise webView2
@@ -835,10 +863,10 @@ public partial class FrmMainApp : Form
         // if the user zooms out too much they can encounter an "unreal" coordinate.
 
         double correctedDblLat =
-            DataPointInteractions.GenericCorrectInvalidCoordinate(
+            CoordinateParsing.GenericCorrectInvalidCoordinate(
                 coordHalfPair: dblLat);
         double correctedDblLng =
-            DataPointInteractions.GenericCorrectInvalidCoordinate(
+            CoordinateParsing.GenericCorrectInvalidCoordinate(
                 coordHalfPair: dblLng);
         nud_lat.Text = correctedDblLat.ToString(provider: CultureInfo.InvariantCulture);
         nud_lng.Text = correctedDblLng.ToString(provider: CultureInfo.InvariantCulture);
@@ -2631,7 +2659,7 @@ public partial class FrmMainApp : Form
                                                         index: lvw
                                                               .Columns[
                                                                    key: HelperVariables.COL_NAME_PREFIX +
-                                                                        FileListView.FileListColumns
+                                                                        FileListColumns
                                                                            .GPS_LATITUDE]
                                                               .Index]
                                                    .Text.ToString(
@@ -2641,7 +2669,7 @@ public partial class FrmMainApp : Form
                                                          index: lvw
                                                                .Columns[
                                                                     key: HelperVariables.COL_NAME_PREFIX +
-                                                                         FileListView.FileListColumns
+                                                                         FileListColumns
                                                                             .GPS_LONGITUDE]
                                                                .Index]
                                                     .Text.ToString(
@@ -2974,7 +3002,7 @@ public partial class FrmMainApp : Form
                                                   index: lvw_FileList
                                                         .Columns[
                                                              key: HelperVariables.COL_NAME_PREFIX +
-                                                                  FileListView.FileListColumns.GPS_ALTITUDE]
+                                                                  FileListColumns.GPS_ALTITUDE]
                                                         .Index]
                                              .Text.ToString(
                                                   provider: CultureInfo.InvariantCulture);
@@ -3029,7 +3057,7 @@ public partial class FrmMainApp : Form
                 _ = AttributeValueFormatter.TryParseDateTime(
                     value: lvi.SubItems[index: lvw_FileList
                                               .Columns[key: HelperVariables.COL_NAME_PREFIX +
-                                                            FileListView.FileListColumns.CREATE_DATE]
+                                                            FileListColumns.CREATE_DATE]
                                               .Index]
                               .Text,
                     context: ValueFormatContext.Display,
@@ -4580,19 +4608,12 @@ context: ValueFormatContext.Display));
 
     internal Favourite GetFavouriteByName(string favouriteName)
     {
-        Favourite match = Favourites.FirstOrDefault(predicate: f => f.FavouriteName == favouriteName);
-        return match ??
-               null;
+        return Helpers.Data.Favourites.GetFavouriteByName(favouriteName: favouriteName);
     }
 
     internal void RemoveFavouriteByName(string favouriteName)
     {
-        Favourite itemToRemove = Favourites.FirstOrDefault(predicate: f => f.FavouriteName == favouriteName);
-
-        if (itemToRemove != null)
-        {
-            _ = Favourites.Remove(item: itemToRemove);
-        }
+        Helpers.Data.Favourites.RemoveFavouriteByName(favouriteName: favouriteName);
     }
 
     /// <summary>

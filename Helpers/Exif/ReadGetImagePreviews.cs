@@ -177,7 +177,7 @@ internal static class ReadGetImagePreviews
 
             return entry == null
                 ? null
-                : RawPreview.DecodeOriented(jpeg: entry.Jpeg, exifOrientation: entry.ExifOrientation);
+                : DecodeEntry(entry: entry);
         }
         catch
         {
@@ -222,7 +222,10 @@ internal static class ReadGetImagePreviews
 
             try
             {
-                return RawPreview.DecodeOriented(jpeg: jpeg, exifOrientation: exifOrientation);
+                using SkiaSharp.SKBitmap upright = RawPreview.DecodeOriented(jpeg: jpeg, exifOrientation: exifOrientation);
+                return upright == null
+                    ? null
+                    : SkiaBridge.ToBitmap(source: upright);
             }
             catch
             {
@@ -231,42 +234,12 @@ internal static class ReadGetImagePreviews
         });
     }
 
-    /// <summary>
-    ///     Use LibRaw to pull the full image.
-    /// </summary>
-    /// <param name="originalImagePath"></param>
-    /// <param name="generatedJpegPath"></param>
-    /// <param name="imgWidth"></param>
-    /// <param name="imgHeight"></param>
-    internal static void UseLibRawToGenerateFullImage(string originalImagePath,
-                                                      string generatedJpegPath,
-                                                      int? imgWidth = null,
-                                                      int? imgHeight = null)
+    private static Image? DecodeEntry(PreviewEntry entry)
     {
-        try
-        {
-            using RawContext r = RawContext.OpenFile(filePath: originalImagePath);
-            r.Unpack();
-            r.DcrawProcess();
-            using ProcessedImage image = r.MakeDcrawMemoryImage();
-
-            Bitmap bmp = ProcessedImageToBitmap(rgbImage: image);
-
-            Bitmap ProcessedImageToBitmap(ProcessedImage rgbImage)
-            {
-                rgbImage.SwapRGB();
-                int witdthToUse = imgWidth ?? rgbImage.Width;
-                int heightToUse = imgHeight ?? rgbImage.Height;
-                using Bitmap bmpNewBitmap = new(width: witdthToUse, height: heightToUse, stride: rgbImage.Width * 3,
-                    format: PixelFormat.Format24bppRgb, scan0: rgbImage.DataPointer);
-                bmpNewBitmap.Save(filename: generatedJpegPath, format: ImageFormat.Jpeg);
-                return null;
-            }
-        }
-        catch
-
-        {
-            // ignored
-        }
+        using SkiaSharp.SKBitmap upright = RawPreview.DecodeOriented(jpeg: entry.Jpeg,
+            exifOrientation: entry.ExifOrientation);
+        return upright == null
+            ? null
+            : SkiaBridge.ToBitmap(source: upright);
     }
 }

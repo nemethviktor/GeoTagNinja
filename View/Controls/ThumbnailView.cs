@@ -671,7 +671,7 @@ internal sealed class ThumbnailView : ScrollableControl
         }
 
         int bucket = ThumbnailProvider.BucketFor(displaySize: _thumbnailSize);
-        Image? loaded = ThumbnailCache.TryGetMemory(fileNameWithPath: element.FileNameWithPath, size: bucket);
+        Image? loaded = ThumbnailImages.TryGetMemory(fileNameWithPath: element.FileNameWithPath, size: bucket);
         if (loaded != null)
         {
             Bitmap bitmap = (Bitmap)loaded;

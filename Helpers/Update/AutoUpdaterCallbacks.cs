@@ -3,7 +3,6 @@ using GeoTagNinja.Helpers.UI;
 using Newtonsoft.Json;
 using System;
 using System.Windows.Forms;
-using WinFormsDarkThemerNinja;
 
 namespace GeoTagNinja.Helpers.Update;
 
@@ -45,19 +44,19 @@ internal static class AutoUpdaterCallbacks
 
         // Show what the update brings (only released entries, see ChangelogNotes). If that isn't possible (offline,
         // no notes for the range) the plain question is asked instead.
-        DialogResult? withNotes =
+        UiDialogResult? withNotes =
             Version.TryParse(input: args.CurrentVersion, result: out Version newVersion)
                 ? ChangelogNotes.AskToUpdate(installedBuild: args.InstalledVersion.Build, newBuild: newVersion.Build)
                 : null;
 
-        DialogResult dialogResult = withNotes ?? Themer.ShowMessageBoxWithResult(
+        UiDialogResult dialogResult = withNotes ?? UiServices.ShowMessageBoxWithResult(
             message:
             $@"There is a new version ({args.CurrentVersion}) available. You are using version {args.InstalledVersion}.{Environment.NewLine}Do you want to update the application now?",
-            icon: MessageBoxIcon.Question,
-            buttons: MessageBoxButtons.YesNo);
+            icon: UiMessageIcon.Question,
+            buttons: UiMessageButtons.YesNo);
 
-        if (!dialogResult.Equals(obj: DialogResult.Yes) &&
-            !dialogResult.Equals(obj: DialogResult.OK))
+        if (!dialogResult.Equals(obj: UiDialogResult.Yes) &&
+            !dialogResult.Equals(obj: UiDialogResult.OK))
         {
             return;
         }
@@ -71,10 +70,10 @@ internal static class AutoUpdaterCallbacks
         }
         catch (Exception exception)
         {
-            ThemeHelper.ShowMessageBox(message: exception.Message,
+            UiServices.ShowMessageBox(message: exception.Message,
                 caption: exception.GetType().ToString(),
-                buttons: MessageBoxButtons.OK,
-                icon: MessageBoxIcon.Error);
+                buttons: UiMessageButtons.OK,
+                icon: UiMessageIcon.Error);
         }
     }
 }

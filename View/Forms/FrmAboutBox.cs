@@ -26,7 +26,7 @@ internal partial class FrmAboutBox : Form
 
         rtb_AboutBox.LinkClicked += rtb_AboutBox_LinkClicked;
 
-        HelperControlAndMessageBoxHandling.ReturnControlText(control: this, senderForm: this);
+        ControlTextApplier.ReturnControlText(control: this, senderForm: this);
 
         // via https://stackoverflow.com/a/1601079/3968494
         Version version = Assembly.GetEntryAssembly()

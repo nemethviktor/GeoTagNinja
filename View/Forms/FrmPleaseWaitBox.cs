@@ -42,7 +42,7 @@ public partial class FrmPleaseWaitBox : Form
 
     private void FrmPleaseWaitBox_Load(object sender, EventArgs e)
     {
-        HelperControlAndMessageBoxHandling.ReturnControlText(control: this, senderForm: this);
+        ControlTextApplier.ReturnControlText(control: this, senderForm: this);
         _frmMainAppInstance.Enabled = false;
         GetControlNames();
 

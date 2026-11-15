@@ -134,28 +134,14 @@
     <Reference Include="WindowsFormsIntegration" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Model\ExifTagSetParser.cs" />
-    <Compile Include="Model\NullEquivalents.cs" />
-    <Compile Include="Model\TagList.cs" />
-    <Compile Include="Helpers\Data\FieldHistory.cs" />
-    <Compile Include="Helpers\Geo\Sexagesimal.cs" />
-    <Compile Include="Helpers\Geo\GeoKeywordSync.cs" />
-    <Compile Include="Helpers\Data\EditTemplates.cs" />
-    <Compile Include="Helpers\Exif\EditTemplateGroups.cs" />
+    <ProjectReference Include="GeoTagNinja.Core\GeoTagNinja.Core.csproj" />
+  </ItemGroup>
+  <ItemGroup>
     <Compile Include="View\Forms\FrmChangelog.cs" />
     <Compile Include="View\Forms\FrmEditTemplateDialog.cs" />
     <Compile Include="View\Forms\FrmBatchRename.cs" />
     <Compile Include="View\Forms\FrmMainApp.BatchRename.cs" />
     <Compile Include="View\FileList\FileListView.BatchRename.cs" />
-    <Compile Include="Helpers\FileSystem\BatchRenameModel.cs" />
-    <Compile Include="Helpers\FileSystem\LongPathSupport.cs" />
-    <Compile Include="Helpers\FileSystem\BatchRenamePlanner.cs" />
-    <Compile Include="Helpers\FileSystem\BatchRenameExecutor.cs" />
-    <Compile Include="Helpers\FileSystem\BatchRenamePreflight.cs" />
-    <Compile Include="Helpers\Data\BatchRenamePresets.cs" />
-    <Compile Include="Helpers\Localisation\BatchRenameText.cs" />
-    <Compile Include="Model\ExifStructTags.cs" />
-    <Compile Include="Helpers\Exif\ListTagArguments.cs" />
     <Compile Include="View\Forms\FrmCustomiseFormControls.cs">
       <SubType>Form</SubType>
     </Compile>
@@ -180,51 +166,22 @@
     <Compile Include="View\Forms\FrmSplashScreen.Designer.cs">
       <DependentUpon>FrmSplashScreen.cs</DependentUpon>
     </Compile>
-    <Compile Include="Helpers\FileSystem\CloudFileHelpers.cs" />
-    <Compile Include="Helpers\UI\ControlTextAndMessageBoxes.cs" />
-    <Compile Include="Helpers\Data\CacheManager.cs" />
-    <Compile Include="Helpers\Data\ThumbnailCache.cs" />
-    <Compile Include="Helpers\Data\FileKeyedCache.cs" />
-    <Compile Include="Helpers\Data\PriorityWorkList.cs" />
-    <Compile Include="Helpers\Data\ThumbnailStore.cs" />
+    <Compile Include="Helpers\UI\ControlTextApplier.cs" />
+    <Compile Include="Helpers\UI\WinFormsDialogs.cs" />
+    <Compile Include="Helpers\UI\SkiaBridge.cs" />
+    <Compile Include="Helpers\Data\ThumbnailImages.cs" />
+    <Compile Include="Helpers\UI\ReportBox.cs" />
+    <Compile Include="Helpers\UI\ToponomyPicker.cs" />
     <Compile Include="Helpers\Data\MenuSettings.cs" />
-    <Compile Include="Helpers\Data\PreviewCache.cs" />
-    <Compile Include="Helpers\Data\SettingsImportExportOptions.cs" />
-    <Compile Include="Helpers\Data\SettingsExport.cs" />
-    <Compile Include="Helpers\Data\SettingsImport.cs" />
-    <Compile Include="Helpers\Exif\ReadTrackFilePath.cs" />
-    <Compile Include="Helpers\Exif\WriteTrackDataToTrackFile.cs" />
-    <Compile Include="Helpers\Exif\WriteTrackDataToSideCar.cs" />
-    <Compile Include="Helpers\Text\StringOperations.cs" />
     <Compile Include="Helpers\UI\ControlTraversal.cs" />
     <Compile Include="Helpers\UI\FormPositioning.cs" />
     <Compile Include="Helpers\UI\DarkDisabledText.cs" />
     <Compile Include="Helpers\UI\ThemeHelper.cs" />
-    <Compile Include="Helpers\UI\ThumbnailWorker.cs" />
     <Compile Include="View\Controls\ThumbnailLayout.cs" />
     <Compile Include="View\Controls\ThumbnailView.cs" />
     <Compile Include="View\Controls\FolderIcons.cs" />
-    <Compile Include="Helpers\FileSystem\FileEnumeration.cs" />
     <Compile Include="Helpers\Update\AutoUpdaterCallbacks.cs" />
-    <Compile Include="Helpers\Update\ChangelogNotes.cs" />
-    <Compile Include="Helpers\Update\ChangelogParser.cs" />
-    <Compile Include="Helpers\FileSystem\GetChecksum.cs" />
-    <Compile Include="Helpers\Startup\AppStartup.cs" />
-    <Compile Include="Helpers\Startup\LegacyWindowsNotice.cs" />
-    <Compile Include="Helpers\Startup\UpgradeNotices.cs" />
-    <Compile Include="Helpers\Localisation\LanguageLists.cs" />
-    <Compile Include="Helpers\Data\SettingsImportExportTables.cs" />
-    <Compile Include="Helpers\Exif\ExifToolInititators.cs" />
-    <Compile Include="Helpers\Localisation\TimeZones.cs" />
-    <Compile Include="Helpers\Data\ToponomyColumns.cs" />
-    <Compile Include="Helpers\Data\CustomRulesMetadata.cs" />
-    <Compile Include="Helpers\Localisation\Countries.cs" />
-    <Compile Include="Helpers\FileSystem\SupportedFileExtensions.cs" />
-    <Compile Include="Helpers\Exif\GpxImportOptions.cs" />
-    <Compile Include="Helpers\Exif\GpxExportOptions.cs" />
-    <Compile Include="Helpers\Exif\KmlExportOptions.cs" />
-    <Compile Include="Helpers\Exif\CopyPasteTags.cs" />
-    <Compile Include="Helpers\Map\MapLayers.cs" />
+    <Compile Include="Helpers\Startup\WebView2Check.cs" />
     <Compile Include="View\Forms\FrmAboutBox.cs">
       <SubType>Form</SubType>
     </Compile>
@@ -237,26 +194,11 @@
     <Compile Include="View\Forms\FrmManageFavourites.designer.cs">
       <DependentUpon>FrmManageFavourites.cs</DependentUpon>
     </Compile>
-    <Compile Include="Helpers\Geo\FavouriteAutoAssign.cs" />
-    <Compile Include="Helpers\Geo\FavouriteGrouping.cs" />
-    <Compile Include="Helpers\Geo\FavouriteMatcher.cs" />
-    <Compile Include="Helpers\Geo\GeoCalculations.cs" />
-    <Compile Include="Helpers\Localisation\ResourceManager.cs" />
-    <Compile Include="Model\AppSettingContainer.cs" />
-    <Compile Include="Model\Favourite.cs" />
-    <Compile Include="Model\FavouriteKeywords.cs" />
-    <Compile Include="Model\GeoSetterFavourite.cs" />
-    <Compile Include="Model\MapWebMessage.cs" />
-    <Compile Include="Helpers\Localisation\LanguageManager.cs" />
+    <Compile Include="Helpers\UI\ControlResourceManager.cs" />
     <Compile Include="Properties\Resources.Designer.cs">
       <AutoGen>True</AutoGen>
       <DesignTime>True</DesignTime>
       <DependentUpon>Resources.resx</DependentUpon>
-    </Compile>
-    <Compile Include="Resources\Languages\Strings.Designer.cs">
-      <AutoGen>True</AutoGen>
-      <DesignTime>True</DesignTime>
-      <DependentUpon>Strings.resx</DependentUpon>
     </Compile>
     <Compile Include="SingleInstance_PipeServer.cs" />
     <Compile Include="View\Dialogs\RevolutQRBox.cs">
@@ -269,38 +211,8 @@
     <Compile Include="View\FileList\FileListViewCopyPaste.cs" />
     <Compile Include="View\FileList\FileListViewReadWrite.cs" />
     <Compile Include="View\Forms\EditFileFormLauncher.cs" />
-    <Compile Include="Helpers\API\GeoNamesToponomyExtractor.cs" />
-    <Compile Include="Helpers\API\APIVersionCheckers.cs">
-      <SubType>Component</SubType>
-    </Compile>
-    <Compile Include="Helpers\Data\ApplicationSettings.cs" />
-    <Compile Include="Helpers\Data\CSVFileOperations.cs" />
-    <Compile Include="Helpers\Data\CustomCityAllocationRules.cs" />
-    <Compile Include="Helpers\Data\CustomRules.cs" />
-    <Compile Include="Helpers\Data\DatabaseAndStartup.cs" />
-    <Compile Include="Helpers\Data\DatabaseSchema.cs" />
-    <Compile Include="Helpers\Data\Favourites.cs" />
-    <Compile Include="Helpers\Data\LanguageTZ.cs" />
-    <Compile Include="Helpers\Data\SessionDataTables.cs" />
-    <Compile Include="Helpers\Exif\DataPointInteractions.cs" />
-    <Compile Include="Helpers\Exif\ExifToolInstaller.cs" />
-    <Compile Include="Helpers\Exif\ExifToolOperator.cs" />
-    <Compile Include="Helpers\Exif\ReadExifData.cs" />
+    <Compile Include="Helpers\Exif\ImageExifRotation.cs" />
     <Compile Include="Helpers\Exif\ReadGetImagePreviews.cs" />
-    <Compile Include="Helpers\Exif\ExifArgumentLines.cs" />
-    <Compile Include="Helpers\Exif\ThumbnailGenerator.cs" />
-    <Compile Include="Helpers\Exif\RawPreview.cs" />
-    <Compile Include="Helpers\Exif\ThumbnailProvider.cs" />
-    <Compile Include="Helpers\Exif\ReadTrackFile.cs" />
-    <Compile Include="Helpers\Exif\WriteSaveToFile.cs" />
-    <Compile Include="Helpers\FileSystem\Operators.cs" />
-    <Compile Include="Helpers\FileSystem\FileLocking.cs" />
-    <Compile Include="Model\DirectoryElementCollection.cs" />
-    <Compile Include="Model\DirectoryElement.cs" />
-    <Compile Include="Model\ExifToolWrapper.cs" />
-    <Compile Include="Model\AttributeValueFormatter.cs" />
-    <Compile Include="Model\SourcesAndAttributes.cs" />
-    <Compile Include="Model\TagsToModelValueTransformations.cs" />
     <Compile Include="View\Forms\FrmColumnSelection.cs">
       <SubType>Form</SubType>
     </Compile>
@@ -319,8 +231,6 @@
     <Compile Include="View\Forms\FrmPasteWhat.Designer.cs">
       <DependentUpon>FrmPasteWhat.cs</DependentUpon>
     </Compile>
-    <Compile Include="Helpers\HelperVariables.cs" />
-    <Compile Include="Helpers\API\GeoNamesToponomyJSONParser.cs" />
     <Compile Include="View\Forms\FrmEditFileData.cs">
       <SubType>Form</SubType>
     </Compile>
@@ -354,8 +264,6 @@
     <Compile Include="View\Forms\FrmSettings.Designer.cs">
       <DependentUpon>FrmSettings.cs</DependentUpon>
     </Compile>
-    <Compile Include="Helpers\API\GeoNamesGeoTagXMLParser.cs" />
-    <Compile Include="Helpers\API\GitHub.cs" />
     <Compile Include="View\FileList\ListViewColumnSorter.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
@@ -373,7 +281,6 @@
     </Compile>
     <Compile Include="View\FileList\ModelToColumnValueTransformations.cs" />
     <Compile Include="View\Dialogs\DialogWithOrWithoutCheckBox.cs" />
-    <EmbeddedResource Include="Resources\Languages\Strings.zh-Hans.resx" />
     <EmbeddedResource Include="View\Forms\FrmAboutBox.resx">
       <DependentUpon>FrmAboutBox.cs</DependentUpon>
       <SubType>Designer</SubType>
@@ -394,20 +301,6 @@
     <EmbeddedResource Include="Properties\Resources.resx">
       <Generator>ResXFileCodeGenerator</Generator>
       <LastGenOutput>Resources.Designer.cs</LastGenOutput>
-    </EmbeddedResource>
-    <EmbeddedResource Include="Resources\Languages\Strings.de.resx">
-      <SubType>Designer</SubType>
-    </EmbeddedResource>
-    <EmbeddedResource Include="Resources\Languages\Strings.es.resx" />
-    <EmbeddedResource Include="Resources\Languages\Strings.fr.resx" />
-    <EmbeddedResource Include="Resources\Languages\Strings.pl.resx" />
-    <EmbeddedResource Include="Resources\Languages\Strings.ru.resx" />
-    <EmbeddedResource Include="Resources\Languages\Strings.ta.resx" />
-    <EmbeddedResource Include="Resources\Languages\Strings.uk.resx" />
-    <EmbeddedResource Include="Resources\Languages\Strings.resx">
-      <Generator>PublicResXFileCodeGenerator</Generator>
-      <SubType>Designer</SubType>
-      <LastGenOutput>Strings1.Designer.cs</LastGenOutput>
     </EmbeddedResource>
     <EmbeddedResource Include="View\Dialogs\RevolutQRBox.resx">
       <DependentUpon>RevolutQRBox.cs</DependentUpon>

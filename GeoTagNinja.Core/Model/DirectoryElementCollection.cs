@@ -1,0 +1,965 @@
+﻿using GeoTagNinja.Helpers;
+using GeoTagNinja.Helpers.Data;
+using GeoTagNinja.Helpers.FileSystem;
+using GeoTagNinja.Helpers.UI;
+using NLog;
+using System;
+using System.Collections.Generic;
+using System.IO;
+using System.Linq;
+using System.Threading;
+using System.Threading.Tasks;
+using static System.Environment;
+
+namespace GeoTagNinja.Model;
+
+public class DirectoryElementCollection : List<DirectoryElement>
+{
+    private static readonly Logger Log = LogManager.GetCurrentClassLogger();
+
+    private ExifTool _ExifTool;
+
+    private readonly object _hydrationLock = new();
+    private IReadOnlyList<DirectoryElement> _hydrationPriority = [];
+
+    /// <summary>
+    /// Provides access to the currently running metadata hydration task.
+    /// </summary>
+    public Task? HydrationTask { get; private set; }
+
+    /// <summary>
+    /// Indicates whether the metadata hydration process is currently active.
+    /// </summary>
+    public bool IsHydrating => HydrationTask != null && !HydrationTask.IsCompleted;
+
+    public ExifTool ExifTool
+    {
+        get => _ExifTool;
+        set
+        {
+            // Don't just dispose immediately if a task might be using it
+            ExifTool oldTool = _ExifTool;
+            _ExifTool = value;
+
+            _ = Task.Run(() =>
+            {
+                Thread.Sleep(500); // Give background tasks a moment to see the cancellation
+                oldTool?.Dispose();
+            });
+        }
+    }
+
+    /// <summary>
+    ///     Searches through the list of directory elements for the element
+    ///     with the given item name. If nothing is found, return null.
+    ///     Prepwork atm for allowing for multiple filenames across folders as these IDs are in fact unique.
+    /// </summary>
+    /// <param name="GUID"></param>
+    /// <returns></returns>
+    public DirectoryElement FindElementByItemGUID(string GUID)
+    {
+        foreach (DirectoryElement item in this)
+        {
+            if (item.GetAttributeValueAsString(attribute: SourcesAndAttributes.ElementAttribute.GUID,
+                    context: ValueFormatContext.Display) ==
+                GUID)
+            {
+                return item;
+            }
+        }
+
+        return null;
+    }
+
+    /// <summary>
+    ///     Searches through the list of directory elements for the element
+    ///     with the given item name. Uses FileNameWithPath. If nothing is found, return null.
+    /// </summary>
+    /// <param name="FileNameWithPath">The file name to search for (w/ path)</param>
+    public DirectoryElement FindElementByFileNameWithPath(string FileNameWithPath)
+    {
+        foreach (DirectoryElement item in this)
+        {
+            if (item.FileNameWithPath == FileNameWithPath)
+            {
+                return item;
+            }
+        }
+
+        return null;
+    }
+
+    /// <summary>
+    ///     Searches through all the DEs in this collection for elements
+    ///     with dirty (to be saved) attributes.
+    ///     TODO: THIS IS VERY INEFFICIENT. With larger element sets, we parse the whole
+    ///     collection and for every element every attribute... Need a cache...?
+    /// </summary>
+    /// <returns>A HashSet of UIDs of dirty elements. Empty if there are none.</returns>
+    /// <param name="optionalListOfDEs">An optional list of DEs to check (in case we only want to save some of the items.)</param>
+    public HashSet<string> FindDirtyElements(List<DirectoryElement> optionalListOfDEs = null)
+    {
+        List<DirectoryElement> directoryElements = optionalListOfDEs ?? this;
+        HashSet<string> uids = [];
+        foreach (DirectoryElement directoryElement in directoryElements)
+        {
+            if (directoryElement.HasDirtyAttributes())
+            {
+                _ = uids.Add(
+                    item: directoryElement.GetAttributeValueAsString(
+                        attribute: SourcesAndAttributes.ElementAttribute.GUID,
+                        context: ValueFormatContext.Display));
+            }
+        }
+
+        return uids;
+    }
+
+    /// <summary>
+    /// Finds the best matching DirectoryElement for an XMP file. 
+    /// Prioritizes raw/non-jpg files over jpg files.
+    /// </summary>
+    /// <param name="XMPFileNameWithPath">Full path of the XMP file.</param>
+    /// <returns>The best matching DirectoryElement or null if none found.</returns>
+    public DirectoryElement FindElementByBelongingToXmpWithPath(string XMPFileNameWithPath)
+    {
+        // Strip the .xmp extension to get the base path (e.g., .../img_01)
+        string basePath = XMPFileNameWithPath.EndsWith(".xmp", StringComparison.OrdinalIgnoreCase)
+            ? XMPFileNameWithPath.Substring(0, XMPFileNameWithPath.Length - 4)
+            : XMPFileNameWithPath;
+
+        DirectoryElement jpgFallback = null;
+
+        foreach (DirectoryElement item in this)
+        {
+            // Check if the file starts with the same name
+            if (item.FileNameWithPath.StartsWith(value: basePath, comparisonType: StringComparison.OrdinalIgnoreCase))
+            {
+                // Ignore the XMP file itself
+                if (item.FileNameWithPath.EndsWith(".xmp", StringComparison.OrdinalIgnoreCase))
+                {
+                    continue;
+                }
+
+                // Check if it is a JPG
+                bool isJpg = item.FileNameWithPath.EndsWith(".jpg", StringComparison.OrdinalIgnoreCase) ||
+                             item.FileNameWithPath.EndsWith(".jpeg", StringComparison.OrdinalIgnoreCase);
+
+                if (!isJpg)
+                {
+                    // High priority: Found a Raw or other format. Return immediately.
+                    return item;
+                }
+                else
+                {
+                    // Low priority: Keep the JPG in case we don't find anything better.
+                    jpgFallback = item;
+                }
+            }
+        }
+
+        // If we finished the loop and never found a Raw file, return the JPG (if found)
+        return jpgFallback;
+    }
+
+    /// <summary>
+    ///     Adds a DirectoryElement to this list. Hereby it is checked, whether
+    ///     already an item with the same name exists. If this is the case,
+    ///     either replace it with the one passed (replaceIfExists must be se to
+    ///     true) or an ArgumentException is thrown.
+    /// </summary>
+    /// <param name="item">The item to add</param>
+    /// <param name="replaceIfExists">
+    ///     Whether in case of already existing item the existing
+    ///     item should be replaced (or an exception thrown)
+    /// </param>
+    private void Add(DirectoryElement item,
+        bool replaceIfExists)
+    {
+        DirectoryElement exstgElement = FindElementByFileNameWithPath(FileNameWithPath: item.FileNameWithPath);
+        if (exstgElement != null && replaceIfExists)
+        {
+            _ = Remove(item: exstgElement);
+            base.Add(item: item);
+        }
+        else if (exstgElement == null)
+        {
+            base.Add(item: item);
+        }
+        else
+        {
+            throw new ArgumentException(
+                message: string.Format(
+                    format:
+                    "Error when adding element '{0}': the item must be unique but already exists in collection.",
+                    arg0: item.FileNameWithPath));
+        }
+    }
+
+    /// <summary>
+    ///     Clears up the data stored in the 'stage' for the whole DE
+    /// </summary>
+    /// <param name="attributeVersion"></param>
+    internal void CleanupAllDataInStage(DirectoryElement.AttributeVersion attributeVersion)
+    {
+        foreach (DirectoryElement item in this)
+        {
+            foreach (SourcesAndAttributes.ElementAttribute attribute in (SourcesAndAttributes.ElementAttribute[])
+                     Enum.GetValues(enumType: typeof(SourcesAndAttributes.ElementAttribute)))
+            {
+                item.RemoveAttributeValue(
+                    attribute: attribute,
+                    version: attributeVersion);
+            }
+        }
+    }
+
+    /// <summary>
+    ///     Parses the given folder (or list of files if in CollectionMode) into DirectoryElements.
+    ///     The previous collection of directory elements is cleared before.
+    ///     The updateProgressHandler to be passed optionally accepts a string
+    ///     containing a short status text.
+    /// </summary>
+    /// <param name="folderOrCollectionFileName"></param>
+    /// <param name="updateProgressHandler">The method to call for status updates</param>
+    /// <param name="collectionModeEnabled"></param>
+    /// <param name="processSubFolders"></param>
+    /// <param name="cts"></param>
+    public async Task ParseFolderOrFileListToDEsAsync(string folderOrCollectionFileName,
+        Action<string> updateProgressHandler,
+        bool collectionModeEnabled,
+        bool processSubFolders,
+        CancellationTokenSource cts,
+        Action<DirectoryElement> onElementFound = null) // ADD THIS PARAMETER
+    {
+        Log.Trace(message: $"Start Parsing Folder '{folderOrCollectionFileName}'");
+        updateProgressHandler(obj: "Scanning folder: Initializing ...");
+
+        CancellationToken cancellationToken = cts.Token;
+        if (_ExifTool == null)
+        {
+            throw new InvalidOperationException(
+                message:
+                $"Cannot scan a folder (currently '{folderOrCollectionFileName}') when the EXIF Tool was not set for the DirectoryElementCollection.");
+        }
+
+        #region Normal Mode Non-Files
+
+        if (!collectionModeEnabled)
+        {
+            #region MyComputer
+
+            // ******************************
+            // Special Case is "MyComputer"...
+            // Only list drives... then exit
+            if (folderOrCollectionFileName == SpecialFolder.MyComputer.ToString())
+            {
+                Log.Trace(message: "Listing Drives");
+                foreach (DriveInfo drive in DriveInfo.GetDrives())
+                {
+                    Log.Trace(message: $"Drive:{drive.Name}");
+                    DirectoryElement de = new(
+                        itemNameWithoutPath: drive.Name,
+                        type: DirectoryElement.ElementType.Drive,
+                        fileNameWithPath: drive.RootDirectory.FullName);
+                    Add(item: de, replaceIfExists: true);
+
+                    // STREAM TO UI:
+                    onElementFound?.Invoke(de);
+                }
+
+                Log.Trace(message: "Listing Drives - OK");
+                return;
+            }
+
+            #endregion
+
+            #region DotDot
+
+            // ******************************
+            // first, add a parent folder. "dot dot"
+
+            try
+            {
+                Log.Trace(message: "Files: Adding Parent Folder");
+                string tmpStrParent = Operators.FsoGetParent(path: folderOrCollectionFileName);
+                if (tmpStrParent != null &&
+                    tmpStrParent != SpecialFolder.MyComputer.ToString())
+                {
+                    DirectoryElement de = new(
+                        itemNameWithoutPath: HelperVariables.ParentFolder,
+                        type: DirectoryElement.ElementType.ParentDirectory,
+                        fileNameWithPath: tmpStrParent);
+
+                    Add(item: de, replaceIfExists: true);
+
+                    // STREAM TO UI:
+                    onElementFound?.Invoke(de);
+                }
+            }
+            catch (Exception ex)
+            {
+                Log.Error(message: $"Could not add parent. Error: {ex.Message}");
+                UiServices.ShowMessageBox(
+                    message: HelperControlAndMessageBoxHandling.ReturnControlText(
+                        controlName: "mbx_DirectoryElementCollection_ErrorParsing",
+                        fakeControlType: HelperControlAndMessageBoxHandling.FakeControlTypes.MessageBox),
+                    icon: UiMessageIcon.Error,
+                    buttons: UiMessageButtons.OK);
+            }
+
+            #endregion
+
+            #region Folders
+
+            // ******************************
+            // list folders, ReparsePoint means these are links.
+            updateProgressHandler(obj: "Scanning folder: processing directories ...");
+            Log.Trace(message: "Listing Folders");
+            List<string> dirs = [];
+            try
+            {
+                DirectoryInfo di = new(path: folderOrCollectionFileName);
+                foreach (DirectoryInfo directoryInfo in di.GetDirectories())
+                {
+                    if (directoryInfo.FullName == SpecialFolder.MyComputer.ToString())
+                    {
+                        // It's the MyComputer entry
+                        Log.Trace(message: $"MyComputer: {directoryInfo.Name}");
+                        DirectoryElement de = new(
+                            itemNameWithoutPath: directoryInfo.Name,
+                            type: DirectoryElement.ElementType.MyComputer,
+                            fileNameWithPath: directoryInfo.FullName);
+
+                        Add(item: de, replaceIfExists: true);
+
+                        // STREAM TO UI:
+                        onElementFound?.Invoke(de);
+                    }
+                    // So apparently this cannot be just directoryInfo.Attributes.ToString() because with that, .NET attempts to stringify a bitmask bitwise.
+                    // For stuff like OneDrive or similar apps this causes problems. If the bitmask contains non-standard flag bits, .ToString() falls back to displaying the raw integer string (in this case, 524304).
+                    // Which means 524304 in binary represents the combination of multiple low-level attribute flags:
+                    // - Directory(16 or 0x10)
+                    // - ReparsePoint(1024 or 0x400 — used by OneDrive cloud link placeholders)
+                    // - Pinned(524288 or 0x80000 — set when "Always keep on this device" is selected)
+                    // - 16 + 1024 + 524288 = 524304
+
+                    else if (directoryInfo.Attributes.HasFlag(FileAttributes.Directory))
+                    {
+                        Log.Trace(message: $"Folder: {directoryInfo.Name}");
+                        DirectoryElement de = new(
+                            itemNameWithoutPath: directoryInfo.Name,
+                            type: DirectoryElement.ElementType.SubDirectory,
+                            fileNameWithPath: directoryInfo.FullName);
+
+                        Add(item: de, replaceIfExists: true);
+
+                        // STREAM TO UI:
+                        onElementFound?.Invoke(de);
+                    }
+                }
+            }
+            catch (Exception ex)
+            {
+                Log.Error(message: $"Error: {ex.Message}");
+                UiServices.ShowMessageBox(
+                    message: HelperControlAndMessageBoxHandling.ReturnControlText(
+                        controlName: "mbx_DirectoryElementCollection_ErrorParsing",
+                        fakeControlType: HelperControlAndMessageBoxHandling.FakeControlTypes.MessageBox),
+                    icon: UiMessageIcon.Error,
+                    buttons: UiMessageButtons.OK);
+            }
+
+            Log.Trace(message: "Listing Folders - OK");
+        }
+
+        #endregion
+
+        #endregion
+
+        #region Any Mode Files
+
+        Log.Trace(message: "Loading allowedExtensions");
+        string[] allowedImageExtensions = SupportedFileExtensions.AllCompatibleExtensionsExt();
+        string[] allowedSidecarExtensions = SupportedFileExtensions.GetSideCarExtensionsArray();
+        Log.Trace(message: "Loading allowedExtensions - OK");
+        // ******************************
+        // list files that have supported extensions
+        // separate these into sidecar and image files
+        updateProgressHandler(obj: "Scanning folder: processing supported files ...");
+        Log.Trace(message: "Files: Listing Files");
+        HashSet<FileInfo> imageFiles = FileEnumeration.CreateHashSetWithComparer();
+        HashSet<FileInfo> sidecarFiles = FileEnumeration.CreateHashSetWithComparer();
+
+        IEnumerable<FileInfo> filesInDir = null;
+        int filesThatExistWithinCollection = 0;
+
+        #region Collection Mode
+
+        // if we're in collection-mode...
+        if (collectionModeEnabled)
+        {
+            List<FileInfo> filesInCollection = [];
+            foreach (string collectItemWithPath in File.ReadLines(path: HelperVariables.CollectionFileLocation))
+            {
+                if (File.Exists(path: collectItemWithPath))
+                {
+                    FileInfo fi = new(fileName: collectItemWithPath);
+                    DirectoryElement de = new(
+                        itemNameWithoutPath: fi.Name,
+                        type: DirectoryElement.ElementType.File,
+                        fileNameWithPath: fi.FullName);
+
+                    Add(item: de);
+
+                    // INSERT THIS LINE:
+                    onElementFound?.Invoke(de);
+
+                    filesThatExistWithinCollection++;
+                }
+            }
+
+            if (filesThatExistWithinCollection > 0)
+            {
+                filesInDir = filesInCollection;
+            }
+        }
+
+        #endregion
+
+        #region Normal Mode
+
+        // if we're in normal mode or failed to gather any valid files...
+        if (!collectionModeEnabled ||
+            (collectionModeEnabled && filesThatExistWithinCollection == 0))
+        {
+            UiServices.SetWaitStage(stage: UiWaitStage.Scanning);
+
+            try
+            {
+                await Task.Run(action: () =>
+                {
+                    // .ToList() actually forces enumeration here, inside the background thread: GetFilesFromAFolder
+                    // is a yield-return iterator, so merely assigning it to filesInDir (without enumerating it)
+                    // does not run any of its body - it would otherwise run lazily in the continuation below.
+                    filesInDir = FileEnumeration.GetFilesFromAFolder(
+                        folder: folderOrCollectionFileName,
+                        filter: allowedImageExtensions.Concat(second: allowedSidecarExtensions).ToArray(),
+                        recursive: processSubFolders,
+                        updateProgressHandler: updateProgressHandler,
+                        cancellationToken: cancellationToken
+                    ).ToList();
+                }).ConfigureAwait(continueOnCapturedContext: false);
+            }
+            catch (OperationCanceledException)
+            {
+                Console.WriteLine(value: "Operation canceled.");
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine(value: $"Error: {ex.Message}");
+            }
+        }
+
+        if (filesInDir != null)
+        {
+            foreach (FileInfo fileInfoItem in filesInDir)
+            {
+                // Check, if it is a sidecar file. If so,
+                // add it to the list to attach to image files later
+                if (allowedSidecarExtensions.Contains(
+                        value: fileInfoItem.Extension.Replace(oldValue: ".", newValue: ""),
+                        comparer: StringComparer.InvariantCultureIgnoreCase))
+                {
+                    _ = sidecarFiles.Add(item: fileInfoItem);
+                }
+
+                // Image file
+                else if (allowedImageExtensions.Contains(
+                             value: fileInfoItem.Extension.Replace(oldValue: ".", newValue: ""),
+                             comparer: StringComparer.InvariantCultureIgnoreCase))
+                {
+                    _ = imageFiles.Add(item: fileInfoItem);
+
+                    // collection mode throws a slight problem with sidecar files: 
+                    // if an xmp (or other, currently undefined) file is not explicitly on the collection-mode-list then it gets ignored.
+                    // so we check if there is an xmp file with the same name as the image here.
+
+                    foreach (string sideCarExtension in allowedSidecarExtensions)
+                    {
+                        string imaginarySidecarFileNameWithPath =
+                            $"{Path.GetFileNameWithoutExtension(path: fileInfoItem.FullName)}.{sideCarExtension}";
+                        if (File.Exists(path: Path.Combine(path1: fileInfoItem.DirectoryName,
+                                path2: imaginarySidecarFileNameWithPath)))
+                        {
+                            FileInfo fiSidecarFileInfoItem = new(fileName: Path.Combine(
+                                path1: fileInfoItem.DirectoryName,
+                                path2: imaginarySidecarFileNameWithPath));
+                            _ = sidecarFiles.Add(item: fiSidecarFileInfoItem);
+                        }
+                    }
+                }
+            }
+        }
+
+        Log.Trace(message: $"Files: Listing Files - OK, image file count: {imageFiles.Count}");
+
+        // ******************************
+        // Map sidecar files to image file
+        IDictionary<FileInfo, FileInfo> imageToSidecarFileMapping = new Dictionary<FileInfo, FileInfo>();
+        HashSet<FileInfo> overlappingXMPFileList = FileEnumeration.CreateHashSetWithComparer();
+
+        Log.Trace(message: $"Files: Checking sidecar files, count: {sidecarFiles.Count}");
+        foreach (FileInfo sideCarFileInfoItem in sidecarFiles)
+        {
+            // Get (by comparing w/o extension +  folder) list of matching image files in lower case
+            string scFilenameWithoutExtension = sideCarFileInfoItem.Name
+                                                                   .Replace(oldValue: sideCarFileInfoItem.Extension,
+                                                                        newValue: "").ToLower();
+            string scFolder = sideCarFileInfoItem.DirectoryName;
+            List<FileInfo> matchingImageFiles = imageFiles
+                                               .Where(predicate: imgFile =>
+                                                    imgFile.Name.Replace(oldValue: imgFile.Extension, newValue: "")
+                                                           .ToLower() ==
+                                                    scFilenameWithoutExtension && imgFile.DirectoryName == scFolder)
+                                               .ToList();
+
+            bool sidecarFileAlreadyAdded = false;
+            foreach (FileInfo imagefileFileInfoItem in matchingImageFiles)
+            {
+                string imgFileExtension = imagefileFileInfoItem.Extension.TrimStart('.');
+
+                // only add the sidecar file linkage if the particular extension is marked to use sidecars
+                bool writeXMPSideCar = Convert.ToBoolean(value: ApplicationSettings.DataReadSQLiteSettings(
+                    dataTable: HelperVariables.DtHelperDataApplicationSettings,
+                    settingTabPage: "tpg_FileOptions",
+                    settingId: $"{imgFileExtension.ToLower()}_ckb_AddXMPSideCar"));
+                if (writeXMPSideCar)
+                {
+                    if (sidecarFileAlreadyAdded)
+                    {
+                        _ = overlappingXMPFileList.Add(item: sideCarFileInfoItem);
+                        Log.Warn(message: $"Sidecar file '{sideCarFileInfoItem}' matches multiple image files!");
+                    }
+
+                    imageToSidecarFileMapping[key: imagefileFileInfoItem] = sideCarFileInfoItem;
+                    sidecarFileAlreadyAdded = true;
+                }
+            }
+        }
+
+        // check if we have 1 xmp belonging to multiple images. 
+        if (overlappingXMPFileList.Count > 0)
+        {
+            string overlappingXmpFileStr = "";
+            foreach (FileInfo fi in overlappingXMPFileList)
+            {
+                overlappingXmpFileStr += fi.FullName + NewLine;
+            }
+
+            UiServices.ShowMessageBox(
+                message: HelperControlAndMessageBoxHandling.ReturnControlText(
+                    controlName: "mbx_FrmMainApp_WarningMultipleImageFilesForXMP",
+                    fakeControlType: HelperControlAndMessageBoxHandling.FakeControlTypes.MessageBox
+                    ) +
+                    Environment.NewLine + $"{overlappingXmpFileStr}",
+                icon: UiMessageIcon.Warning,
+                buttons: UiMessageButtons.OK);
+        }
+
+        // ******************************
+        // Extract data for all files that are supported
+        Log.Info(message: "Files: Extracting File Data");
+        int fileCount = 0;
+        _ExifTool ??= new ExifTool();
+
+        UiServices.SetWaitStage(stage: UiWaitStage.Parsing);
+        await Task.Run(action: () =>
+        {
+            ParseImagesToDirectoryElements(updateProgressHandler: updateProgressHandler,
+                imageFiles: imageFiles,
+                sidecarFiles: sidecarFiles,
+                fileCount: fileCount,
+                imageToSidecarFileMapping: imageToSidecarFileMapping,
+                cancellationToken: cancellationToken,
+                onElementFound: onElementFound);
+        });
+        // Not .ConfigureAwait(false): the code right after this await (TaskbarManagerInstance.SetProgressState)
+        // is a COM taskbar call that needs the UI/STA thread. ParseImagesToDirectoryElements itself already runs
+        // on a thread-pool thread regardless (it's the Task.Run delegate), and parallelizes its own checksum work
+        // internally, so nothing is lost by resuming the continuation here on the UI thread.
+
+        UiServices.SetTaskbarProgress(state: UiTaskbarProgress.NoProgress);
+
+        Log.Info(message: "Files: Extracting File Data - OK");
+
+        #endregion
+
+        #endregion
+    }
+
+    /// <summary>
+    /// Asks the metadata read to do these elements next (in this order), before the rest of the folder, which follows
+    /// in list order. Safe to call from the UI thread at any time, including before hydration starts.
+    /// </summary>
+    /// <param name="elements">Typically the rows the user can see, then the ones about to scroll into view.</param>
+    public void PrioritiseHydration(IEnumerable<DirectoryElement> elements)
+    {
+        List<DirectoryElement> copy = elements.ToList();
+        lock (_hydrationLock)
+        {
+            _hydrationPriority = copy;
+        }
+    }
+
+    private DirectoryElement? TakeNextToHydrate(PriorityWorkList<DirectoryElement> remaining)
+    {
+        lock (_hydrationLock)
+        {
+            remaining.SetPriority(items: _hydrationPriority);
+            return remaining.TakeNext();
+        }
+    }
+
+    /// <summary>
+    /// Starts and awaits a background metadata hydration task, storing the running task in HydrationTask for
+    /// monitoring.
+    /// </summary>
+    /// <remarks>Captures the running task in HydrationTask so the UI can monitor progress and then awaits its
+    /// completion.</remarks>
+    /// <param name="onUpdated">Callback invoked when a DirectoryElement is updated during hydration.</param>
+    /// <param name="ct">Cancellation token that can be used to cancel the background read operation.</param>
+    /// <returns>A task that represents the asynchronous operation.</returns>
+    public async Task StartBackgroundMetadataRead(Action<DirectoryElement> onUpdated, CancellationToken ct,
+                                                  Action<int, int> onProgress = null)
+    {
+        // Capture the task so the UI can monitor it
+        HydrationTask = RunHydrationInternal(onUpdated: onUpdated, ct: ct, onProgress: onProgress);
+        try
+        {
+            await HydrationTask;
+        }
+        finally
+        {
+            // (0, 0) signals "finished or canceled" so the caller can clear its progress display.
+            onProgress?.Invoke(0, 0);
+        }
+    }
+
+    /// <summary>
+    /// Starts an asynchronous background scan that reads metadata for file elements and invokes a callback when
+    /// metadata is available.
+    /// </summary>
+    /// <remarks>Processes only file elements, prefers a sidecar file when present, and invokes ExifTool on a
+    /// background thread to avoid blocking. Aggregates properties by key, updates DirectoryElement attributes, clears
+    /// the IsDirty flag on success, invokes the callback to refresh UI rows (including reapplying cached attributes),
+    /// and logs errors without propagating exceptions.</remarks>
+    /// <param name="onUpdated">Callback invoked for each DirectoryElement when cached attributes are reapplied or when new metadata has been
+    /// read; may be null.</param>
+    /// <param name="ct">Cancellation token used to cancel the background processing; checked between files.</param>
+    /// <returns>A Task that completes when the background metadata read finishes or is canceled.</returns>
+    public async Task RunHydrationInternal(Action<DirectoryElement> onUpdated, CancellationToken ct,
+                                           Action<int, int> onProgress = null)
+    {
+        Log.Info("Metadata Hydration: Task Started");
+
+        // Get a snapshot of the files
+        List<DirectoryElement> workList;
+        lock (this) { workList = this.Where(x => x.Type == DirectoryElement.ElementType.File).ToList(); }
+
+        PriorityWorkList<DirectoryElement> remaining = new();
+        foreach (DirectoryElement element in workList)
+        {
+            _ = remaining.Add(item: element);
+        }
+
+        int completedCount = 0;
+        while (TakeNextToHydrate(remaining: remaining) is { } de)
+        {
+            if (ct.IsCancellationRequested)
+            {
+                return;
+            }
+
+            // Reports files finished so far (before this one), so the final 100% is never shown; the caller
+            // clears the progress state when hydration ends.
+            onProgress?.Invoke(completedCount++, workList.Count);
+
+            // We only skip if:
+            // 1. It already HAS attributes (HasAttributes is true)
+            // 2. AND it is NOT dirty (checksum matches)
+            if (de.IsHydrated && !de.IsDirty)
+            {
+                // Still notify UI to show cached data
+                onUpdated?.Invoke(de);
+                continue;
+            }
+
+            try
+            {
+                // Prefer Sidecar, then RAW
+                string fileToRead = de.SidecarFile?.FullName ?? de.FileNameWithPath;
+                // Guard against ExifTool attempting to read cloud-only files
+                if (CloudFileHelpers.IsCloudOnlyPlaceholder(filePath: fileToRead))
+                {
+                    de.IsCloudOffline = true;
+                    Log.Warn(message: $"Skipping metadata hydration for online-only file: {fileToRead}");
+                    // Optionally set default/stub attributes on 'de' to indicate offline status
+                    onUpdated?.Invoke(de);
+                    continue;
+                }
+
+                // A path beyond what this setup supports (see LongPathSupport: ExifTool 12.x or Windows without long paths) would only
+                // make ExifTool answer "File not found", so say why in the log and spare the round trip.
+                if (fileToRead.Length > LongPathSupport.MaxPathLength)
+                {
+                    Log.Warn(message: $"Skipping metadata read: the path has {fileToRead.Length} characters but only {LongPathSupport.MaxPathLength} are supported here (long paths need ExifTool 13+ and Windows long path support): {fileToRead}");
+                    onUpdated?.Invoke(de);
+                    continue;
+                }
+
+                de.IsCloudOffline = false;
+                List<KeyValuePair<string, string>> props = [];
+
+                // Run ExifTool
+                await Task.Run(() =>
+                {
+                    if (ct.IsCancellationRequested)
+                    {
+                        return;
+                    }
+
+                    ExifTool.GetProperties(fileToRead, props);
+                }, ct).ConfigureAwait(continueOnCapturedContext: false);
+
+                if (props.Count > 0 && !ct.IsCancellationRequested)
+                {
+                    Dictionary<string, string> dict = props.GroupBy(x => x.Key).ToDictionary(x => x.Key, x => x.First().Value);
+                    de.ParseAttributesFromExifToolOutput(dict);
+
+                    // Reset dirty flag so next refresh skips this file
+                    de.IsDirty = false;
+
+                    onUpdated?.Invoke(de);
+                }
+            }
+            catch (Exception ex)
+            {
+                Log.Error(ex, "Hydration failed");
+            }
+        }
+        Log.Info("Metadata Hydration: Task Finished");
+    }
+
+    /// <summary>
+    /// Parses the provided image files into DirectoryElement instances, links matching .xmp sidecar files, computes and
+    /// updates file checksums, marks elements as dirty when content changes, and notifies via an optional callback.
+    /// </summary>
+    /// <remarks>Updates HelperVariables.FileChecksumDictionary with computed checksums and returns early if
+    /// cancellation is requested.</remarks>
+    /// <param name="updateProgressHandler">Handler invoked to report progress messages.</param>
+    /// <param name="imageFiles">Set of image files to process into directory elements.</param>
+    /// <param name="sidecarFiles">Set of available sidecar files (.xmp) used to link to images.</param>
+    /// <param name="fileCount">Total number of files expected for progress calculation.</param>
+    /// <param name="imageToSidecarFileMapping">Optional mapping from image FileInfo to its sidecar FileInfo.</param>
+    /// <param name="cancellationToken">CancellationToken to observe for cooperative cancellation.</param>
+    /// <param name="onElementFound">Optional callback invoked for each created or updated DirectoryElement.</param>
+    private void ParseImagesToDirectoryElements(Action<string> updateProgressHandler,
+                                                HashSet<FileInfo> imageFiles,
+                                                HashSet<FileInfo> sidecarFiles,
+                                                int fileCount,
+                                                IDictionary<FileInfo, FileInfo> imageToSidecarFileMapping,
+                                                CancellationToken cancellationToken,
+                                                Action<DirectoryElement> onElementFound = null)
+    {
+        // Pass 1: find-or-create each element and map its sidecar, sequentially. List<T>.Add (this collection
+        // is a List<DirectoryElement>) is not thread-safe, but this part is cheap - the expensive part (full-file
+        // checksums below) is what benefits from running in parallel.
+        List<(DirectoryElement de, FileInfo imageFile, bool isNew)> workItems = [];
+
+        // Looked up by hash instead of scanning the list / sidecar set for every image (that was O(n squared)).
+        Dictionary<string, DirectoryElement> existingByPath = new(comparer: StringComparer.Ordinal);
+        foreach (DirectoryElement existing in this)
+        {
+            existingByPath[key: existing.FileNameWithPath] = existing;
+        }
+
+        Dictionary<string, FileInfo> xmpByName = new(comparer: StringComparer.InvariantCultureIgnoreCase);
+        foreach (FileInfo sidecar in sidecarFiles)
+        {
+            if (!xmpByName.ContainsKey(key: sidecar.Name))
+            {
+                xmpByName[key: sidecar.Name] = sidecar;
+            }
+        }
+
+        foreach (FileInfo imagefileFileInfoItem in imageFiles)
+        {
+            if (cancellationToken.IsCancellationRequested)
+            {
+                return;
+            }
+
+            // 1. Find or create the element
+            _ = existingByPath.TryGetValue(key: imagefileFileInfoItem.FullName, value: out DirectoryElement? de);
+            bool isNew = de == null;
+
+            if (isNew)
+            {
+                de = new DirectoryElement(itemNameWithoutPath: imagefileFileInfoItem.Name, type: DirectoryElement.ElementType.File, fileNameWithPath: imagefileFileInfoItem.FullName);
+                Add(item: de);
+            }
+
+            // Check cloud status
+            bool isCloudOnly = CloudFileHelpers.IsCloudOnlyPlaceholder(fileInfo: imagefileFileInfoItem);
+            // de.IsCloudOnly = isCloudOnly; // Optionally expose this on your model
+
+            // 2. Map Sidecar
+            string baseName = Path.GetFileNameWithoutExtension(path: imagefileFileInfoItem.Name);
+            _ = xmpByName.TryGetValue(key: baseName + ".xmp", value: out FileInfo? sidecarMatch);
+            de.SidecarFile = sidecarMatch;
+
+            workItems.Add(item: (de: de, imageFile: imagefileFileInfoItem, isNew: isNew));
+        }
+
+        // Pass 2: checksum every image/sidecar pair in parallel. Full-content hashing of every file, every scan,
+        // is deliberate (see comment below) and embarrassingly parallel per file, so this is where the wall-clock
+        // time was going. onElementFound ends up calling into Control.Invoke, which is safe to call concurrently
+        // from multiple threads, so rows can still stream into the UI as each checksum finishes.
+        //
+        // New elements are not hashed here at all: they are read by ExifTool regardless (isNew), so the hash cannot
+        // change what happens to them, and hashing every RAW in full (tens of MB each, often from a cloud-synced
+        // drive) is what kept the "parsing" box up for many seconds. Their checksums are filled in afterwards on
+        // background threads (StoreChecksumsInBackground). Until that finishes a rescan sees no stored checksum and
+        // simply re-reads the file, which is the safe direction.
+        List<DirectoryElement> checksumLater = [];
+        _ = Parallel.ForEach(source: workItems, body: (workItem, loopState) =>
+        {
+            if (cancellationToken.IsCancellationRequested)
+            {
+                loopState.Stop();
+                return;
+            }
+
+            DirectoryElement de = workItem.de;
+
+            if (workItem.isNew)
+            {
+                lock (checksumLater)
+                {
+                    checksumLater.Add(item: de);
+                }
+
+                de.IsDirty = true;
+                onElementFound?.Invoke(de);
+                return;
+            }
+
+            // 3. Checksum Logic
+            bool fileNeedsReDEing = workItem.isNew;
+            bool checksumChanged = false;
+
+            for (int i = 0; i <= 1; i++)
+            {
+                string thisCheckSum = string.Empty;
+                string storedChecksum = string.Empty;
+                FileInfo fileNameWithPathToCheck = i == 0 ? workItem.imageFile : de.SidecarFile;
+
+                // note to self: jpgs have no sidecars.
+                if (fileNameWithPathToCheck != null && File.Exists(path: fileNameWithPathToCheck.FullName))
+                {
+                    // Skip reading/checksumming if the target is online-only
+                    if (CloudFileHelpers.IsCloudOnlyPlaceholder(fileInfo: fileNameWithPathToCheck))
+                    {
+                        Log.Info($"Skipping checksum for cloud placeholder: {fileNameWithPathToCheck.FullName}");
+                        continue;
+                    }
+
+                    if (HelperVariables.FileChecksumDictionary.TryGetValue(key: fileNameWithPathToCheck.FullName, value: out string value))
+                    {
+                        storedChecksum = value;
+                    }
+
+                    // before anyone points out, yes we could store/check filesizes and match those two but the problem is that particularly
+                    // xmp files can be modified within a single byte and then saved and have their datetime stamp changed to takendatetime
+                    // so basically we could have two files that look identical on the surface but differ in content.
+                    // as such we do need to do the checksum test regardless of what the files appear like.
+                    // Safe to run checksum on local files
+                    thisCheckSum = Helpers.FileSystem.GetChecksum.GetFileChecksum(fileNameWithPath: fileNameWithPathToCheck.FullName);
+                    checksumChanged = storedChecksum != thisCheckSum;
+
+                    fileNeedsReDEing = fileNeedsReDEing || checksumChanged ||
+                                       !HelperVariables.FileChecksumDictionary.ContainsKey(fileNameWithPathToCheck.FullName);
+                }
+
+                if (fileNeedsReDEing && !string.IsNullOrWhiteSpace(value: thisCheckSum))
+                {
+                    HelperVariables.FileChecksumDictionary[key: fileNameWithPathToCheck.FullName] = thisCheckSum;
+                }
+            }
+
+            de.IsDirty = !de.IsHydrated || fileNeedsReDEing;
+
+            // 4. Notify UI
+            onElementFound?.Invoke(de);
+        });
+
+        StoreChecksumsInBackground(elements: checksumLater, cancellationToken: cancellationToken);
+    }
+
+    /// <summary>
+    ///     Hashes the image and sidecar of each element and records the result in
+    ///     <see cref="HelperVariables.FileChecksumDictionary" />, for the next rescan's change detection. Runs on the
+    ///     thread pool, at most two files at a time so it does not compete with the metadata read, and stops when the
+    ///     folder load is cancelled (e.g. the user navigates away).
+    /// </summary>
+    private static void StoreChecksumsInBackground(List<DirectoryElement> elements,
+                                                   CancellationToken cancellationToken)
+    {
+        if (elements.Count == 0)
+        {
+            return;
+        }
+
+        _ = Task.Run(action: () =>
+        {
+            try
+            {
+                _ = Parallel.ForEach(
+                    source: elements,
+                    parallelOptions: new ParallelOptions
+                    {
+                        MaxDegreeOfParallelism = 2,
+                        CancellationToken = cancellationToken
+                    },
+                    body: de =>
+                    {
+                        FileInfo?[] targets = [new FileInfo(fileName: de.FileNameWithPath), de.SidecarFile];
+                        foreach (FileInfo? target in targets)
+                        {
+                            if (target == null ||
+                                !File.Exists(path: target.FullName) ||
+                                CloudFileHelpers.IsCloudOnlyPlaceholder(fileInfo: target))
+                            {
+                                continue;
+                            }
+
+                            string checksum = Helpers.FileSystem.GetChecksum.GetFileChecksum(fileNameWithPath: target.FullName);
+                            if (!string.IsNullOrWhiteSpace(value: checksum))
+                            {
+                                HelperVariables.FileChecksumDictionary[key: target.FullName] = checksum;
+                            }
+                        }
+                    });
+            }
+            catch (OperationCanceledException)
+            {
+                // folder changed; nothing to record
+            }
+            catch (Exception ex)
+            {
+                Log.Error(ex, "Background checksums failed");
+            }
+        });
+    }
+}

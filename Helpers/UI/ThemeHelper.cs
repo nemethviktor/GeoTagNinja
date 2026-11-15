@@ -42,16 +42,7 @@ internal static class ThemeHelper
     /// </summary>
     internal static bool WindowsPrefersDarkApps()
     {
-        try
-        {
-            using Microsoft.Win32.RegistryKey key = Microsoft.Win32.Registry.CurrentUser.OpenSubKey(
-                name: @"Software\Microsoft\Windows\CurrentVersion\Themes\Personalize");
-            return key?.GetValue(name: "AppsUseLightTheme") is int appsUseLightTheme && appsUseLightTheme == 0;
-        }
-        catch
-        {
-            return false;
-        }
+        return WindowsAppearance.PrefersDarkApps();
     }
 
     /// <summary>

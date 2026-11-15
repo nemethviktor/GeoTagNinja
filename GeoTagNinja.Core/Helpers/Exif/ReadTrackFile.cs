@@ -1,0 +1,388 @@
+﻿using GeoTagNinja.Helpers.API;
+using GeoTagNinja.Helpers.Data;
+using GeoTagNinja.Helpers.FileSystem;
+using GeoTagNinja.Helpers.UI;
+using GeoTagNinja.Model;
+using System;
+using System.Collections.Generic;
+using System.Data;
+using System.Globalization;
+using System.IO;
+using System.Linq;
+using System.Reflection;
+using System.Threading.Tasks;
+using System.Xml.Serialization;
+using static GeoTagNinja.Model.SourcesAndAttributes;
+
+namespace GeoTagNinja.Helpers.Exif;
+
+internal static class ReadTrackFile
+{
+    /// <summary>
+    ///     Fires off a command to try to parse Track files and link them up with data in
+    ///     the main grid
+    /// </summary>
+    /// <param name="trackFileLocationType">File or Folder</param>
+    /// <param name="trackFileLocationVal">The location of the above</param>
+    /// <param name="compareTZAgainst">If TZ should be compared against CreateDate or DateTimeOriginal</param>
+    /// <param name="TZVal">Value as string, e.g "+01:00"</param>
+    /// <param name="GeoMaxIntSecs"></param>
+    /// <param name="GeoMaxExtSecs"></param>
+    /// <param name="doNotReverseGeoCode">Whether reverse geocoding should be skipped</param>
+    /// <param name="getTrackDataOverlay">Whether to overlay the track data</param>
+    /// <param name="overlayDateList">Whether to fire up the overlay-track process and if so how</param>
+    /// <param name="timeShiftSeconds">Int value if GPS time should be shifted.</param>
+    /// <returns></returns>
+    internal static async Task ExifGetTrackSyncData(string trackFileLocationType,
+        string trackFileLocationVal,
+        string compareTZAgainst,
+        string TZVal,
+        int GeoMaxIntSecs,
+        int GeoMaxExtSecs,
+        bool doNotReverseGeoCode,
+        TrackOverlaySetting getTrackDataOverlay,
+        List<DateTime> overlayDateList,
+        int timeShiftSeconds = 0)
+    {
+        //HelperVariables._sErrorMsg = "";
+        HelperVariables._sOutputAndErrorMsg = "";
+        Directory.CreateDirectory(path: $@"{HelperVariables.UserDataFolderPath}\tmpLocFiles");
+        List<string> trackFileList = [];
+        List<string> imageFileList = [];
+        if (UiServices.Host != null)
+        {
+            // trackFileList
+            if (trackFileLocationType == "file")
+            {
+                trackFileList.Add(item: trackFileLocationVal);
+            }
+            else if (trackFileLocationType == "folder")
+            {
+                trackFileList = Directory
+                               .GetFiles(path: trackFileLocationVal)
+                               .Where(predicate: file => SupportedFileExtensions.GpxExtensions()
+                                                        .Any(predicate: file.ToLower()
+                                                            .EndsWith))
+                               .ToList();
+            }
+
+            // imageFileList
+            foreach (DirectoryElement dirElemFileToModify in UiServices.GetSelectedDirectoryElements())
+            {
+                string pathToTag = dirElemFileToModify.FileNameWithPath;
+                if (File.Exists(path: pathToTag))
+                {
+                    imageFileList.Add(item: pathToTag);
+                }
+            }
+
+            string tmpFolder =
+                Path.Combine($@"{HelperVariables.UserDataFolderPath}\tmpLocFiles");
+
+            // this is a little superflous but...
+            DirectoryInfo diTmpLocFiles = new(path: tmpFolder);
+
+            foreach (FileInfo file in diTmpLocFiles.EnumerateFiles())
+            {
+                file.Delete();
+            }
+
+            // this triggers ExifTool
+            await WriteTrackDataToSideCar.ExifWriteTrackDataToSideCar(
+                trackFileList: trackFileList,
+                imageFileList: imageFileList,
+                compareTZAgainst: compareTZAgainst,
+                TZVal: TZVal,
+                GeoMaxIntSecs: GeoMaxIntSecs,
+                GeoMaxExtSecs: GeoMaxExtSecs,
+                timeShiftSeconds: timeShiftSeconds
+            );
+
+            foreach (FileInfo exifFileIn in diTmpLocFiles.EnumerateFiles())
+            {
+                // note to self -> this is the xmp file in the folder produced by the track parsing, not an xmp file that belongs to a nef file etc.
+                if (exifFileIn.Extension == ".xmp")
+                {
+                    try
+                    {
+                        string textInTheXMPFile = File.ReadAllText(
+                            path: Path.Combine(path1: tmpFolder, path2: exifFileIn.Name));
+
+                        XmlSerializer serializer = new(type: typeof(xmpmeta));
+                        xmpmeta trackFileXMPData;
+                        using (StringReader reader = new(s: textInTheXMPFile))
+                        {
+                            trackFileXMPData =
+                                (xmpmeta)serializer.Deserialize(textReader: reader);
+                        }
+
+                        if (trackFileXMPData != null)
+                        {
+                            DataTable dtFileExifTable = new();
+                            dtFileExifTable.Clear();
+                            dtFileExifTable.Columns.Add(columnName: "attribute");
+                            dtFileExifTable.Columns.Add(columnName: "TagValue");
+
+                            PropertyInfo[] properties =
+                                typeof(RDFDescription).GetProperties(
+                                    bindingAttr: BindingFlags.Instance |
+                                                 BindingFlags.Public);
+
+                            foreach (PropertyInfo trackData in properties)
+                            {
+                                string attribute = $"exif:{trackData.Name}";
+                                object tagValue =
+                                    trackData.GetValue(
+                                        obj: trackFileXMPData.RDF.Description);
+
+                                DataRow dr = dtFileExifTable.NewRow();
+                                dr[columnName: "attribute"] = attribute;
+                                dr[columnName: "TagValue"] = tagValue;
+                                dtFileExifTable.Rows.Add(row: dr);
+                            }
+
+                            // de-dupe. this is pretty poor performance but the dataset is small
+                            DataTable dtDistinctFileExifTable =
+                                dtFileExifTable.DefaultView.ToTable(distinct: true);
+
+                            // note to self -> should find a way to handle multiple identically-named files somehow.
+                            string trackedFileName = exifFileIn.Name.Substring(
+                                startIndex: 0,
+                                length: exifFileIn.Name.Length - 4);
+                            // exact name first; the list control used to match on the start of the name
+                            DirectoryElement matchedElement =
+                                HelperVariables.DirectoryElements.FirstOrDefault(predicate: element => string.Equals(
+                                    a: element.ItemNameWithoutPath, b: trackedFileName,
+                                    comparisonType: StringComparison.OrdinalIgnoreCase)) ??
+                                HelperVariables.DirectoryElements.FirstOrDefault(predicate: element =>
+                                    element.ItemNameWithoutPath.StartsWith(value: trackedFileName,
+                                        comparisonType: StringComparison.OrdinalIgnoreCase));
+
+                            if (matchedElement != null)
+                            {
+
+                                ElementAttribute[] trackFileOverwrites =
+                                {
+                                    ElementAttribute.GPSLatitude,
+                                    ElementAttribute.GPSLongitude,
+                                    ElementAttribute.GPSAltitude,
+                                    ElementAttribute.GPSDOP,
+                                    ElementAttribute.GPSHPositioningError
+                                };
+
+                                ElementAttribute[] toponomyDeletes =
+                                {
+                                    ElementAttribute.CountryCode,
+                                    ElementAttribute.Country,
+                                    ElementAttribute.City,
+                                    ElementAttribute.State,
+                                    ElementAttribute.Sublocation
+                                };
+
+                                DirectoryElement dirElemFileToModify = matchedElement;
+                                string fileNameWithoutPath = dirElemFileToModify.ItemNameWithoutPath;
+
+                                // get the current stuff, either from DE3 or Orig or just blank if none.
+                                // we're doing this so we can compare if the data received from the track parse is different from the one in the file
+                                // if so then later we'll trigger the store-to-Stage3-process
+
+                                string currentLat = GetCurrentValue(dirElemFileToModify: dirElemFileToModify,
+                                    attribute: ElementAttribute.GPSLatitude);
+                                string currentLng = GetCurrentValue(dirElemFileToModify: dirElemFileToModify,
+                                    attribute: ElementAttribute.GPSLongitude);
+                                string currentAltitude = GetCurrentValue(dirElemFileToModify: dirElemFileToModify,
+                                    attribute: ElementAttribute.GPSAltitude);
+
+                                // The sidecar goes through the same reader as a photo does, so a coordinate
+                                // means the same thing whichever of the two it arrived in.
+                                IDictionary<ElementAttribute, IConvertible> valuesInTrackFile =
+                                    ExifTagSetParser.ParseTagSet(
+                                        dictTagsIn: ExifTagSetParser.TagsFromExifToolDataTable(
+                                            dtFileExif: dtDistinctFileExifTable));
+
+                                string strLatInTrackFile = GetValueInTrackFile(
+                                    valuesInTrackFile: valuesInTrackFile,
+                                    attribute: ElementAttribute.GPSLatitude);
+                                string strLngInTrackFile = GetValueInTrackFile(
+                                    valuesInTrackFile: valuesInTrackFile,
+                                    attribute: ElementAttribute.GPSLongitude);
+                                string altitudeInTrackFile = GetValueInTrackFile(
+                                    valuesInTrackFile: valuesInTrackFile,
+                                    attribute: ElementAttribute.GPSAltitude);
+
+                                bool coordinatesHaveChanged =
+                                    !(currentLat == strLatInTrackFile &&
+                                      currentLng == strLngInTrackFile &&
+                                      currentAltitude == altitudeInTrackFile);
+                                if (coordinatesHaveChanged)
+                                {
+                                    UiServices.SetStatusText(text: $"Processing: {fileNameWithoutPath}");
+
+                                    UiServices.MarkFileListItemChanged(directoryElement: dirElemFileToModify);
+
+                                    foreach (ElementAttribute attribute in trackFileOverwrites)
+                                    {
+                                        SetValueFromTrackFile(
+                                            dirElemFileToModify: dirElemFileToModify,
+                                            valuesInTrackFile: valuesInTrackFile,
+                                            attribute: attribute);
+                                    }
+
+                                    // clear city, state etc
+                                    foreach (ElementAttribute attribute in
+                                             toponomyDeletes)
+                                    {
+                                        dirElemFileToModify.RemoveAttributeValue(
+                                            attribute: attribute,
+                                            version: DirectoryElement.AttributeVersion
+                                                                     .Stage3ReadyToWrite);
+                                    }
+
+                                    // pull from web
+                                    if (!doNotReverseGeoCode)
+                                    {
+                                        HelperVariables.OperationAPIReturnedOKResponse =
+                                            true;
+                                        DataTable dtToponomy =
+                                            ReadExifData
+                                               .DTFromAPIExifGetToponomyFromWebOrSQL(
+                                                    lat: strLatInTrackFile.ToString(
+                                                        provider: CultureInfo.InvariantCulture),
+                                                    lng: strLngInTrackFile.ToString(
+                                                        provider: CultureInfo.InvariantCulture),
+                                                    fileNameWithoutPath: fileNameWithoutPath);
+
+                                        if (HelperVariables
+                                           .OperationAPIReturnedOKResponse)
+                                        {
+                                            List<(ElementAttribute attribute, string toponomyOverwriteVal)>
+                                                toponomyOverwrites =
+                                                [
+                                                    (ElementAttribute.CountryCode,
+                                                     dtToponomy.Rows[index: 0][columnName: ToponomyColumns.DefaultEnglishNamesToColumnHeaders[
+                                                         ReadExifData.GetToponomyDataColumnName(
+                                                             DefaultColumnNamesFromElementAttributesForFileEditing.CountryCode, true)]].ToString()),
+                                                    (ElementAttribute.Country,
+                                                     dtToponomy.Rows[index: 0][columnName: ToponomyColumns.DefaultEnglishNamesToColumnHeaders[
+                                                         ReadExifData.GetToponomyDataColumnName(
+                                                             DefaultColumnNamesFromElementAttributesForFileEditing.Country, true)]].ToString()),
+                                                    (ElementAttribute.City,
+                                                     dtToponomy.Rows[index: 0][columnName: ToponomyColumns.DefaultEnglishNamesToColumnHeaders[
+                                                         ReadExifData.GetToponomyDataColumnName(
+                                                             DefaultColumnNamesFromElementAttributesForFileEditing.City, true)]].ToString()),
+                                                    (ElementAttribute.State,
+                                                     dtToponomy.Rows[index: 0][columnName: ToponomyColumns.DefaultEnglishNamesToColumnHeaders[
+                                                         ReadExifData.GetToponomyDataColumnName(
+                                                             DefaultColumnNamesFromElementAttributesForFileEditing.State, true)]].ToString()),
+                                                    (ElementAttribute.Sublocation,
+                                                     dtToponomy.Rows[index: 0][columnName: ToponomyColumns.DefaultEnglishNamesToColumnHeaders[
+                                                         ReadExifData.GetToponomyDataColumnName(
+                                                             DefaultColumnNamesFromElementAttributesForFileEditing.Sublocation, true)]].ToString()),
+                                                ];
+
+                                            foreach ((ElementAttribute attribute, string
+                                                     toponomyOverwriteVal) in toponomyOverwrites)
+                                            {
+                                                // these are all strings
+                                                dirElemFileToModify
+                                                   .SetAttributeValueAnyType(
+                                                        attribute: attribute,
+                                                        value: toponomyOverwriteVal,
+                                                        version: DirectoryElement.AttributeVersion
+                                                           .Stage3ReadyToWrite,
+                                                        isMarkedForDeletion: false);
+                                            }
+                                        }
+                                    }
+
+                                    await UiServices.RefreshFileListRowAsync(directoryElement: dirElemFileToModify);
+                                }
+                            }
+                        }
+                    }
+                    catch
+                    {
+                        // nothing. errors should have already come up
+                    }
+#if !DEBUG
+                    finally
+                    {
+                        File.Delete(path: exifFileIn.FullName); // clean up
+                    }
+#endif
+                }
+            }
+
+            // this triggers ExifTool
+            if (getTrackDataOverlay is TrackOverlaySetting.OverlayForAllDates or
+                TrackOverlaySetting.OverlayForOverlappingDates)
+            {
+                await ReadTrackFilePath.ExifReadTrackFileForMapping(trackFileList: trackFileList,
+                    overlayDateSetting: getTrackDataOverlay, overlayDateList: overlayDateList, TZVal: TZVal);
+                UiServices.RequestMapRefresh();
+            }
+        }
+
+        UiDialogResult dialogResult =
+            UiServices.ShowMessageBoxWithResult(
+                message: HelperControlAndMessageBoxHandling.ReturnControlText(
+                    controlName: "mbx_FrmImportExportGpx_AskUserWantsReport",
+                    fakeControlType: HelperControlAndMessageBoxHandling.FakeControlTypes.MessageBox),
+                icon: UiMessageIcon.Question,
+                buttons: UiMessageButtons.YesNo);
+
+        if (dialogResult == UiDialogResult.Yes)
+        {
+            UiServices.ShowReport(text: HelperVariables._sOutputAndErrorMsg);
+        }
+
+        string GetCurrentValue(DirectoryElement dirElemFileToModify,
+                               ElementAttribute attribute)
+        {
+            string currentValue = dirElemFileToModify.GetAttributeValueAsString(
+                attribute: attribute,
+                version: DirectoryElement.AttributeVersion.Stage3ReadyToWrite,
+                notFoundValue: dirElemFileToModify.GetAttributeValueAsString(
+                    attribute: attribute,
+                    version: DirectoryElement.AttributeVersion.Original,
+                    notFoundValue: NullEquivalents.StringGeneric,
+                    context: ValueFormatContext.Display),
+                context: ValueFormatContext.Display);
+            return currentValue;
+        }
+
+        /// <summary>
+        ///     Copies a value read out of the track sidecar onto the file, ready to be written.
+        /// </summary>
+        /// <remarks>
+        ///     A value the track did not supply is still set, as the blank value for its type. The overlay replaces
+        ///     the file's GPS block rather than merging into it, and leaving the photo's own accuracy figures next to
+        ///     coordinates that now come from the track would claim more than the data supports.
+        /// </remarks>
+        static void SetValueFromTrackFile(DirectoryElement dirElemFileToModify,
+                                          IDictionary<ElementAttribute, IConvertible> valuesInTrackFile,
+                                          ElementAttribute attribute)
+        {
+            IConvertible value =
+                valuesInTrackFile.TryGetValue(key: attribute, value: out IConvertible parsedValue)
+                    ? parsedValue
+                    : DirectoryElement.BlankValueFor(attribute: attribute);
+
+            dirElemFileToModify.SetAttributeValue(
+                attribute: attribute,
+                value: value,
+                version: DirectoryElement.AttributeVersion.Stage3ReadyToWrite,
+                isMarkedForDeletion: false);
+        }
+
+        static string GetValueInTrackFile(
+            IDictionary<ElementAttribute, IConvertible> valuesInTrackFile,
+            ElementAttribute attribute)
+        {
+            return valuesInTrackFile.TryGetValue(key: attribute, value: out IConvertible value)
+                ? AttributeValueFormatter.Format(value: value,
+                    context: ValueFormatContext.Display)
+                : NullEquivalents.StringGeneric;
+        }
+    }
+}

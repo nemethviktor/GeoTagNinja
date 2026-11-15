@@ -1,0 +1,368 @@
+﻿using NLog;
+using GeoTagNinja.Helpers.Data;
+using GeoTagNinja.Helpers.Exif;
+using GeoTagNinja.Helpers.UI;
+using GeoTagNinja.Model;
+using Newtonsoft.Json;
+using RestSharp;
+using RestSharp.Authenticators;
+using System;
+using System.Collections.Generic;
+using System.Diagnostics;
+using System.Globalization;
+using System.IO;
+using System.Net;
+using System.Net.Http;
+using System.Reflection;
+using System.Text.RegularExpressions;
+using System.Threading.Tasks;
+using static GeoTagNinja.Helpers.API.GTNReleaseAPIResponse;
+
+namespace GeoTagNinja.Helpers.API;
+
+public class TimedWebClient : WebClient
+{
+    // via https://stackoverflow.com/a/12879118/3968494
+    // Timeout in milliseconds, default = 600,000 msec
+    public int Timeout { get; set; }
+
+    public TimedWebClient()
+    {
+        Timeout = 600000;
+    }
+
+    protected override WebRequest GetWebRequest(Uri address)
+    {
+        WebRequest objWebRequest = base.GetWebRequest(address: address);
+        objWebRequest.Timeout = Timeout;
+        return objWebRequest;
+    }
+}
+
+internal static class APIVersionCheckers
+{
+    private static readonly Logger Log = LogManager.GetCurrentClassLogger();
+
+    /// <summary>
+    ///     Responsible for pulling the latest prod-version number of exifTool from ~~exiftool.org~~ sourceforge.
+    /// </summary>
+    /// <returns>The version number of the currently newest exifTool uploaded to exiftool.org or 0.0m if that fails.</returns>
+    private static decimal API_ExifGetExifToolVersionFromWeb()
+    {
+        string onlineExifToolVer;
+        string URL = "http://exiftool.org/ver.txt"; // this remains exiftool.org
+        bool parsedResult;
+        decimal returnVal;
+        try
+        {
+            onlineExifToolVer = new TimedWebClient { Timeout = 2000 }.DownloadString(address: URL);
+            parsedResult = decimal.TryParse(s: onlineExifToolVer, style: NumberStyles.Any,
+                                            provider: CultureInfo.InvariantCulture,
+                                            result: out decimal parsedDecimal);
+            returnVal = parsedResult
+                ? parsedDecimal
+                : 0.0m;
+        }
+        catch
+        {
+            returnVal = 0.0m;
+        }
+
+        return returnVal;
+    }
+
+    /// <summary>
+    ///     Responsible for pulling the latest release of GTN from gitHub
+    ///     GitHub doesn't store "build" numbers as such so the easiest is to pull the datediff of the last relevant build and
+    ///     2000/1/1 and then compare it to the current version.
+    ///     Client runs on a 2-second timeout.
+    /// </summary>
+    /// <returns>The version number of the latest GTN release</returns>
+    private static int API_GenericGetGTNVersionFromWeb()
+    {
+        GTNReleaseAPIResponse returnVal = new();
+        RestClientOptions options = new(baseUrl: "https://api.github.com")
+        {
+            Authenticator = new HttpBasicAuthenticator(username: "demo", password: "demo"),
+            Timeout = TimeSpan.FromSeconds(value: 2)
+        };
+        RestClient client = new(options: options);
+
+        RestRequest request_GTNVersionQuery =
+            new(resource: "repos/nemethviktor/GeoTagNinja/releases/latest");
+
+        RestResponse response_GTNVersionQuery = client.ExecuteGet(request: request_GTNVersionQuery);
+
+        int lastGTNBuildOnline = 0;
+        if (response_GTNVersionQuery.StatusCode.ToString() == "OK")
+        {
+            HelperVariables.OperationAPIReturnedOKResponse = true;
+            Root gtnReleasesApiResponse = JsonConvert.DeserializeObject<Root>(response_GTNVersionQuery.Content);
+
+            int lastGTNBuildInt = 0;
+            Regex rgx = new(pattern: "[^0-9]");
+
+            if (
+                (!HelperVariables.UserSettingUpdatePreReleaseGTN && !gtnReleasesApiResponse.prerelease) ||
+                HelperVariables.UserSettingUpdatePreReleaseGTN)
+            {
+                bool _ = int.TryParse(s: rgx.Replace(input: gtnReleasesApiResponse.tag_name, replacement: ""),
+                    result: out lastGTNBuildInt);
+            }
+
+            // Add some logic to return 0 for build number if there's no result. While negative 73k isn't likely to be a problem I don't feel like experimenting.
+            lastGTNBuildOnline =
+                Math.Max(val1: 0, val2: lastGTNBuildInt);
+        }
+        // actually, this is largely irrelevant for most users
+#if DEBUG
+        else
+        {
+            HelperVariables.OperationAPIReturnedOKResponse = false;
+            // this now runs off the UI thread, and ThemeHelper shows the box on it
+            UiServices.ShowMessageBox(
+                message: HelperControlAndMessageBoxHandling.ReturnControlText(
+                    controlName: "mbx_Helper_WarningGTNVerAPIResponse",
+                    fakeControlType: HelperControlAndMessageBoxHandling.FakeControlTypes.MessageBox
+                    ) +
+                    Environment.NewLine + $"{response_GTNVersionQuery.StatusCode}",
+                icon: UiMessageIcon.Warning,
+                buttons: UiMessageButtons.OK);
+        }
+#endif
+
+        return lastGTNBuildOnline;
+    }
+
+    /// <summary>
+    ///     Checks for new versions of GTN and ExifTool.
+    /// </summary>
+    internal static async Task CheckForNewVersions()
+    {
+        Log.Info(message: "Starting");
+
+        // check when the last polling took place
+        long nowUnixTime = ((DateTimeOffset)DateTime.Now).ToUnixTimeSeconds();
+        long lastCheckUnixTime = 0;
+
+        string strLastOnlineVersionCheck =
+            ApplicationSettings.DataReadSQLiteSettings(
+                dataTable: HelperVariables.DtHelperDataApplicationSettings,
+                settingTabPage: "generic",
+                settingId: "onlineVersionCheckDate"
+            );
+
+        if (strLastOnlineVersionCheck == null)
+        {
+            lastCheckUnixTime = nowUnixTime;
+            // write back to SQL so it doesn't remain blank
+            List<AppSettingContainer> settingsToWrite =
+            [
+                new AppSettingContainer
+                {
+                    TableName = "settings",
+                    SettingTabPage = "generic",
+                    SettingId = "onlineVersionCheckDate",
+                    SettingValue = nowUnixTime.ToString(provider: CultureInfo.InvariantCulture)
+                }
+            ];
+            ApplicationSettings.DataWriteSQLiteSettings(settingsToWrite: settingsToWrite);
+        }
+        else
+        {
+            lastCheckUnixTime = long.Parse(s: strLastOnlineVersionCheck);
+        }
+        DateTimeOffset dateTimelastCheckUnixTime = DateTimeOffset.FromUnixTimeSeconds(lastCheckUnixTime);
+        DateTimeOffset dateTimenowUnixTime = DateTimeOffset.FromUnixTimeSeconds(nowUnixTime);
+
+        Log.Info(message: $"strLastOnlineVersionCheck: {strLastOnlineVersionCheck}");
+
+        Log.Info(message: $"dateTimelastCheckUnixTime: {dateTimelastCheckUnixTime.DateTime}");
+        Log.Info(message: $"dateTimenowUnixTime: {dateTimenowUnixTime.DateTime}");
+
+        Log.Info(message: $"nowUnixTime: {nowUnixTime}");
+        Log.Info(message: $"nowUnixTime > lastCheckUnixTime: {nowUnixTime - lastCheckUnixTime}");
+
+        int checkUpdateVal = 604800; //604800 is a week's worth of seconds
+#if DEBUG
+        //checkUpdateVal = 86400; // 86400 is a day's worth of seconds
+        checkUpdateVal = 1;
+#endif
+
+        // this needs to run each time the app runs because it's part of the info in the About box.
+        // get current exiftool version
+        // ...asked of the long-running stay_open process (the same one that reads the files) rather than of a new one.
+        ExifTool runningExifTool = HelperVariables.DirectoryElements.ExifTool;
+        HelperVariables.CurrentExifToolVersionLocal = runningExifTool == null
+            ? 0
+            : await Task.Run(function: runningExifTool.GetVersion);
+
+        if (nowUnixTime > lastCheckUnixTime + checkUpdateVal ||
+            strLastOnlineVersionCheck == null)
+        {
+            Log.Info(message: "Checking for new ExifTool versions.");
+            // get the newest exiftool version -- do this here at the end so it doesn't hold up the process
+            /////////////////
+
+            int CPUBitness = Environment.Is64BitOperatingSystem ? 64 : 32;
+            // A blocking web request (2 s timeout) must not run on the UI thread: it froze the window for about a second
+            // right as it appeared. Task.Run keeps the order of everything else the same.
+            HelperVariables.CurrentExifToolVersionCloud = await Task.Run(function: API_ExifGetExifToolVersionFromWeb);
+
+            Log.Info(message: $"currentExifToolVersionLocal: {HelperVariables
+               .CurrentExifToolVersionLocal} / newestExifToolVersionOnline: {HelperVariables.CurrentExifToolVersionCloud}");
+
+            // if cloud version is newer, either arm an already-downloaded zip (e.g. left over from a
+            // prior run that never reached FormClosing) or download a fresh one and arm that instead.
+            if (HelperVariables.CurrentExifToolVersionCloud >
+                HelperVariables.CurrentExifToolVersionLocal)
+            {
+                string existingZipPath = Path.Combine(path1: HelperVariables.UserDataFolderPath,
+                    path2:
+                    $"exiftool-{HelperVariables.CurrentExifToolVersionCloud}_{CPUBitness}.zip");
+
+                if (File.Exists(path: existingZipPath))
+                {
+                    Log.Info(
+                        message:
+                        $"Found already-downloaded exifTool version {HelperVariables.CurrentExifToolVersionCloud.ToString(
+                            provider: CultureInfo
+                               .InvariantCulture)}, arming it for extraction on close.");
+
+                    HelperVariables.ExifToolExeZippedPathRoamingTemp = existingZipPath;
+                }
+                else
+                {
+                    Log.Info(
+                        message:
+                        $"Downloading newest exifTool version from the cloud. {HelperVariables.CurrentExifToolVersionCloud.ToString(
+                            provider: CultureInfo
+                               .InvariantCulture)}");
+
+                    // get new version from online - it will get "armed" on app exit.
+                    await DownloadCurrentExifToolVersion(
+                        version: HelperVariables.CurrentExifToolVersionCloud.ToString(
+                            provider: CultureInfo.InvariantCulture));
+                }
+            }
+
+            Log.Info(message: "Checking for new GTN versions.");
+            // Done w ExifTool and move on to checking GTN stuff
+            // current version may be something like "0.5.8251.40825"
+            // Assembly.GetExecutingAssembly().GetName().Version.Build is just "8251"
+            string currentGTNVersionBuildMajor = Assembly.GetExecutingAssembly()
+                                                         .GetName()
+                                                         .Version.Major
+                                                         .ToString(
+                                                              provider: CultureInfo
+                                                                 .InvariantCulture);
+
+            string currentGTNVersionBuildMinor = Assembly.GetExecutingAssembly()
+                                                         .GetName()
+                                                         .Version.Minor
+                                                         .ToString(
+                                                              provider: CultureInfo
+                                                                 .InvariantCulture);
+
+            int currentGTNVersionBuild = Assembly.GetExecutingAssembly()
+                                                 .GetName()
+                                                 .Version.Build;
+
+            HelperVariables.OperationAPIReturnedOKResponse = true;
+            int newestOnlineGTNVersion = 0;
+            try
+            {
+                newestOnlineGTNVersion = await Task.Run(function: API_GenericGetGTNVersionFromWeb);
+            }
+            catch
+            {
+                // ignore
+            }
+
+            Log.Info($"Remotebuild is {newestOnlineGTNVersion}");
+
+            CreateJsonForUpdate(localMajor: currentGTNVersionBuildMajor,
+                localMinor: currentGTNVersionBuildMinor,
+                remoteBuild: newestOnlineGTNVersion.ToString(
+                    provider: CultureInfo.InvariantCulture));
+
+            // write back to SQL
+            List<AppSettingContainer> settingsToWrite =
+            [
+                new AppSettingContainer
+                {
+                    TableName = "settings",
+                    SettingTabPage = "generic",
+                    SettingId = "onlineVersionCheckDate",
+                    SettingValue = nowUnixTime.ToString(provider: CultureInfo.InvariantCulture)
+                }
+            ];
+            ApplicationSettings.DataWriteSQLiteSettings(settingsToWrite: settingsToWrite);
+        }
+        else
+        {
+            Log.Info(message: "Not checking for new versions.");
+        }
+    }
+
+    /// <summary>
+    ///     Attempts to download the current ExifTool version.
+    /// </summary>
+    /// <param name="version">The (most current) version to download.</param>
+    /// <returns></returns>
+    private static async Task DownloadCurrentExifToolVersion(string version)
+    {
+
+        int CPUBitness = Environment.Is64BitOperatingSystem ? 64 : 32;
+        string remoteUri = $"https://sourceforge.net/projects/exiftool/files/exiftool-{version}_{CPUBitness}.zip/download";
+        string zipPath = Path.Combine(path1: HelperVariables.UserDataFolderPath,
+            path2: $"exiftool-{version}_{CPUBitness}.zip");
+        try
+        {
+            HttpClient httpClient = new();
+            using Stream stream = await httpClient.GetStreamAsync(requestUri: remoteUri);
+            using FileStream fileStream = new(path: zipPath, mode: FileMode.Create);
+            await stream.CopyToAsync(destination: fileStream);
+            fileStream.Flush();
+            fileStream.Close();
+            HelperVariables.ExifToolExeZippedPathRoamingTemp = zipPath;
+        }
+        catch (Exception ex)
+        {
+            Debug.Print($"Exiftool Download failed - {ex.Message}");
+        }
+    }
+
+    private static void CreateJsonForUpdate(string localMajor,
+                                            string localMinor,
+                                            string remoteBuild)
+    {
+
+        // Create JSON object
+        var jsonObject = new
+        {
+            // don't care/can't query remote major and minor
+            version = $"{localMajor}.{localMinor}.{remoteBuild}.0",
+            url =
+                $"https://github.com/nemethviktor/GeoTagNinja/releases/download/b{remoteBuild}/GeoTagNinja_Setup.msi",
+            changelog =
+                // the file is changelog.md (GitHub paths are case-sensitive)
+                $"https://github.com/nemethviktor/GeoTagNinja/blob/b{remoteBuild}/changelog.md"
+        };
+
+        string jsonContent =
+            JsonConvert.SerializeObject(value: jsonObject,
+                                        formatting: Formatting.Indented);
+
+        string updateJsonPath =
+            Path.Combine(path1: HelperVariables.UserDataFolderPath,
+                         path2: "updateJsonData.json");
+
+        if (File.Exists(path: updateJsonPath))
+        {
+            File.Delete(path: updateJsonPath);
+        }
+
+        File.WriteAllText(path: updateJsonPath, contents: jsonContent);
+    }
+}

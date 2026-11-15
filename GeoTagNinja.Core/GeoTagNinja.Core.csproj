@@ -1,0 +1,61 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+  <!-- The UI-free heart of GeoTagNinja, shared by the WinForms app (net48) and the Avalonia pre-release (net10).
+       Folders and namespaces are unchanged by the move (GeoTagNinja.Model, GeoTagNinja.Helpers.*), so a file is
+       "moved" into this project without touching its namespace. Nothing here may reference WinForms, System.Drawing
+       or FrmMainApp: see project-layout.md. -->
+  <PropertyGroup>
+    <TargetFrameworks>net48</TargetFrameworks>
+    <!-- net10 is only built where the Avalonia project exists (the avalonia-port branch), so master needs no .NET 10 SDK. -->
+    <TargetFrameworks Condition="Exists('$(MSBuildThisFileDirectory)..\GeoTagNinja.Avalonia\GeoTagNinja.Avalonia.csproj')">net48;net10.0-windows10.0.17763.0</TargetFrameworks>
+    <LangVersion>preview</LangVersion>
+    <Nullable>disable</Nullable>
+    <ImplicitUsings>disable</ImplicitUsings>
+    <PlatformTarget>x64</PlatformTarget>
+    <RuntimeIdentifiers>win-x64</RuntimeIdentifiers>
+    <AssemblyName>GeoTagNinja.Core</AssemblyName>
+    <RootNamespace>GeoTagNinja</RootNamespace>
+    <GenerateAssemblyInfo>true</GenerateAssemblyInfo>
+  </PropertyGroup>
+
+  <!-- Strings.resx and its translations stay at Resources/Languages in the repo root, where Weblate expects them.
+       They are linked in so the manifest names stay GeoTagNinja.Resources.Languages.Strings(.xx).resources. -->
+  <ItemGroup>
+    <Compile Include="..\Resources\Languages\Strings.Designer.cs" Link="Resources\Languages\Strings.Designer.cs" />
+    <EmbeddedResource Include="..\Resources\Languages\Strings*.resx" Link="Resources\Languages\%(Filename)%(Extension)" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <InternalsVisibleTo Include="GeoTagNinja" />
+    <InternalsVisibleTo Include="GeoTagNinja.Avalonia" />
+    <InternalsVisibleTo Include="GeoTagNinja.Tests" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <PackageReference Include="CsvHelper" Version="33.1.0" />
+    <PackageReference Include="Magick.NET-Q16-OpenMP-x64" Version="15.0.0" />
+    <PackageReference Include="Markdig" Version="1.6.0" />
+    <PackageReference Include="Newtonsoft.Json" Version="13.0.4" />
+    <PackageReference Include="NLog" Version="6.2.2" />
+    <PackageReference Include="RestSharp" Version="114.1.0" />
+    <PackageReference Include="Sdcb.LibRaw" Version="0.21.1.7" />
+    <PackageReference Include="Sdcb.LibRaw.runtime.win64" Version="0.21.1" />
+    <PackageReference Include="SkiaSharp" Version="3.119.4" />
+    <PackageReference Include="System.Data.SQLite" Version="2.0.4" />
+    <PackageReference Include="System.IO.Hashing" Version="10.0.13" />
+  </ItemGroup>
+
+  <ItemGroup Condition="'$(TargetFramework)' == 'net48'">
+    <Reference Include="System.Net.Http" />
+    <Reference Include="System.IO.Compression" />
+    <Reference Include="System.IO.Compression.FileSystem" />
+    <Reference Include="System.Web" />
+    <Reference Include="System.Data.DataSetExtensions" />
+    <Reference Include="System.Xml.Linq" />
+    <PackageReference Include="System.Text.Json" Version="10.0.13" />
+    <PackageReference Include="System.Collections.Immutable" Version="10.0.13" />
+    <PackageReference Include="Microsoft.Bcl.HashCode" Version="6.0.0" />
+    <PackageReference Include="System.ValueTuple" Version="4.6.2" />
+  </ItemGroup>
+
+</Project>

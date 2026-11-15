@@ -144,7 +144,7 @@ public partial class FrmMainApp
                 else
                 {
                     toolStripMenuItemName = control.Name;
-                    ReturnControlText(control: control, senderForm: this);
+                    ControlTextApplier.ReturnControlText(control: control, senderForm: this);
 
                     Log.Trace(message: $"{toolStripMenuItemName}: {control.Text}");
                 }

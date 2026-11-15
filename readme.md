@@ -148,10 +148,7 @@ The repo includes VS Code workspace files under `.vscode/` for the main app:
 - `Restore GeoTagNinja packages`
 - `Build GeoTagNinja (Debug x64)`
 - `Run GeoTagNinja (Debug x64)`
-- `Run GeoTagNinja Avalonia pre-release (Debug x64)` (builds the solution, then starts the Avalonia exe from `%LOCALAPPDATA%\build\GeoTagNinja\GeoTagNinja.Avalonia\`)
 - `Test GeoTagNinja` (runs the NUnit tests against the Debug build)
-
-`GeoTagNinja.Avalonia/` is the in-progress Avalonia rewrite (modern .NET, `net10.0-windows`, Windows 10 and 11). It builds as part of the same solution build. It is a pre-release effort and the WinForms app stays the main app for now. Avalonia itself is MIT and needs no licence key.
 
 The tasks call `.vscode\msbuild.ps1`, which finds MSBuild through `vswhere`. F5 launches the exe from `%LOCALAPPDATA%\build\GeoTagNinja\`.
 
