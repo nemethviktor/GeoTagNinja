@@ -326,6 +326,7 @@ internal static class FileListViewReadWrite
 
         int totalFileCount = 0;
         int filesWithGeoDataCount = 0;
+        int readFileCount = 0;
 
         // 2. Pre-cache the list of attributes that represent Geodata.
         List<ElementAttribute> geoAttributes = Enum.GetValues(enumType: typeof(ElementAttribute))
@@ -343,6 +344,10 @@ internal static class FileListViewReadWrite
                 if (directoryElement.Type == DirectoryElement.ElementType.File)
                 {
                     totalFileCount++;
+                    if (directoryElement.IsHydrated)
+                    {
+                        readFileCount++;
+                    }
 
                     // Check for geodata attributes.
                     foreach (ElementAttribute geoAttr in geoAttributes)
@@ -358,9 +363,18 @@ internal static class FileListViewReadWrite
         }
 
         // 4. Retrieve localized strings for the status label.
-        string readyLabel = HelperControlAndMessageBoxHandling.ReturnControlText(
-            controlName: "Generic_Ready",
-            fakeControlType: HelperControlAndMessageBoxHandling.FakeControlTypes.Generic);
+        // "Ready" only means the folder has been listed. While the metadata is still being read (minutes for thousands
+        // of RAW files, and sorting by a metadata column is only complete once it is done) say so, with progress.
+        string readyLabel = FrmMainApp.DirectoryElements.IsHydrating
+            ? string.Format(
+                format: HelperControlAndMessageBoxHandling.ReturnControlText(
+                    controlName: "Generic_ReadingMetadataProgress",
+                    fakeControlType: HelperControlAndMessageBoxHandling.FakeControlTypes.Generic),
+                arg0: readFileCount,
+                arg1: totalFileCount)
+            : HelperControlAndMessageBoxHandling.ReturnControlText(
+                controlName: "Generic_Ready",
+                fakeControlType: HelperControlAndMessageBoxHandling.FakeControlTypes.Generic);
 
         string filesLabel = HelperControlAndMessageBoxHandling.ReturnControlText(
             controlName: "Generic_Files",

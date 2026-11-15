@@ -3341,10 +3341,18 @@ public partial class FrmMainApp : Form
             _ = hydrationTask.ContinueWith(
                 continuationAction: _ =>
                 {
-                    if (!IsDisposed && !loadToken.IsCancellationRequested)
+                    if (IsDisposed)
+                    {
+                        return;
+                    }
+
+                    if (!loadToken.IsCancellationRequested)
                     {
                         lvw_FileList.ResortAfterHydration();
                     }
+
+                    // The status bar showed the read's progress; this turns it back to "Ready" with the final counts.
+                    FileListViewReadWrite.ListViewCountItemsWithGeoData();
                 },
                 scheduler: TaskScheduler.FromCurrentSynchronizationContext());
 

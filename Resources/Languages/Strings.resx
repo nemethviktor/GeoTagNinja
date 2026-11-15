@@ -2026,6 +2026,10 @@ That said the code _should_ be able to comprehend other layouts. Note if the cli
     <value>Ready</value>
     <comment>The word "Ready"</comment>
   </data>
+  <data name="Generic_ReadingMetadataProgress" xml:space="preserve">
+    <value>Reading metadata: {0} of {1}</value>
+    <comment>Status bar while the background metadata read is running. {0} is the number of files read so far, {1} the number of files in the folder. Shown in place of "Ready".</comment>
+  </data>
   <data name="Generic_Total" xml:space="preserve">
     <value>Total</value>
     <comment>The word "Total"</comment>
