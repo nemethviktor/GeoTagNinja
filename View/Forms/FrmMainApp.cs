@@ -3291,7 +3291,8 @@ public partial class FrmMainApp : Form
 
             // 2. Start Background Hydration with Live Counting
             // We use a lambda to perform multiple actions when a file is updated.
-            _ = DirectoryElements.StartBackgroundMetadataRead(
+            CancellationToken loadToken = _token;
+            Task hydrationTask = DirectoryElements.StartBackgroundMetadataRead(
                 onUpdated: (DirectoryElement de) =>
                 {
                     // Action A: Update the specific row in the ListView (GPS data, dates, etc.)
@@ -3334,8 +3335,18 @@ public partial class FrmMainApp : Form
             );
 
             // Rows were sorted before their metadata arrived, so a click on a metadata column header during the read
-            // (or a remembered sort) only ordered the rows read so far. Sort again now that every value is in.
-            lvw_FileList.ResortAfterHydration();
+            // (or a remembered sort) only ordered the rows read so far. Sort again once every value is in. The read is
+            // not awaited here (the list must be shown at once and fill in), so this runs when the task completes, back
+            // on the UI thread. A re-sort straight after starting it would only see the few rows read so far.
+            _ = hydrationTask.ContinueWith(
+                continuationAction: _ =>
+                {
+                    if (!IsDisposed && !loadToken.IsCancellationRequested)
+                    {
+                        lvw_FileList.ResortAfterHydration();
+                    }
+                },
+                scheduler: TaskScheduler.FromCurrentSynchronizationContext());
 
             lvw_FileList.EndUpdate();
             try
