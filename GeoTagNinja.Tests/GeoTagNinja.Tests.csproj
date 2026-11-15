@@ -20,6 +20,8 @@
 
   <ItemGroup>
     <ProjectReference Include="..\GeoTagNinja.csproj" />
+    <!-- The pure logic under test (Model, Helpers/Geo and so on) now lives in Core. -->
+    <ProjectReference Include="..\GeoTagNinja.Core\GeoTagNinja.Core.csproj" />
   </ItemGroup>
 
   <!-- Release builds only succeed if the tests pass. Debug builds are left alone so the

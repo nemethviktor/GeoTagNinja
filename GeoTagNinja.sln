@@ -14,6 +14,8 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution 
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "GeoTagNinja.Tests", "GeoTagNinja.Tests\GeoTagNinja.Tests.csproj", "{34BCE75E-CBB7-4EFC-ABA8-D86E6CE6477C}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "GeoTagNinja.Core", "GeoTagNinja.Core\GeoTagNinja.Core.csproj", "{EEE1776D-6457-4A7D-BFE8-9C4A86429270}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -58,6 +60,18 @@ Global
 		{34BCE75E-CBB7-4EFC-ABA8-D86E6CE6477C}.Release|x64.Build.0 = Release|Any CPU
 		{34BCE75E-CBB7-4EFC-ABA8-D86E6CE6477C}.Release|x86.ActiveCfg = Release|Any CPU
 		{34BCE75E-CBB7-4EFC-ABA8-D86E6CE6477C}.Release|x86.Build.0 = Release|Any CPU
+		{EEE1776D-6457-4A7D-BFE8-9C4A86429270}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{EEE1776D-6457-4A7D-BFE8-9C4A86429270}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{EEE1776D-6457-4A7D-BFE8-9C4A86429270}.Debug|x64.ActiveCfg = Debug|Any CPU
+		{EEE1776D-6457-4A7D-BFE8-9C4A86429270}.Debug|x64.Build.0 = Debug|Any CPU
+		{EEE1776D-6457-4A7D-BFE8-9C4A86429270}.Debug|x86.ActiveCfg = Debug|Any CPU
+		{EEE1776D-6457-4A7D-BFE8-9C4A86429270}.Debug|x86.Build.0 = Debug|Any CPU
+		{EEE1776D-6457-4A7D-BFE8-9C4A86429270}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{EEE1776D-6457-4A7D-BFE8-9C4A86429270}.Release|Any CPU.Build.0 = Release|Any CPU
+		{EEE1776D-6457-4A7D-BFE8-9C4A86429270}.Release|x64.ActiveCfg = Release|Any CPU
+		{EEE1776D-6457-4A7D-BFE8-9C4A86429270}.Release|x64.Build.0 = Release|Any CPU
+		{EEE1776D-6457-4A7D-BFE8-9C4A86429270}.Release|x86.ActiveCfg = Release|Any CPU
+		{EEE1776D-6457-4A7D-BFE8-9C4A86429270}.Release|x86.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

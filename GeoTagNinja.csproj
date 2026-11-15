@@ -549,4 +549,26 @@ ative, which a
   <Target Name="CopyWebView2LoaderToOutputRoot" AfterTargets="Build">
     <Copy SourceFiles="$(OutDir)runtimes\win-x64\native\WebView2Loader.dll" DestinationFolder="$(OutDir)" SkipUnchangedFiles="true" />
   </Target>
+  <!-- The setup project (GeoTagNinja_Setup.vdproj) builds its dependency list from this project's BuiltProjectOutputGroupDependencies, which MSBuild
+       fills from ReferencePath / ReferenceDependencyPaths, i.e. the COMPILE-time assemblies. For NuGet packages that is the ref\ copy (a reference
+       assembly: it throws BadImageFormatException "Cannot load a reference assembly for execution" at run time), and for .NET Framework it is the
+       Reference Assemblies\...\Facades folder. So before the group is built, swap every reference for the runtime copy that really lands in the output
+       folder, and drop framework reference assemblies that nothing copies (the GAC provides those). -->
+  <Target Name="InstallerUseRuntimeAssemblies" BeforeTargets="BuiltProjectOutputGroupDependencies" DependsOnTargets="ResolveReferences">
+    <ItemGroup>
+      <_InstallerRuntimeDll Include="@(ReferenceCopyLocalPaths)" Condition="'%(Extension)' == '.dll'" />
+      <_InstallerRefs Include="@(ReferencePath);@(ReferenceDependencyPaths)" />
+    </ItemGroup>
+    <PropertyGroup>
+      <_InstallerRuntimeNames>;@(_InstallerRuntimeDll->'%(Filename)%(Extension)');</_InstallerRuntimeNames>
+      <_InstallerRefNames>;@(_InstallerRefs->'%(Filename)%(Extension)');</_InstallerRefNames>
+    </PropertyGroup>
+    <ItemGroup>
+      <_InstallerRuntimeSwap Include="@(_InstallerRuntimeDll)" Condition="$(_InstallerRefNames.Contains(';%(Filename)%(Extension);'))" />
+      <_InstallerRefsKeep Include="@(_InstallerRefs)" Condition="!$(_InstallerRuntimeNames.Contains(';%(Filename)%(Extension);')) And !$([System.String]::Copy('%(FullPath)').Contains('Reference Assemblies'))" />
+      <ReferencePath Remove="@(ReferencePath)" />
+      <ReferenceDependencyPaths Remove="@(ReferenceDependencyPaths)" />
+      <ReferencePath Include="@(_InstallerRefsKeep);@(_InstallerRuntimeSwap)" />
+    </ItemGroup>
+  </Target>
 </Project>
