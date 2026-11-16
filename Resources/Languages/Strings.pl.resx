@@ -1544,7 +1544,7 @@ Zapisz klucz API, gdy zostaniesz o to poproszony. Jeśli tego nie zrobisz od raz
     <value>Seryjna zmiana nazw - podgląd</value>
   </data>
   <data name="gbx_BatchRename_Presets" xml:space="preserve">
-    <value>Szablony</value>
+    <value>Ustawienia wstępne</value>
   </data>
   <data name="gbx_BatchRename_Destination" xml:space="preserve">
     <value>Docelowy folder</value>
@@ -1559,7 +1559,7 @@ Zapisz klucz API, gdy zostaniesz o to poproszony. Jeśli tego nie zrobisz od raz
     <value>Podgląd</value>
   </data>
   <data name="lbl_BatchRename_Preset" xml:space="preserve">
-    <value>Szablon</value>
+    <value>Ustawienie wstępne</value>
   </data>
   <data name="lbl_BatchRename_Modified" xml:space="preserve">
     <value>(Zmodyfikowano)</value>
@@ -1785,5 +1785,78 @@ Zapisz klucz API, gdy zostaniesz o to poproszony. Jeśli tego nie zrobisz od raz
   </data>
   <data name="mbx_BatchRename_OneFile" xml:space="preserve">
     <value>Jeden plik zostanie przetworzony</value>
+  </data>
+  <data name="mbx_BatchRename_ManyFiles" xml:space="preserve">
+    <value>{0} pliki zostaną zmienione</value>
+  </data>
+  <data name="mbx_BatchRename_SomeBlocked" xml:space="preserve">
+    <value>{0} z {1} plik(ów) nie mogło mieć zmienionej nazwy: zobacz podgląd</value>
+  </data>
+  <data name="mbx_BatchRename_PresetNamePrompt" xml:space="preserve">
+    <value>Nazwa ustawienia wstępnego:</value>
+  </data>
+  <data name="mbx_BatchRename_PresetUnreadable" xml:space="preserve">
+    <value>Nie można odczytać ustawienia wstępnego '{0}'.</value>
+  </data>
+  <data name="mbx_BatchRename_PresetReplace" xml:space="preserve">
+    <value>Ustawienie wstępne '{0}' już istnieje. Czy chcesz je zastąpić?</value>
+  </data>
+  <data name="mbx_BatchRename_PresetSaveFailed" xml:space="preserve">
+    <value>Nie można zapisać ustawienia wstępnego.</value>
+  </data>
+  <data name="mbx_BatchRename_PresetDelete" xml:space="preserve">
+    <value>Czy usunąć ustawienie wstępne '{0}'?</value>
+  </data>
+  <data name="ckb_ImportExport_BatchRenamePresets" xml:space="preserve">
+    <value>Ustawienia wstępne zmiany nazw plików</value>
+  </data>
+  <data name="mbx_BatchRename_Preflight" xml:space="preserve">
+    <value>Nie zmieniono nazw żadnych plików. Najpierw należy rozwiązać następujące problemy:
+
+{0}</value>
+  </data>
+  <data name="mbx_BatchRename_MoreProblems" xml:space="preserve">
+    <value>… oraz {0} kolejnych (wszystkie są widoczne w podglądzie)</value>
+  </data>
+  <data name="mbx_BatchRename_SelectFiles" xml:space="preserve">
+    <value>Najpierw wybierz pliki, których nazwy chcesz zmienić.</value>
+  </data>
+  <data name="mbx_BatchRename_NothingRenamed" xml:space="preserve">
+    <value>Nie zmieniono nazw żadnych plików (wszystkie dotychczasowe zmiany zostały cofnięte).
+
+{0}</value>
+  </data>
+  <data name="mbx_BatchRename_StepFailed" xml:space="preserve">
+    <value>{0}
+
+Wszystkie dotychczasowe zmiany zostały cofnięte, żaden plik nie został zmodyfikowany.
+
+Kontynuować bez pliku {1} (oraz bez pliku, który miał otrzymać jego nazwę)?
+Tak: zmień nazwy pozostałych plików.  Nie: przerwij operację – wszystkie pliki pozostaną bez zmian.</value>
+  </data>
+  <data name="mbx_BatchRename_NothingLeft" xml:space="preserve">
+    <value>Nie ma żadnych plików do zmiany nazwy.</value>
+  </data>
+  <data name="mbx_BatchRename_DoneSkipped" xml:space="preserve">
+    <value>{0} zmieniony(ch) plik(ów). Bez zmian:
+{1}</value>
+  </data>
+  <data name="mbx_BatchRename_AndMore" xml:space="preserve">
+    <value>… oraz {0} kolejnych</value>
+  </data>
+  <data name="mbx_BatchRename_Problem_NoDestination" xml:space="preserve">
+    <value>Nie wybrano folderu docelowego</value>
+  </data>
+  <data name="mbx_BatchRename_Problem_EmptyName" xml:space="preserve">
+    <value>Brak nowej nazwy</value>
+  </data>
+  <data name="mbx_BatchRename_Problem_Reserved" xml:space="preserve">
+    <value>'{0}' jest nazwą zastrzeżoną w systemie Windows</value>
+  </data>
+  <data name="mbx_BatchRename_Problem_NameTooLong" xml:space="preserve">
+    <value>Nowa nazwa jest zbyt długa</value>
+  </data>
+  <data name="mbx_BatchRename_Problem_PathTooLong" xml:space="preserve">
+    <value>Nowa ścieżka jest za długa</value>
   </data>
 </root>
