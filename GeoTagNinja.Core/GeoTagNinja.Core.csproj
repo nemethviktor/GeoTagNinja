@@ -16,6 +16,14 @@
     <AssemblyName>GeoTagNinja.Core</AssemblyName>
     <RootNamespace>GeoTagNinja</RootNamespace>
     <GenerateAssemblyInfo>true</GenerateAssemblyInfo>
+    <!-- Same auto-incrementing scheme as the exe (Properties\AssemblyInfo.cs). It must not stay at 1.0.0.0: the MSI only
+         replaces an installed DLL with a higher version, so a Core rebuilt at 1.0.0.0 was never installed over the old
+         one and the new exe then failed with "Could not load type" against the stale Core. Deterministic=false is what
+         lets the wildcard resolve. FileVersion is left to the compiler (= AssemblyVersion): the SDK would otherwise
+         stamp a fixed 1.0.0.0 file version, which is what the installer compares. -->
+    <Deterministic>false</Deterministic>
+    <AssemblyVersion>1.19.*</AssemblyVersion>
+    <GenerateAssemblyFileVersionAttribute>false</GenerateAssemblyFileVersionAttribute>
   </PropertyGroup>
 
   <!-- Strings.resx and its translations stay at Resources/Languages in the repo root, where Weblate expects them.
