@@ -208,6 +208,7 @@ public partial class FrmMainApp
         ThemeHelper.ApplyTo(control: thumbnailView);
         BuildViewMenu();
         AddBatchRenameMenus();
+        AddHelpMenu();
         ApplyViewMode(mode: HelperVariables.UserSettingShowThumbnails
             ? ListViewDisplayMode.LargeIcons
             : ListViewDisplayMode.Details, persist: false);

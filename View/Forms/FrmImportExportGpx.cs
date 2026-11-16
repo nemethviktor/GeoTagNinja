@@ -40,6 +40,7 @@ public partial class FrmImportExportGpx : Form
     public FrmImportExportGpx()
     {
         InitializeComponent();
+        FrmHelp.Attach(form: this, topicId: "gpx");
 
         ControlTextApplier.ReturnControlText(control: this, senderForm: this);
 

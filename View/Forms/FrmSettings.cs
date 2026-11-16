@@ -64,6 +64,7 @@ public partial class FrmSettings : Form
     public FrmSettings()
     {
         InitializeComponent();
+        FrmHelp.Attach(form: this, topicId: "settings");
         AddCodeCreatedCheckBox(name: "ckb_SyncGeoKeywords");
         AddCodeCreatedCheckBox(name: "ckb_ShowChangelogAfterUpdate");
 

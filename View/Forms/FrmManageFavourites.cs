@@ -61,6 +61,7 @@ public partial class FrmManageFavourites : Form
     public FrmManageFavourites()
     {
         InitializeComponent();
+        FrmHelp.Attach(form: this, topicId: "favourites");
     }
 
     #region Form lifecycle

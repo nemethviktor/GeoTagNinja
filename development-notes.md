@@ -58,6 +58,14 @@ older build made. The Favourites table is the example: `DatabaseSchema.Favourite
 `EnsureFavouritesColumnsExist` adds the missing ones when the database is opened (a settings import recreates the table in its canonical shape and copies only the columns the file has). Give the column a `DEFAULT` (or allow NULL)
 so existing rows stay valid, and read it tolerantly (`Favourites.ReadText` / `ReadInt` accept a missing column or NULL), because a
 settings file exported by an older build has no such column either.
+## Keeping the Help current
+
+The in-app Help (`F1`, `View/Forms/FrmHelp`) is one Markdown file, `GeoTagNinja.Core/Helpers/Help/help.md`, embedded in `GeoTagNinja.Core`: one `## Title {#id}` section per topic (`HelpContent` splits it; the heading text is the list entry, the id is the key code uses). It is English-only on purpose, like the update changelog, and is plain Markdown (no tables, no raw HTML).
+
+- **Whenever you add or change a user-visible feature, menu item, setting or keyboard shortcut, update `help.md` in the same change.** The *Keyboard shortcuts* topic must match what the code does (`FrmMainApp.lvw_FileList_KeyDown`, `ThumbnailView.OnKeyDown`, menu `ShortcutKeys`).
+- A new form that deserves its own page: add a `##` section, call `FrmHelp.Attach(form: this, topicId: "...")` after the form's controls exist, and add the id to `IdsUsedByCode` in `HelpContentTests` (the test fails if a renamed heading leaves a caller pointing at nothing).
+- The main window gets `F1` from the `Help` menu item (`FrmMainApp.Help.cs`); the others from `FrmHelp.Attach` (WinForms raises `HelpRequested` on `F1`).
+
 ## Telling upgrading users about a change
 
 `Helpers/Startup/UpgradeNotices.cs` shows a one-off message to users who upgrade from an older build. The app stores the build it last ran (just `Version.Build`, e.g. `9778`, as `generic` / `lastRunBuild` in the settings table) and compares it with `UpgradeNotices.Registry` at startup.

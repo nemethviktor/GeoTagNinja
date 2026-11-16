@@ -23,6 +23,8 @@
   <ItemGroup>
     <Compile Include="..\Resources\Languages\Strings.Designer.cs" Link="Resources\Languages\Strings.Designer.cs" />
     <EmbeddedResource Include="..\Resources\Languages\Strings*.resx" Link="Resources\Languages\%(Filename)%(Extension)" />
+    <!-- The text of the in-app Help (F1); see Helpers/Help/HelpContent.cs. -->
+    <EmbeddedResource Include="Helpers\Help\help.md" LogicalName="GeoTagNinja.Helpers.Help.help.md" />
   </ItemGroup>
 
   <ItemGroup>

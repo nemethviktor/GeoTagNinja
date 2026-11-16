@@ -45,6 +45,7 @@ Helpers/
   Text/          string odds and ends
   UI/            control-tree walking, form placement, localised control text, and ThemeHelper
                  (the single entry point for dark mode - call it rather than styling controls by hand)
+  Help/          HelpContent and help.md: the text of the in-app Help (F1), one Markdown file; View/Forms/FrmHelp shows it. See development-notes.md, "Keeping the Help current"
   Update/        AutoUpdater.NET callbacks, and the changelog shown before/after an update (ChangelogParser is pure and tested; ChangelogNotes fetches/reads it; the dialog is View/Forms/FrmChangelog)
   HelperVariables.cs   application-wide mutable state (see below)
 

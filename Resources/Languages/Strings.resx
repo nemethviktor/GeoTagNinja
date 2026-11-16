@@ -1686,6 +1686,10 @@ Yes: rename the rest.  No: stop; all files stay as they were.</value>
     <value>About...</value>
     <comment>Open About Box</comment>
   </data>
+  <data name="tmi_Help_Help" xml:space="preserve">
+    <value>Help</value>
+    <comment>Help menu: open the Help window (F1)</comment>
+  </data>
   <data name="tmi_Help_BugReport" xml:space="preserve">
     <value>File a bug report (GitHub)</value>
     <comment>Open Browser to GitHub and file a bug report.</comment>

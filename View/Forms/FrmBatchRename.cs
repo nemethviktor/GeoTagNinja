@@ -116,6 +116,7 @@ internal sealed class FrmBatchRename : Form
     {
         _sources = sources;
         _fields = fields;
+        FrmHelp.Attach(form: this, topicId: "batch-rename");
 
         Text = T(key: "frm_BatchRename");
         AutoScaleDimensions = new SizeF(width: 96F, height: 96F);

@@ -46,6 +46,7 @@ public partial class FrmEditFileData : Form
         KeyPreview = true; // send keypress to the Form first
 
         InitializeComponent();
+        FrmHelp.Attach(form: this, topicId: "edit-files");
 
         Log.Trace(message: "InitializeComponent OK");
 

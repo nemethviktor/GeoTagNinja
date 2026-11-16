@@ -146,6 +146,12 @@
     <Compile Include="View\Forms\FrmBatchRename.cs">
       <SubType>Form</SubType>
     </Compile>
+    <Compile Include="View\Forms\FrmHelp.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="View\Forms\FrmMainApp.Help.cs">
+      <SubType>Form</SubType>
+    </Compile>
     <Compile Include="View\Forms\FrmMainApp.BatchRename.cs">
       <SubType>Form</SubType>
     </Compile>
