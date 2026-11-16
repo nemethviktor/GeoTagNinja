@@ -8,7 +8,6 @@ using GeoTagNinja.View.FileList;
 using Microsoft.WindowsAPICodePack.Taskbar;
 using System;
 using System.Collections.Generic;
-using System.Globalization;
 using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
@@ -663,10 +662,10 @@ public partial class FrmPasteWhat : Form
             DateTime modifiedTakenDateTime =
                 originalTakenDateTime.AddSeconds(value: totalShiftedSeconds);
 
-            dirElemFileToModify.SetAttributeValueAnyType(
+            // pass the typed value; rendering it to text and re-parsing it swaps day and month in some locales.
+            dirElemFileToModify.SetAttributeValue(
                 attribute: ElementAttribute.TakenDate,
-                value: Convert.ToString(value: modifiedTakenDateTime,
-                    provider: CultureInfo.CurrentUICulture),
+                value: modifiedTakenDateTime,
                 version: dirElemVersion,
                 isMarkedForDeletion: false);
             return true;
@@ -715,10 +714,10 @@ public partial class FrmPasteWhat : Form
             DateTime modifiedCreateDateTime =
                 originalCreateDateTime.AddSeconds(value: totalShiftedSeconds);
 
-            dirElemFileToModify.SetAttributeValueAnyType(
+            // pass the typed value; rendering it to text and re-parsing it swaps day and month in some locales.
+            dirElemFileToModify.SetAttributeValue(
                 attribute: ElementAttribute.CreateDate,
-                value: Convert.ToString(value: modifiedCreateDateTime,
-                    provider: CultureInfo.CurrentUICulture),
+                value: modifiedCreateDateTime,
                 version: dirElemVersion,
                 isMarkedForDeletion: false);
             return true;

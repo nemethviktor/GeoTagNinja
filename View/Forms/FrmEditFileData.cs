@@ -563,7 +563,6 @@ public partial class FrmEditFileData : Form
                                            DirectoryElement.AttributeVersion maxAttributeVersion)
         {
             string name = dtp.Name; // again, this is for debugging.
-            DateTime directoryElementDateTimeOriginal = default;
             DateTime directoryElementDateTimeMaxVersion = default;
 
             // Update ref ticket #147:
@@ -611,15 +610,16 @@ public partial class FrmEditFileData : Form
 
                 totalShiftedSeconds =
                     ShiftTimeForDateTimePicker(
-                        whatToShift: TimeShiftTypes.TakenDate,
+                        whatToShift: dtp == dtp_CreateDate
+                            ? TimeShiftTypes.CreateDate
+                            : TimeShiftTypes.TakenDate,
                         dirElemFileToModify: directoryElement);
 
-                // if we don't have "orignal", ie the user just added the date (inserted) then try get that.
+                // if we don't have "orignal", ie the user just added the date (inserted) then use the newest version.
                 // it wouldn't be null because that was ascertained when we entered this method.
-                dtp.Value = directoryElementDateTimeOriginalNullable is not null
-                    ? totalShiftedSeconds != 0
-                    ? directoryElementDateTimeOriginal.AddSeconds(value: totalShiftedSeconds)
-                    : directoryElementDateTimeMaxVersion
+                dtp.Value = directoryElementDateTimeOriginalNullable is { } originalDateTime &&
+                            totalShiftedSeconds != 0
+                    ? originalDateTime.AddSeconds(value: totalShiftedSeconds)
                     : directoryElementDateTimeMaxVersion;
 
             }
@@ -1337,13 +1337,14 @@ public partial class FrmEditFileData : Form
                                 attribute: attribute,
                                 version: DirectoryElement.AttributeVersion
                                                          .Stage1EditFormIntraTabTransferQueue,
-                                context: ValueFormatContext.Display),
+                                context: ValueFormatContext.RoundTrip),
                             version: DirectoryElement.AttributeVersion
                                                      .Stage3ReadyToWrite,
                             isMarkedForDeletion: dirElemFileToModify
                                .IsMarkedForDeletion(attribute: attribute,
                                     version: DirectoryElement.AttributeVersion
-                                                             .Stage1EditFormIntraTabTransferQueue));
+                                                             .Stage1EditFormIntraTabTransferQueue),
+                            context: ValueFormatContext.RoundTrip);
 
                         // remove from Stage1EditFormIntraTabTransferQueue
                         dirElemFileToModify.RemoveAttributeValue(

@@ -76,6 +76,43 @@ public class MetadataRoundTripTests
     }
 
     /// <summary>
+    ///     #235: a date shifted by +12 h, staged as a typed value and handed from Stage 1 to Stage 3 the way the edit
+    ///     form's OK button does, must reach ExifTool as the same instant. The day is 5 (and the month 6), so a
+    ///     day/month swap would still be a valid date and go unnoticed.
+    /// </summary>
+    [Test]
+    public void ShiftedTakenDate_SurvivesStageHandOverToExifTool()
+    {
+        DateTime shifted = new DateTime(year: 2018, month: 6, day: 5, hour: 8, minute: 15, second: 0).AddHours(
+            value: 12);
+        DirectoryElement de = NewFile();
+
+        de.SetAttributeValue(
+            attribute: ElementAttribute.TakenDate,
+            value: shifted,
+            version: DirectoryElement.AttributeVersion.Stage1EditFormIntraTabTransferQueue,
+            isMarkedForDeletion: false);
+
+        de.SetAttributeValueAnyType(
+            attribute: ElementAttribute.TakenDate,
+            value: de.GetAttributeValueAsString(
+                attribute: ElementAttribute.TakenDate,
+                version: DirectoryElement.AttributeVersion.Stage1EditFormIntraTabTransferQueue,
+                context: ValueFormatContext.RoundTrip),
+            version: DirectoryElement.AttributeVersion.Stage3ReadyToWrite,
+            isMarkedForDeletion: false,
+            context: ValueFormatContext.RoundTrip);
+
+        string forExifTool = de.GetAttributeValueAsString(
+            attribute: ElementAttribute.TakenDate,
+            version: DirectoryElement.AttributeVersion.Stage3ReadyToWrite,
+            context: ValueFormatContext.ExifTool);
+
+        Assert.That(actual: forExifTool, expression: Is.EqualTo(expected: "2018-06-05 20:15:00"),
+            message: $"in {_culture.Name}");
+    }
+
+    /// <summary>
     ///     A decimal typed by the user must reach the file as the same number, with a dot.
     /// </summary>
     [Test]
