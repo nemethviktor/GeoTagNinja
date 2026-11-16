@@ -2544,4 +2544,44 @@ That said the code _should_ be able to comprehend other layouts. Note if the cli
     <value>The location data has been removed, but your keywords have not been touched: any place names or "geo:" keywords in them stay as they were. To have them follow location changes, turn on "Keep keywords in step with the location" in Settings.</value>
     <comment>Location: Remove geodata</comment>
   </data>
+  <data name="tmi_View_FolderTree" xml:space="preserve">
+    <value>Folder tree</value>
+    <comment>View menu: show or hide the folder tree at the left of the window (Ctrl+B)</comment>
+  </data>
+  <data name="lbl_FolderTree_Title" xml:space="preserve">
+    <value>Folders</value>
+    <comment>Title of the folder tree panel</comment>
+  </data>
+  <data name="tsb_FolderTree_Favourites" xml:space="preserve">
+    <value>Favourite folders</value>
+    <comment>Folder tree: tooltip of the star button that opens the favourite folders</comment>
+  </data>
+  <data name="tmi_FolderTree_AddCurrent" xml:space="preserve">
+    <value>Add current folder to favourites</value>
+    <comment>Folder tree: favourites menu entry</comment>
+  </data>
+  <data name="tmi_FolderTree_RemoveCurrent" xml:space="preserve">
+    <value>Remove current folder from favourites</value>
+    <comment>Folder tree: favourites menu entry</comment>
+  </data>
+  <data name="tmi_FolderTree_NoFavourites" xml:space="preserve">
+    <value>(no favourite folders yet)</value>
+    <comment>Folder tree: shown in the favourites menu when it is empty</comment>
+  </data>
+  <data name="tsb_FolderTree_Refresh" xml:space="preserve">
+    <value>Refresh the folder tree</value>
+    <comment>Folder tree: tooltip of the refresh button</comment>
+  </data>
+  <data name="tsb_FolderTree_Hide" xml:space="preserve">
+    <value>Hide the folder tree (Ctrl+B)</value>
+    <comment>Folder tree: tooltip of the close button</comment>
+  </data>
+  <data name="cmi_FolderTree_AddThis" xml:space="preserve">
+    <value>Add to favourites</value>
+    <comment>Folder tree: right-click menu on a folder</comment>
+  </data>
+  <data name="cmi_FolderTree_RemoveThis" xml:space="preserve">
+    <value>Remove from favourites</value>
+    <comment>Folder tree: right-click menu on a folder</comment>
+  </data>
 </root>

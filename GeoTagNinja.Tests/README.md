@@ -45,10 +45,11 @@ the move to PackageReference, NuGet needs that spelled out. Don't remove it.
 
 ## What they cover, and why
 
-Every value-handling fixture is a `[TestFixtureSource]` over a dozen or so cultures — `en-US`, `en-GB`,
-`en-AU`, `en-IN`, `es-AR`, `hu-HU` , `fi-FI`, `ar-SA`, `ar-EG`, `de-CH`, `fr-FR`, `ja-JP`, `th-TH`,— so each test runs once per locale. The set is chosen
-in `Cultures.cs` to break every assumption the code has historically made: month-first vs day-first
-vs year-first dates, dot vs comma decimals, and lakh vs thousand grouping plus some fancy cultures.
+Every value-handling fixture is a `[TestFixtureSource]` over the seven cultures in `Cultures.cs` — `en-US`, `en-GB`,
+`es-AR`, `fi-FI`, `ja-JP`, `ar-SA`, `th-TH` — so each test runs once per locale. They are chosen to break every assumption
+the code has historically made: month-first vs day-first vs year-first dates, dot vs comma decimals, non-breaking-space
+grouping, Arabic digits and the Buddhist year. (There used to be thirteen; the extra six never caught anything the seven
+did not.) Logic that cannot depend on the locale does not use the matrix.
 
 | Fixture | Guards against |
 | --- | --- |

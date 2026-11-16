@@ -23,6 +23,7 @@ Press `F1` at any time to open this Help. In `Edit File(s)`, `Manage Favourites`
 ## The main window {#main-window}
 
 - **Folder box and file list**: the current folder's files. `Enter` opens a folder, `Backspace` goes up one. Columns can be chosen from the list's right-click menu and filtered from the column headers.
+- **Folder tree** (`View` > `Folder tree`, `Ctrl+B`, or the × on its header): drives and folders at the left; click one to go there. It follows the folder box. The star in its header opens your **favourite folders**: pick one to jump to it, or add or remove the current folder (right-clicking a folder does the same). Not to be confused with the favourite locations.
 - **Details and Thumbnails** (`View` menu): switch at any time. Thumbnails can be resized with `Ctrl` + mouse wheel, `Ctrl` + `+` / `-`, the slider under the list, or `View` > `Thumbnail Size`. There are no column headers in the thumbnail view, so use `View` > `Sort By` there; filtering by column is for `Details` only. Drag a rectangle over empty space to select several pictures.
 - **Preview and metadata panel**: the selected photo's preview and its metadata.
 - **Map**: shows the selected photos. Drag the marker, or long-press a point, to apply a location to the selected photos. The map's search box tries GeoNames, then Photon, then Nominatim (street addresses come from the last two; Nominatim only when you press `Enter`). If a photo has an image direction, a line shows it when exactly one such photo is selected.
@@ -99,6 +100,7 @@ Open `Import/Export GPX` from the `File` menu or the toolbar.
 
 - `F1`: this Help
 - `Esc`: cancel the folder load or other running operation
+- `Ctrl+B`: show or hide the folder tree
 
 **File list and thumbnails**
 

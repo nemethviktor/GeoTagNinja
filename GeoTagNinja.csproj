@@ -149,6 +149,9 @@
     <Compile Include="View\Forms\FrmHelp.cs">
       <SubType>Form</SubType>
     </Compile>
+    <Compile Include="View\Forms\FrmMainApp.FolderTree.cs">
+      <DependentUpon>FrmMainApp.cs</DependentUpon>
+    </Compile>
     <Compile Include="View\Forms\FrmMainApp.Help.cs">
       <SubType>Form</SubType>
     </Compile>
@@ -194,6 +197,7 @@
     <Compile Include="Helpers\UI\DarkDisabledText.cs" />
     <Compile Include="Helpers\UI\ThemeHelper.cs" />
     <Compile Include="View\Controls\ThumbnailLayout.cs" />
+    <Compile Include="View\Controls\FolderTreePanel.cs" />
     <Compile Include="View\Controls\ThumbnailView.cs">
       <SubType>Component</SubType>
     </Compile>

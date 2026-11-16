@@ -207,6 +207,7 @@ public partial class FrmMainApp
 
         ThemeHelper.ApplyTo(control: thumbnailView);
         BuildViewMenu();
+        AddFolderTree();
         AddBatchRenameMenus();
         AddHelpMenu();
         ApplyViewMode(mode: HelperVariables.UserSettingShowThumbnails

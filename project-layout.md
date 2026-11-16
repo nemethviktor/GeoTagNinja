@@ -26,9 +26,9 @@ View/
               Keywords, Source/Description and Contact tabs, built in code), .FieldMenus (the "..." menus and field history),
               .Templates (Load/Save template, Load from Image) and .LocationExtras (sexagesimal, direction, destination, altitude
               from web). FrmEditTemplateDialog is the picker behind the template buttons. FrmBatchRename is the code-only Batch Rename dialog. FrmMainApp is split into partial files:
-              .Startup (start-up steps) and .ViewMenu (the View menu, mode switching, thumbnail size)
+              .Startup (start-up steps), .ViewMenu (the View menu, mode switching, thumbnail size) and .FolderTree (puts the folder tree and its favourite folders at the left; stored as `generic` settings `folderTreeVisible`, `folderTreeWidth`, `folderBookmarks`)
   Controls/   custom controls: ImagePreview, and the thumbnail view (ThumbnailView, its pure layout maths in
-              ThumbnailLayout, FolderIcons)
+              ThumbnailLayout, FolderIcons) and FolderTreePanel (the folder tree view: it only displays and raises events)
   FileList/   the main file list view and its collaborators
   Dialogs/    reusable message-box style dialogs
 
@@ -37,7 +37,7 @@ Helpers/
   Data/          SQLite settings (and MenuSettings, for settings changed from menus), custom rules, Edit Data templates and Batch Rename presets, the thumbnail
                  and preview caches (in memory, plus ThumbnailStore in SQLite) and the session's in-memory DataTables
   Exif/          reading, writing and track-file handling via ExifTool; thumbnail and preview extraction; ExifToolInstaller unpacks the shipped/downloaded ExifTool zip into Roaming
-  FileSystem/    enumeration, checksums, locking, cloud placeholders, supported extensions, whether long paths work (LongPathSupport); Batch Rename (BatchRenameModel the settings, BatchRenamePlanner the pure "what would each file be called and what clashes", BatchRenamePreflight the disk checks before it starts, BatchRenameExecutor the all-or-nothing file moves)
+  FileSystem/    enumeration, checksums, locking, cloud placeholders, supported extensions, whether long paths work (LongPathSupport); Batch Rename (BatchRenameModel the settings, BatchRenamePlanner the pure "what would each file be called and what clashes", BatchRenamePreflight the disk checks before it starts, BatchRenameExecutor the all-or-nothing file moves); the folder tree's UI-free half (FolderBookmarks the favourite-folder list, FolderTreeSource what the tree lists, the path chain to a folder and the natural folder order), shared with the Avalonia version
   Geo/           coordinate and field-of-view maths, and the favourites logic (which favourite a position falls in, tree grouping, auto-assign onto photos)
   Localisation/  languages, countries, time zones, resource lookup (BatchRenameText: the Batch Rename text, looked up in Strings.resx)
   Map/           the Leaflet layer list
