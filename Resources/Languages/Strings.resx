@@ -1766,8 +1766,11 @@ Yes: rename the rest.  No: stop; all files stay as they were.</value>
   <data name="tsb_GetAllFromWeb" xml:space="preserve">
     <value>Get Toponomy &amp; Altitude info for all of the selected files</value>
   </data>
-  <data name="tsb_ImportExportGPX" xml:space="preserve">
-    <value>Import/Export GPX/JSON Track Files</value>
+  <data name="tsb_ImportGPX" xml:space="preserve">
+    <value>Import GPX/JSON Track Files</value>
+  </data>
+  <data name="tsb_ExportGPX" xml:space="preserve">
+    <value>Export Track File (GPX/KML)</value>
   </data>
   <data name="tsb_OneFolderUp" xml:space="preserve">
     <value>Parent Folder</value>
@@ -2150,7 +2153,7 @@ That said the code _should_ be able to comprehend other layouts. Note if the cli
   </data>
   <data name="gbx_FavouriteDetails" xml:space="preserve">
     <value>Details</value>
-    <comment>Manage Favourites dialog: heading of the selected favourite&apos;s details</comment>
+    <comment>Manage Favourites dialog: heading of the selected favourite's details</comment>
   </data>
   <data name="gbx_FavouriteAdditionalInfo" xml:space="preserve">
     <value>Additional info</value>
@@ -2170,11 +2173,11 @@ That said the code _should_ be able to comprehend other layouts. Note if the cli
   </data>
   <data name="ckb_FavouriteAutoAssign" xml:space="preserve">
     <value>Auto assign</value>
-    <comment>Manage Favourites dialog: photos inside the radius get this favourite&apos;s location details automatically</comment>
+    <comment>Manage Favourites dialog: photos inside the radius get this favourite's location details automatically</comment>
   </data>
   <data name="ckb_FavouriteSnap" xml:space="preserve">
     <value>Snap images to favourite position</value>
-    <comment>Manage Favourites dialog: auto-assigned photos also take the favourite&apos;s coordinates</comment>
+    <comment>Manage Favourites dialog: auto-assigned photos also take the favourite's coordinates</comment>
   </data>
   <data name="lbl_FavouriteTimeZone" xml:space="preserve">
     <value>Time zone:</value>
@@ -2583,5 +2586,9 @@ That said the code _should_ be able to comprehend other layouts. Note if the cli
   <data name="cmi_FolderTree_RemoveThis" xml:space="preserve">
     <value>Remove from favourites</value>
     <comment>Folder tree: right-click menu on a folder</comment>
+  </data>
+  <data name="tsb_Donate" xml:space="preserve">
+    <value>BuyMeACoffee (donate, opens in browser)</value>
+    <comment>Donate button in the main menu</comment>
   </data>
 </root>

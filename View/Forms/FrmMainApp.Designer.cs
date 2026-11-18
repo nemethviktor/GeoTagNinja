@@ -127,10 +127,13 @@ namespace GeoTagNinja.View.Forms
             this.tsb_EditFile = new System.Windows.Forms.ToolStripButton();
             this.tsb_GetAllFromWeb = new System.Windows.Forms.ToolStripButton();
             this.tsb_RemoveGeoData = new System.Windows.Forms.ToolStripButton();
-            this.tsb_ImportExportGPX = new System.Windows.Forms.ToolStripButton();
+            this.tsb_ImportGPX = new System.Windows.Forms.ToolStripButton();
+            this.tsb_ExportGPX = new System.Windows.Forms.ToolStripButton();
             this.tss_tsr_Main_1 = new System.Windows.Forms.ToolStripSeparator();
             this.tsb_FeedbackFeatureRequest = new System.Windows.Forms.ToolStripButton();
             this.tsb_BugReport = new System.Windows.Forms.ToolStripButton();
+            this.tss_tsr_Main_2 = new System.Windows.Forms.ToolStripSeparator();
+            this.tsb_Donate = new System.Windows.Forms.ToolStripButton();
             this.tsr_FolderControl = new System.Windows.Forms.ToolStrip();
             this.tbx_FolderName = new System.Windows.Forms.ToolStripTextBox();
             this.tsb_OneFolderUp = new System.Windows.Forms.ToolStripButton();
@@ -269,6 +272,7 @@ namespace GeoTagNinja.View.Forms
             // 
             // flp_GeoCoords
             // 
+            resources.ApplyResources(this.flp_GeoCoords, "flp_GeoCoords");
             this.flp_GeoCoords.Controls.Add(this.lbl_lat);
             this.flp_GeoCoords.Controls.Add(this.nud_lat);
             this.flp_GeoCoords.Controls.Add(this.lbl_lng);
@@ -281,13 +285,6 @@ namespace GeoTagNinja.View.Forms
             this.flp_GeoCoords.Controls.Add(this.btn_SaveFavourite);
             this.flp_GeoCoords.Controls.Add(this.btn_LoadFavourite);
             this.flp_GeoCoords.Controls.Add(this.btn_ManageFavourites);
-            resources.ApplyResources(this.flp_GeoCoords, "flp_GeoCoords");
-            // three fixed rows: coordinates / what to do with them / favourites
-            this.flp_GeoCoords.AutoSize = true;
-            this.flp_GeoCoords.AutoSizeMode = System.Windows.Forms.AutoSizeMode.GrowAndShrink;
-            this.flp_GeoCoords.Padding = new System.Windows.Forms.Padding(0, 3, 0, 3);
-            this.flp_GeoCoords.SetFlowBreak(this.nud_lng, true);
-            this.flp_GeoCoords.SetFlowBreak(this.btn_loctToFileDestination, true);
             this.flp_GeoCoords.Name = "flp_GeoCoords";
             // 
             // lbl_lat
@@ -319,6 +316,7 @@ namespace GeoTagNinja.View.Forms
             // nud_lng
             // 
             this.nud_lng.DecimalPlaces = 6;
+            this.flp_GeoCoords.SetFlowBreak(this.nud_lng, true);
             resources.ApplyResources(this.nud_lng, "nud_lng");
             this.nud_lng.Maximum = new decimal(new int[] {
             180,
@@ -334,10 +332,8 @@ namespace GeoTagNinja.View.Forms
             // 
             // btn_NavigateMapGo
             // 
-            this.btn_NavigateMapGo.BackColor = System.Drawing.SystemColors.Menu;
             resources.ApplyResources(this.btn_NavigateMapGo, "btn_NavigateMapGo");
-            this.btn_NavigateMapGo.AutoSize = true;
-            this.btn_NavigateMapGo.AutoSizeMode = System.Windows.Forms.AutoSizeMode.GrowAndShrink;
+            this.btn_NavigateMapGo.BackColor = System.Drawing.SystemColors.Menu;
             this.btn_NavigateMapGo.Name = "btn_NavigateMapGo";
             this.btn_NavigateMapGo.UseVisualStyleBackColor = false;
             this.btn_NavigateMapGo.Click += new System.EventHandler(this.btn_NavigateMapGo_Click);
@@ -345,8 +341,6 @@ namespace GeoTagNinja.View.Forms
             // btn_loctToFile
             // 
             resources.ApplyResources(this.btn_loctToFile, "btn_loctToFile");
-            this.btn_loctToFile.AutoSize = true;
-            this.btn_loctToFile.AutoSizeMode = System.Windows.Forms.AutoSizeMode.GrowAndShrink;
             this.btn_loctToFile.Name = "btn_loctToFile";
             this.btn_loctToFile.UseVisualStyleBackColor = true;
             this.btn_loctToFile.Click += new System.EventHandler(this.btn_loctToFile_Click);
@@ -354,8 +348,7 @@ namespace GeoTagNinja.View.Forms
             // btn_loctToFileDestination
             // 
             resources.ApplyResources(this.btn_loctToFileDestination, "btn_loctToFileDestination");
-            this.btn_loctToFileDestination.AutoSize = true;
-            this.btn_loctToFileDestination.AutoSizeMode = System.Windows.Forms.AutoSizeMode.GrowAndShrink;
+            this.flp_GeoCoords.SetFlowBreak(this.btn_loctToFileDestination, true);
             this.btn_loctToFileDestination.Name = "btn_loctToFileDestination";
             this.btn_loctToFileDestination.UseVisualStyleBackColor = true;
             this.btn_loctToFileDestination.Click += new System.EventHandler(this.btn_loctToFile_Click);
@@ -375,8 +368,6 @@ namespace GeoTagNinja.View.Forms
             // btn_SaveFavourite
             // 
             resources.ApplyResources(this.btn_SaveFavourite, "btn_SaveFavourite");
-            this.btn_SaveFavourite.AutoSize = true;
-            this.btn_SaveFavourite.AutoSizeMode = System.Windows.Forms.AutoSizeMode.GrowAndShrink;
             this.btn_SaveFavourite.Name = "btn_SaveFavourite";
             this.btn_SaveFavourite.UseVisualStyleBackColor = true;
             this.btn_SaveFavourite.Click += new System.EventHandler(this.btn_SaveFavourite_Click);
@@ -384,8 +375,6 @@ namespace GeoTagNinja.View.Forms
             // btn_LoadFavourite
             // 
             resources.ApplyResources(this.btn_LoadFavourite, "btn_LoadFavourite");
-            this.btn_LoadFavourite.AutoSize = true;
-            this.btn_LoadFavourite.AutoSizeMode = System.Windows.Forms.AutoSizeMode.GrowAndShrink;
             this.btn_LoadFavourite.Name = "btn_LoadFavourite";
             this.btn_LoadFavourite.UseVisualStyleBackColor = true;
             this.btn_LoadFavourite.Click += new System.EventHandler(this.btn_LoadFavourite_Click);
@@ -393,8 +382,6 @@ namespace GeoTagNinja.View.Forms
             // btn_ManageFavourites
             // 
             resources.ApplyResources(this.btn_ManageFavourites, "btn_ManageFavourites");
-            this.btn_ManageFavourites.AutoSize = true;
-            this.btn_ManageFavourites.AutoSizeMode = System.Windows.Forms.AutoSizeMode.GrowAndShrink;
             this.btn_ManageFavourites.Name = "btn_ManageFavourites";
             this.btn_ManageFavourites.UseVisualStyleBackColor = true;
             this.btn_ManageFavourites.Click += new System.EventHandler(this.btn_ManageFavourites_Click);
@@ -812,10 +799,13 @@ namespace GeoTagNinja.View.Forms
             this.tsb_EditFile,
             this.tsb_GetAllFromWeb,
             this.tsb_RemoveGeoData,
-            this.tsb_ImportExportGPX,
+            this.tsb_ImportGPX,
+            this.tsb_ExportGPX,
             this.tss_tsr_Main_1,
             this.tsb_FeedbackFeatureRequest,
-            this.tsb_BugReport});
+            this.tsb_BugReport,
+            this.tss_tsr_Main_2,
+            this.tsb_Donate});
             resources.ApplyResources(this.tsr_MainAppToolStrip, "tsr_MainAppToolStrip");
             this.tsr_MainAppToolStrip.Name = "tsr_MainAppToolStrip";
             // 
@@ -854,12 +844,19 @@ namespace GeoTagNinja.View.Forms
             this.tsb_RemoveGeoData.Name = "tsb_RemoveGeoData";
             this.tsb_RemoveGeoData.Click += new System.EventHandler(this.tsb_RemoveGeoData_Click);
             // 
-            // tsb_ImportExportGPX
+            // tsb_ImportGPX
             // 
-            this.tsb_ImportExportGPX.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Image;
-            resources.ApplyResources(this.tsb_ImportExportGPX, "tsb_ImportExportGPX");
-            this.tsb_ImportExportGPX.Name = "tsb_ImportExportGPX";
-            this.tsb_ImportExportGPX.Click += new System.EventHandler(this.tsb_ImportExportGPX_Click);
+            this.tsb_ImportGPX.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Image;
+            resources.ApplyResources(this.tsb_ImportGPX, "tsb_ImportGPX");
+            this.tsb_ImportGPX.Name = "tsb_ImportGPX";
+            this.tsb_ImportGPX.Click += new System.EventHandler(this.tsb_ImportGPX_Click);
+            // 
+            // tsb_ExportGPX
+            // 
+            this.tsb_ExportGPX.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Image;
+            resources.ApplyResources(this.tsb_ExportGPX, "tsb_ExportGPX");
+            this.tsb_ExportGPX.Name = "tsb_ExportGPX";
+            this.tsb_ExportGPX.Click += new System.EventHandler(this.tsb_ExportGPX_Click);
             // 
             // tss_tsr_Main_1
             // 
@@ -879,6 +876,18 @@ namespace GeoTagNinja.View.Forms
             resources.ApplyResources(this.tsb_BugReport, "tsb_BugReport");
             this.tsb_BugReport.Name = "tsb_BugReport";
             this.tsb_BugReport.Click += new System.EventHandler(this.tsb_BugReport_Click);
+            // 
+            // tss_tsr_Main_2
+            // 
+            this.tss_tsr_Main_2.Name = "tss_tsr_Main_2";
+            resources.ApplyResources(this.tss_tsr_Main_2, "tss_tsr_Main_2");
+            // 
+            // tsb_Donate
+            // 
+            this.tsb_Donate.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Image;
+            resources.ApplyResources(this.tsb_Donate, "tsb_Donate");
+            this.tsb_Donate.Name = "tsb_Donate";
+            this.tsb_Donate.Click += new System.EventHandler(this.tsb_Donate_Click);
             // 
             // tsr_FolderControl
             // 
@@ -935,6 +944,7 @@ namespace GeoTagNinja.View.Forms
             this.flp_ProcessingInfo.PerformLayout();
             this.tcr_Main.ResumeLayout(false);
             this.tpg_Map.ResumeLayout(false);
+            this.tpg_Map.PerformLayout();
             ((System.ComponentModel.ISupportInitialize)(this.wbv_MapArea)).EndInit();
             this.flp_GeoCoords.ResumeLayout(false);
             this.flp_GeoCoords.PerformLayout();
@@ -975,7 +985,8 @@ namespace GeoTagNinja.View.Forms
         private ToolStripButton tsb_EditFile;
         private ToolStripButton tsb_RemoveGeoData;
         private ToolStripMenuItem tmi_File_ImportExportGPX;
-        private ToolStripButton tsb_ImportExportGPX;
+        private ToolStripButton tsb_ImportGPX;
+        private ToolStripButton tsb_ExportGPX;
         private ToolStripButton tsb_GetAllFromWeb;
         internal SplitContainer splitContainerMain;
         internal SplitContainer splitContainerLeftTop;
@@ -1056,6 +1067,8 @@ namespace GeoTagNinja.View.Forms
         private ToolStripMenuItem tmi_File_SaveSelected;
         private ToolStripMenuItem tmi_Debug;
         private ToolStripMenuItem tmi_Debug_CustomiseWinformControls;
+        private ToolStripSeparator tss_tsr_Main_2;
+        private ToolStripButton tsb_Donate;
     }
 }
 

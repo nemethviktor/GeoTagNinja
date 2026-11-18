@@ -77,7 +77,7 @@ Open `Manage Favourites` from `Settings` > `Favourites` or from the `Manage...` 
 
 ## Importing and exporting tracks {#gpx}
 
-Open `Import/Export GPX` from the `File` menu or the toolbar.
+Open `Import/Export GPX` from the `File` menu, or use the two toolbar buttons: `Import` opens the dialog on its `Import` tab, `Export` on its `Export` tab. Both need at least one file selected.
 
 - **Import**: reads a GPX, KML or similar track file and matches your photos to it by time. The track can be overlaid on the map first, so you can decide whether it is the right one. Check the time zone and offset options: the camera's clock and the track's clock must agree.
 - **Export**: writes the selected photos' positions to a `GPX` or `KML` track. The file extension you choose picks the format. Photos missing a coordinate or a timestamp (or an altitude, if `Include altitude` is ticked) are left out.

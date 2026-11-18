@@ -32,6 +32,8 @@ public partial class FrmImportExportGpx : Form
     private static string _lastTimeZoneChoice;
     private static string _lastCompareAgainstChoice;
     private readonly FrmMainApp _frmMainAppInstance = FrmMainApp.Instance;
+    private string _importOneFilePrompt;
+    private string _importFromAnotherFolderPrompt;
 
     /// <summary>
     ///     This form helps import various Track files.
@@ -123,6 +125,10 @@ public partial class FrmImportExportGpx : Form
             }
         }
 
+        // the localised "click there..." prompts: stored/blank values must never replace them
+        _importOneFilePrompt = lbl_importOneFile.Text;
+        _importFromAnotherFolderPrompt = lbl_importFromAnotherFolder.Text;
+
         GetDefaultUserSettings();
 
         // trigger timer for datetime-update
@@ -155,14 +161,14 @@ public partial class FrmImportExportGpx : Form
         {
             case "rbt_importOneFile":
                 rbt_importOneFile.Checked = true;
-                lbl_importOneFile.Text = GetStoredUserSettingValue(settingID: "lbl_importOneFile");
+                ApplyStoredPath(label: lbl_importOneFile, prompt: _importOneFilePrompt);
                 break;
             case "rbt_importFromCurrentFolder":
                 rbt_importFromCurrentFolder.Checked = true;
                 break;
             case "rbt_importFromAnotherFolder":
                 rbt_importFromAnotherFolder.Checked = true;
-                lbl_importFromAnotherFolder.Text = GetStoredUserSettingValue(settingID: "lbl_importFromAnotherFolder");
+                ApplyStoredPath(label: lbl_importFromAnotherFolder, prompt: _importFromAnotherFolderPrompt);
                 break;
             default:
                 rbt_importOneFile.Checked = true;
@@ -179,6 +185,18 @@ public partial class FrmImportExportGpx : Form
 
         rbt_importFromCurrentFolder.Enabled = !Program.CollectionModeEnabled;
 
+        // Only a real stored path replaces the prompt. Blank (nothing saved yet) or an old saved copy of the prompt
+        // itself leaves the localised prompt in place.
+        static void ApplyStoredPath(Label label, string prompt)
+        {
+            string stored = GetStoredUserSettingValue(settingID: label.Name);
+            if (!string.IsNullOrWhiteSpace(value: stored) &&
+                stored != prompt)
+            {
+                label.Text = stored;
+            }
+        }
+
         static string GetStoredUserSettingValue(string settingID)
         {
             return ApplicationSettings.DataReadSQLiteSettings(
@@ -188,6 +206,17 @@ public partial class FrmImportExportGpx : Form
                 returnBlankIfNull: true
             );
         }
+    }
+
+    /// <summary>
+    ///     Switches to the Import or Export tab. Used by the main form's separate toolbar buttons.
+    /// </summary>
+    /// <param name="tabName">tpg_ImportExport_Import or tpg_ImportExport_Export</param>
+    internal void SelectTab(string tabName)
+    {
+        tcr_ImportExport.SelectedTab = tabName == "tpg_ImportExport_Export"
+            ? tpg_ImportExport_Export
+            : tpg_ImportExport_Import;
     }
 
     private void FillTZComboBox(ComboBox cbxToFill)
@@ -508,7 +537,9 @@ public partial class FrmImportExportGpx : Form
 
             // If it has an associated label and it's selected, store the label text too
             if (rbt.Radio.Checked &&
-                rbt.Label != null)
+                rbt.Label != null &&
+                rbt.Label.Text != _importOneFilePrompt &&
+                rbt.Label.Text != _importFromAnotherFolderPrompt)
             {
                 settingsToWrite.Add(item: new AppSettingContainer
                 {

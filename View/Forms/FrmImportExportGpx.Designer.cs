@@ -567,8 +567,10 @@
             // 
             // FrmImportExportGpx
             // 
+            this.AcceptButton = this.btn_Generic_OK;
             resources.ApplyResources(this, "$this");
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
+            this.CancelButton = this.btn_Generic_Cancel;
             this.ControlBox = false;
             this.Controls.Add(this.pbx_SaveDefaults);
             this.Controls.Add(this.btn_SaveDefaults);

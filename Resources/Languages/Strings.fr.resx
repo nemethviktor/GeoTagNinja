@@ -1,4 +1,4 @@
-<?xml version="1.0" encoding="utf-8"?>
+﻿<?xml version="1.0" encoding="utf-8"?>
 <root>
   <!-- 
     Microsoft ResX Schema 
@@ -730,8 +730,11 @@ Enregistrez la clé API lorsque vous y êtes invité. Si vous ne le faites pas �
   <data name="tsb_GetAllFromWeb" xml:space="preserve">
     <value>Obtenir les informations sur la toponymie et l'altitude pour tous les fichiers sélectionnés</value>
   </data>
-  <data name="tsb_ImportExportGPX" xml:space="preserve">
-    <value>Importer/Exporter des fichiers de suivi GPX/JSON</value>
+  <data name="tsb_ImportGPX" xml:space="preserve">
+    <value>Importer des fichiers de suivi GPX/JSON</value>
+  </data>
+  <data name="tsb_ExportGPX" xml:space="preserve">
+    <value>Exporter un fichier de suivi (GPX/KML)</value>
   </data>
   <data name="tsb_OneFolderUp" xml:space="preserve">
     <value>Dossier parent</value>

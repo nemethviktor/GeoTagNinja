@@ -9,7 +9,6 @@ using GeoTagNinja.Helpers.Map;
 using GeoTagNinja.Helpers.Startup;
 using GeoTagNinja.Helpers.Text;
 using GeoTagNinja.Helpers.UI;
-using GeoTagNinja.View.Controls;
 using GeoTagNinja.Helpers.Update;
 using GeoTagNinja.Model;
 using GeoTagNinja.View.Dialogs;
@@ -2880,12 +2879,32 @@ public partial class FrmMainApp : Form
         }
     }
     /// <summary>
-    ///     Handles the tsb_ImportExportGPX_Click event -> shows the FrmImportExportGpx Form
+    ///     Handles the tsb_ImportGPX_Click event -> shows the FrmImportExportGpx Form on its Import tab
     /// </summary>
     /// <param name="sender">Unused</param>
     /// <param name="e">Unused</param>
-    private void tsb_ImportExportGPX_Click(object sender,
-                                           EventArgs e)
+    private void tsb_ImportGPX_Click(object sender,
+                                     EventArgs e)
+    {
+        ShowImportExportFromToolbar(tabName: "tpg_ImportExport_Import");
+    }
+
+    /// <summary>
+    ///     Handles the tsb_ExportGPX_Click event -> shows the FrmImportExportGpx Form on its Export tab
+    /// </summary>
+    /// <param name="sender">Unused</param>
+    /// <param name="e">Unused</param>
+    private void tsb_ExportGPX_Click(object sender,
+                                     EventArgs e)
+    {
+        ShowImportExportFromToolbar(tabName: "tpg_ImportExport_Export");
+    }
+
+    /// <summary>
+    ///     Shows the FrmImportExportGpx Form on the requested tab, provided at least one file is selected.
+    /// </summary>
+    /// <param name="tabName">Name of the TabPage to open: tpg_ImportExport_Import or tpg_ImportExport_Export</param>
+    private void ShowImportExportFromToolbar(string tabName)
     {
         bool validFilesToImport = false;
         foreach (ListViewItem lvi in lvw_FileList.SelectedItems)
@@ -2905,6 +2924,7 @@ public partial class FrmMainApp : Form
             {
                 StartPosition = FormStartPosition.CenterScreen
             };
+            frmImportGpx.SelectTab(tabName: tabName);
             _ = frmImportGpx.ShowDialog();
         }
         else
@@ -4001,6 +4021,13 @@ context: ValueFormatContext.Display));
         _ = Process.Start(
             fileName:
             "https://github.com/nemethviktor/GeoTagNinja/issues/new?template=bug_report.md");
+    }
+
+    private void tsb_Donate_Click(object sender, EventArgs e)
+    {
+        _ = Process.Start(
+           fileName:
+           "https://buymeacoffee.com/nemethv");
     }
 
     private void tmi_Help_Donate_BuyMeCoffee_Click(object sender, EventArgs e)

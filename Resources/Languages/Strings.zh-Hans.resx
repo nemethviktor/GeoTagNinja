@@ -1,4 +1,4 @@
-<?xml version="1.0" encoding="utf-8"?>
+﻿<?xml version="1.0" encoding="utf-8"?>
 <root>
   <xsd:schema xmlns="" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:msdata="urn:schemas-microsoft-com:xml-msdata" id="root">
     <xsd:import namespace="http://www.w3.org/XML/1998/namespace" />
@@ -1007,8 +1007,11 @@ ArcGIS 自 2024 年 6 月起更改了注册流程。请在[此处](https://locat
   <data name="tsb_GetAllFromWeb" xml:space="preserve">
     <value>获取所有选中文件的地名和海拔信息</value>
   </data>
-  <data name="tsb_ImportExportGPX" xml:space="preserve">
-    <value>导入/导出 GPX/JSON 轨迹文件</value>
+  <data name="tsb_ImportGPX" xml:space="preserve">
+    <value>导入 GPX/JSON 轨迹文件</value>
+  </data>
+  <data name="tsb_ExportGPX" xml:space="preserve">
+    <value>导出轨迹文件 (GPX/KML)</value>
   </data>
   <data name="tsb_OneFolderUp" xml:space="preserve">
     <value>父文件夹</value>

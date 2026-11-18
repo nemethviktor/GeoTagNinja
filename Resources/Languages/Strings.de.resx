@@ -1,4 +1,4 @@
-<?xml version="1.0" encoding="utf-8"?>
+﻿<?xml version="1.0" encoding="utf-8"?>
 <root>
   <xsd:schema xmlns="" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:msdata="urn:schemas-microsoft-com:xml-msdata" id="root">
     <xsd:import namespace="http://www.w3.org/XML/1998/namespace" />
@@ -1008,8 +1008,11 @@ Wenn Sie dies nicht sofort tun, müssen Sie einen neuen Schlüssel generieren.</
   <data name="tsb_GetAllFromWeb" xml:space="preserve">
     <value>Toponomie- und Höheninformationen für alle ausgewählten Dateien abrufen</value>
   </data>
-  <data name="tsb_ImportExportGPX" xml:space="preserve">
-    <value>GPX/JSON-Track-Dateien importieren/exportieren</value>
+  <data name="tsb_ImportGPX" xml:space="preserve">
+    <value>GPX/JSON-Track-Dateien importieren</value>
+  </data>
+  <data name="tsb_ExportGPX" xml:space="preserve">
+    <value>Track-Datei exportieren (GPX/KML)</value>
   </data>
   <data name="tsb_OneFolderUp" xml:space="preserve">
     <value>Übergeordneter Ordner</value>

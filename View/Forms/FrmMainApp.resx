@@ -160,7 +160,7 @@
     <value>lvw_FileList</value>
   </data>
   <data name="&gt;&gt;lvw_FileList.Type" xml:space="preserve">
-    <value>GeoTagNinja.View.FileList.FileListView, GeoTagNinja, Version=1.18.9758.21993, Culture=neutral, PublicKeyToken=null</value>
+    <value>GeoTagNinja.View.FileList.FileListView, GeoTagNinja, Version=1.19.9818.37587, Culture=neutral, PublicKeyToken=null</value>
   </data>
   <data name="&gt;&gt;lvw_FileList.Parent" xml:space="preserve">
     <value>splitContainerLeftTop.Panel1</value>
@@ -208,7 +208,7 @@
     <value>pbx_imagePreview</value>
   </data>
   <data name="&gt;&gt;pbx_imagePreview.Type" xml:space="preserve">
-    <value>GeoTagNinja.View.Controls.ImagePreview, GeoTagNinja, Version=1.18.9758.21993, Culture=neutral, PublicKeyToken=null</value>
+    <value>GeoTagNinja.View.Controls.ImagePreview, GeoTagNinja, Version=1.19.9818.37587, Culture=neutral, PublicKeyToken=null</value>
   </data>
   <data name="&gt;&gt;pbx_imagePreview.Parent" xml:space="preserve">
     <value>splitContainerLeftTop.Panel2</value>
@@ -254,24 +254,6 @@
   </data>
   <data name="&gt;&gt;splitContainerLeftTop.ZOrder" xml:space="preserve">
     <value>0</value>
-  </data>
-  <data name="lbl_ParseProgress.AutoSize" type="System.Boolean, mscorlib">
-    <value>True</value>
-  </data>
-  <data name="lbl_ParseProgress.Location" type="System.Drawing.Point, System.Drawing">
-    <value>0, 7</value>
-  </data>
-  <data name="lbl_ParseProgress.Margin" type="System.Windows.Forms.Padding, System.Windows.Forms">
-    <value>0, 7, 3, 0</value>
-  </data>
-  <data name="lbl_ParseProgress.Size" type="System.Drawing.Size, System.Drawing">
-    <value>91, 13</value>
-  </data>
-  <data name="lbl_ParseProgress.TabIndex" type="System.Int32, mscorlib">
-    <value>15</value>
-  </data>
-  <data name="lbl_ParseProgress.Text" xml:space="preserve">
-    <value>lbl_ParseProgress</value>
   </data>
   <data name="&gt;&gt;lbl_ParseProgress.Name" xml:space="preserve">
     <value>lbl_ParseProgress</value>
@@ -333,21 +315,6 @@
   <data name="&gt;&gt;splitContainerMain.Panel1.ZOrder" xml:space="preserve">
     <value>0</value>
   </data>
-  <data name="wbv_MapArea.Dock" type="System.Windows.Forms.DockStyle, System.Windows.Forms">
-    <value>Fill</value>
-  </data>
-  <data name="wbv_MapArea.Location" type="System.Drawing.Point, System.Drawing">
-    <value>2, 2</value>
-  </data>
-  <data name="wbv_MapArea.Padding" type="System.Windows.Forms.Padding, System.Windows.Forms">
-    <value>1, 1, 1, 1</value>
-  </data>
-  <data name="wbv_MapArea.Size" type="System.Drawing.Size, System.Drawing">
-    <value>407, 334</value>
-  </data>
-  <data name="wbv_MapArea.TabIndex" type="System.Int32, mscorlib">
-    <value>1</value>
-  </data>
   <data name="&gt;&gt;wbv_MapArea.Name" xml:space="preserve">
     <value>wbv_MapArea</value>
   </data>
@@ -359,345 +326,6 @@
   </data>
   <data name="&gt;&gt;wbv_MapArea.ZOrder" xml:space="preserve">
     <value>0</value>
-  </data>
-  <data name="lbl_lat.Anchor" type="System.Windows.Forms.AnchorStyles, System.Windows.Forms">
-    <value>None</value>
-  </data>
-  <data name="lbl_lat.AutoSize" type="System.Boolean, mscorlib">
-    <value>True</value>
-  </data>
-  <data name="lbl_lat.Location" type="System.Drawing.Point, System.Drawing">
-    <value>10, 7</value>
-  </data>
-  <data name="lbl_lat.Margin" type="System.Windows.Forms.Padding, System.Windows.Forms">
-    <value>6, 6, 2, 0</value>
-  </data>
-  <data name="lbl_lat.Size" type="System.Drawing.Size, System.Drawing">
-    <value>34, 13</value>
-  </data>
-  <data name="lbl_lat.TabIndex" type="System.Int32, mscorlib">
-    <value>6</value>
-  </data>
-  <data name="lbl_lat.Text" xml:space="preserve">
-    <value>lbl_lat</value>
-  </data>
-  <data name="&gt;&gt;lbl_lat.Name" xml:space="preserve">
-    <value>lbl_lat</value>
-  </data>
-  <data name="&gt;&gt;lbl_lat.Type" xml:space="preserve">
-    <value>System.Windows.Forms.Label, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
-  </data>
-  <data name="&gt;&gt;lbl_lat.Parent" xml:space="preserve">
-    <value>flp_GeoCoords</value>
-  </data>
-  <data name="&gt;&gt;lbl_lat.ZOrder" xml:space="preserve">
-    <value>0</value>
-  </data>
-  <data name="nud_lat.Location" type="System.Drawing.Point, System.Drawing">
-    <value>49, 3</value>
-  </data>
-  <data name="nud_lat.Size" type="System.Drawing.Size, System.Drawing">
-    <value>90, 20</value>
-  </data>
-  <data name="nud_lat.TabIndex" type="System.Int32, mscorlib">
-    <value>17</value>
-  </data>
-  <data name="&gt;&gt;nud_lat.Name" xml:space="preserve">
-    <value>nud_lat</value>
-  </data>
-  <data name="&gt;&gt;nud_lat.Type" xml:space="preserve">
-    <value>System.Windows.Forms.NumericUpDown, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
-  </data>
-  <data name="&gt;&gt;nud_lat.Parent" xml:space="preserve">
-    <value>flp_GeoCoords</value>
-  </data>
-  <data name="&gt;&gt;nud_lat.ZOrder" xml:space="preserve">
-    <value>1</value>
-  </data>
-  <data name="lbl_lng.Anchor" type="System.Windows.Forms.AnchorStyles, System.Windows.Forms">
-    <value>None</value>
-  </data>
-  <data name="lbl_lng.AutoSize" type="System.Boolean, mscorlib">
-    <value>True</value>
-  </data>
-  <data name="lbl_lng.Location" type="System.Drawing.Point, System.Drawing">
-    <value>162, 7</value>
-  </data>
-  <data name="lbl_lng.Margin" type="System.Windows.Forms.Padding, System.Windows.Forms">
-    <value>20, 6, 2, 0</value>
-  </data>
-  <data name="lbl_lng.Size" type="System.Drawing.Size, System.Drawing">
-    <value>37, 13</value>
-  </data>
-  <data name="lbl_lng.TabIndex" type="System.Int32, mscorlib">
-    <value>8</value>
-  </data>
-  <data name="lbl_lng.Text" xml:space="preserve">
-    <value>lbl_lng</value>
-  </data>
-  <data name="&gt;&gt;lbl_lng.Name" xml:space="preserve">
-    <value>lbl_lng</value>
-  </data>
-  <data name="&gt;&gt;lbl_lng.Type" xml:space="preserve">
-    <value>System.Windows.Forms.Label, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
-  </data>
-  <data name="&gt;&gt;lbl_lng.Parent" xml:space="preserve">
-    <value>flp_GeoCoords</value>
-  </data>
-  <data name="&gt;&gt;lbl_lng.ZOrder" xml:space="preserve">
-    <value>2</value>
-  </data>
-  <data name="nud_lng.Location" type="System.Drawing.Point, System.Drawing">
-    <value>204, 3</value>
-  </data>
-  <data name="nud_lng.Size" type="System.Drawing.Size, System.Drawing">
-    <value>90, 20</value>
-  </data>
-  <data name="nud_lng.TabIndex" type="System.Int32, mscorlib">
-    <value>18</value>
-  </data>
-  <data name="&gt;&gt;nud_lng.Name" xml:space="preserve">
-    <value>nud_lng</value>
-  </data>
-  <data name="&gt;&gt;nud_lng.Type" xml:space="preserve">
-    <value>System.Windows.Forms.NumericUpDown, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
-  </data>
-  <data name="&gt;&gt;nud_lng.Parent" xml:space="preserve">
-    <value>flp_GeoCoords</value>
-  </data>
-  <data name="&gt;&gt;nud_lng.ZOrder" xml:space="preserve">
-    <value>3</value>
-  </data>
-  <data name="btn_NavigateMapGo.Location" type="System.Drawing.Point, System.Drawing">
-    <value>317, 2</value>
-  </data>
-  <data name="btn_NavigateMapGo.Margin" type="System.Windows.Forms.Padding, System.Windows.Forms">
-    <value>6, 3, 3, 3</value>
-  </data>
-  <data name="btn_NavigateMapGo.Size" type="System.Drawing.Size, System.Drawing">
-    <value>24, 24</value>
-  </data>
-  <data name="btn_NavigateMapGo.TabIndex" type="System.Int32, mscorlib">
-    <value>11</value>
-  </data>
-  <data name="btn_NavigateMapGo.Text" xml:space="preserve">
-    <value>btn_NavigateMapGo</value>
-  </data>
-  <data name="&gt;&gt;btn_NavigateMapGo.Name" xml:space="preserve">
-    <value>btn_NavigateMapGo</value>
-  </data>
-  <data name="&gt;&gt;btn_NavigateMapGo.Type" xml:space="preserve">
-    <value>System.Windows.Forms.Button, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
-  </data>
-  <data name="&gt;&gt;btn_NavigateMapGo.Parent" xml:space="preserve">
-    <value>flp_GeoCoords</value>
-  </data>
-  <data name="&gt;&gt;btn_NavigateMapGo.ZOrder" xml:space="preserve">
-    <value>4</value>
-  </data>
-  <data name="btn_loctToFile.Location" type="System.Drawing.Point, System.Drawing">
-    <value>345, 2</value>
-  </data>
-  <data name="btn_loctToFile.Margin" type="System.Windows.Forms.Padding, System.Windows.Forms">
-    <value>3, 3, 3, 3</value>
-  </data>
-  <data name="btn_loctToFile.Size" type="System.Drawing.Size, System.Drawing">
-    <value>24, 24</value>
-  </data>
-  <data name="btn_loctToFile.TabIndex" type="System.Int32, mscorlib">
-    <value>10</value>
-  </data>
-  <data name="btn_loctToFile.Text" xml:space="preserve">
-    <value>btn_loctToFile</value>
-  </data>
-  <data name="&gt;&gt;btn_loctToFile.Name" xml:space="preserve">
-    <value>btn_loctToFile</value>
-  </data>
-  <data name="&gt;&gt;btn_loctToFile.Type" xml:space="preserve">
-    <value>System.Windows.Forms.Button, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
-  </data>
-  <data name="&gt;&gt;btn_loctToFile.Parent" xml:space="preserve">
-    <value>flp_GeoCoords</value>
-  </data>
-  <data name="&gt;&gt;btn_loctToFile.ZOrder" xml:space="preserve">
-    <value>5</value>
-  </data>
-  <data name="btn_loctToFileDestination.Location" type="System.Drawing.Point, System.Drawing">
-    <value>373, 2</value>
-  </data>
-  <data name="btn_loctToFileDestination.Margin" type="System.Windows.Forms.Padding, System.Windows.Forms">
-    <value>3, 3, 3, 3</value>
-  </data>
-  <data name="btn_loctToFileDestination.Size" type="System.Drawing.Size, System.Drawing">
-    <value>24, 24</value>
-  </data>
-  <data name="btn_loctToFileDestination.TabIndex" type="System.Int32, mscorlib">
-    <value>19</value>
-  </data>
-  <data name="btn_loctToFileDestination.Text" xml:space="preserve">
-    <value>btn_loctToFileDestination</value>
-  </data>
-  <data name="&gt;&gt;btn_loctToFileDestination.Name" xml:space="preserve">
-    <value>btn_loctToFileDestination</value>
-  </data>
-  <data name="&gt;&gt;btn_loctToFileDestination.Type" xml:space="preserve">
-    <value>System.Windows.Forms.Button, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
-  </data>
-  <data name="&gt;&gt;btn_loctToFileDestination.Parent" xml:space="preserve">
-    <value>flp_GeoCoords</value>
-  </data>
-  <data name="&gt;&gt;btn_loctToFileDestination.ZOrder" xml:space="preserve">
-    <value>6</value>
-  </data>
-  <data name="lbl_Favourites.Anchor" type="System.Windows.Forms.AnchorStyles, System.Windows.Forms">
-    <value>None</value>
-  </data>
-  <data name="lbl_Favourites.AutoSize" type="System.Boolean, mscorlib">
-    <value>True</value>
-  </data>
-  <data name="lbl_Favourites.Location" type="System.Drawing.Point, System.Drawing">
-    <value>10, 35</value>
-  </data>
-  <data name="lbl_Favourites.Margin" type="System.Windows.Forms.Padding, System.Windows.Forms">
-    <value>6, 6, 2, 0</value>
-  </data>
-  <data name="lbl_Favourites.Size" type="System.Drawing.Size, System.Drawing">
-    <value>72, 13</value>
-  </data>
-  <data name="lbl_Favourites.TabIndex" type="System.Int32, mscorlib">
-    <value>12</value>
-  </data>
-  <data name="lbl_Favourites.Text" xml:space="preserve">
-    <value>lbl_Favourites</value>
-  </data>
-  <data name="&gt;&gt;lbl_Favourites.Name" xml:space="preserve">
-    <value>lbl_Favourites</value>
-  </data>
-  <data name="&gt;&gt;lbl_Favourites.Type" xml:space="preserve">
-    <value>System.Windows.Forms.Label, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
-  </data>
-  <data name="&gt;&gt;lbl_Favourites.Parent" xml:space="preserve">
-    <value>flp_GeoCoords</value>
-  </data>
-  <data name="&gt;&gt;lbl_Favourites.ZOrder" xml:space="preserve">
-    <value>7</value>
-  </data>
-  <data name="cbx_Favourites.Location" type="System.Drawing.Point, System.Drawing">
-    <value>87, 31</value>
-  </data>
-  <data name="cbx_Favourites.Size" type="System.Drawing.Size, System.Drawing">
-    <value>148, 21</value>
-  </data>
-  <data name="cbx_Favourites.TabIndex" type="System.Int32, mscorlib">
-    <value>13</value>
-  </data>
-  <data name="&gt;&gt;cbx_Favourites.Name" xml:space="preserve">
-    <value>cbx_Favourites</value>
-  </data>
-  <data name="&gt;&gt;cbx_Favourites.Type" xml:space="preserve">
-    <value>System.Windows.Forms.ComboBox, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
-  </data>
-  <data name="&gt;&gt;cbx_Favourites.Parent" xml:space="preserve">
-    <value>flp_GeoCoords</value>
-  </data>
-  <data name="&gt;&gt;cbx_Favourites.ZOrder" xml:space="preserve">
-    <value>8</value>
-  </data>
-  <data name="btn_SaveFavourite.Location" type="System.Drawing.Point, System.Drawing">
-    <value>240, 30</value>
-  </data>
-  <data name="btn_SaveFavourite.Margin" type="System.Windows.Forms.Padding, System.Windows.Forms">
-    <value>3, 3, 3, 3</value>
-  </data>
-  <data name="btn_SaveFavourite.Size" type="System.Drawing.Size, System.Drawing">
-    <value>24, 24</value>
-  </data>
-  <data name="btn_SaveFavourite.TabIndex" type="System.Int32, mscorlib">
-    <value>14</value>
-  </data>
-  <data name="btn_SaveFavourite.Text" xml:space="preserve">
-    <value>btn_SaveFavourite</value>
-  </data>
-  <data name="&gt;&gt;btn_SaveFavourite.Name" xml:space="preserve">
-    <value>btn_SaveFavourite</value>
-  </data>
-  <data name="&gt;&gt;btn_SaveFavourite.Type" xml:space="preserve">
-    <value>System.Windows.Forms.Button, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
-  </data>
-  <data name="&gt;&gt;btn_SaveFavourite.Parent" xml:space="preserve">
-    <value>flp_GeoCoords</value>
-  </data>
-  <data name="&gt;&gt;btn_SaveFavourite.ZOrder" xml:space="preserve">
-    <value>9</value>
-  </data>
-  <data name="btn_LoadFavourite.Location" type="System.Drawing.Point, System.Drawing">
-    <value>268, 30</value>
-  </data>
-  <data name="btn_LoadFavourite.Margin" type="System.Windows.Forms.Padding, System.Windows.Forms">
-    <value>3, 3, 3, 3</value>
-  </data>
-  <data name="btn_LoadFavourite.Size" type="System.Drawing.Size, System.Drawing">
-    <value>24, 24</value>
-  </data>
-  <data name="btn_LoadFavourite.TabIndex" type="System.Int32, mscorlib">
-    <value>15</value>
-  </data>
-  <data name="btn_LoadFavourite.Text" xml:space="preserve">
-    <value>btn_LoadFavourite</value>
-  </data>
-  <data name="&gt;&gt;btn_LoadFavourite.Name" xml:space="preserve">
-    <value>btn_LoadFavourite</value>
-  </data>
-  <data name="&gt;&gt;btn_LoadFavourite.Type" xml:space="preserve">
-    <value>System.Windows.Forms.Button, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
-  </data>
-  <data name="&gt;&gt;btn_LoadFavourite.Parent" xml:space="preserve">
-    <value>flp_GeoCoords</value>
-  </data>
-  <data name="&gt;&gt;btn_LoadFavourite.ZOrder" xml:space="preserve">
-    <value>10</value>
-  </data>
-  <data name="btn_ManageFavourites.Location" type="System.Drawing.Point, System.Drawing">
-    <value>296, 30</value>
-  </data>
-  <data name="btn_ManageFavourites.Margin" type="System.Windows.Forms.Padding, System.Windows.Forms">
-    <value>3, 3, 3, 3</value>
-  </data>
-  <data name="btn_ManageFavourites.Size" type="System.Drawing.Size, System.Drawing">
-    <value>24, 24</value>
-  </data>
-  <data name="btn_ManageFavourites.TabIndex" type="System.Int32, mscorlib">
-    <value>16</value>
-  </data>
-  <data name="btn_ManageFavourites.Text" xml:space="preserve">
-    <value>btn_ManageFavourites</value>
-  </data>
-  <data name="&gt;&gt;btn_ManageFavourites.Name" xml:space="preserve">
-    <value>btn_ManageFavourites</value>
-  </data>
-  <data name="&gt;&gt;btn_ManageFavourites.Type" xml:space="preserve">
-    <value>System.Windows.Forms.Button, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
-  </data>
-  <data name="&gt;&gt;btn_ManageFavourites.Parent" xml:space="preserve">
-    <value>flp_GeoCoords</value>
-  </data>
-  <data name="&gt;&gt;btn_ManageFavourites.ZOrder" xml:space="preserve">
-    <value>11</value>
-  </data>
-  <data name="flp_GeoCoords.Dock" type="System.Windows.Forms.DockStyle, System.Windows.Forms">
-    <value>Bottom</value>
-  </data>
-  <data name="flp_GeoCoords.Location" type="System.Drawing.Point, System.Drawing">
-    <value>2, 336</value>
-  </data>
-  <data name="flp_GeoCoords.MinimumSize" type="System.Drawing.Size, System.Drawing">
-    <value>0, 30</value>
-  </data>
-  <data name="flp_GeoCoords.Size" type="System.Drawing.Size, System.Drawing">
-    <value>407, 46</value>
-  </data>
-  <data name="flp_GeoCoords.TabIndex" type="System.Int32, mscorlib">
-    <value>13</value>
   </data>
   <data name="&gt;&gt;flp_GeoCoords.Name" xml:space="preserve">
     <value>flp_GeoCoords</value>
@@ -743,27 +371,6 @@
   </data>
   <data name="&gt;&gt;tpg_Map.ZOrder" xml:space="preserve">
     <value>0</value>
-  </data>
-  <data name="clh_ExifTag.Text" xml:space="preserve">
-    <value>clh_ExifTag</value>
-  </data>
-  <data name="clh_OriginalValue.Text" xml:space="preserve">
-    <value>clh_OriginalValue</value>
-  </data>
-  <data name="clh_ModifiedValue.Text" xml:space="preserve">
-    <value>clh_ModifiedValue</value>
-  </data>
-  <data name="lvw_ExifData.Dock" type="System.Windows.Forms.DockStyle, System.Windows.Forms">
-    <value>Fill</value>
-  </data>
-  <data name="lvw_ExifData.Location" type="System.Drawing.Point, System.Drawing">
-    <value>3, 3</value>
-  </data>
-  <data name="lvw_ExifData.Size" type="System.Drawing.Size, System.Drawing">
-    <value>410, 378</value>
-  </data>
-  <data name="lvw_ExifData.TabIndex" type="System.Int32, mscorlib">
-    <value>1</value>
   </data>
   <data name="&gt;&gt;lvw_ExifData.Name" xml:space="preserve">
     <value>lvw_ExifData</value>
@@ -818,7 +425,7 @@
         AAEAAAD/////AQAAAAAAAAAMAgAAAFdTeXN0ZW0uV2luZG93cy5Gb3JtcywgVmVyc2lvbj00LjAuMC4w
         LCBDdWx0dXJlPW5ldXRyYWwsIFB1YmxpY0tleVRva2VuPWI3N2E1YzU2MTkzNGUwODkFAQAAACZTeXN0
         ZW0uV2luZG93cy5Gb3Jtcy5JbWFnZUxpc3RTdHJlYW1lcgEAAAAERGF0YQcCAgAAAAkDAAAADwMAAAD8
-        CAAAAk1TRnQBSQFMAgEBAgEAAQgBBAEIAQQBEAEAARABAAT/AQkBAAj/AUIBTQE2AQQGAAE2AQQCAAEo
+        CAAAAk1TRnQBSQFMAgEBAgEAATABBAEwAQQBEAEAARABAAT/AQkBAAj/AUIBTQE2AQQGAAE2AQQCAAEo
         AwABQAMAARADAAEBAQABCAYAAQQYAAGAAgABgAMAAoABAAGAAwABgAEAAYABAAKAAgADwAEAAcAB3AHA
         AQAB8AHKAaYBAAEzBQABMwEAATMBAAEzAQACMwIAAxYBAAMcAQADIgEAAykBAANVAQADTQEAA0IBAAM5
         AQABgAF8Af8BAAJQAf8BAAGTAQAB1gEAAf8B7AHMAQABxgHWAe8BAAHWAucBAAGQAakBrQIAAf8BMwMA
@@ -925,9 +532,633 @@
   <data name="&gt;&gt;splitContainerMain.ZOrder" xml:space="preserve">
     <value>0</value>
   </data>
+  <data name="lbl_ParseProgress.AutoSize" type="System.Boolean, mscorlib">
+    <value>True</value>
+  </data>
+  <data name="lbl_ParseProgress.Location" type="System.Drawing.Point, System.Drawing">
+    <value>0, 7</value>
+  </data>
+  <data name="lbl_ParseProgress.Margin" type="System.Windows.Forms.Padding, System.Windows.Forms">
+    <value>0, 7, 3, 0</value>
+  </data>
+  <data name="lbl_ParseProgress.Size" type="System.Drawing.Size, System.Drawing">
+    <value>91, 13</value>
+  </data>
+  <data name="lbl_ParseProgress.TabIndex" type="System.Int32, mscorlib">
+    <value>15</value>
+  </data>
+  <data name="lbl_ParseProgress.Text" xml:space="preserve">
+    <value>lbl_ParseProgress</value>
+  </data>
+  <data name="&gt;&gt;lbl_ParseProgress.Name" xml:space="preserve">
+    <value>lbl_ParseProgress</value>
+  </data>
+  <data name="&gt;&gt;lbl_ParseProgress.Type" xml:space="preserve">
+    <value>System.Windows.Forms.Label, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </data>
+  <data name="&gt;&gt;lbl_ParseProgress.Parent" xml:space="preserve">
+    <value>flp_ProcessingInfo</value>
+  </data>
+  <data name="&gt;&gt;lbl_ParseProgress.ZOrder" xml:space="preserve">
+    <value>0</value>
+  </data>
+  <data name="wbv_MapArea.Dock" type="System.Windows.Forms.DockStyle, System.Windows.Forms">
+    <value>Fill</value>
+  </data>
+  <data name="wbv_MapArea.Location" type="System.Drawing.Point, System.Drawing">
+    <value>2, 2</value>
+  </data>
+  <data name="wbv_MapArea.Padding" type="System.Windows.Forms.Padding, System.Windows.Forms">
+    <value>1, 1, 1, 1</value>
+  </data>
+  <data name="wbv_MapArea.Size" type="System.Drawing.Size, System.Drawing">
+    <value>407, 261</value>
+  </data>
+  <data name="wbv_MapArea.TabIndex" type="System.Int32, mscorlib">
+    <value>1</value>
+  </data>
+  <data name="&gt;&gt;wbv_MapArea.Name" xml:space="preserve">
+    <value>wbv_MapArea</value>
+  </data>
+  <data name="&gt;&gt;wbv_MapArea.Type" xml:space="preserve">
+    <value>Microsoft.Web.WebView2.WinForms.WebView2, Microsoft.Web.WebView2.WinForms, Version=1.0.4078.44, Culture=neutral, PublicKeyToken=2a8ab48044d2601e</value>
+  </data>
+  <data name="&gt;&gt;wbv_MapArea.Parent" xml:space="preserve">
+    <value>tpg_Map</value>
+  </data>
+  <data name="&gt;&gt;wbv_MapArea.ZOrder" xml:space="preserve">
+    <value>0</value>
+  </data>
+  <data name="flp_GeoCoords.AutoSize" type="System.Boolean, mscorlib">
+    <value>True</value>
+  </data>
+  <data name="flp_GeoCoords.AutoSizeMode" type="System.Windows.Forms.AutoSizeMode, System.Windows.Forms">
+    <value>GrowAndShrink</value>
+  </data>
+  <data name="&gt;&gt;lbl_lat.Name" xml:space="preserve">
+    <value>lbl_lat</value>
+  </data>
+  <data name="&gt;&gt;lbl_lat.Type" xml:space="preserve">
+    <value>System.Windows.Forms.Label, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </data>
+  <data name="&gt;&gt;lbl_lat.Parent" xml:space="preserve">
+    <value>flp_GeoCoords</value>
+  </data>
+  <data name="&gt;&gt;lbl_lat.ZOrder" xml:space="preserve">
+    <value>0</value>
+  </data>
+  <data name="&gt;&gt;nud_lat.Name" xml:space="preserve">
+    <value>nud_lat</value>
+  </data>
+  <data name="&gt;&gt;nud_lat.Type" xml:space="preserve">
+    <value>System.Windows.Forms.NumericUpDown, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </data>
+  <data name="&gt;&gt;nud_lat.Parent" xml:space="preserve">
+    <value>flp_GeoCoords</value>
+  </data>
+  <data name="&gt;&gt;nud_lat.ZOrder" xml:space="preserve">
+    <value>1</value>
+  </data>
+  <data name="&gt;&gt;lbl_lng.Name" xml:space="preserve">
+    <value>lbl_lng</value>
+  </data>
+  <data name="&gt;&gt;lbl_lng.Type" xml:space="preserve">
+    <value>System.Windows.Forms.Label, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </data>
+  <data name="&gt;&gt;lbl_lng.Parent" xml:space="preserve">
+    <value>flp_GeoCoords</value>
+  </data>
+  <data name="&gt;&gt;lbl_lng.ZOrder" xml:space="preserve">
+    <value>2</value>
+  </data>
+  <data name="&gt;&gt;nud_lng.Name" xml:space="preserve">
+    <value>nud_lng</value>
+  </data>
+  <data name="&gt;&gt;nud_lng.Type" xml:space="preserve">
+    <value>System.Windows.Forms.NumericUpDown, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </data>
+  <data name="&gt;&gt;nud_lng.Parent" xml:space="preserve">
+    <value>flp_GeoCoords</value>
+  </data>
+  <data name="&gt;&gt;nud_lng.ZOrder" xml:space="preserve">
+    <value>3</value>
+  </data>
+  <data name="&gt;&gt;btn_NavigateMapGo.Name" xml:space="preserve">
+    <value>btn_NavigateMapGo</value>
+  </data>
+  <data name="&gt;&gt;btn_NavigateMapGo.Type" xml:space="preserve">
+    <value>System.Windows.Forms.Button, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </data>
+  <data name="&gt;&gt;btn_NavigateMapGo.Parent" xml:space="preserve">
+    <value>flp_GeoCoords</value>
+  </data>
+  <data name="&gt;&gt;btn_NavigateMapGo.ZOrder" xml:space="preserve">
+    <value>4</value>
+  </data>
+  <data name="&gt;&gt;btn_loctToFile.Name" xml:space="preserve">
+    <value>btn_loctToFile</value>
+  </data>
+  <data name="&gt;&gt;btn_loctToFile.Type" xml:space="preserve">
+    <value>System.Windows.Forms.Button, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </data>
+  <data name="&gt;&gt;btn_loctToFile.Parent" xml:space="preserve">
+    <value>flp_GeoCoords</value>
+  </data>
+  <data name="&gt;&gt;btn_loctToFile.ZOrder" xml:space="preserve">
+    <value>5</value>
+  </data>
+  <data name="&gt;&gt;btn_loctToFileDestination.Name" xml:space="preserve">
+    <value>btn_loctToFileDestination</value>
+  </data>
+  <data name="&gt;&gt;btn_loctToFileDestination.Type" xml:space="preserve">
+    <value>System.Windows.Forms.Button, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </data>
+  <data name="&gt;&gt;btn_loctToFileDestination.Parent" xml:space="preserve">
+    <value>flp_GeoCoords</value>
+  </data>
+  <data name="&gt;&gt;btn_loctToFileDestination.ZOrder" xml:space="preserve">
+    <value>6</value>
+  </data>
+  <data name="&gt;&gt;lbl_Favourites.Name" xml:space="preserve">
+    <value>lbl_Favourites</value>
+  </data>
+  <data name="&gt;&gt;lbl_Favourites.Type" xml:space="preserve">
+    <value>System.Windows.Forms.Label, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </data>
+  <data name="&gt;&gt;lbl_Favourites.Parent" xml:space="preserve">
+    <value>flp_GeoCoords</value>
+  </data>
+  <data name="&gt;&gt;lbl_Favourites.ZOrder" xml:space="preserve">
+    <value>7</value>
+  </data>
+  <data name="&gt;&gt;cbx_Favourites.Name" xml:space="preserve">
+    <value>cbx_Favourites</value>
+  </data>
+  <data name="&gt;&gt;cbx_Favourites.Type" xml:space="preserve">
+    <value>System.Windows.Forms.ComboBox, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </data>
+  <data name="&gt;&gt;cbx_Favourites.Parent" xml:space="preserve">
+    <value>flp_GeoCoords</value>
+  </data>
+  <data name="&gt;&gt;cbx_Favourites.ZOrder" xml:space="preserve">
+    <value>8</value>
+  </data>
+  <data name="&gt;&gt;btn_SaveFavourite.Name" xml:space="preserve">
+    <value>btn_SaveFavourite</value>
+  </data>
+  <data name="&gt;&gt;btn_SaveFavourite.Type" xml:space="preserve">
+    <value>System.Windows.Forms.Button, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </data>
+  <data name="&gt;&gt;btn_SaveFavourite.Parent" xml:space="preserve">
+    <value>flp_GeoCoords</value>
+  </data>
+  <data name="&gt;&gt;btn_SaveFavourite.ZOrder" xml:space="preserve">
+    <value>9</value>
+  </data>
+  <data name="&gt;&gt;btn_LoadFavourite.Name" xml:space="preserve">
+    <value>btn_LoadFavourite</value>
+  </data>
+  <data name="&gt;&gt;btn_LoadFavourite.Type" xml:space="preserve">
+    <value>System.Windows.Forms.Button, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </data>
+  <data name="&gt;&gt;btn_LoadFavourite.Parent" xml:space="preserve">
+    <value>flp_GeoCoords</value>
+  </data>
+  <data name="&gt;&gt;btn_LoadFavourite.ZOrder" xml:space="preserve">
+    <value>10</value>
+  </data>
+  <data name="&gt;&gt;btn_ManageFavourites.Name" xml:space="preserve">
+    <value>btn_ManageFavourites</value>
+  </data>
+  <data name="&gt;&gt;btn_ManageFavourites.Type" xml:space="preserve">
+    <value>System.Windows.Forms.Button, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </data>
+  <data name="&gt;&gt;btn_ManageFavourites.Parent" xml:space="preserve">
+    <value>flp_GeoCoords</value>
+  </data>
+  <data name="&gt;&gt;btn_ManageFavourites.ZOrder" xml:space="preserve">
+    <value>11</value>
+  </data>
+  <data name="flp_GeoCoords.Dock" type="System.Windows.Forms.DockStyle, System.Windows.Forms">
+    <value>Bottom</value>
+  </data>
+  <data name="flp_GeoCoords.Location" type="System.Drawing.Point, System.Drawing">
+    <value>2, 263</value>
+  </data>
+  <data name="flp_GeoCoords.MinimumSize" type="System.Drawing.Size, System.Drawing">
+    <value>0, 30</value>
+  </data>
+  <data name="flp_GeoCoords.Padding" type="System.Windows.Forms.Padding, System.Windows.Forms">
+    <value>0, 3, 0, 3</value>
+  </data>
+  <data name="flp_GeoCoords.Size" type="System.Drawing.Size, System.Drawing">
+    <value>407, 119</value>
+  </data>
+  <data name="flp_GeoCoords.TabIndex" type="System.Int32, mscorlib">
+    <value>13</value>
+  </data>
+  <data name="&gt;&gt;flp_GeoCoords.Name" xml:space="preserve">
+    <value>flp_GeoCoords</value>
+  </data>
+  <data name="&gt;&gt;flp_GeoCoords.Type" xml:space="preserve">
+    <value>System.Windows.Forms.FlowLayoutPanel, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </data>
+  <data name="&gt;&gt;flp_GeoCoords.Parent" xml:space="preserve">
+    <value>tpg_Map</value>
+  </data>
+  <data name="&gt;&gt;flp_GeoCoords.ZOrder" xml:space="preserve">
+    <value>1</value>
+  </data>
+  <data name="lbl_lat.Anchor" type="System.Windows.Forms.AnchorStyles, System.Windows.Forms">
+    <value>None</value>
+  </data>
+  <data name="lbl_lat.AutoSize" type="System.Boolean, mscorlib">
+    <value>True</value>
+  </data>
+  <data name="lbl_lat.Location" type="System.Drawing.Point, System.Drawing">
+    <value>6, 12</value>
+  </data>
+  <data name="lbl_lat.Margin" type="System.Windows.Forms.Padding, System.Windows.Forms">
+    <value>6, 6, 2, 0</value>
+  </data>
+  <data name="lbl_lat.Size" type="System.Drawing.Size, System.Drawing">
+    <value>34, 13</value>
+  </data>
+  <data name="lbl_lat.TabIndex" type="System.Int32, mscorlib">
+    <value>6</value>
+  </data>
+  <data name="lbl_lat.Text" xml:space="preserve">
+    <value>lbl_lat</value>
+  </data>
+  <data name="&gt;&gt;lbl_lat.Name" xml:space="preserve">
+    <value>lbl_lat</value>
+  </data>
+  <data name="&gt;&gt;lbl_lat.Type" xml:space="preserve">
+    <value>System.Windows.Forms.Label, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </data>
+  <data name="&gt;&gt;lbl_lat.Parent" xml:space="preserve">
+    <value>flp_GeoCoords</value>
+  </data>
+  <data name="&gt;&gt;lbl_lat.ZOrder" xml:space="preserve">
+    <value>0</value>
+  </data>
+  <data name="nud_lat.Location" type="System.Drawing.Point, System.Drawing">
+    <value>45, 6</value>
+  </data>
+  <data name="nud_lat.Size" type="System.Drawing.Size, System.Drawing">
+    <value>90, 20</value>
+  </data>
+  <data name="nud_lat.TabIndex" type="System.Int32, mscorlib">
+    <value>17</value>
+  </data>
+  <data name="&gt;&gt;nud_lat.Name" xml:space="preserve">
+    <value>nud_lat</value>
+  </data>
+  <data name="&gt;&gt;nud_lat.Type" xml:space="preserve">
+    <value>System.Windows.Forms.NumericUpDown, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </data>
+  <data name="&gt;&gt;nud_lat.Parent" xml:space="preserve">
+    <value>flp_GeoCoords</value>
+  </data>
+  <data name="&gt;&gt;nud_lat.ZOrder" xml:space="preserve">
+    <value>1</value>
+  </data>
+  <data name="lbl_lng.Anchor" type="System.Windows.Forms.AnchorStyles, System.Windows.Forms">
+    <value>None</value>
+  </data>
+  <data name="lbl_lng.AutoSize" type="System.Boolean, mscorlib">
+    <value>True</value>
+  </data>
+  <data name="lbl_lng.Location" type="System.Drawing.Point, System.Drawing">
+    <value>158, 12</value>
+  </data>
+  <data name="lbl_lng.Margin" type="System.Windows.Forms.Padding, System.Windows.Forms">
+    <value>20, 6, 2, 0</value>
+  </data>
+  <data name="lbl_lng.Size" type="System.Drawing.Size, System.Drawing">
+    <value>37, 13</value>
+  </data>
+  <data name="lbl_lng.TabIndex" type="System.Int32, mscorlib">
+    <value>8</value>
+  </data>
+  <data name="lbl_lng.Text" xml:space="preserve">
+    <value>lbl_lng</value>
+  </data>
+  <data name="&gt;&gt;lbl_lng.Name" xml:space="preserve">
+    <value>lbl_lng</value>
+  </data>
+  <data name="&gt;&gt;lbl_lng.Type" xml:space="preserve">
+    <value>System.Windows.Forms.Label, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </data>
+  <data name="&gt;&gt;lbl_lng.Parent" xml:space="preserve">
+    <value>flp_GeoCoords</value>
+  </data>
+  <data name="&gt;&gt;lbl_lng.ZOrder" xml:space="preserve">
+    <value>2</value>
+  </data>
+  <data name="nud_lng.Location" type="System.Drawing.Point, System.Drawing">
+    <value>200, 6</value>
+  </data>
+  <data name="nud_lng.Size" type="System.Drawing.Size, System.Drawing">
+    <value>90, 20</value>
+  </data>
+  <data name="nud_lng.TabIndex" type="System.Int32, mscorlib">
+    <value>18</value>
+  </data>
+  <data name="&gt;&gt;nud_lng.Name" xml:space="preserve">
+    <value>nud_lng</value>
+  </data>
+  <data name="&gt;&gt;nud_lng.Type" xml:space="preserve">
+    <value>System.Windows.Forms.NumericUpDown, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </data>
+  <data name="&gt;&gt;nud_lng.Parent" xml:space="preserve">
+    <value>flp_GeoCoords</value>
+  </data>
+  <data name="&gt;&gt;nud_lng.ZOrder" xml:space="preserve">
+    <value>3</value>
+  </data>
+  <data name="btn_NavigateMapGo.AutoSize" type="System.Boolean, mscorlib">
+    <value>True</value>
+  </data>
+  <data name="btn_NavigateMapGo.AutoSizeMode" type="System.Windows.Forms.AutoSizeMode, System.Windows.Forms">
+    <value>GrowAndShrink</value>
+  </data>
+  <data name="btn_NavigateMapGo.Location" type="System.Drawing.Point, System.Drawing">
+    <value>6, 32</value>
+  </data>
+  <data name="btn_NavigateMapGo.Margin" type="System.Windows.Forms.Padding, System.Windows.Forms">
+    <value>6, 3, 3, 3</value>
+  </data>
+  <data name="btn_NavigateMapGo.Size" type="System.Drawing.Size, System.Drawing">
+    <value>116, 23</value>
+  </data>
+  <data name="btn_NavigateMapGo.TabIndex" type="System.Int32, mscorlib">
+    <value>11</value>
+  </data>
+  <data name="btn_NavigateMapGo.Text" xml:space="preserve">
+    <value>btn_NavigateMapGo</value>
+  </data>
+  <data name="&gt;&gt;btn_NavigateMapGo.Name" xml:space="preserve">
+    <value>btn_NavigateMapGo</value>
+  </data>
+  <data name="&gt;&gt;btn_NavigateMapGo.Type" xml:space="preserve">
+    <value>System.Windows.Forms.Button, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </data>
+  <data name="&gt;&gt;btn_NavigateMapGo.Parent" xml:space="preserve">
+    <value>flp_GeoCoords</value>
+  </data>
+  <data name="&gt;&gt;btn_NavigateMapGo.ZOrder" xml:space="preserve">
+    <value>4</value>
+  </data>
+  <data name="btn_loctToFile.AutoSize" type="System.Boolean, mscorlib">
+    <value>True</value>
+  </data>
+  <data name="btn_loctToFile.AutoSizeMode" type="System.Windows.Forms.AutoSizeMode, System.Windows.Forms">
+    <value>GrowAndShrink</value>
+  </data>
+  <data name="btn_loctToFile.Location" type="System.Drawing.Point, System.Drawing">
+    <value>128, 32</value>
+  </data>
+  <data name="btn_loctToFile.Size" type="System.Drawing.Size, System.Drawing">
+    <value>84, 23</value>
+  </data>
+  <data name="btn_loctToFile.TabIndex" type="System.Int32, mscorlib">
+    <value>10</value>
+  </data>
+  <data name="btn_loctToFile.Text" xml:space="preserve">
+    <value>btn_loctToFile</value>
+  </data>
+  <data name="&gt;&gt;btn_loctToFile.Name" xml:space="preserve">
+    <value>btn_loctToFile</value>
+  </data>
+  <data name="&gt;&gt;btn_loctToFile.Type" xml:space="preserve">
+    <value>System.Windows.Forms.Button, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </data>
+  <data name="&gt;&gt;btn_loctToFile.Parent" xml:space="preserve">
+    <value>flp_GeoCoords</value>
+  </data>
+  <data name="&gt;&gt;btn_loctToFile.ZOrder" xml:space="preserve">
+    <value>5</value>
+  </data>
+  <data name="btn_loctToFileDestination.AutoSize" type="System.Boolean, mscorlib">
+    <value>True</value>
+  </data>
+  <data name="btn_loctToFileDestination.AutoSizeMode" type="System.Windows.Forms.AutoSizeMode, System.Windows.Forms">
+    <value>GrowAndShrink</value>
+  </data>
+  <data name="btn_loctToFileDestination.Location" type="System.Drawing.Point, System.Drawing">
+    <value>218, 32</value>
+  </data>
+  <data name="btn_loctToFileDestination.Size" type="System.Drawing.Size, System.Drawing">
+    <value>137, 23</value>
+  </data>
+  <data name="btn_loctToFileDestination.TabIndex" type="System.Int32, mscorlib">
+    <value>19</value>
+  </data>
+  <data name="btn_loctToFileDestination.Text" xml:space="preserve">
+    <value>btn_loctToFileDestination</value>
+  </data>
+  <data name="&gt;&gt;btn_loctToFileDestination.Name" xml:space="preserve">
+    <value>btn_loctToFileDestination</value>
+  </data>
+  <data name="&gt;&gt;btn_loctToFileDestination.Type" xml:space="preserve">
+    <value>System.Windows.Forms.Button, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </data>
+  <data name="&gt;&gt;btn_loctToFileDestination.Parent" xml:space="preserve">
+    <value>flp_GeoCoords</value>
+  </data>
+  <data name="&gt;&gt;btn_loctToFileDestination.ZOrder" xml:space="preserve">
+    <value>6</value>
+  </data>
+  <data name="lbl_Favourites.Anchor" type="System.Windows.Forms.AnchorStyles, System.Windows.Forms">
+    <value>None</value>
+  </data>
+  <data name="lbl_Favourites.AutoSize" type="System.Boolean, mscorlib">
+    <value>True</value>
+  </data>
+  <data name="lbl_Favourites.Location" type="System.Drawing.Point, System.Drawing">
+    <value>6, 69</value>
+  </data>
+  <data name="lbl_Favourites.Margin" type="System.Windows.Forms.Padding, System.Windows.Forms">
+    <value>6, 6, 2, 0</value>
+  </data>
+  <data name="lbl_Favourites.Size" type="System.Drawing.Size, System.Drawing">
+    <value>72, 13</value>
+  </data>
+  <data name="lbl_Favourites.TabIndex" type="System.Int32, mscorlib">
+    <value>12</value>
+  </data>
+  <data name="lbl_Favourites.Text" xml:space="preserve">
+    <value>lbl_Favourites</value>
+  </data>
+  <data name="&gt;&gt;lbl_Favourites.Name" xml:space="preserve">
+    <value>lbl_Favourites</value>
+  </data>
+  <data name="&gt;&gt;lbl_Favourites.Type" xml:space="preserve">
+    <value>System.Windows.Forms.Label, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </data>
+  <data name="&gt;&gt;lbl_Favourites.Parent" xml:space="preserve">
+    <value>flp_GeoCoords</value>
+  </data>
+  <data name="&gt;&gt;lbl_Favourites.ZOrder" xml:space="preserve">
+    <value>7</value>
+  </data>
+  <data name="cbx_Favourites.Location" type="System.Drawing.Point, System.Drawing">
+    <value>83, 61</value>
+  </data>
+  <data name="cbx_Favourites.Size" type="System.Drawing.Size, System.Drawing">
+    <value>148, 21</value>
+  </data>
+  <data name="cbx_Favourites.TabIndex" type="System.Int32, mscorlib">
+    <value>13</value>
+  </data>
+  <data name="&gt;&gt;cbx_Favourites.Name" xml:space="preserve">
+    <value>cbx_Favourites</value>
+  </data>
+  <data name="&gt;&gt;cbx_Favourites.Type" xml:space="preserve">
+    <value>System.Windows.Forms.ComboBox, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </data>
+  <data name="&gt;&gt;cbx_Favourites.Parent" xml:space="preserve">
+    <value>flp_GeoCoords</value>
+  </data>
+  <data name="&gt;&gt;cbx_Favourites.ZOrder" xml:space="preserve">
+    <value>8</value>
+  </data>
+  <data name="btn_SaveFavourite.AutoSize" type="System.Boolean, mscorlib">
+    <value>True</value>
+  </data>
+  <data name="btn_SaveFavourite.AutoSizeMode" type="System.Windows.Forms.AutoSizeMode, System.Windows.Forms">
+    <value>GrowAndShrink</value>
+  </data>
+  <data name="btn_SaveFavourite.Location" type="System.Drawing.Point, System.Drawing">
+    <value>237, 61</value>
+  </data>
+  <data name="btn_SaveFavourite.Size" type="System.Drawing.Size, System.Drawing">
+    <value>107, 23</value>
+  </data>
+  <data name="btn_SaveFavourite.TabIndex" type="System.Int32, mscorlib">
+    <value>14</value>
+  </data>
+  <data name="btn_SaveFavourite.Text" xml:space="preserve">
+    <value>btn_SaveFavourite</value>
+  </data>
+  <data name="&gt;&gt;btn_SaveFavourite.Name" xml:space="preserve">
+    <value>btn_SaveFavourite</value>
+  </data>
+  <data name="&gt;&gt;btn_SaveFavourite.Type" xml:space="preserve">
+    <value>System.Windows.Forms.Button, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </data>
+  <data name="&gt;&gt;btn_SaveFavourite.Parent" xml:space="preserve">
+    <value>flp_GeoCoords</value>
+  </data>
+  <data name="&gt;&gt;btn_SaveFavourite.ZOrder" xml:space="preserve">
+    <value>9</value>
+  </data>
+  <data name="btn_LoadFavourite.AutoSize" type="System.Boolean, mscorlib">
+    <value>True</value>
+  </data>
+  <data name="btn_LoadFavourite.AutoSizeMode" type="System.Windows.Forms.AutoSizeMode, System.Windows.Forms">
+    <value>GrowAndShrink</value>
+  </data>
+  <data name="btn_LoadFavourite.Location" type="System.Drawing.Point, System.Drawing">
+    <value>3, 90</value>
+  </data>
+  <data name="btn_LoadFavourite.Size" type="System.Drawing.Size, System.Drawing">
+    <value>106, 23</value>
+  </data>
+  <data name="btn_LoadFavourite.TabIndex" type="System.Int32, mscorlib">
+    <value>15</value>
+  </data>
+  <data name="btn_LoadFavourite.Text" xml:space="preserve">
+    <value>btn_LoadFavourite</value>
+  </data>
+  <data name="&gt;&gt;btn_LoadFavourite.Name" xml:space="preserve">
+    <value>btn_LoadFavourite</value>
+  </data>
+  <data name="&gt;&gt;btn_LoadFavourite.Type" xml:space="preserve">
+    <value>System.Windows.Forms.Button, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </data>
+  <data name="&gt;&gt;btn_LoadFavourite.Parent" xml:space="preserve">
+    <value>flp_GeoCoords</value>
+  </data>
+  <data name="&gt;&gt;btn_LoadFavourite.ZOrder" xml:space="preserve">
+    <value>10</value>
+  </data>
+  <data name="btn_ManageFavourites.AutoSize" type="System.Boolean, mscorlib">
+    <value>True</value>
+  </data>
+  <data name="btn_ManageFavourites.AutoSizeMode" type="System.Windows.Forms.AutoSizeMode, System.Windows.Forms">
+    <value>GrowAndShrink</value>
+  </data>
+  <data name="btn_ManageFavourites.Location" type="System.Drawing.Point, System.Drawing">
+    <value>115, 90</value>
+  </data>
+  <data name="btn_ManageFavourites.Size" type="System.Drawing.Size, System.Drawing">
+    <value>126, 23</value>
+  </data>
+  <data name="btn_ManageFavourites.TabIndex" type="System.Int32, mscorlib">
+    <value>16</value>
+  </data>
+  <data name="btn_ManageFavourites.Text" xml:space="preserve">
+    <value>btn_ManageFavourites</value>
+  </data>
+  <data name="&gt;&gt;btn_ManageFavourites.Name" xml:space="preserve">
+    <value>btn_ManageFavourites</value>
+  </data>
+  <data name="&gt;&gt;btn_ManageFavourites.Type" xml:space="preserve">
+    <value>System.Windows.Forms.Button, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </data>
+  <data name="&gt;&gt;btn_ManageFavourites.Parent" xml:space="preserve">
+    <value>flp_GeoCoords</value>
+  </data>
+  <data name="&gt;&gt;btn_ManageFavourites.ZOrder" xml:space="preserve">
+    <value>11</value>
+  </data>
+  <data name="lvw_ExifData.Dock" type="System.Windows.Forms.DockStyle, System.Windows.Forms">
+    <value>Fill</value>
+  </data>
+  <data name="lvw_ExifData.Location" type="System.Drawing.Point, System.Drawing">
+    <value>3, 3</value>
+  </data>
+  <data name="lvw_ExifData.Size" type="System.Drawing.Size, System.Drawing">
+    <value>410, 378</value>
+  </data>
+  <data name="lvw_ExifData.TabIndex" type="System.Int32, mscorlib">
+    <value>1</value>
+  </data>
+  <data name="&gt;&gt;lvw_ExifData.Name" xml:space="preserve">
+    <value>lvw_ExifData</value>
+  </data>
+  <data name="&gt;&gt;lvw_ExifData.Type" xml:space="preserve">
+    <value>System.Windows.Forms.ListView, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </data>
+  <data name="&gt;&gt;lvw_ExifData.Parent" xml:space="preserve">
+    <value>tpg_Exif</value>
+  </data>
+  <data name="&gt;&gt;lvw_ExifData.ZOrder" xml:space="preserve">
+    <value>0</value>
+  </data>
+  <data name="clh_ExifTag.Text" xml:space="preserve">
+    <value>clh_ExifTag</value>
+  </data>
+  <data name="clh_OriginalValue.Text" xml:space="preserve">
+    <value>clh_OriginalValue</value>
+  </data>
+  <data name="clh_ModifiedValue.Text" xml:space="preserve">
+    <value>clh_ModifiedValue</value>
+  </data>
   <metadata name="cms_FileListView.TrayLocation" type="System.Drawing.Point, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a">
     <value>750, 17</value>
   </metadata>
+  <data name="cms_FileListView.Size" type="System.Drawing.Size, System.Drawing">
+    <value>256, 214</value>
+  </data>
+  <data name="&gt;&gt;cms_FileListView.Name" xml:space="preserve">
+    <value>cms_FileListView</value>
+  </data>
+  <data name="&gt;&gt;cms_FileListView.Type" xml:space="preserve">
+    <value>System.Windows.Forms.ContextMenuStrip, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </data>
   <data name="cmi_ShowHideCols.Size" type="System.Drawing.Size, System.Drawing">
     <value>255, 22</value>
   </data>
@@ -951,6 +1182,12 @@
   </data>
   <data name="cmi_OpenCoordsInAPI.Text" xml:space="preserve">
     <value>cmi_OpenCoordsInAPI</value>
+  </data>
+  <data name="cmi_OpenCoordsInBrowser.Size" type="System.Drawing.Size, System.Drawing">
+    <value>255, 22</value>
+  </data>
+  <data name="cmi_OpenCoordsInBrowser.Text" xml:space="preserve">
+    <value>cmi_OpenCoordsInBrowser</value>
   </data>
   <data name="cmi_OpenCoordsInBrowserBing.Size" type="System.Drawing.Size, System.Drawing">
     <value>301, 22</value>
@@ -981,12 +1218,6 @@
   </data>
   <data name="cmi_OpenCoordsInBrowserOpenStreetMap.Text" xml:space="preserve">
     <value>cmi_OpenCoordsInBrowserOpenStreetMap</value>
-  </data>
-  <data name="cmi_OpenCoordsInBrowser.Size" type="System.Drawing.Size, System.Drawing">
-    <value>255, 22</value>
-  </data>
-  <data name="cmi_OpenCoordsInBrowser.Text" xml:space="preserve">
-    <value>cmi_OpenCoordsInBrowser</value>
   </data>
   <data name="cmi_CopyGeoData.ShortcutKeyDisplayString" xml:space="preserve">
     <value>Sh + CTRL+C</value>
@@ -1030,18 +1261,42 @@
   <data name="cmi_InvertSelection.Text" xml:space="preserve">
     <value>cmi_InvertSelection</value>
   </data>
-  <data name="cms_FileListView.Size" type="System.Drawing.Size, System.Drawing">
-    <value>256, 214</value>
-  </data>
-  <data name="&gt;&gt;cms_FileListView.Name" xml:space="preserve">
-    <value>cms_FileListView</value>
-  </data>
-  <data name="&gt;&gt;cms_FileListView.Type" xml:space="preserve">
-    <value>System.Windows.Forms.ContextMenuStrip, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
-  </data>
   <metadata name="mns_MenuStrip.TrayLocation" type="System.Drawing.Point, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a">
     <value>613, 17</value>
   </metadata>
+  <data name="mns_MenuStrip.Location" type="System.Drawing.Point, System.Drawing">
+    <value>0, 0</value>
+  </data>
+  <data name="mns_MenuStrip.Padding" type="System.Windows.Forms.Padding, System.Windows.Forms">
+    <value>4, 1, 0, 1</value>
+  </data>
+  <data name="mns_MenuStrip.Size" type="System.Drawing.Size, System.Drawing">
+    <value>730, 24</value>
+  </data>
+  <data name="mns_MenuStrip.TabIndex" type="System.Int32, mscorlib">
+    <value>9</value>
+  </data>
+  <data name="mns_MenuStrip.Text" xml:space="preserve">
+    <value>mns_MenuStrip</value>
+  </data>
+  <data name="&gt;&gt;mns_MenuStrip.Name" xml:space="preserve">
+    <value>mns_MenuStrip</value>
+  </data>
+  <data name="&gt;&gt;mns_MenuStrip.Type" xml:space="preserve">
+    <value>System.Windows.Forms.MenuStrip, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </data>
+  <data name="&gt;&gt;mns_MenuStrip.Parent" xml:space="preserve">
+    <value>$this</value>
+  </data>
+  <data name="&gt;&gt;mns_MenuStrip.ZOrder" xml:space="preserve">
+    <value>3</value>
+  </data>
+  <data name="tmi_File.Size" type="System.Drawing.Size, System.Drawing">
+    <value>60, 22</value>
+  </data>
+  <data name="tmi_File.Text" xml:space="preserve">
+    <value>tmi_File</value>
+  </data>
   <data name="tmi_File_SaveAll.ShortcutKeyDisplayString" xml:space="preserve">
     <value>CTRL+S</value>
   </data>
@@ -1129,11 +1384,11 @@
   <data name="tmi_File_Quit.Text" xml:space="preserve">
     <value>tmi_File_Quit</value>
   </data>
-  <data name="tmi_File.Size" type="System.Drawing.Size, System.Drawing">
-    <value>60, 22</value>
+  <data name="tmi_Debug.Size" type="System.Drawing.Size, System.Drawing">
+    <value>77, 22</value>
   </data>
-  <data name="tmi_File.Text" xml:space="preserve">
-    <value>tmi_File</value>
+  <data name="tmi_Debug.Text" xml:space="preserve">
+    <value>tmi_Debug</value>
   </data>
   <data name="tmi_Debug_CustomiseWinformControls.Size" type="System.Drawing.Size, System.Drawing">
     <value>285, 22</value>
@@ -1141,11 +1396,11 @@
   <data name="tmi_Debug_CustomiseWinformControls.Text" xml:space="preserve">
     <value>tmi_Debug_CustomiseWinformControls</value>
   </data>
-  <data name="tmi_Debug.Size" type="System.Drawing.Size, System.Drawing">
-    <value>77, 22</value>
+  <data name="tmi_Edit.Size" type="System.Drawing.Size, System.Drawing">
+    <value>62, 22</value>
   </data>
-  <data name="tmi_Debug.Text" xml:space="preserve">
-    <value>tmi_Debug</value>
+  <data name="tmi_Edit.Text" xml:space="preserve">
+    <value>tmi_Edit</value>
   </data>
   <data name="tmi_Edit_SelectAll.ShortcutKeys" type="System.Windows.Forms.Keys, System.Windows.Forms">
     <value>Ctrl+A</value>
@@ -1168,11 +1423,11 @@
   <data name="tmi_Edit_InvertSelection.Text" xml:space="preserve">
     <value>tmi_Edit_InvertSelection</value>
   </data>
-  <data name="tmi_Edit.Size" type="System.Drawing.Size, System.Drawing">
-    <value>62, 22</value>
+  <data name="tmi_Settings.Size" type="System.Drawing.Size, System.Drawing">
+    <value>84, 22</value>
   </data>
-  <data name="tmi_Edit.Text" xml:space="preserve">
-    <value>tmi_Edit</value>
+  <data name="tmi_Settings.Text" xml:space="preserve">
+    <value>tmi_Settings</value>
   </data>
   <data name="tmi_Settings_Settings.Size" type="System.Drawing.Size, System.Drawing">
     <value>198, 22</value>
@@ -1186,11 +1441,11 @@
   <data name="tmi_Settings_Favourites.Text" xml:space="preserve">
     <value>tmi_Settings_Favourites</value>
   </data>
-  <data name="tmi_Settings.Size" type="System.Drawing.Size, System.Drawing">
-    <value>84, 22</value>
+  <data name="tmi_Help.Size" type="System.Drawing.Size, System.Drawing">
+    <value>67, 22</value>
   </data>
-  <data name="tmi_Settings.Text" xml:space="preserve">
-    <value>tmi_Settings</value>
+  <data name="tmi_Help.Text" xml:space="preserve">
+    <value>tmi_Help</value>
   </data>
   <data name="tmi_Help_About.Size" type="System.Drawing.Size, System.Drawing">
     <value>183, 22</value>
@@ -1200,6 +1455,12 @@
   </data>
   <data name="tss_Help_1.Size" type="System.Drawing.Size, System.Drawing">
     <value>180, 6</value>
+  </data>
+  <data name="tmi_Help_Donate.Size" type="System.Drawing.Size, System.Drawing">
+    <value>183, 22</value>
+  </data>
+  <data name="tmi_Help_Donate.Text" xml:space="preserve">
+    <value>tmi_Help_Donate</value>
   </data>
   <data name="tmi_Help_Donate_PayPal.Size" type="System.Drawing.Size, System.Drawing">
     <value>242, 22</value>
@@ -1219,12 +1480,6 @@
   <data name="tmi_Help_Donate_BuyMeCoffee.Text" xml:space="preserve">
     <value>tmi_Help_Donate_BuyMeCoffee</value>
   </data>
-  <data name="tmi_Help_Donate.Size" type="System.Drawing.Size, System.Drawing">
-    <value>183, 22</value>
-  </data>
-  <data name="tmi_Help_Donate.Text" xml:space="preserve">
-    <value>tmi_Help_Donate</value>
-  </data>
   <data name="tss_Help_2.Size" type="System.Drawing.Size, System.Drawing">
     <value>180, 6</value>
   </data>
@@ -1239,39 +1494,6 @@
   </data>
   <data name="tmi_Help_BugReport.Text" xml:space="preserve">
     <value>tmi_Help_BugReport</value>
-  </data>
-  <data name="tmi_Help.Size" type="System.Drawing.Size, System.Drawing">
-    <value>67, 22</value>
-  </data>
-  <data name="tmi_Help.Text" xml:space="preserve">
-    <value>tmi_Help</value>
-  </data>
-  <data name="mns_MenuStrip.Location" type="System.Drawing.Point, System.Drawing">
-    <value>0, 0</value>
-  </data>
-  <data name="mns_MenuStrip.Padding" type="System.Windows.Forms.Padding, System.Windows.Forms">
-    <value>4, 1, 0, 1</value>
-  </data>
-  <data name="mns_MenuStrip.Size" type="System.Drawing.Size, System.Drawing">
-    <value>730, 24</value>
-  </data>
-  <data name="mns_MenuStrip.TabIndex" type="System.Int32, mscorlib">
-    <value>9</value>
-  </data>
-  <data name="mns_MenuStrip.Text" xml:space="preserve">
-    <value>mns_MenuStrip</value>
-  </data>
-  <data name="&gt;&gt;mns_MenuStrip.Name" xml:space="preserve">
-    <value>mns_MenuStrip</value>
-  </data>
-  <data name="&gt;&gt;mns_MenuStrip.Type" xml:space="preserve">
-    <value>System.Windows.Forms.MenuStrip, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
-  </data>
-  <data name="&gt;&gt;mns_MenuStrip.Parent" xml:space="preserve">
-    <value>$this</value>
-  </data>
-  <data name="&gt;&gt;mns_MenuStrip.ZOrder" xml:space="preserve">
-    <value>3</value>
   </data>
   <metadata name="tsr_MainAppToolStrip.TrayLocation" type="System.Drawing.Point, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a">
     <value>17, 17</value>
@@ -1396,26 +1618,43 @@
   <data name="tsb_RemoveGeoData.Text" xml:space="preserve">
     <value>tsb_RemoveGeoData</value>
   </data>
-  <data name="tsb_ImportExportGPX.Image" type="System.Drawing.Bitmap, System.Drawing" mimetype="application/x-microsoft.net.object.bytearray.base64">
+  <data name="tsb_ImportGPX.Image" type="System.Drawing.Bitmap, System.Drawing" mimetype="application/x-microsoft.net.object.bytearray.base64">
     <value>
-        iVBORw0KGgoAAAANSUhEUgAAABAAAAAQCAYAAAAf8/9hAAAAAXNSR0IArs4c6QAAAARnQU1BAACxjwv8
-        YQUAAAAJcEhZcwAADsMAAA7DAcdvqGQAAAC5SURBVDhPY2AYPCBtExdDzK4mhuiddxhid9aiS+MHIM2x
-        O44zxOzazBC925QhdBUbuhL8AGQzSDPZAOzsXSbowsSD2F0/GZI28KILo4D47QroQghAyAUgzdG7XjFE
-        73ZAl4KAmJ2NBMMApBmnISHHOBmidx5jiN25hSFuhxnOWCBoSOzOBobYXbcZYnf9YYjd9R833nkVXTtx
-        IHa3DUPsrpcMMTud0KUIg+jttuRrJhgLxAC86YACAADQ81o+8EwwbAAAAABJRU5ErkJggg==
+        iVBORw0KGgoAAAANSUhEUgAAABAAAAAQCAYAAAAf8/9hAAAACXBIWXMAAA7EAAAOxAGVKw4bAAAA
+        VklEQVR4nGNgGJlAQUHhPrEKCxQUFOZjEf9Pim0L0A0hyQBshmAYoABxagMB/B5mCCUGLMBqACEA
+        shmmmZxAnI+smSQDFCBeQ9FMsgsYsBtMXEIaGgAA9yUtT+SSJFkAAAAASUVORK5CYII=
 </value>
   </data>
-  <data name="tsb_ImportExportGPX.ImageScaling" type="System.Windows.Forms.ToolStripItemImageScaling, System.Windows.Forms">
+  <data name="tsb_ImportGPX.ImageScaling" type="System.Windows.Forms.ToolStripItemImageScaling, System.Windows.Forms">
     <value>None</value>
   </data>
-  <data name="tsb_ImportExportGPX.ImageTransparentColor" type="System.Drawing.Color, System.Drawing">
+  <data name="tsb_ImportGPX.ImageTransparentColor" type="System.Drawing.Color, System.Drawing">
     <value>Magenta</value>
   </data>
-  <data name="tsb_ImportExportGPX.Size" type="System.Drawing.Size, System.Drawing">
+  <data name="tsb_ImportGPX.Size" type="System.Drawing.Size, System.Drawing">
     <value>23, 22</value>
   </data>
-  <data name="tsb_ImportExportGPX.Text" xml:space="preserve">
-    <value>tsb_ImportExportGPX</value>
+  <data name="tsb_ImportGPX.Text" xml:space="preserve">
+    <value>tsb_ImportGPX</value>
+  </data>
+  <data name="tsb_ExportGPX.Image" type="System.Drawing.Bitmap, System.Drawing" mimetype="application/x-microsoft.net.object.bytearray.base64">
+    <value>
+        iVBORw0KGgoAAAANSUhEUgAAABAAAAAQCAYAAAAf8/9hAAAACXBIWXMAAA7EAAAOxAGVKw4bAAAA
+        RklEQVR4nGNgGH5AQUHBAISJUHcfl+b7RBrwn2zNGAYokKgZmwH3QQJE4Pu0cQHFYUCVWCAjHWA3
+        gIFIoKCgkECRAYMHAACDOCxHisn/CwAAAABJRU5ErkJggg==
+</value>
+  </data>
+  <data name="tsb_ExportGPX.ImageScaling" type="System.Windows.Forms.ToolStripItemImageScaling, System.Windows.Forms">
+    <value>None</value>
+  </data>
+  <data name="tsb_ExportGPX.ImageTransparentColor" type="System.Drawing.Color, System.Drawing">
+    <value>Magenta</value>
+  </data>
+  <data name="tsb_ExportGPX.Size" type="System.Drawing.Size, System.Drawing">
+    <value>23, 22</value>
+  </data>
+  <data name="tsb_ExportGPX.Text" xml:space="preserve">
+    <value>tsb_ExportGPX</value>
   </data>
   <data name="tss_tsr_Main_1.Size" type="System.Drawing.Size, System.Drawing">
     <value>6, 25</value>
@@ -1423,12 +1662,13 @@
   <data name="tsb_FeedbackFeatureRequest.Image" type="System.Drawing.Bitmap, System.Drawing" mimetype="application/x-microsoft.net.object.bytearray.base64">
     <value>
         iVBORw0KGgoAAAANSUhEUgAAABAAAAAQCAYAAAAf8/9hAAAAAXNSR0IArs4c6QAAAARnQU1BAACxjwv8
-        YQUAAAAJcEhZcwAADsMAAA7DAcdvqGQAAAERSURBVDhPxZG9SsRQFIRT+QKSIiHcmcmNoqlcLQW7xecQ
-        xLdwOws7wZfQShsLRdkHsdTOH2ytlLPmLuZI2GbBgYFwz3xzzyVZtmxJuiA5XWTLeXYmSdOyLFcX2XKe
-        nel/C9q2XQFwVxTFhxnAeQih8PBggaQzKwAwijFuk7y3Eg8PFpB8NdBuNccYdyS9W7jzpcFVVe2RvPF8
-        BuDFF9hZmltJCGFX0lXTNKM+/RM4tbWtxGCSD3b2a25bXAPY6pOdJI3zPP+U9GXuvsdpTvJkECY5Ifks
-        6bCu6zUzgAMAjySPfb4nkvsAngBspvcnA9joiueb/JG92272cDLJI0m3nptL0put7MFkSev2iz23FH0D
-        4sRqcIKF1LwAAAAASUVORK5CYII=
+        YQUAAAAJcEhZcwAADsMAAA7DAcdvqGQAAAFsSURBVDhPrZK/SgNBEMa/0kcwKBcLg40WWikKiZWdIlb6
+        HkJyu5PTXiGJiM8gxNzuRGwEU4moj2CjYqM2ghaCRWSWJISJscoPlp2Z/b65/XOA4iLBpLeossGDt/iQ
+        2VnUpK61AzjCKpfwyoRKg5B3FjOpQaFZRlXqsq49PThBFEQxNs9iZPTgGFuyPnQn3uDEWxwGcYIFJlzW
+        S3iX2VnMS90TKs7gWHsDbPHMhKUgtGg5wkFqMSdN2eCq02C5YfCkvYE64TtNMBW2TPg6LWJa4vouclzE
+        p8SyLjrtDUhn+UI4AuHGE/bkXlKLfU+4lnrDYMURHrU3wAZHctthqzEWmXDPhHYa407yTuOaPKn2BkTg
+        CG/OYr1384R2N/YxNuQVzhOMa2+PpkFBRE3CWn8DyTv/R157BmCLHU+47W8QjlHGttb+SSvB2Gxu4ieb
+        zba7Q3Kpa+1QxBRFUaY7JNeafxlFg5f+I0iuNSPjF7dZyClzJ6slAAAAAElFTkSuQmCC
 </value>
   </data>
   <data name="tsb_FeedbackFeatureRequest.ImageScaling" type="System.Windows.Forms.ToolStripItemImageScaling, System.Windows.Forms">
@@ -1463,6 +1703,31 @@
   <data name="tsb_BugReport.Text" xml:space="preserve">
     <value>tsb_BugReport</value>
   </data>
+  <data name="tss_tsr_Main_2.Size" type="System.Drawing.Size, System.Drawing">
+    <value>6, 25</value>
+  </data>
+  <data name="tsb_Donate.Image" type="System.Drawing.Bitmap, System.Drawing" mimetype="application/x-microsoft.net.object.bytearray.base64">
+    <value>
+        iVBORw0KGgoAAAANSUhEUgAAABAAAAAQCAYAAAAf8/9hAAAAAXNSR0IArs4c6QAAAARnQU1BAACxjwv8
+        YQUAAAAJcEhZcwAADsMAAA7DAcdvqGQAAAD0SURBVDhPrZPRDYIwEIZ900jo+SzS6wiM4ga6iWygG+gG
+        jkAiLTwZRnAERtD8D5heITVGv6QJaf//7x0cs9m/qIhXjdKHOskejvg5tXAGDbQjs0vzzip9aomNOPSw
+        xIVV+gKtCLHKHJzSZ6GOcFP65NK8fG+gNKQLVQRUCc97A/35goq4aJS+3mizbVKzw3N4gfCEAZMvMsl6
+        XxMNgDgMECWHnjAA5fohNsn6r1oAfkhoBh8DgCXeY4X7QHjQ331hWCgioCLxTuqUS6v0UagiYOgceYM0
+        jDIO7HI96negnbPBRdB2U/9DTVxOzoD3KaEZmX/hBXzpne1NW4WrAAAAAElFTkSuQmCC
+</value>
+  </data>
+  <data name="tsb_Donate.ImageScaling" type="System.Windows.Forms.ToolStripItemImageScaling, System.Windows.Forms">
+    <value>None</value>
+  </data>
+  <data name="tsb_Donate.ImageTransparentColor" type="System.Drawing.Color, System.Drawing">
+    <value>Magenta</value>
+  </data>
+  <data name="tsb_Donate.Size" type="System.Drawing.Size, System.Drawing">
+    <value>23, 22</value>
+  </data>
+  <data name="tsb_Donate.Text" xml:space="preserve">
+    <value>toolStripButton1</value>
+  </data>
   <data name="tsr_MainAppToolStrip.Location" type="System.Drawing.Point, System.Drawing">
     <value>0, 24</value>
   </data>
@@ -1496,32 +1761,6 @@
   <metadata name="tsr_FolderControl.TrayLocation" type="System.Drawing.Point, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a">
     <value>184, 17</value>
   </metadata>
-  <data name="tbx_FolderName.Size" type="System.Drawing.Size, System.Drawing">
-    <value>400, 25</value>
-  </data>
-  <data name="tsb_OneFolderUp.Image" type="System.Drawing.Bitmap, System.Drawing" mimetype="application/x-microsoft.net.object.bytearray.base64">
-    <value>
-        iVBORw0KGgoAAAANSUhEUgAAABAAAAAQCAYAAAAf8/9hAAAAAXNSR0IArs4c6QAAAARnQU1BAACxjwv8
-        YQUAAAAJcEhZcwAADsMAAA7DAcdvqGQAAABvSURBVDhPY2CgFZCXl3dQVFS8DqLR5QgCkCY5OblXioqK
-        /0E0SYYoKiraysjIvFRSUnICGaCkpGQD46OrxQDImqH8/yCaKEPQNUPFwAaAAEFDFBQUStH9imwACIDk
-        QeqQxfACdANIBqMGDAYD6AIACXEo1/42vXwAAAAASUVORK5CYII=
-</value>
-  </data>
-  <data name="tsb_OneFolderUp.ImageScaling" type="System.Windows.Forms.ToolStripItemImageScaling, System.Windows.Forms">
-    <value>None</value>
-  </data>
-  <data name="tsb_OneFolderUp.ImageTransparentColor" type="System.Drawing.Color, System.Drawing">
-    <value>Magenta</value>
-  </data>
-  <data name="tsb_OneFolderUp.Size" type="System.Drawing.Size, System.Drawing">
-    <value>23, 22</value>
-  </data>
-  <data name="tsb_OneFolderUp.Text" xml:space="preserve">
-    <value>tsb_OneFolderUp</value>
-  </data>
-  <data name="tsb_OneFolderUp.ToolTipText" xml:space="preserve">
-    <value>tsb_OneFolderUp</value>
-  </data>
   <data name="tsr_FolderControl.Location" type="System.Drawing.Point, System.Drawing">
     <value>0, 49</value>
   </data>
@@ -1551,6 +1790,32 @@
   </data>
   <data name="&gt;&gt;tsr_FolderControl.ZOrder" xml:space="preserve">
     <value>1</value>
+  </data>
+  <data name="tbx_FolderName.Size" type="System.Drawing.Size, System.Drawing">
+    <value>400, 25</value>
+  </data>
+  <data name="tsb_OneFolderUp.Image" type="System.Drawing.Bitmap, System.Drawing" mimetype="application/x-microsoft.net.object.bytearray.base64">
+    <value>
+        iVBORw0KGgoAAAANSUhEUgAAABAAAAAQCAYAAAAf8/9hAAAAAXNSR0IArs4c6QAAAARnQU1BAACxjwv8
+        YQUAAAAJcEhZcwAADsMAAA7DAcdvqGQAAABvSURBVDhPY2CgFZCXl3dQVFS8DqLR5QgCkCY5OblXioqK
+        /0E0SYYoKiraysjIvFRSUnICGaCkpGQD46OrxQDImqH8/yCaKEPQNUPFwAaAAEFDFBQUStH9imwACIDk
+        QeqQxfACdANIBqMGDAYD6AIACXEo1/42vXwAAAAASUVORK5CYII=
+</value>
+  </data>
+  <data name="tsb_OneFolderUp.ImageScaling" type="System.Windows.Forms.ToolStripItemImageScaling, System.Windows.Forms">
+    <value>None</value>
+  </data>
+  <data name="tsb_OneFolderUp.ImageTransparentColor" type="System.Drawing.Color, System.Drawing">
+    <value>Magenta</value>
+  </data>
+  <data name="tsb_OneFolderUp.Size" type="System.Drawing.Size, System.Drawing">
+    <value>23, 22</value>
+  </data>
+  <data name="tsb_OneFolderUp.Text" xml:space="preserve">
+    <value>tsb_OneFolderUp</value>
+  </data>
+  <data name="tsb_OneFolderUp.ToolTipText" xml:space="preserve">
+    <value>tsb_OneFolderUp</value>
   </data>
   <metadata name="ttp_NavigateMapGo.TrayLocation" type="System.Drawing.Point, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a">
     <value>329, 17</value>
@@ -4862,10 +5127,16 @@
   <data name="&gt;&gt;tsb_RemoveGeoData.Type" xml:space="preserve">
     <value>System.Windows.Forms.ToolStripButton, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </data>
-  <data name="&gt;&gt;tsb_ImportExportGPX.Name" xml:space="preserve">
-    <value>tsb_ImportExportGPX</value>
+  <data name="&gt;&gt;tsb_ImportGPX.Name" xml:space="preserve">
+    <value>tsb_ImportGPX</value>
   </data>
-  <data name="&gt;&gt;tsb_ImportExportGPX.Type" xml:space="preserve">
+  <data name="&gt;&gt;tsb_ImportGPX.Type" xml:space="preserve">
+    <value>System.Windows.Forms.ToolStripButton, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </data>
+  <data name="&gt;&gt;tsb_ExportGPX.Name" xml:space="preserve">
+    <value>tsb_ExportGPX</value>
+  </data>
+  <data name="&gt;&gt;tsb_ExportGPX.Type" xml:space="preserve">
     <value>System.Windows.Forms.ToolStripButton, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </data>
   <data name="&gt;&gt;tss_tsr_Main_1.Name" xml:space="preserve">
@@ -4884,6 +5155,18 @@
     <value>tsb_BugReport</value>
   </data>
   <data name="&gt;&gt;tsb_BugReport.Type" xml:space="preserve">
+    <value>System.Windows.Forms.ToolStripButton, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </data>
+  <data name="&gt;&gt;tss_tsr_Main_2.Name" xml:space="preserve">
+    <value>tss_tsr_Main_2</value>
+  </data>
+  <data name="&gt;&gt;tss_tsr_Main_2.Type" xml:space="preserve">
+    <value>System.Windows.Forms.ToolStripSeparator, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </data>
+  <data name="&gt;&gt;tsb_Donate.Name" xml:space="preserve">
+    <value>tsb_Donate</value>
+  </data>
+  <data name="&gt;&gt;tsb_Donate.Type" xml:space="preserve">
     <value>System.Windows.Forms.ToolStripButton, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </data>
   <data name="&gt;&gt;tbx_FolderName.Name" xml:space="preserve">

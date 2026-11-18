@@ -3131,11 +3131,20 @@ namespace GeoTagNinja.Resources.Languages {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Import/Export GPX/JSON Track Files.
+        ///   Looks up a localized string similar to Export Track File (GPX/KML).
         /// </summary>
-        public static string tsb_ImportExportGPX {
+        public static string tsb_ExportGPX {
             get {
-                return ResourceManager.GetString("tsb_ImportExportGPX", resourceCulture);
+                return ResourceManager.GetString("tsb_ExportGPX", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Import GPX/JSON Track Files.
+        /// </summary>
+        public static string tsb_ImportGPX {
+            get {
+                return ResourceManager.GetString("tsb_ImportGPX", resourceCulture);
             }
         }
         

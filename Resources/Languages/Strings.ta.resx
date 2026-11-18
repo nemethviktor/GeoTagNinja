@@ -1,4 +1,4 @@
-<?xml version="1.0" encoding="utf-8"?>
+﻿<?xml version="1.0" encoding="utf-8"?>
 <root>
   <!-- 
     Microsoft ResX Schema 
@@ -1027,8 +1027,11 @@
   <data name="tsb_GetAllFromWeb" xml:space="preserve">
     <value>தேர்ந்தெடுக்கப்பட்ட அனைத்து கோப்புகளுக்கும் நிலப்பரப்பு மற்றும் உயரத் தகவலைப் பெறுங்கள்</value>
   </data>
-  <data name="tsb_ImportExportGPX" xml:space="preserve">
-    <value>GPX/JSON மின்தடம் கோப்புகளை இறக்குமதி/ஏற்றுமதி செய்யுங்கள்</value>
+  <data name="tsb_ImportGPX" xml:space="preserve">
+    <value>GPX/JSON மின்தடம் கோப்புகளை இறக்குமதி செய்யுங்கள்</value>
+  </data>
+  <data name="tsb_ExportGPX" xml:space="preserve">
+    <value>மின்தடம் கோப்பை ஏற்றுமதி செய்யுங்கள் (GPX/KML)</value>
   </data>
   <data name="tsb_OneFolderUp" xml:space="preserve">
     <value>பெற்றோர் கோப்புறை</value>
