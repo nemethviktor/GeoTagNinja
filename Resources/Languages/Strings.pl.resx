@@ -1859,4 +1859,148 @@ Tak: zmień nazwy pozostałych plików.  Nie: przerwij operację – wszystkie p
   <data name="mbx_BatchRename_Problem_PathTooLong" xml:space="preserve">
     <value>Nowa ścieżka jest za długa</value>
   </data>
+  <data name="mbx_BatchRename_Problem_NoDate" xml:space="preserve">
+    <value>Brak {0} do użycia</value>
+  </data>
+  <data name="mbx_BatchRename_Problem_BadRegex" xml:space="preserve">
+    <value>Regularne wyrażenie jest nieprawidłowe</value>
+  </data>
+  <data name="mbx_BatchRename_Problem_RegexTimeout" xml:space="preserve">
+    <value>Zbyt długi czas przetwarzania</value>
+  </data>
+  <data name="mbx_BatchRename_Problem_NameClaimed" xml:space="preserve">
+    <value>Inny plik ma już tę nazwę (lub ma ją otrzymać)</value>
+  </data>
+  <data name="mbx_BatchRename_Problem_FileExists" xml:space="preserve">
+    <value>Plik o tej nazwie już istnieje</value>
+  </data>
+  <data name="mbx_BatchRename_Problem_SidecarExists" xml:space="preserve">
+    <value>Plik XMP o tej nazwie już istnieje</value>
+  </data>
+  <data name="mbx_BatchRename_Problem_Gone" xml:space="preserve">
+    <value>Plik już nie istnieje</value>
+  </data>
+  <data name="mbx_BatchRename_Problem_BeingSaved" xml:space="preserve">
+    <value>Plik jest zapisywany przez GeoTagNinja</value>
+  </data>
+  <data name="mbx_BatchRename_Problem_InUse" xml:space="preserve">
+    <value>Plik jest używany przez inny program</value>
+  </data>
+  <data name="mbx_BatchRename_Problem_FolderNotWritable" xml:space="preserve">
+    <value>Nie można zapisać w folderze '{0}'</value>
+  </data>
+  <data name="mbx_BatchRename_Problem_NoSpace" xml:space="preserve">
+    <value>Za mało miejsca na {0}: wymagane {1} MB, dostępne {2} MB</value>
+  </data>
+  <data name="mbx_BatchRename_Problem_Unfixed" xml:space="preserve">
+    <value>Zestaw zawiera problemy, które należy najpierw naprawić.</value>
+  </data>
+  <data name="tmi_File_BatchRename" xml:space="preserve">
+    <value>Seryjna zmiana nazw...</value>
+  </data>
+  <data name="cmi_BatchRename" xml:space="preserve">
+    <value>Seryjna zmiana nazw...</value>
+  </data>
+  <data name="tmi_Help_Help" xml:space="preserve">
+    <value>Pomoc</value>
+  </data>
+  <data name="ckb_ImportExport_Favourites" xml:space="preserve">
+    <value>Ulubione</value>
+  </data>
+  <data name="ckb_ImportExport_EditTemplates" xml:space="preserve">
+    <value>Edytuj szablony danych</value>
+  </data>
+  <data name="ckb_ImportExport_FieldHistory" xml:space="preserve">
+    <value>Edytuj historię pól danych</value>
+  </data>
+  <data name="Generic_ReadingMetadataProgress" xml:space="preserve">
+    <value>Odczytywanie metadanych: {0} z {1}</value>
+  </data>
+  <data name="chk_TemplateGroup_Direction" xml:space="preserve">
+    <value>Orientacja obrazu</value>
+  </data>
+  <data name="chk_TemplateGroup_Destination" xml:space="preserve">
+    <value>Miejsce docelowe</value>
+  </data>
+  <data name="chk_TemplateGroup_TakenDate" xml:space="preserve">
+    <value>Data wykonania zdjęcia</value>
+  </data>
+  <data name="chk_TemplateGroup_CreateDate" xml:space="preserve">
+    <value>Data utworzenia</value>
+  </data>
+  <data name="chk_TemplateGroup_OffsetTime" xml:space="preserve">
+    <value>Przesunięcie względem strefy czasowej</value>
+  </data>
+  <data name="mbx_FrmEditTemplateDialog_QuestionDeleteTemplate" xml:space="preserve">
+    <value>Usunąć szablon {0}?</value>
+  </data>
+  <data name="mbx_FrmEditTemplateDialog_QuestionOverwriteTemplate" xml:space="preserve">
+    <value>Szablon o nazwie {0} już istnieje. Czy go zastąpić?</value>
+  </data>
+  <data name="mbx_FrmEditFileData_ErrorTemplateNotSaved" xml:space="preserve">
+    <value>Nie można zapisać szablonu.</value>
+  </data>
+  <data name="mbx_FrmEditFileData_InfoImageHasNothingToLoad" xml:space="preserve">
+    <value>Ten plik nie zawiera danych, które można wczytać za pomocą formularza.</value>
+  </data>
+  <data name="lbl_Sexagesimal" xml:space="preserve">
+    <value>Sześćdziesiątkowy</value>
+  </data>
+  <data name="lbl_DestLatitude" xml:space="preserve">
+    <value>Szerokość geograficzna:</value>
+  </data>
+  <data name="lbl_DestLongitude" xml:space="preserve">
+    <value>Długość geograficzna:</value>
+  </data>
+  <data name="btn_GetAltitudeFromWeb" xml:space="preserve">
+    <value>Pobierz z internetu</value>
+  </data>
+  <data name="mbx_FrmEditFileData_InfoCoordinatesNeededForAltitude" xml:space="preserve">
+    <value>Najpierw wprowadź szerokość i długość geograficzną.</value>
+  </data>
+  <data name="mbx_FrmEditFileData_WarningNoAltitudeFromWeb" xml:space="preserve">
+    <value>Brak danych do pobrania o wysokości dla tej pozycji.</value>
+  </data>
+  <data name="ckb_ShowChangelogAfterUpdate" xml:space="preserve">
+    <value>Po aktualizacji pokaż wprowadzone zmiany</value>
+  </data>
+  <data name="mbx_Helper_InfoRemoveGeoDataKeywordsRemain" xml:space="preserve">
+    <value>Dane lokalizacyjne zostały usunięte, ale słowa kluczowe pozostały bez zmian. Wszystkie zawarte w nich nazwy miejsc i słowa kluczowe "geo:" pozostają takie jak wcześniej. Aby były automatycznie dostosowywane do zmian lokalizacji, włącz w Ustawieniach opcję „Aktualizuj słowa kluczowe zgodnie z lokalizacją”.</value>
+  </data>
+  <data name="tmi_View_FolderTree" xml:space="preserve">
+    <value>Drzewo folderów</value>
+  </data>
+  <data name="lbl_FolderTree_Title" xml:space="preserve">
+    <value>Foldery</value>
+  </data>
+  <data name="tsb_FolderTree_Favourites" xml:space="preserve">
+    <value>Ulubione foldery</value>
+  </data>
+  <data name="tmi_FolderTree_AddCurrent" xml:space="preserve">
+    <value>Dodaj bieżący folder do ulubionych</value>
+  </data>
+  <data name="tmi_FolderTree_RemoveCurrent" xml:space="preserve">
+    <value>Usuń bieżący folder z ulubionych</value>
+  </data>
+  <data name="tmi_FolderTree_NoFavourites" xml:space="preserve">
+    <value>(brak ulubionych folderów)</value>
+  </data>
+  <data name="tsb_FolderTree_Refresh" xml:space="preserve">
+    <value>Odśwież drzewo folderów</value>
+  </data>
+  <data name="tsb_FolderTree_Hide" xml:space="preserve">
+    <value>Ukryj drzewo folderów (Ctrl+B)</value>
+  </data>
+  <data name="cmi_FolderTree_AddThis" xml:space="preserve">
+    <value>Dodaj do ulubionych</value>
+  </data>
+  <data name="cmi_FolderTree_RemoveThis" xml:space="preserve">
+    <value>Usuń z ulubionych</value>
+  </data>
+  <data name="lbl_ImageDirection" xml:space="preserve">
+    <value>Kierunek obrazu [°]:</value>
+  </data>
+  <data name="ckb_SyncGeoKeywords" xml:space="preserve">
+    <value>Zachowaj słowa kluczowe z lokalizacji (nazwy miejsc i geograficzne słowa kluczowe)</value>
+  </data>
 </root>
