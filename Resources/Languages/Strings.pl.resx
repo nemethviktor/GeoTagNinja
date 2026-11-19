@@ -2003,4 +2003,7 @@ Tak: zmień nazwy pozostałych plików.  Nie: przerwij operację – wszystkie p
   <data name="ckb_SyncGeoKeywords" xml:space="preserve">
     <value>Zachowaj słowa kluczowe z lokalizacji (nazwy miejsc i geograficzne słowa kluczowe)</value>
   </data>
+  <data name="tsb_Donate" xml:space="preserve">
+    <value>Postaw mi kawę (darowizna, otwiera przeglądarkę)</value>
+  </data>
 </root>
