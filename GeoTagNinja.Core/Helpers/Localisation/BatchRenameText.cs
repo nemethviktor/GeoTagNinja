@@ -53,7 +53,7 @@ internal static class BatchRenameText
             string language = HelperVariables.AppLanguage;
             return string.IsNullOrEmpty(value: language)
                 ? CultureInfo.CurrentUICulture
-                : CultureInfo.GetCultureInfo(name: language);
+                : LanguageManager.CultureFor(code: language);
         }
         catch (Exception ex) when (ex is CultureNotFoundException or ArgumentException)
         {

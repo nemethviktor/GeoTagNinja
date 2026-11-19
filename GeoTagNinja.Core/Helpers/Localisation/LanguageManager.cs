@@ -71,6 +71,60 @@ internal static class LanguageManager
     /// </summary>
     internal const double MinimumCoverageForAutoSelect = 0.8;
 
+    private static readonly Dictionary<string, CultureInfo> CultureForCodeCache = new();
+
+    /// <summary>
+    ///     The culture to use as the UI culture for a stored language code (a TwoLetterISOLanguageName such as "hu").
+    ///     Usually that is simply the culture of the same name. But a language can ship under a more specific name:
+    ///     Simplified Chinese is <c>Strings.zh-Hans.resx</c>, yet the settings list and the stored value say "zh", and
+    ///     .NET never looks from "zh" down to "zh-Hans". So when "zh" has no resources of its own, the culture of that
+    ///     language that does have a resource file is used instead. Falls back to the plain culture (English, or a
+    ///     language nobody has translated, then simply shows the neutral resources).
+    /// </summary>
+    /// <param name="code">A TwoLetterISOLanguageName.</param>
+    public static CultureInfo CultureFor(string code)
+    {
+        if (CultureForCodeCache.TryGetValue(key: code, value: out CultureInfo cached))
+        {
+            return cached;
+        }
+
+        CultureInfo plain = CultureInfo.GetCultureInfo(name: code);
+        CultureInfo found = plain;
+        if (code != HelperVariables.DefaultEnglishString)
+        {
+            System.Resources.ResourceManager rm = new(resourceSource: typeof(Strings));
+            if (!HasResources(rm: rm, culture: plain))
+            {
+                foreach (CultureInfo culture in CultureInfo.GetCultures(types: CultureTypes.AllCultures))
+                {
+                    if (culture.TwoLetterISOLanguageName == code &&
+                        culture.Name != plain.Name &&
+                        HasResources(rm: rm, culture: culture))
+                    {
+                        found = culture;
+                        break;
+                    }
+                }
+            }
+        }
+
+        CultureForCodeCache[key: code] = found;
+        return found;
+    }
+
+    private static bool HasResources(System.Resources.ResourceManager rm, CultureInfo culture)
+    {
+        try
+        {
+            return rm.GetResourceSet(culture: culture, createIfNotExists: true, tryParents: false) != null;
+        }
+        catch (CultureNotFoundException)
+        {
+            return false;
+        }
+    }
+
     /// <summary>
     ///     Picks the language a user who has never chosen one should get: the first of the Windows display language
     ///     (and its parents, e.g. hu-HU then hu) that is translated well enough, otherwise English.
@@ -102,10 +156,12 @@ internal static class LanguageManager
 
             try
             {
-                // Same test as GetTranslatedLanguages: the file must exist for exactly this culture, otherwise the
-                // app could not load it once the code is used as the UI culture.
-                ResourceSet rs = rm.GetResourceSet(culture: CultureInfo.GetCultureInfo(name: code),
-                    createIfNotExists: true, tryParents: false);
+                // The resource file must be for this culture or one of its parents: a Windows set to zh-TW (so
+                // zh-Hant, zh) must not get the Simplified Chinese file, but zh-CN (zh-Hans, zh) may.
+                CultureInfo resourceCulture = CultureFor(code: code);
+                ResourceSet rs = IsSelfOrParent(culture: culture, candidate: resourceCulture)
+                    ? rm.GetResourceSet(culture: resourceCulture, createIfNotExists: true, tryParents: false)
+                    : null;
                 if (rs != null &&
                     CountTranslated(resourceSet: rs, englishKeys: englishKeys) >=
                     englishCount * MinimumCoverageForAutoSelect)
@@ -120,6 +176,19 @@ internal static class LanguageManager
         }
 
         return HelperVariables.DefaultEnglishString;
+    }
+
+    private static bool IsSelfOrParent(CultureInfo culture, CultureInfo candidate)
+    {
+        for (CultureInfo c = culture; c.LCID != CultureInfo.InvariantCulture.LCID; c = c.Parent)
+        {
+            if (c.Name == candidate.Name)
+            {
+                return true;
+            }
+        }
+
+        return false;
     }
 
     /// <summary>

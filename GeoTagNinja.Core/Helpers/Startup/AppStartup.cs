@@ -138,9 +138,9 @@ internal static class AppStartup
                 _ => lang
             };
 
-            CultureInfo cultureInfo = CultureInfo.GetCultureInfo(name: HelperVariables.AppLanguage);
+            CultureInfo cultureInfo = LanguageManager.CultureFor(code: HelperVariables.AppLanguage);
 
-            Thread.CurrentThread.CurrentUICulture = new CultureInfo(name: cultureInfo.ToString());
+            Thread.CurrentThread.CurrentUICulture = new CultureInfo(name: cultureInfo.Name);
 
             Log.Info(message: $"AppLanguage is{HelperVariables.AppLanguage}");
         }

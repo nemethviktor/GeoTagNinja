@@ -42,7 +42,7 @@ internal static class ResourceManager
         try
         {
             Thread.CurrentThread.CurrentUICulture =
-                new CultureInfo(name: CultureInfo.GetCultureInfo(name: HelperVariables.AppLanguage).Name);
+                new CultureInfo(name: LanguageManager.CultureFor(code: HelperVariables.AppLanguage).Name);
             resourceValue = resourceManager.GetString(name: resourceKey);
         }
         catch
