@@ -182,7 +182,7 @@ public partial class FrmSettings : Form
                             dataTable: HelperVariables.DtHelperDataApplicationSettings,
                             settingTabPage: parentNameToUse,
                             settingId: cbx.Name
-                        ) ?? HelperVariables.DefaultEnglishString).ToLower().Substring(startIndex: 0, length: 2);
+                        ) ?? HelperVariables.AppLanguage ?? HelperVariables.DefaultEnglishString).ToLower().Substring(startIndex: 0, length: 2);
 
                     native =
                         SessionDataTables.DataGetFirstOrDefaultFromDataTable(

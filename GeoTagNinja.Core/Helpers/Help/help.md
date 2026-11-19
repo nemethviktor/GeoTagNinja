@@ -135,7 +135,7 @@ Open `Settings` > `Settings`. A few worth knowing:
 - **Keep keywords in step with the location**: on by default; see *Tagging photos with a location*.
 - **Leave the modified date untouched** when saving, so the file keeps its date.
 - **After an update, show what has changed**: on by default.
-- Dark Mode, the map layers and the language.
+- Dark Mode, the map layers and the language. Until you choose a language, GeoTagNinja uses your Windows display language if it has been translated well enough, otherwise English.
 - `Import` / `Export` back up your settings, custom rules, favourites, `Edit Data` templates and field history, and Batch Rename presets. Window layout is deliberately left out.
 
 Custom rules let you change how place names are written for a country (for example, to shorten a long country name).

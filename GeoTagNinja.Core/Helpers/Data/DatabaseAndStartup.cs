@@ -239,22 +239,10 @@ internal static class DatabaseAndStartup
             }
         }
 
-        // language -> Add "English" as default if there isn't one defined.
-        string existingSQLVal = ApplicationSettings.DataReadSQLiteSettings(
-            dataTable: HelperVariables.DtHelperDataApplicationSettings,
-            settingTabPage: "tpg_Application",
-            settingId: "cbx_Language");
-        if (existingSQLVal is "" or
-            null)
-        {
-            settingsToWriteTmp.Add(item: new AppSettingContainer
-            {
-                TableName = "settings",
-                SettingTabPage = "tpg_Application",
-                SettingId = "cbx_Language",
-                SettingValue = "English"
-            });
-        }
+        // language -> deliberately no default row. A user who has never chosen one gets the Windows display language
+        // if it is translated well enough (LanguageManager.ResolveDefaultLanguage, applied in
+        // AppStartup.AppStartupReadAppLanguage), else English. Older installs have "English" stored from before this
+        // and keep it, since that can't be told apart from a choice.
 
         // just make sure we don't overwrite existing data with what's supposed to be a "default".
         List<AppSettingContainer> settingsToWrite = (from appSettingContainerTmp in settingsToWriteTmp

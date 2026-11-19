@@ -119,7 +119,12 @@ internal static class AppStartup
         {
             string lang = ApplicationSettings.DataReadSQLiteSettings(
                 dataTable: HelperVariables.DtHelperDataApplicationSettings, settingTabPage: "tpg_Application",
-                settingId: "cbx_Language") ?? "en"; // default to "en".
+                settingId: "cbx_Language");
+            if (string.IsNullOrEmpty(value: lang))
+            {
+                // Never chosen (a new user): follow Windows if we are translated well enough into its language.
+                lang = LanguageManager.ResolveDefaultLanguage();
+            }
 
             Log.Info(message: $"AppLanguage lang is{lang}");
 

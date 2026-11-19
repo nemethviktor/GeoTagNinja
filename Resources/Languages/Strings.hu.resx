@@ -1,0 +1,2009 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<root>
+  <xsd:schema xmlns="" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:msdata="urn:schemas-microsoft-com:xml-msdata" id="root">
+    <xsd:import namespace="http://www.w3.org/XML/1998/namespace" />
+    <xsd:element name="root" msdata:IsDataSet="true">
+      <xsd:complexType>
+        <xsd:choice maxOccurs="unbounded">
+          <xsd:element name="metadata">
+            <xsd:complexType>
+              <xsd:sequence>
+                <xsd:element name="value" type="xsd:string" minOccurs="0" />
+              </xsd:sequence>
+              <xsd:attribute name="name" use="required" type="xsd:string" />
+              <xsd:attribute name="type" type="xsd:string" />
+              <xsd:attribute name="mimetype" type="xsd:string" />
+              <xsd:attribute ref="xml:space" />
+            </xsd:complexType>
+          </xsd:element>
+          <xsd:element name="assembly">
+            <xsd:complexType>
+              <xsd:attribute name="alias" type="xsd:string" />
+              <xsd:attribute name="name" type="xsd:string" />
+            </xsd:complexType>
+          </xsd:element>
+          <xsd:element name="data">
+            <xsd:complexType>
+              <xsd:sequence>
+                <xsd:element name="value" type="xsd:string" minOccurs="0" msdata:Ordinal="1" />
+                <xsd:element name="comment" type="xsd:string" minOccurs="0" msdata:Ordinal="2" />
+              </xsd:sequence>
+              <xsd:attribute name="name" type="xsd:string" use="required" msdata:Ordinal="1" />
+              <xsd:attribute name="type" type="xsd:string" msdata:Ordinal="3" />
+              <xsd:attribute name="mimetype" type="xsd:string" msdata:Ordinal="4" />
+              <xsd:attribute ref="xml:space" />
+            </xsd:complexType>
+          </xsd:element>
+          <xsd:element name="resheader">
+            <xsd:complexType>
+              <xsd:sequence>
+                <xsd:element name="value" type="xsd:string" minOccurs="0" msdata:Ordinal="1" />
+              </xsd:sequence>
+              <xsd:attribute name="name" type="xsd:string" use="required" />
+            </xsd:complexType>
+          </xsd:element>
+        </xsd:choice>
+      </xsd:complexType>
+    </xsd:element>
+  </xsd:schema>
+  <resheader name="resmimetype">
+    <value>text/microsoft-resx</value>
+  </resheader>
+  <resheader name="version">
+    <value>2.0</value>
+  </resheader>
+  <resheader name="reader">
+    <value>System.Resources.ResXResourceReader, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </resheader>
+  <resheader name="writer">
+    <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </resheader>
+  <data name="btn_ApplyAndNext" xml:space="preserve">
+    <value>Alkalmazás &amp;&amp; ugrás a következőre</value>
+  </data>
+  <data name="btn_InsertFromTakenDate" xml:space="preserve">
+    <value>Készítés dátumának használata</value>
+  </data>
+  <data name="btn_PullMostRecentPasteSettings" xml:space="preserve">
+    <value>A „legutóbbi” beillesztési beállítások lekérése</value>
+  </data>
+  <data name="btn_PullMostRecentTrackSyncShift" xml:space="preserve">
+    <value>A „legutóbbi” eltolási beállítások lekérése</value>
+  </data>
+  <data name="btn_RemoveGeoData" xml:space="preserve">
+    <value>GPS- és helyadatok eltávolítása</value>
+  </data>
+  <data name="btn_ResetToDefaults" xml:space="preserve">
+    <value>Alapértelmezések visszaállítása</value>
+  </data>
+  <data name="btn_RestartLater" xml:space="preserve">
+    <value>Újraindítás később</value>
+  </data>
+  <data name="btn_RestartNow" xml:space="preserve">
+    <value>Újraindítás most</value>
+  </data>
+  <data name="btn_SetCurrentValues" xml:space="preserve">
+    <value>Az aktuális értékek beállítása a szerkesztésre kijelölt összes képhez...</value>
+  </data>
+  <data name="ckb_AddXMPSideCar" xml:space="preserve">
+    <value>XMP kísérőfájl hozzáadása/felülírása</value>
+  </data>
+  <data name="ckb_DeSelectAll" xml:space="preserve">
+    <value>Összes kijelölése/kijelölés törlése</value>
+  </data>
+  <data name="ckb_DoNotQueryAPI" xml:space="preserve">
+    <value>NE végezzen fordított geokódolást (csak a koordináták kellenek, a város/állam stb. nem)</value>
+  </data>
+  <data name="ckb_ExportTrackIncludeAltitude" xml:space="preserve">
+    <value>Magassági adatok belefoglalása az exportba</value>
+  </data>
+  <data name="ckb_ImportExport_CityRulesSettings" xml:space="preserve">
+    <value>CityRulesSettings</value>
+  </data>
+  <data name="ckb_IncludePredeterminedCountries" xml:space="preserve">
+    <value>„Előre meghatározott” országok belefoglalása? (lásd a fenti hivatkozást és figyelmeztetést)</value>
+  </data>
+  <data name="ckb_LoadTrackOntoMap" xml:space="preserve">
+    <value>Nyomvonalfájl rávetítése a térképre</value>
+  </data>
+  <data name="ckb_OffsetTime" xml:space="preserve">
+    <value>Időzóna-eltolás</value>
+  </data>
+  <data name="ckb_OverlayGPXForSelectedDatesOnly" xml:space="preserve">
+    <value>Csak a kijelölt fájlok első és utolsó dátuma közé eső dátumokra</value>
+  </data>
+  <data name="ckb_OverwriteOriginal" xml:space="preserve">
+    <value>NE készüljön xxx_original biztonsági másolat</value>
+  </data>
+  <data name="ckb_PopulatedPlacesOnly" xml:space="preserve">
+    <value>Az API-adatok szűrése csak a „lakott helyekre” (fcode=PPL) [nem ajánlott]</value>
+  </data>
+  <data name="ckb_ProcessOriginalFile" xml:space="preserve">
+    <value>Maga a képfájl feldolgozása</value>
+  </data>
+  <data name="ckb_QuestionStopProcessingRows" xml:space="preserve">
+    <value>Leállítja a további sorok feldolgozását?</value>
+  </data>
+  <data name="ckb_RemoveGeoDataRemovesTimeOffset" xml:space="preserve">
+    <value>A „Geoadatok eltávolítása” funkció az időzóna-eltolást is eltávolítja</value>
+  </data>
+  <data name="ckb_ReplaceBlankToponyms" xml:space="preserve">
+    <value>Az üres város-, állam- és helymegnevezés-értékek cseréje erre: </value>
+  </data>
+  <data name="ckb_ResetFileDateToCreated" xml:space="preserve">
+    <value>A képfájl dátumának és idejének visszaállítása a létrehozás dátumára</value>
+  </data>
+  <data name="ckb_ResetMapToZero" xml:space="preserve">
+    <value>Térkép beállítása 0/0-ra, ha nincs geoadat</value>
+  </data>
+  <data name="ckb_StopProcessingRules" xml:space="preserve">
+    <value>A szabályok feldolgozásának leállítása az első ország+cél egyezés után</value>
+  </data>
+  <data name="ckb_UpdateCheckPreRelease" xml:space="preserve">
+    <value>Előzetes [béta] frissítések keresése is?</value>
+  </data>
+  <data name="ckb_UseDarkMode" xml:space="preserve">
+    <value>Sötét mód használata az alkalmazás felületén?</value>
+  </data>
+  <data name="ckb_UseImperialNotMetric" xml:space="preserve">
+    <value>Angolszász mértékegység (láb) használata a magassághoz (a metrikus [méter] helyett)</value>
+  </data>
+  <data name="ckb_UseTimeZone" xml:space="preserve">
+    <value>Ezen időzóna használata:</value>
+  </data>
+  <data name="clh_BlankOutTargetPoint" xml:space="preserve">
+    <value>Kiüresítés?</value>
+  </data>
+  <data name="clh_DataPointConditionType" xml:space="preserve">
+    <value>Ha</value>
+  </data>
+  <data name="clh_DataPointConditionValue" xml:space="preserve">
+    <value>Érték</value>
+  </data>
+  <data name="clh_DataPointName" xml:space="preserve">
+    <value>Mi</value>
+  </data>
+  <data name="clh_ExifTag" xml:space="preserve">
+    <value>Exif (GTN belső) címke</value>
+  </data>
+  <data name="clh_Folder" xml:space="preserve">
+    <value>Mappa</value>
+  </data>
+  <data name="clh_ModifiedValue" xml:space="preserve">
+    <value>Módosított (nem mentett) érték</value>
+  </data>
+  <data name="clh_OriginalValue" xml:space="preserve">
+    <value>Eredeti (mentett) érték</value>
+  </data>
+  <data name="clh_TargetPointName" xml:space="preserve">
+    <value>Akkor</value>
+  </data>
+  <data name="clh_TargetPointNameCustomCityLogic" xml:space="preserve">
+    <value>A várost innen olvassa</value>
+  </data>
+  <data name="clh_TargetPointOutcome" xml:space="preserve">
+    <value>Lesz</value>
+  </data>
+  <data name="clh_TargetPointOutcomeCustom" xml:space="preserve">
+    <value>Egyéni eredmény</value>
+  </data>
+  <data name="cmi_OpenCoordsInAPI" xml:space="preserve">
+    <value>Koordináták megnyitása az API-ban</value>
+  </data>
+  <data name="cmi_RemoveCachedData" xml:space="preserve">
+    <value>Gyorsítótárazott adatok eltávolítása</value>
+  </data>
+  <data name="cmi_ShowHideCols" xml:space="preserve">
+    <value>Oszlopok megjelenítése vagy elrejtése</value>
+  </data>
+  <data name="fbd_StartupFolder" xml:space="preserve">
+    <value>Indítási mappa tallózása</value>
+  </data>
+  <data name="frm_FrmEditFileData" xml:space="preserve">
+    <value>Adatok szerkesztése</value>
+  </data>
+  <data name="frm_FrmImportExportGpx" xml:space="preserve">
+    <value>GPX/JSON-adatok importálása</value>
+  </data>
+  <data name="frm_FrmManageFavourites" xml:space="preserve">
+    <value>Kedvencek kezelése</value>
+  </data>
+  <data name="frm_FrmPasteWhat" xml:space="preserve">
+    <value>Beillesztés… mit?</value>
+  </data>
+  <data name="frm_FrmPickDataFromAPIBox" xml:space="preserve">
+    <value>Helynévértékek kiválasztása</value>
+  </data>
+  <data name="frm_FrmPleaseWaitBox" xml:space="preserve">
+    <value>Kis türelmet, a mappa betöltése folyamatban van.</value>
+  </data>
+  <data name="frm_FrmSettings" xml:space="preserve">
+    <value>Beállítások</value>
+  </data>
+  <data name="gbx_AppSettings" xml:space="preserve">
+    <value>Alkalmazásbeállítások</value>
+  </data>
+  <data name="gbx_CreateDate" xml:space="preserve">
+    <value>Létrehozás dátuma</value>
+  </data>
+  <data name="gbx_Dates" xml:space="preserve">
+    <value>Dátumok</value>
+  </data>
+  <data name="gbx_EditImageList" xml:space="preserve">
+    <value>Szerkesztésre kijelölt képek</value>
+  </data>
+  <data name="gbx_GeoNamesLanguageSettings" xml:space="preserve">
+    <value>GeoNames nyelvi beállítások</value>
+  </data>
+  <data name="gbx_GeoNamesSettings" xml:space="preserve">
+    <value>GeoNames-beállítások</value>
+  </data>
+  <data name="gbx_GetAltitude" xml:space="preserve">
+    <value>Magassági adatok lekérése</value>
+  </data>
+  <data name="gbx_GetToponomy" xml:space="preserve">
+    <value>Helynévadatok lekérése</value>
+  </data>
+  <data name="gbx_GPSData" xml:space="preserve">
+    <value>GPS-adatok</value>
+  </data>
+  <data name="gbx_ImportExportGpxSource" xml:space="preserve">
+    <value>Forrás</value>
+  </data>
+  <data name="gbx_ImportExportGpxTimeSetting" xml:space="preserve">
+    <value>Időbeállítás</value>
+  </data>
+  <data name="gbx_LocationData" xml:space="preserve">
+    <value>Helyadatok</value>
+  </data>
+  <data name="gbx_MapColourMode" xml:space="preserve">
+    <value>Térkép színmódja</value>
+  </data>
+  <data name="gbx_OtherSettings" xml:space="preserve">
+    <value>Egyéb beállítások</value>
+  </data>
+  <data name="gbx_SaveTrackTo" xml:space="preserve">
+    <value>Nyomvonal mentése (beállítások)</value>
+  </data>
+  <data name="gbx_TakenDate" xml:space="preserve">
+    <value>A kép készítésének dátuma</value>
+  </data>
+  <data name="Generic_All" xml:space="preserve">
+    <value>Mind</value>
+  </data>
+  <data name="Generic_Cancel" xml:space="preserve">
+    <value>Mégse</value>
+  </data>
+  <data name="Generic_City" xml:space="preserve">
+    <value>Város</value>
+  </data>
+  <data name="Generic_Close" xml:space="preserve">
+    <value>Bezárás</value>
+  </data>
+  <data name="Generic_Coordinates" xml:space="preserve">
+    <value>Koordináták</value>
+  </data>
+  <data name="Generic_Country" xml:space="preserve">
+    <value>Ország</value>
+  </data>
+  <data name="Generic_CountryCode" xml:space="preserve">
+    <value>Országkód</value>
+  </data>
+  <data name="Generic_CreateDate" xml:space="preserve">
+    <value>Létrehozás dátuma</value>
+  </data>
+  <data name="Generic_Days" xml:space="preserve">
+    <value>Nap</value>
+  </data>
+  <data name="Generic_Decimal" xml:space="preserve">
+    <value>Tizedes</value>
+  </data>
+  <data name="Generic_Delete" xml:space="preserve">
+    <value>Törlés</value>
+  </data>
+  <data name="Generic_DestCoordinates" xml:space="preserve">
+    <value>Célkoordináták</value>
+  </data>
+  <data name="Generic_Export" xml:space="preserve">
+    <value>Exportálás</value>
+  </data>
+  <data name="Generic_ExportTrackTimeStampType" xml:space="preserve">
+    <value>Időbélyeg értéke</value>
+  </data>
+  <data name="Generic_ExposureTime" xml:space="preserve">
+    <value>Záridő</value>
+  </data>
+  <data name="Generic_Favourites" xml:space="preserve">
+    <value>Kedvencek</value>
+  </data>
+  <data name="Generic_Feet" xml:space="preserve">
+    <value>Láb</value>
+  </data>
+  <data name="Generic_Feet_Abbr" xml:space="preserve">
+    <value>ft</value>
+  </data>
+  <data name="Generic_FileModifyDate" xml:space="preserve">
+    <value>Fájl dátuma</value>
+  </data>
+  <data name="Generic_FileName" xml:space="preserve">
+    <value>Fájlnév</value>
+  </data>
+  <data name="Generic_Fnumber" xml:space="preserve">
+    <value>Rekesz</value>
+  </data>
+  <data name="Generic_FocalLength" xml:space="preserve">
+    <value>Gyújtótávolság</value>
+  </data>
+  <data name="Generic_FocalLengthIn35mmFormat" xml:space="preserve">
+    <value>Gyújtótávolság (35 mm)</value>
+  </data>
+  <data name="Generic_ForAllImages" xml:space="preserve">
+    <value>Az összes képhez</value>
+  </data>
+  <data name="Generic_ForThisImage" xml:space="preserve">
+    <value>Ehhez a képhez</value>
+  </data>
+  <data name="Generic_GPSAltitude" xml:space="preserve">
+    <value>Magasság</value>
+  </data>
+  <data name="Generic_GPSAltitudeRef" xml:space="preserve">
+    <value>Magasság-referencia</value>
+  </data>
+  <data name="Generic_GPSDateTime" xml:space="preserve">
+    <value>GPS dátum és idő</value>
+  </data>
+  <data name="Generic_GPSDestLatitude" xml:space="preserve">
+    <value>Cél szélessége</value>
+  </data>
+  <data name="Generic_GPSDestLatitudeRef" xml:space="preserve">
+    <value>Cél szélességi referenciája</value>
+  </data>
+  <data name="Generic_GPSDestLongitude" xml:space="preserve">
+    <value>Cél hosszúsága</value>
+  </data>
+  <data name="Generic_GPSDestLongitudeRef" xml:space="preserve">
+    <value>Cél hosszúsági referenciája</value>
+  </data>
+  <data name="Generic_GPSImgDirection" xml:space="preserve">
+    <value>Kép iránya</value>
+  </data>
+  <data name="Generic_GPSImgDirectionRef" xml:space="preserve">
+    <value>Kép irányának referenciája</value>
+  </data>
+  <data name="Generic_GPSLatitude" xml:space="preserve">
+    <value>Szélesség</value>
+  </data>
+  <data name="Generic_GPSLatitudeRef" xml:space="preserve">
+    <value>Szélességi referencia</value>
+  </data>
+  <data name="Generic_GPSLongitude" xml:space="preserve">
+    <value>Hosszúság</value>
+  </data>
+  <data name="Generic_GPSLongitudeRef" xml:space="preserve">
+    <value>Hosszúsági referencia</value>
+  </data>
+  <data name="Generic_GPSSpeed" xml:space="preserve">
+    <value>Sebesség</value>
+  </data>
+  <data name="Generic_GPSSpeedRef" xml:space="preserve">
+    <value>Sebesség-referencia</value>
+  </data>
+  <data name="Generic_GUID" xml:space="preserve">
+    <value>GUID</value>
+  </data>
+  <data name="Generic_Hours" xml:space="preserve">
+    <value>Óra</value>
+  </data>
+  <data name="Generic_Import" xml:space="preserve">
+    <value>Importálás</value>
+  </data>
+  <data name="Generic_Insert" xml:space="preserve">
+    <value>Beszúrás</value>
+  </data>
+  <data name="Generic_IPTCKeywords" xml:space="preserve">
+    <value>IPTC-kulcsszavak</value>
+  </data>
+  <data name="Generic_ISO" xml:space="preserve">
+    <value>ISO-érzékenység</value>
+  </data>
+  <data name="Generic_LensSpec" xml:space="preserve">
+    <value>Objektív</value>
+  </data>
+  <data name="Generic_Make" xml:space="preserve">
+    <value>Gyártó</value>
+  </data>
+  <data name="Generic_Metres" xml:space="preserve">
+    <value>Méter</value>
+  </data>
+  <data name="Generic_Metres_Abbr" xml:space="preserve">
+    <value>m</value>
+  </data>
+  <data name="Generic_Miles" xml:space="preserve">
+    <value>Mérföld</value>
+  </data>
+  <data name="Generic_Minutes" xml:space="preserve">
+    <value>Perc</value>
+  </data>
+  <data name="Generic_Model" xml:space="preserve">
+    <value>Típus</value>
+  </data>
+  <data name="Generic_No" xml:space="preserve">
+    <value>Nem</value>
+  </data>
+  <data name="Generic_None" xml:space="preserve">
+    <value>Nincs</value>
+  </data>
+  <data name="Generic_OffsetTime" xml:space="preserve">
+    <value>Időzóna-eltolás</value>
+  </data>
+  <data name="Generic_OK" xml:space="preserve">
+    <value>OK</value>
+  </data>
+  <data name="Generic_PleaseWait" xml:space="preserve">
+    <value>Kis türelmet...</value>
+  </data>
+  <data name="Generic_QuestionDontAskAgain" xml:space="preserve">
+    <value>Ne kérdezze újra</value>
+  </data>
+  <data name="Generic_Rating" xml:space="preserve">
+    <value>Értékelés</value>
+  </data>
+  <data name="Generic_Rename" xml:space="preserve">
+    <value>Átnevezés</value>
+  </data>
+  <data name="Generic_Save" xml:space="preserve">
+    <value>A jelenlegi módosítások mentése</value>
+  </data>
+  <data name="Generic_Seconds" xml:space="preserve">
+    <value>mp</value>
+  </data>
+  <data name="Generic_ShowPassword" xml:space="preserve">
+    <value>Jelszó megjelenítése</value>
+  </data>
+  <data name="Generic_ShowUserName" xml:space="preserve">
+    <value>Felhasználónév megjelenítése</value>
+  </data>
+  <data name="Generic_State" xml:space="preserve">
+    <value>Állam/tartomány</value>
+  </data>
+  <data name="Generic_Sublocation" xml:space="preserve">
+    <value>Részletes helyszín</value>
+  </data>
+  <data name="Generic_TakenDate" xml:space="preserve">
+    <value>Készítés dátuma</value>
+  </data>
+  <data name="Generic_TZTime" xml:space="preserve">
+    <value>Időzóna-korrekció:</value>
+  </data>
+  <data name="Generic_UseDST" xml:space="preserve">
+    <value>Nyári időszámítás használata?</value>
+  </data>
+  <data name="Generic_XMLSubjects" xml:space="preserve">
+    <value>XML-tárgyak</value>
+  </data>
+  <data name="Generic_Yes" xml:space="preserve">
+    <value>Igen</value>
+  </data>
+  <data name="lbl_ARCGIS_APIKey" xml:space="preserve">
+    <value>ARCGIS API-kulcs</value>
+  </data>
+  <data name="lbl_CameraTime" xml:space="preserve">
+    <value>A fényképezőgép dátuma/ideje</value>
+  </data>
+  <data name="lbl_CameraTimeNote" xml:space="preserve">
+    <value>Megjegyzés: az időeltolásra csak akkor van szükség, ha a képek időbélyege nincs megfelelően szinkronban a GPS-idővel. Ha nem szükséges, hagyja 0-n.</value>
+  </data>
+  <data name="lbl_CancelPressed" xml:space="preserve">
+    <value>Mégse gomb megnyomva. A mappa feldolgozása leállt, de a már összegyűjtött fájlok feldolgozásra kerülnek.</value>
+  </data>
+  <data name="lbl_ChoiceOfferCount" xml:space="preserve">
+    <value>Ennyi helynévlehetőség megjelenítése</value>
+  </data>
+  <data name="lbl_ChoiceRadius" xml:space="preserve">
+    <value>Ebben a sugárban [km]</value>
+  </data>
+  <data name="lbl_ExportTrackOrderBy" xml:space="preserve">
+    <value>Nyomvonalpontok rendezése:</value>
+  </data>
+  <data name="lbl_ExportTrackTimeStampType" xml:space="preserve">
+    <value>Időbélyeg értéke</value>
+  </data>
+  <data name="lbl_ExportTrackTimeStampTypeNote" xml:space="preserve">
+    <value>Ha a GPSDateTime lehetőséget választja, és a fájl nem rendelkezik ilyen attribútummal, az exportálás sikertelen lesz. 
+Ezzel egyes HEIC-fájlok rendelkeznek, a legtöbb más formátum nem.</value>
+  </data>
+  <data name="lbl_GeoMaxExtSecs" xml:space="preserve">
+    <value>Legnagyobb extrapolációs idő (a készítési időbélyeg és a nyomvonalpont időbélyege közti különbség) másodpercben.</value>
+  </data>
+  <data name="lbl_GeoMaxIntSecs" xml:space="preserve">
+    <value>Legnagyobb interpolációs („útvonalbecslési”) idő másodpercben. A kikapcsoláshoz állítsa 0-ra.</value>
+  </data>
+  <data name="lbl_GeoNames_Pwd" xml:space="preserve">
+    <value>GeoNames-jelszó</value>
+  </data>
+  <data name="lbl_GeoNames_UserName" xml:space="preserve">
+    <value>GeoNames-felhasználónév</value>
+  </data>
+  <data name="lbl_importFromAnotherFolder" xml:space="preserve">
+    <value>&lt;-- Kattintson ide az importálási forrásmappa beállításához</value>
+  </data>
+  <data name="lbl_importOneFile" xml:space="preserve">
+    <value>&lt;-- Kattintson ide az importálási forrásfájl beállításához</value>
+  </data>
+  <data name="lbl_ImportTimeAgainst" xml:space="preserve">
+    <value>A nyomvonalfájlok időbélyegének összehasonlítása ezzel:</value>
+  </data>
+  <data name="lbl_Language" xml:space="preserve">
+    <value>Nyelv</value>
+  </data>
+  <data name="lbl_OffsetTime" xml:space="preserve">
+    <value>Időzóna</value>
+  </data>
+  <data name="lbl_ParseProgress_Normal" xml:space="preserve">
+    <value>Kész</value>
+  </data>
+  <data name="lbl_ParseProgress_Read" xml:space="preserve">
+    <value>Olvasás:</value>
+  </data>
+  <data name="lbl_ParseProgress_Write" xml:space="preserve">
+    <value>Írás:</value>
+  </data>
+  <data name="lbl_ParsingFolders" xml:space="preserve">
+    <value>Fájlok &amp;&amp; mappák feldolgozása, kis türelmet. </value>
+  </data>
+  <data name="lbl_PleaseWaitBoxActionParsing" xml:space="preserve">
+    <value>Adatok feldolgozása:</value>
+  </data>
+  <data name="lbl_PleaseWaitBoxActionPopulatingListView" xml:space="preserve">
+    <value>A fő rács (ListView) feltöltése</value>
+  </data>
+  <data name="lbl_PleaseWaitBoxActionScanning" xml:space="preserve">
+    <value>Fájl vizsgálata:</value>
+  </data>
+  <data name="lbl_PressCancelToStop" xml:space="preserve">
+    <value>A leállításhoz nyomja meg a Mégse gombot.</value>
+  </data>
+  <data name="lbl_QuestionAddToponomy" xml:space="preserve">
+    <value>Szeretne magasság- és helynévértékeket is hozzárendelni?
+Ha a Nemet választja, a szélességi/hosszúsági adatok eltérhetnek a beágyazott helynévadatoktól.
+Ha a „Ne kérdezze újra” lehetőséget választja, az Igen válasznak számít, és ebben a munkamenetben többé nem kérdez rá. Az alaphelyzethez indítsa újra az alkalmazást.</value>
+  </data>
+  <data name="lbl_SaveTrackTo" xml:space="preserve">
+    <value>Kimenet mentése ide</value>
+  </data>
+  <data name="lbl_SelectColsTitle" xml:space="preserve">
+    <value>Oszlopok kiválasztása</value>
+  </data>
+  <data name="lbl_ShiftTrackTimeBy" xml:space="preserve">
+    <value>Nyomvonalfájl idejének eltolása:</value>
+  </data>
+  <data name="gbx_Startup_Folder" xml:space="preserve">
+    <value>Indítási mappa</value>
+  </data>
+  <data name="lbl_TZNote" xml:space="preserve">
+    <value>Megjegyzés: ha a dátum/idő címke nem tartalmaz időzónát, akkor hozzáadható egy (lásd alább), különben a helyi rendszeridő az irányadó.</value>
+  </data>
+  <data name="lbl_TZTime" xml:space="preserve">
+    <value>Időzóna-korrekció:</value>
+  </data>
+  <data name="mbc_Error" xml:space="preserve">
+    <value>Hiba</value>
+  </data>
+  <data name="mbc_Information" xml:space="preserve">
+    <value>Információ</value>
+  </data>
+  <data name="mbc_Question" xml:space="preserve">
+    <value>Kérdés</value>
+  </data>
+  <data name="mbc_Warning" xml:space="preserve">
+    <value>Figyelmeztetés</value>
+  </data>
+  <data name="mbx_DirectoryElementCollection_ErrorParsing" xml:space="preserve">
+    <value>Hiba a mappa DirectoryElement-elemekké történő feldolgozása közben</value>
+  </data>
+  <data name="mbx_FrmEditFileData_ErrorAPIError" xml:space="preserve">
+    <value>Az alkalmazás hibát észlelt az API-val való kommunikáció során. Ha jogosulatlansági (Unauthorised) hibát kapott, kérjük, adja meg a felhasználónevét jelszóként a beállításokban.</value>
+  </data>
+  <data name="mbx_FrmEditFileData_ErrorInvalidSender" xml:space="preserve">
+    <value>Ez hiba lesz. Kérjük, jelentse a GitHubon, és adja meg, hogy a „sender” ez volt: </value>
+  </data>
+  <data name="mbx_FrmEditFileData_InfoDataUpdated" xml:space="preserve">
+    <value>Az adatok frissítve.</value>
+  </data>
+  <data name="mbx_FrmEditFileData_WarningFileDisappeared" xml:space="preserve">
+    <value>Úgy tűnik, a fájlok eltűntek.</value>
+  </data>
+  <data name="mbx_FrmEditFileData_WarningLatLongMustBeNumbers" xml:space="preserve">
+    <value>Itt csak számok szerepelhetnek. Az érték nulla lesz.</value>
+  </data>
+  <data name="mbx_FrmImportExportGpx_AskUserWantsReport" xml:space="preserve">
+    <value>Szeretné megtekinteni az importálási folyamat jelentését?</value>
+  </data>
+  <data name="mbx_FrmImportExportGpx_FileOrFolderDoesntExist" xml:space="preserve">
+    <value>A kiválasztott fájl vagy mappa érvénytelen.</value>
+  </data>
+  <data name="mbx_FrmImportExportGpx_NoFileSelected" xml:space="preserve">
+    <value>Nincs kijelölve importálandó fájl.</value>
+  </data>
+  <data name="mbx_FrmImportExportGpx_TrackContainsNoData" xml:space="preserve">
+    <value>A nyomvonal-átfedés importálása sikertelen – nem található megfelelőnek tűnő adat.</value>
+  </data>
+  <data name="mbx_FrmImportNoStoredShiftValues" xml:space="preserve">
+    <value>Nincsenek tárolt „eltolási” értékek. Az adatok 0-n maradnak.</value>
+  </data>
+  <data name="mbx_FrmMainApp_ErrorCantCreateSQLiteDB" xml:space="preserve">
+    <value>Nem hozható létre az SQLite-adatbázis (kérjük, jelentse a GitHubon): </value>
+  </data>
+  <data name="mbx_FrmMainApp_ErrorCantLoadSQLiteDB" xml:space="preserve">
+    <value>Az adatok betöltése az SQL-ből sikertelen (kérjük, jelentse a GitHubon): </value>
+  </data>
+  <data name="mbx_FrmMainApp_ErrorCantLoadWebView2" xml:space="preserve">
+    <value>Hiba a WebView2 betöltésekor – telepítette?</value>
+  </data>
+  <data name="mbx_FrmMainApp_ErrorCantReadDefaultSQLiteDB" xml:space="preserve">
+    <value>Az alapértékek beolvasása az SQL-ből sikertelen (kérjük, jelentse a GitHubon): </value>
+  </data>
+  <data name="mbx_FrmMainApp_ErrorCantWriteSQLiteDB" xml:space="preserve">
+    <value>Az SQLite-adatbázis létrejött, de nem írható (kérjük, jelentse a GitHubon): </value>
+  </data>
+  <data name="mbx_FrmMainApp_ErrorClearingFileDataQTables" xml:space="preserve">
+    <value>Hiba a filedata-Q táblák törlésekor (kérjük, jelentse a GitHubon): </value>
+  </data>
+  <data name="mbx_FrmMainApp_ErrorDoubleBuffer" xml:space="preserve">
+    <value>DoubleBuffer-hiba (kérjük, jelentse a GitHubon): </value>
+  </data>
+  <data name="mbx_FrmMainApp_ErrorFileGoneMissing" xml:space="preserve">
+    <value>A fájl úgy tűnik, már nem létezik: </value>
+  </data>
+  <data name="mbx_FrmMainApp_ErrorInitializeComponent" xml:space="preserve">
+    <value>Hiba a FrmMainApp.InitializeComponent függvényben (kérjük, jelentse a GitHubon): </value>
+  </data>
+  <data name="mbx_FrmMainApp_ErrorInitializeWebViewEnsureCoreWebView2Async" xml:space="preserve">
+    <value>Hiba a FrmMainApp.InitialiseWebView függvényben (await wbv_MapArea.EnsureCoreWebView2Async(c2wv)) (kérjük, jelentse a GitHubon): </value>
+  </data>
+  <data name="mbx_FrmMainApp_ErrorInitializeWebViewIsWebMessageEnabled" xml:space="preserve">
+    <value>Hiba a FrmMainApp.InitialiseWebView függvényben (IsWebMessageEnabled) (kérjük, jelentse a GitHubon): </value>
+  </data>
+  <data name="mbx_FrmMainApp_ErrorInitializeWebViewNavigateToStringInHTMLFile" xml:space="preserve">
+    <value>Hiba a FrmMainApp.InitialiseWebView függvényben (NavigateToString a HTMLCode fájlban) (kérjük, jelentse a GitHubon): </value>
+  </data>
+  <data name="mbx_FrmMainApp_ErrorInitializeWebViewParseCoordsFromHTMLFile" xml:space="preserve">
+    <value>Hiba a FrmMainApp.InitialiseWebView függvényben (koordináták feldolgozása a HTMLCode fájlból) (kérjük, jelentse a GitHubon): </value>
+  </data>
+  <data name="mbx_FrmMainApp_ErrorInitializeWebViewReadHTMLFile" xml:space="preserve">
+    <value>Hiba a FrmMainApp.InitialiseWebView függvényben (a HTMLCode fájl olvasása) (kérjük, jelentse a GitHubon): </value>
+  </data>
+  <data name="mbx_FrmMainApp_ErrorInitializeWebViewReplaceStringInHTMLFile" xml:space="preserve">
+    <value>Hiba a FrmMainApp.InitialiseWebView függvényben (állandók cseréje a HTMLCode fájlban) (kérjük, jelentse a GitHubon): </value>
+  </data>
+  <data name="mbx_FrmMainApp_ErrorInitializeWebViewWebMessageReceived" xml:space="preserve">
+    <value>Hiba a wbv_MapArea_WebMessageReceived végrehajtása közben (kérjük, jelentse a GitHubon): </value>
+  </data>
+  <data name="mbx_FrmMainApp_ErrorInvalidFolder" xml:space="preserve">
+    <value>A megadott mappa érvénytelennek tűnik. Visszatér a C:\ meghajtóra?</value>
+  </data>
+  <data name="mbx_FrmMainApp_ErrorLanguageFileColumnHeaders" xml:space="preserve">
+    <value>Hiba történt a nyelvi fájl olvasása és az oszlopfejlécek hozzárendelése közben (kérjük, jelentse a GitHubon): </value>
+  </data>
+  <data name="mbx_FrmMainApp_ErrorNavigateMapGoHTMLCode" xml:space="preserve">
+    <value>Hiba a FrmMainApp.NavigateMapGo (string HTMLCode) függvényben (kérjük, jelentse a GitHubon): </value>
+  </data>
+  <data name="mbx_FrmMainApp_ErrorRemoveGeoDataFailed" xml:space="preserve">
+    <value>A geoadatok eltávolítása sikertelen volt, vagy hibát adott vissza.</value>
+  </data>
+  <data name="mbx_FrmMainApp_ErrorResizingColumns" xml:space="preserve">
+    <value>Az oszlopok átméretezése sikertelen (kérjük, jelentse a GitHubon): </value>
+  </data>
+  <data name="mbx_FrmMainApp_ErrorSettingStartupFolder" xml:space="preserve">
+    <value>Az alapértelmezett indítási mappa beállítása sikertelen (kérjük, jelentse a GitHubon): </value>
+  </data>
+  <data name="mbx_FrmMainApp_InfoCachedDataNotRemoved" xml:space="preserve">
+    <value>Nem került eltávolításra adat. Vagy nem jelölt ki érvényes elemeket, vagy a kijelölt elemekhez nem volt gyorsítótárazott adat.</value>
+  </data>
+  <data name="mbx_FrmMainApp_InfoCachedDataRemoved" xml:space="preserve">
+    <value>A kijelölt elemek gyorsítótárazott adatai (ha voltak) eltávolításra kerültek.</value>
+  </data>
+  <data name="mbx_FrmMainApp_InfoFavouriteNameCannotBeBlank" xml:space="preserve">
+    <value>A név nem lehet üres</value>
+  </data>
+  <data name="mbx_FrmMainApp_InfoFavouriteNotValid" xml:space="preserve">
+    <value>A kijelölt mentett elem érvénytelen</value>
+  </data>
+  <data name="mbx_FrmMainApp_InfoFavouriteSaved" xml:space="preserve">
+    <value>A kedvenc sikeresen mentve</value>
+  </data>
+  <data name="mbx_FrmMainApp_NoFavouritesDefined" xml:space="preserve">
+    <value>Nincsenek kedvencei. Adjon hozzá egyet a térkép alatti gombokkal.</value>
+  </data>
+  <data name="mbx_FrmMainApp_QuestionAddDraggedDataPointToFiles" xml:space="preserve">
+    <value>Szeretné hozzárendelni a koordinátákat a kijelölt fájl(ok)hoz?</value>
+  </data>
+  <data name="mbx_FrmMainApp_QuestionDisableFlatMode" xml:space="preserve">
+    <value>A lapos mód be van kapcsolva. Szeretné kikapcsolni?</value>
+  </data>
+  <data name="mbx_FrmMainApp_QuestionNoRowsFromAPI" xml:space="preserve">
+    <value>Az API-lekérdezés nem adott vissza érvényes információt. Szeretné kiüresíteni a helynévértékeket?</value>
+  </data>
+  <data name="mbx_FrmMainApp_QuestionRunImportExportInFlatMode" xml:space="preserve">
+    <value>A nyomvonalak importálása/exportálása lapos módban rossz ötlet, mert a nyomvonalműveletek speciális logikát használnak, amely nem tudja megkülönböztetni a különböző mappákban lévő azonos nevű fájlokat. Biztosan futtatni szeretné?</value>
+  </data>
+  <data name="mbx_FrmMainApp_WarningMultipleImageFilesForXMP" xml:space="preserve">
+    <value>Figyelmeztetés: a következő kísérőfájlok neve több képfájllal is megegyezik – az adatok olvasása hibás lehetett:</value>
+  </data>
+  <data name="mbx_FrmMainApp_WarningNoItemSelected" xml:space="preserve">
+    <value>Nincs kijelölt elem.</value>
+  </data>
+  <data name="mbx_FrmMainApp_WarningTooManyFilesSelected" xml:space="preserve">
+    <value>Pontosan 1 fájlt kell kijelölni.</value>
+  </data>
+  <data name="mbx_FrmPasteWhat_NoDateShiftToPaste" xml:space="preserve">
+    <value>A másolási készletben nincs megadva érték a dátum/idő eltolásához</value>
+  </data>
+  <data name="mbx_FrmSettings_dgv_CustomRules_ColumnCannotBeEmpty" xml:space="preserve">
+    <value>Minden legördülő oszlopnak rendelkeznie kell nem üres értékkel, és a „ha” feltétel értéke sem lehet üres.</value>
+  </data>
+  <data name="mbx_FrmSettings_dgv_CustomRules_CustomOutcomeCannotBeEmpty" xml:space="preserve">
+    <value>Ha az Eredmény oszlopban az „Egyéni” lehetőséget választja, az Egyéni eredmény oszlop nem lehet üres. Ha úgy zárja be a Beállítások ablakot, hogy ez nincs javítva, a sor törlődik.</value>
+  </data>
+  <data name="mbx_FrmSettings_ErrorExportFailed" xml:space="preserve">
+    <value>Az exportálás sikertelen: </value>
+  </data>
+  <data name="mbx_FrmSettings_ErrorImportFailed" xml:space="preserve">
+    <value>Az importálás sikertelen: </value>
+  </data>
+  <data name="mbx_FrmSettings_PleaseRestartApp" xml:space="preserve">
+    <value>A módosítás érvénybe lépéséhez indítsa újra az alkalmazást.</value>
+  </data>
+  <data name="mbx_FrmSettings_QuestionWhatToExport" xml:space="preserve">
+    <value>Válassza ki, mit exportál. Vegye figyelembe, hogy az exportálás az adatbázisban _lévő_, vagyis már mentett adatokat exportálja. Ha függőben lévő módosításai vannak a Beállításokban, lépjen vissza, mentse őket (kattintson az OK gombra a Beállítások ablakban), majd jöjjön vissza ide.</value>
+  </data>
+  <data name="mbx_FrmSettings_QuestionWhatToImport" xml:space="preserve">
+    <value>Válassza ki, mit importál. Vegye figyelembe, hogy az importálás sikeres befejezésekor az adatbázis érintett részei felülíródnak. Ha valami nem sikerül, az adatbázisról biztonsági másolat marad az AppData mappában.</value>
+  </data>
+  <data name="Generic_Done" xml:space="preserve">
+    <value>Kész.</value>
+  </data>
+  <data name="mbx_GenericDoneRestartApp" xml:space="preserve">
+    <value>Kész – valószínűleg újra szeretné indítani az alkalmazást.</value>
+  </data>
+  <data name="mbx_GenericPathLikelyUTF" xml:space="preserve">
+    <value>A fájl elérési útja valószínűleg UTF- (nem szabványos, például ázsiai, cirill stb.) karaktereket tartalmaz, és ez okozhatja a hibát. Győződjön meg róla, hogy engedélyezte a „Béta: Unicode UTF-8 használata a világnyelvi támogatáshoz” funkciót. (lásd a Readme Ismert problémák részét)</value>
+  </data>
+  <data name="mbx_HelperStaticExifNoAPI" xml:space="preserve">
+    <value>Az API nem érhető el – esetleg nincs internetkapcsolat?</value>
+  </data>
+  <data name="mbx_Helper_ErrorAsyncExifToolExecuteAsyncFailed" xml:space="preserve">
+    <value>Az asyncExifTool.ExecuteAsync sikertelen (kérjük, jelentse a GitHubon): </value>
+  </data>
+  <data name="mbx_Helper_ErrorCantReadDefaultSQLiteDB" xml:space="preserve">
+    <value>Az alapértékek beolvasása az SQL-ből sikertelen (kérjük, jelentse a GitHubon): </value>
+  </data>
+  <data name="mbx_Helper_QuestionFileQIsNotEmpty" xml:space="preserve">
+    <value>Egyes adatok módosultak – szeretné menteni? 
+Ha a Nemet választja, az adatok elvesznek</value>
+  </data>
+  <data name="mbx_Helper_WarningExifToolVerAPIResponse" xml:space="preserve">
+    <value>Az ExifToolVerAPIResponse API a következő választ adta: </value>
+  </data>
+  <data name="mbx_Helper_WarningFileDisappeared" xml:space="preserve">
+    <value>Úgy tűnik, a fájlok eltűntek.</value>
+  </data>
+  <data name="mbx_Helper_WarningGeoNamesAPIResponse" xml:space="preserve">
+    <value>A GeoNames API a következő választ adta: </value>
+  </data>
+  <data name="mbx_Helper_WarningGTNVerAPIResponse" xml:space="preserve">
+    <value>A GitHub API a következő választ adta: </value>
+  </data>
+  <data name="mbx_Helper_WarningNoARCGISKey" xml:space="preserve">
+    <value>Az alkalmazás megfelelő működéséhez meg kell adnia egy ArcGIS API-kulcsot a Beállításokban.</value>
+  </data>
+  <data name="mbx_Helper_WarningNothingInWriteQueue" xml:space="preserve">
+    <value>Az írási sor üres.</value>
+  </data>
+  <data name="mbx_Helper_WarningNothingToPaste" xml:space="preserve">
+    <value>Nincs mit beilleszteni.</value>
+  </data>
+  <data name="mbx_Helper_WarningNoWriteSettingEnabled" xml:space="preserve">
+    <value>Letiltotta az eredeti fájl feldolgozását _és_ az XMP kísérőfájlt is, így nincs hová írni.</value>
+  </data>
+  <data name="mbx_Helper_WarningTooManyFilesSelected" xml:space="preserve">
+    <value>Ez csak akkor működik, ha pontosan egy fájl van kijelölve.</value>
+  </data>
+  <data name="mns_File" xml:space="preserve">
+    <value>Fájl</value>
+  </data>
+  <data name="mns_Help" xml:space="preserve">
+    <value>Súgó</value>
+  </data>
+  <data name="mns_Settings" xml:space="preserve">
+    <value>Beállítások</value>
+  </data>
+  <data name="pbx_Browse_Startup_Folder" xml:space="preserve">
+    <value>Indítási mappa tallózása</value>
+  </data>
+  <data name="pbx_imagePreviewCouldNotRetrieve" xml:space="preserve">
+    <value>A képelőnézet nem kérhető le/nem hozható létre</value>
+  </data>
+  <data name="pbx_imagePreviewEmptyText" xml:space="preserve">
+    <value>Nincs megjeleníthető kép</value>
+  </data>
+  <data name="pbx_importFromAnotherFolder" xml:space="preserve">
+    <value>Nyomvonalak mappájának tallózása</value>
+  </data>
+  <data name="pbx_importOneFile" xml:space="preserve">
+    <value>Nyomvonalfájl tallózása</value>
+  </data>
+  <data name="rbt_CreateDateSetToFixedDate" xml:space="preserve">
+    <value>Beállítás rögzített dátumra</value>
+  </data>
+  <data name="rbt_CreateDateTimeShift" xml:space="preserve">
+    <value>Időeltolás</value>
+  </data>
+  <data name="rbt_importFromAnotherFolder" xml:space="preserve">
+    <value>Importálás másik mappából</value>
+  </data>
+  <data name="rbt_importFromCurrentFolder" xml:space="preserve">
+    <value>Importálás az aktuális mappából</value>
+  </data>
+  <data name="rbt_importOneFile" xml:space="preserve">
+    <value>Importálás egy kiválasztott fájlból</value>
+  </data>
+  <data name="rbt_MapColourModeDarkInverse" xml:space="preserve">
+    <value>Sötét (fordított)</value>
+  </data>
+  <data name="rbt_MapColourModeDarkPale" xml:space="preserve">
+    <value>Sötét (halvány)</value>
+  </data>
+  <data name="rbt_MapColourModeNormal" xml:space="preserve">
+    <value>Normál</value>
+  </data>
+  <data name="rbt_PasteCreateDateActual" xml:space="preserve">
+    <value>Tényleges (rögzített értékek)</value>
+  </data>
+  <data name="rbt_PasteCreateDateShift" xml:space="preserve">
+    <value>Időeltolás</value>
+  </data>
+  <data name="rbt_PasteTakenDateActual" xml:space="preserve">
+    <value>Tényleges (rögzített értékek)</value>
+  </data>
+  <data name="rbt_PasteTakenDateShift" xml:space="preserve">
+    <value>Időeltolás</value>
+  </data>
+  <data name="rbt_TakenDateSetToFixedDate" xml:space="preserve">
+    <value>Beállítás rögzített dátumra</value>
+  </data>
+  <data name="rbt_TakenDateTimeShift" xml:space="preserve">
+    <value>Időeltolás</value>
+  </data>
+  <data name="rbt_TryUseGeoNamesLanguage" xml:space="preserve">
+    <value>Ennek a nyelvnek a használata a helynevek lekérésekor:</value>
+  </data>
+  <data name="rbt_UseGeoNamesLocalLanguage" xml:space="preserve">
+    <value>A „helyi nyelv” használata a helynevek lekérésekor</value>
+  </data>
+  <data name="rbx_CustomCityLogicExplanation" xml:space="preserve">
+    <value>Ez egy haladó funkció. Az AdminName1-4 és a ToponymName az API kimeneteire utal, így ha ezt nem érti, valószínűleg ne nyúljon hozzá. 
+Áttekintésért lásd: https://github.com/nemethviktor/GeoTagNinja/issues/38#issuecomment-1356844255 .
+Ezzel a beállítással megadhatja saját országválasztásait, hogy a „Város” értéket egy adott AdminName-ből kapják.</value>
+  </data>
+  <data name="rbx_CustomCityLogicExplanationBold" xml:space="preserve">
+    <value>Vegye figyelembe, hogy az alábbi táblázat módosításai azonnal érvénybe lépnek, az OK/Mégse gomb nincs rájuk hatással. Ha a módosításokkal érintett fájlok adatait még ebben a munkamenetben újra le szeretné kérni, kattintson rájuk jobb gombbal, és válassza a Gyorsítótárazott adatok visszaállítása lehetőséget (vagy egyszerűen indítsa újra az alkalmazást).</value>
+  </data>
+  <data name="rbx_CustomRulesExplanation" xml:space="preserve">
+    <value>Ez egy haladó funkció. Az AdminName1-4 és a ToponymName az API kimeneteire utal, így ha ezt nem érti, valószínűleg ne nyúljon hozzá. 
+Vonatkozik az „Előre meghatározott országok” jelölőnégyzetre (lent): erről itt olvashat: https://github.com/nemethviktor/GeoTagNinja/issues/38#issuecomment-1356844255 + nézze meg a másik lapot is – ha kikapcsolja ezt a beállítást, kiüresíti azokat az országkód-cellákat, amelyek kívül esnek az adott csoportosításon, de a sorokat nem törli.
+Minden oszlop kötelező, kivéve az „Egyéni” oszlopot, de ha az Eredményt „Egyéni”-re állítja, és az „Egyéni” oszlopot üresen hagyja, a sor figyelmen kívül marad. Az adatok nem kis- és nagybetű érzékenyek. Minden adatponthoz (pl. város, állam) az utolsó sor felülírja az előzőeket. Röviden: legyen észszerű. Minél több sort ad hozzá, annál lassabb lesz.
+Példa: a londoni (Egyesült Királyság) alapértelmezett API-visszatérés gyenge, mert ebben a régióban az adminName2 = „Greater London”, és ezért elvetésre kerül (a városok általában a „ToponymName”-ből származnak). -&gt; állítsa be: „mi” = „adminName2”, „ha” = „egyenlő”, „Feltétel értéke” = „Greater London”, „akkor” = „Város”, „lesz” = „adminName2”. Ismételje meg az egészet egy 2. sorban, de „akkor” = „Sub_Loction” és „lesz” = „ToponymName”.</value>
+  </data>
+  <data name="rbx_CustomRulesExplanationBold" xml:space="preserve">
+    <value>Vegye figyelembe, hogy az alábbi táblázat módosításai azonnal érvénybe lépnek, az OK/Mégse gomb nincs rájuk hatással. Ha a módosításokkal érintett fájlok adatait még ebben a munkamenetben újra le szeretné kérni, kattintson rájuk jobb gombbal, és válassza a Gyorsítótárazott adatok visszaállítása lehetőséget (vagy egyszerűen indítsa újra az alkalmazást).</value>
+  </data>
+  <data name="rbx_Register_ArcGIS" xml:space="preserve">
+    <value>A térképkereső funkció használatához ArcGIS API-kulcsra van szüksége. 
+Az ArcGIS 2024 júniusától megváltoztatta a regisztrációs folyamatát. Regisztráljon [itt](https://location.arcgis.com/sign-up/)
+Most már meg kell adnia egy portál-URL-t. Bármit beírhat.
+Görgessen/lépjen a `Developer credential creator` részhez
+Majd `New Item`
+Majd `Developer Credentials`
+Válassza az `API Key` lehetőséget (nem az OAuth-ot)
+Állítsa a lejárati dátumot a lehető legtávolabbi jövőre (1 év)
+Hagyja üresen a `Referrers` mezőt
+A következő oldalon válassza a `Geocoding (not stored)` lehetőséget
+A következő oldalon hagyja ki az `Item Access` lépést
+A következő oldalon adjon meg bármilyen címet
+Végül kattintson a `Generate the API key and go to item details page. I am ready to copy and save the key.` gombra.
+Mentse az API-kulcsot, amikor erre kéri a rendszer. Ha ekkor nem teszi meg, újat kell generálnia.</value>
+  </data>
+  <data name="rbx_Register_GeoNames" xml:space="preserve">
+    <value>A fordított geokódolás/keresés funkcióhoz (szélesség/hosszúság --&gt; ország/város/...) GeoNames-fiókra van szüksége. Itt szerezhet egyet: http://www.geonames.org/login, majd engedélyezze a „Free Web Services” hozzáférést itt: https://www.geonames.org/manageaccount</value>
+  </data>
+  <data name="tcr_EditData" xml:space="preserve">
+    <value>Adatok szerkesztése</value>
+  </data>
+  <data name="tmi_File" xml:space="preserve">
+    <value>Fájl</value>
+  </data>
+  <data name="tmi_File_CopyGeoData" xml:space="preserve">
+    <value>Az összes geoadat másolása</value>
+  </data>
+  <data name="frm_BatchRename" xml:space="preserve">
+    <value>Kötegelt átnevezés</value>
+  </data>
+  <data name="frm_BatchRename_Preview" xml:space="preserve">
+    <value>Kötegelt átnevezés – előnézet</value>
+  </data>
+  <data name="gbx_BatchRename_Presets" xml:space="preserve">
+    <value>Előbeállítások</value>
+  </data>
+  <data name="gbx_BatchRename_Destination" xml:space="preserve">
+    <value>Célmappa</value>
+  </data>
+  <data name="gbx_BatchRename_Names" xml:space="preserve">
+    <value>Új fájlnevek</value>
+  </data>
+  <data name="gbx_BatchRename_Options" xml:space="preserve">
+    <value>Beállítások</value>
+  </data>
+  <data name="gbx_BatchRename_Preview" xml:space="preserve">
+    <value>Előnézet</value>
+  </data>
+  <data name="lbl_BatchRename_Preset" xml:space="preserve">
+    <value>Előbeállítás</value>
+  </data>
+  <data name="lbl_BatchRename_Modified" xml:space="preserve">
+    <value>(Módosítva)</value>
+  </data>
+  <data name="btn_BatchRename_Save" xml:space="preserve">
+    <value>Mentés...</value>
+  </data>
+  <data name="btn_BatchRename_Delete" xml:space="preserve">
+    <value>Törlés</value>
+  </data>
+  <data name="rbt_BatchRename_SameFolder" xml:space="preserve">
+    <value>Átnevezés ugyanabban a mappában</value>
+  </data>
+  <data name="rbt_BatchRename_MoveToFolder" xml:space="preserve">
+    <value>Áthelyezés másik mappába</value>
+  </data>
+  <data name="rbt_BatchRename_CopyToFolder" xml:space="preserve">
+    <value>Másolás másik mappába</value>
+  </data>
+  <data name="btn_BatchRename_Browse" xml:space="preserve">
+    <value>Tallózás...</value>
+  </data>
+  <data name="lbl_BatchRename_Compatibility" xml:space="preserve">
+    <value>Kompatibilitás</value>
+  </data>
+  <data name="ckb_BatchRename_Windows" xml:space="preserve">
+    <value>Windows</value>
+  </data>
+  <data name="ckb_BatchRename_Mac" xml:space="preserve">
+    <value>Mac</value>
+  </data>
+  <data name="ckb_BatchRename_Unix" xml:space="preserve">
+    <value>Unix</value>
+  </data>
+  <data name="lbl_BatchRename_CurrentFilename" xml:space="preserve">
+    <value>Jelenlegi fájlnév</value>
+  </data>
+  <data name="lbl_BatchRename_NewFilename" xml:space="preserve">
+    <value>Új fájlnév</value>
+  </data>
+  <data name="lbl_BatchRename_Note" xml:space="preserve">
+    <value>Megjegyzés</value>
+  </data>
+  <data name="lbl_BatchRename_Unchanged" xml:space="preserve">
+    <value>Változatlan</value>
+  </data>
+  <data name="btn_BatchRename_Rename" xml:space="preserve">
+    <value>Átnevezés</value>
+  </data>
+  <data name="btn_BatchRename_PreviewAll" xml:space="preserve">
+    <value>Előnézet</value>
+  </data>
+  <data name="lbl_BatchRename_Find" xml:space="preserve">
+    <value>Keresés</value>
+  </data>
+  <data name="lbl_BatchRename_ReplaceWith" xml:space="preserve">
+    <value>Csere erre</value>
+  </data>
+  <data name="ckb_BatchRename_IgnoreCase" xml:space="preserve">
+    <value>Kis- és nagybetű figyelmen kívül hagyása</value>
+  </data>
+  <data name="ckb_BatchRename_ReplaceAll" xml:space="preserve">
+    <value>Összes cseréje</value>
+  </data>
+  <data name="ckb_BatchRename_UseRegex" xml:space="preserve">
+    <value>Reguláris kifejezés használata</value>
+  </data>
+  <data name="lbl_BatchRename_Kind_Text" xml:space="preserve">
+    <value>Szöveg</value>
+  </data>
+  <data name="lbl_BatchRename_Kind_NewExtension" xml:space="preserve">
+    <value>Új kiterjesztés</value>
+  </data>
+  <data name="lbl_BatchRename_Kind_CurrentFilename" xml:space="preserve">
+    <value>Jelenlegi fájlnév</value>
+  </data>
+  <data name="lbl_BatchRename_Kind_PreservedFilename" xml:space="preserve">
+    <value>Megőrzött fájlnév</value>
+  </data>
+  <data name="lbl_BatchRename_Kind_SequenceNumber" xml:space="preserve">
+    <value>Sorszám</value>
+  </data>
+  <data name="lbl_BatchRename_Kind_SequenceLetter" xml:space="preserve">
+    <value>Sorbetű</value>
+  </data>
+  <data name="lbl_BatchRename_Kind_DateTime" xml:space="preserve">
+    <value>Dátum és idő</value>
+  </data>
+  <data name="lbl_BatchRename_Kind_Metadata" xml:space="preserve">
+    <value>Metaadat</value>
+  </data>
+  <data name="lbl_BatchRename_Kind_FolderName" xml:space="preserve">
+    <value>Mappanév</value>
+  </data>
+  <data name="lbl_BatchRename_Kind_StringSubstitution" xml:space="preserve">
+    <value>Szövegcsere</value>
+  </data>
+  <data name="lbl_BatchRename_Case_Original" xml:space="preserve">
+    <value>Eredeti írásmód</value>
+  </data>
+  <data name="lbl_BatchRename_Case_Lower" xml:space="preserve">
+    <value>Kisbetűs</value>
+  </data>
+  <data name="lbl_BatchRename_Case_Upper" xml:space="preserve">
+    <value>Nagybetűs</value>
+  </data>
+  <data name="lbl_BatchRename_Part_NameAndExtension" xml:space="preserve">
+    <value>Név + kiterjesztés</value>
+  </data>
+  <data name="lbl_BatchRename_Part_Name" xml:space="preserve">
+    <value>Név</value>
+  </data>
+  <data name="lbl_BatchRename_Part_Extension" xml:space="preserve">
+    <value>Kiterjesztés</value>
+  </data>
+  <data name="lbl_BatchRename_Part_NumberSuffix" xml:space="preserve">
+    <value>Számutótag</value>
+  </data>
+  <data name="lbl_BatchRename_DateSource_DateTaken" xml:space="preserve">
+    <value>Készítés dátuma</value>
+  </data>
+  <data name="lbl_BatchRename_DateSource_DateCreated" xml:space="preserve">
+    <value>Létrehozás dátuma</value>
+  </data>
+  <data name="lbl_BatchRename_DateSource_FileModified" xml:space="preserve">
+    <value>Fájl módosításának dátuma</value>
+  </data>
+  <data name="lbl_BatchRename_DateSource_FileCreated" xml:space="preserve">
+    <value>Fájl létrehozásának dátuma</value>
+  </data>
+  <data name="lbl_BatchRename_DateSource_Today" xml:space="preserve">
+    <value>Ma</value>
+  </data>
+  <data name="lbl_BatchRename_DateSource_Yesterday" xml:space="preserve">
+    <value>Tegnap</value>
+  </data>
+  <data name="lbl_BatchRename_Digits_1" xml:space="preserve">
+    <value>Egy számjegy</value>
+  </data>
+  <data name="lbl_BatchRename_Digits_2" xml:space="preserve">
+    <value>Két számjegy</value>
+  </data>
+  <data name="lbl_BatchRename_Digits_3" xml:space="preserve">
+    <value>Három számjegy</value>
+  </data>
+  <data name="lbl_BatchRename_Digits_4" xml:space="preserve">
+    <value>Négy számjegy</value>
+  </data>
+  <data name="lbl_BatchRename_Digits_5" xml:space="preserve">
+    <value>Öt számjegy</value>
+  </data>
+  <data name="lbl_BatchRename_Digits_6" xml:space="preserve">
+    <value>Hat számjegy</value>
+  </data>
+  <data name="lbl_BatchRename_SubstituteSource_OriginalFilename" xml:space="preserve">
+    <value>Eredeti fájlnév</value>
+  </data>
+  <data name="lbl_BatchRename_SubstituteSource_PreservedFilename" xml:space="preserve">
+    <value>Megőrzött fájlnév</value>
+  </data>
+  <data name="lbl_BatchRename_Field_Country" xml:space="preserve">
+    <value>Ország</value>
+  </data>
+  <data name="lbl_BatchRename_Field_CountryCode" xml:space="preserve">
+    <value>Országkód</value>
+  </data>
+  <data name="lbl_BatchRename_Field_State" xml:space="preserve">
+    <value>Állam/tartomány</value>
+  </data>
+  <data name="lbl_BatchRename_Field_City" xml:space="preserve">
+    <value>Város</value>
+  </data>
+  <data name="lbl_BatchRename_Field_Sublocation" xml:space="preserve">
+    <value>Részletes helyszín</value>
+  </data>
+  <data name="lbl_BatchRename_Field_Make" xml:space="preserve">
+    <value>Fényképezőgép gyártója</value>
+  </data>
+  <data name="lbl_BatchRename_Field_Model" xml:space="preserve">
+    <value>Fényképezőgép típusa</value>
+  </data>
+  <data name="lbl_BatchRename_Field_LensSpec" xml:space="preserve">
+    <value>Objektív</value>
+  </data>
+  <data name="lbl_BatchRename_Field_Rating" xml:space="preserve">
+    <value>Értékelés</value>
+  </data>
+  <data name="lbl_BatchRename_Field_ExposureTime" xml:space="preserve">
+    <value>Záridő</value>
+  </data>
+  <data name="lbl_BatchRename_Field_Fnumber" xml:space="preserve">
+    <value>Rekesz (F-szám)</value>
+  </data>
+  <data name="lbl_BatchRename_Field_FocalLength" xml:space="preserve">
+    <value>Gyújtótávolság</value>
+  </data>
+  <data name="lbl_BatchRename_Field_ISO" xml:space="preserve">
+    <value>ISO</value>
+  </data>
+  <data name="lbl_BatchRename_Field_Artist" xml:space="preserve">
+    <value>Előadó</value>
+  </data>
+  <data name="lbl_BatchRename_Field_Byline" xml:space="preserve">
+    <value>Alkotó (Byline)</value>
+  </data>
+  <data name="lbl_BatchRename_Field_Copyright" xml:space="preserve">
+    <value>Szerzői jog</value>
+  </data>
+  <data name="lbl_BatchRename_Field_Credit" xml:space="preserve">
+    <value>Forrásmegjelölés</value>
+  </data>
+  <data name="lbl_BatchRename_Field_Source" xml:space="preserve">
+    <value>Forrás</value>
+  </data>
+  <data name="lbl_BatchRename_Field_ObjectName" xml:space="preserve">
+    <value>Cím (objektumnév)</value>
+  </data>
+  <data name="lbl_BatchRename_Field_Headline" xml:space="preserve">
+    <value>Főcím</value>
+  </data>
+  <data name="lbl_BatchRename_Field_Category" xml:space="preserve">
+    <value>Kategória</value>
+  </data>
+  <data name="mbx_BatchRename_OneFile" xml:space="preserve">
+    <value>Egy fájl kerül feldolgozásra</value>
+  </data>
+  <data name="mbx_BatchRename_ManyFiles" xml:space="preserve">
+    <value>{0} fájl kerül feldolgozásra</value>
+  </data>
+  <data name="mbx_BatchRename_SomeBlocked" xml:space="preserve">
+    <value>{1} fájlból {0} nem nevezhető át: lásd az Előnézetet</value>
+  </data>
+  <data name="mbx_BatchRename_PresetNamePrompt" xml:space="preserve">
+    <value>Az előbeállítás neve:</value>
+  </data>
+  <data name="mbx_BatchRename_PresetUnreadable" xml:space="preserve">
+    <value>A(z) „{0}” előbeállítás nem olvasható.</value>
+  </data>
+  <data name="mbx_BatchRename_PresetReplace" xml:space="preserve">
+    <value>Már létezik „{0}” nevű előbeállítás. Lecseréli?</value>
+  </data>
+  <data name="mbx_BatchRename_PresetSaveFailed" xml:space="preserve">
+    <value>Az előbeállítás nem menthető.</value>
+  </data>
+  <data name="mbx_BatchRename_PresetDelete" xml:space="preserve">
+    <value>Törli a(z) „{0}” előbeállítást?</value>
+  </data>
+  <data name="mbx_BatchRename_Preflight" xml:space="preserve">
+    <value>Semmi sem lett átnevezve. Ezeket előbb rendezni kell:
+
+{0}</value>
+  </data>
+  <data name="mbx_BatchRename_MoreProblems" xml:space="preserve">
+    <value>... és még {0} (az Előnézet mindet felsorolja)</value>
+  </data>
+  <data name="mbx_BatchRename_SelectFiles" xml:space="preserve">
+    <value>Először jelölje ki az átnevezendő fájlokat.</value>
+  </data>
+  <data name="mbx_BatchRename_NothingRenamed" xml:space="preserve">
+    <value>Semmi sem lett átnevezve (a már elvégzett lépések vissza lettek állítva).
+
+{0}</value>
+  </data>
+  <data name="mbx_BatchRename_StepFailed" xml:space="preserve">
+    <value>{0}
+
+A eddig elvégzett lépések mind vissza lettek állítva, így egyetlen fájlhoz sem nyúltunk.
+
+Folytatja a(z) {1} nélkül (és minden olyan fájl nélkül, amely az ő nevét kapta volna)?
+Igen: a többi átnevezése.  Nem: leállítás; minden fájl változatlan marad.</value>
+  </data>
+  <data name="mbx_BatchRename_NothingLeft" xml:space="preserve">
+    <value>Nincs több átnevezendő fájl.</value>
+  </data>
+  <data name="mbx_BatchRename_DoneSkipped" xml:space="preserve">
+    <value>{0} fájl feldolgozva. Változatlanul maradtak:
+{1}</value>
+  </data>
+  <data name="mbx_BatchRename_AndMore" xml:space="preserve">
+    <value>... és még {0}</value>
+  </data>
+  <data name="mbx_BatchRename_Problem_NoDestination" xml:space="preserve">
+    <value>Nincs célmappa kiválasztva</value>
+  </data>
+  <data name="mbx_BatchRename_Problem_EmptyName" xml:space="preserve">
+    <value>Az új név üres</value>
+  </data>
+  <data name="mbx_BatchRename_Problem_Reserved" xml:space="preserve">
+    <value>A(z) „{0}” a Windowsban foglalt név</value>
+  </data>
+  <data name="mbx_BatchRename_Problem_NameTooLong" xml:space="preserve">
+    <value>Az új név túl hosszú</value>
+  </data>
+  <data name="mbx_BatchRename_Problem_PathTooLong" xml:space="preserve">
+    <value>Az új elérési út túl hosszú</value>
+  </data>
+  <data name="mbx_BatchRename_Problem_NoDate" xml:space="preserve">
+    <value>Nincs felhasználható {0}</value>
+  </data>
+  <data name="mbx_BatchRename_Problem_BadRegex" xml:space="preserve">
+    <value>A reguláris kifejezés érvénytelen</value>
+  </data>
+  <data name="mbx_BatchRename_Problem_RegexTimeout" xml:space="preserve">
+    <value>A reguláris kifejezés végrehajtása túl sokáig tart</value>
+  </data>
+  <data name="mbx_BatchRename_Problem_NameClaimed" xml:space="preserve">
+    <value>Egy másik fájl megkapja (vagy már birtokolja) ezt a nevet</value>
+  </data>
+  <data name="mbx_BatchRename_Problem_FileExists" xml:space="preserve">
+    <value>Már létezik ilyen nevű fájl</value>
+  </data>
+  <data name="mbx_BatchRename_Problem_SidecarExists" xml:space="preserve">
+    <value>Már létezik ilyen nevű XMP kísérőfájl</value>
+  </data>
+  <data name="mbx_BatchRename_Problem_Gone" xml:space="preserve">
+    <value>A fájl már nincs ott</value>
+  </data>
+  <data name="mbx_BatchRename_Problem_BeingSaved" xml:space="preserve">
+    <value>A fájlt éppen menti a GeoTagNinja</value>
+  </data>
+  <data name="mbx_BatchRename_Problem_InUse" xml:space="preserve">
+    <value>A fájlt egy másik program használja</value>
+  </data>
+  <data name="mbx_BatchRename_Problem_FolderNotWritable" xml:space="preserve">
+    <value>Nem lehet írni a(z) „{0}” mappába</value>
+  </data>
+  <data name="mbx_BatchRename_Problem_NoSpace" xml:space="preserve">
+    <value>Nincs elég hely itt: {0}: {1} MB szükséges, {2} MB szabad</value>
+  </data>
+  <data name="mbx_BatchRename_Problem_Unfixed" xml:space="preserve">
+    <value>A köteg problémákat tartalmaz, amelyeket előbb ki kell javítani.</value>
+  </data>
+  <data name="tmi_File_BatchRename" xml:space="preserve">
+    <value>Kötegelt átnevezés...</value>
+  </data>
+  <data name="cmi_BatchRename" xml:space="preserve">
+    <value>Kötegelt átnevezés...</value>
+  </data>
+  <data name="tmi_File_EditFiles" xml:space="preserve">
+    <value>Fájlok szerkesztése...</value>
+  </data>
+  <data name="tmi_File_FlatMode" xml:space="preserve">
+    <value>Lapos mód (almappák feldolgozása)</value>
+  </data>
+  <data name="tmi_File_ImportExportGPX" xml:space="preserve">
+    <value>GPX/JSON-nyomvonalfájlok importálása/exportálása...</value>
+  </data>
+  <data name="tmi_File_PasteGeoData" xml:space="preserve">
+    <value>Az összes geoadat beillesztése...</value>
+  </data>
+  <data name="tmi_File_Quit" xml:space="preserve">
+    <value>Kilépés</value>
+  </data>
+  <data name="tmi_File_SaveAll" xml:space="preserve">
+    <value>Összes mentése</value>
+  </data>
+  <data name="tmi_Help" xml:space="preserve">
+    <value>Súgó</value>
+  </data>
+  <data name="tmi_Help_About" xml:space="preserve">
+    <value>Névjegy...</value>
+  </data>
+  <data name="tmi_Help_Help" xml:space="preserve">
+    <value>Súgó</value>
+  </data>
+  <data name="tmi_Help_BugReport" xml:space="preserve">
+    <value>Hibajelentés beküldése (GitHub)</value>
+  </data>
+  <data name="tmi_Help_FeedbackFeatureRequest" xml:space="preserve">
+    <value>Funkciókérés beküldése (GitHub)</value>
+  </data>
+  <data name="tmi_Settings" xml:space="preserve">
+    <value>Beállítások</value>
+  </data>
+  <data name="tmi_Settings_Favourites" xml:space="preserve">
+    <value>Kedvencek kezelése</value>
+  </data>
+  <data name="tmi_Settings_Settings" xml:space="preserve">
+    <value>Beállítások</value>
+  </data>
+  <data name="tpg_Application" xml:space="preserve">
+    <value>Alkalmazás</value>
+  </data>
+  <data name="tpg_CustomCityLogic" xml:space="preserve">
+    <value>Egyéni városhozzárendelési logika</value>
+  </data>
+  <data name="tpg_CustomRules" xml:space="preserve">
+    <value>Egyéni szabályok</value>
+  </data>
+  <data name="tpg_DateTime" xml:space="preserve">
+    <value>Dátum és idő</value>
+  </data>
+  <data name="tpg_Exif" xml:space="preserve">
+    <value>Exif</value>
+  </data>
+  <data name="tpg_FileOptions" xml:space="preserve">
+    <value>Fájlbeállítások</value>
+  </data>
+  <data name="tpg_GeoNames" xml:space="preserve">
+    <value>GeoNames-beállítások</value>
+  </data>
+  <data name="tpg_ImportExport_Export" xml:space="preserve">
+    <value>Nyomvonalak exportálása</value>
+  </data>
+  <data name="tpg_ImportExport_Import" xml:space="preserve">
+    <value>Nyomvonalak importálása</value>
+  </data>
+  <data name="tpg_Location" xml:space="preserve">
+    <value>Hely</value>
+  </data>
+  <data name="tpg_Map" xml:space="preserve">
+    <value>Térkép</value>
+  </data>
+  <data name="tsb_BugReport" xml:space="preserve">
+    <value>Hibajelentés beküldése (GitHub-fiók szükséges)</value>
+  </data>
+  <data name="tsb_EditFile" xml:space="preserve">
+    <value>Fájl szerkesztése</value>
+  </data>
+  <data name="tsb_FeedbackFeatureRequest" xml:space="preserve">
+    <value>Funkciókérés beküldése (GitHub-fiók szükséges)</value>
+  </data>
+  <data name="tsb_GetAllFromWeb" xml:space="preserve">
+    <value>Helynév- és magassági adatok lekérése az összes kijelölt fájlhoz</value>
+  </data>
+  <data name="tsb_ImportGPX" xml:space="preserve">
+    <value>GPX/JSON-nyomvonalfájlok importálása</value>
+  </data>
+  <data name="tsb_ExportGPX" xml:space="preserve">
+    <value>Nyomvonalfájl exportálása (GPX/KML)</value>
+  </data>
+  <data name="tsb_OneFolderUp" xml:space="preserve">
+    <value>Szülőmappa</value>
+  </data>
+  <data name="tsb_Refresh_lvwFileList" xml:space="preserve">
+    <value>Fájllista frissítése</value>
+  </data>
+  <data name="tsb_RemoveGeoData" xml:space="preserve">
+    <value>Az összes helyadat eltávolítása</value>
+  </data>
+  <data name="tsb_SaveFiles" xml:space="preserve">
+    <value>Fájlok mentése</value>
+  </data>
+  <data name="tsr_FolderControl" xml:space="preserve">
+    <value>Mappavezérlő</value>
+  </data>
+  <data name="tsr_MainAppToolStrip" xml:space="preserve">
+    <value>Fő</value>
+  </data>
+  <data name="ttp_GPSDataPaste" xml:space="preserve">
+    <value>A CTRL+V megnyomásával beillesztheti az érvényes tizedes számpárt a szélesség/hosszúság helyőrzőibe. 
+A vágólapon csak egy tizedes számpárnak szabad lennie, lehetőleg „invariáns” (angol) formátumban, vagyis egész.tizedespont,szóköz egész.tizedespont, például 12.345, 56.897
+Ezzel együtt a kód _képes_ más elrendezéseket is értelmezni. Ha a vágólapon a fentiektől eltérő is van, a művelet sikertelen lesz (nem történik semmi.)</value>
+  </data>
+  <data name="btn_NavigateMapGo" xml:space="preserve">
+    <value>Megjelenítés a térképen</value>
+  </data>
+  <data name="btn_loctToFile" xml:space="preserve">
+    <value>Mentés fájl(ok)ba</value>
+  </data>
+  <data name="btn_loctToFileDestination" xml:space="preserve">
+    <value>Mentés a célhelyre</value>
+  </data>
+  <data name="btn_SaveFavourite" xml:space="preserve">
+    <value>Fénykép mentése</value>
+  </data>
+  <data name="btn_LoadFavourite" xml:space="preserve">
+    <value>Alkalmazás a fényképekre</value>
+  </data>
+  <data name="btn_ManageFavourites" xml:space="preserve">
+    <value>Kezelés...</value>
+  </data>
+  <data name="ttp_LoadFavourite" xml:space="preserve">
+    <value>A kijelölt fájl(ok) metaadatainak betöltése a Kedvencekből</value>
+  </data>
+  <data name="ttp_loctToFile" xml:space="preserve">
+    <value>Az aktuális koordináta mentése a kijelölt fájl(ok)ba</value>
+  </data>
+  <data name="ttp_loctToFileDestination" xml:space="preserve">
+    <value>Az aktuális koordináta mentése a kijelölt fájlok célhelyére</value>
+  </data>
+  <data name="ttp_ManageFavourites" xml:space="preserve">
+    <value>Kedvencek kezelése</value>
+  </data>
+  <data name="ttp_NavigateMapGo" xml:space="preserve">
+    <value>A kijelölt fájlok koordinátáinak megjelenítése a térképen</value>
+  </data>
+  <data name="ttp_OffsetTime" xml:space="preserve">
+    <value>Az időzónák megnyitáskor üresek maradnak, függetlenül a tárolt értéktől. Az időzónának nincs Exif-címkéje, csak „eltolás” (offset) van, például „+01:00”. Mivel sem az időzónára, sem a nyári időszámításra nincs utalás, nem állapítható meg, hogy a „+01:00” valójában mondjuk BST vagy CET volt-e, ahol az egyik nyári időszámítás, a másik nem. Állítsa be kézzel, vagy kérje le a webről – a koordináták és a létrehozás dátumának kombinációja egyértelműen megadja a programnak a tényleges időzóna-értéket. A csak olvasható szövegmezőben lévő érték kerül mentésre a fájlba.</value>
+  </data>
+  <data name="ttp_SaveFavourite" xml:space="preserve">
+    <value>A jelenleg kijelölt fájl metaadatainak mentése (vagy felülírása) a Kedvencekbe</value>
+  </data>
+  <data name="ckb_ImportExport_ApplicationSettings" xml:space="preserve">
+    <value>ApplicationSettings</value>
+  </data>
+  <data name="ckb_ImportExport_CustomRulesSettings" xml:space="preserve">
+    <value>CustomRulesSettings</value>
+  </data>
+  <data name="ckb_ImportExport_Favourites" xml:space="preserve">
+    <value>Kedvencek</value>
+  </data>
+  <data name="ckb_ImportExport_EditTemplates" xml:space="preserve">
+    <value>Adatszerkesztési sablonok</value>
+  </data>
+  <data name="ckb_ImportExport_FieldHistory" xml:space="preserve">
+    <value>Adatszerkesztési mezőelőzmények</value>
+  </data>
+  <data name="ckb_ImportExport_BatchRenamePresets" xml:space="preserve">
+    <value>Kötegelt átnevezési előbeállítások</value>
+  </data>
+  <data name="Generic_TimeZoneID" xml:space="preserve">
+    <value>Időzónaazonosító</value>
+  </data>
+  <data name="Generic_Distance" xml:space="preserve">
+    <value>Távolság</value>
+  </data>
+  <data name="cmi_OpenCoordsInBrowser" xml:space="preserve">
+    <value>Koordináták megnyitása böngészőben/térképen</value>
+  </data>
+  <data name="cmi_OpenCoordsInBrowserBing" xml:space="preserve">
+    <value>Bing</value>
+  </data>
+  <data name="cmi_OpenCoordsInBrowserGeoNamesMaps" xml:space="preserve">
+    <value>GeoNames (térképek)</value>
+  </data>
+  <data name="cmi_OpenCoordsInBrowserGoogle" xml:space="preserve">
+    <value>Google Térkép</value>
+  </data>
+  <data name="cmi_OpenCoordsInBrowserWeGoHere" xml:space="preserve">
+    <value>WeGo/Here</value>
+  </data>
+  <data name="cmi_OpenCoordsInBrowserOpenStreetMap" xml:space="preserve">
+    <value>OpenStreetMap</value>
+  </data>
+  <data name="tmi_File_ImportFavouritesFromGeoSetter" xml:space="preserve">
+    <value>Kedvencek importálása a Geosetterből...</value>
+  </data>
+  <data name="ofd_Settings_GetDatabaseFileToImport_SelectDatabaseFile" xml:space="preserve">
+    <value>Adatbázisfájl kiválasztása</value>
+  </data>
+  <data name="ofd_tmi_File_ImportFavouritesFromGeoSetter_SelectFile" xml:space="preserve">
+    <value>A GS kedvencek exportfájljának kiválasztása</value>
+  </data>
+  <data name="mbx_FrmMainApp_ErrorImportGeoSetterFavourites" xml:space="preserve">
+    <value>Hiba a GeoSetter-kedvencek importálása közben.</value>
+  </data>
+  <data name="mbx_FrmMainApp_InfoImportGeoSetterFavouritesDone" xml:space="preserve">
+    <value>A GeoSetter-kedvencek importálva. Importált elemek: </value>
+  </data>
+  <data name="ckb_ShowThumbnails" xml:space="preserve">
+    <value>Indexképek megjelenítése a rács helyett</value>
+  </data>
+  <data name="ttp_ShowThumbnails" xml:space="preserve">
+    <value>Ez nagyon jelentős teljesítménycsökkenést okoz (a méréseim szerint akár 7-szeres), ezért nem ajánlott.</value>
+  </data>
+  <data name="Generic_SaveDefaults" xml:space="preserve">
+    <value>Alapértelmezések mentése</value>
+  </data>
+  <data name="ttp_FrmImportExport_SaveDefaults" xml:space="preserve">
+    <value>Bizonyos alapértelmezéseket ment. Jelenleg: az importálás forráshelye, az időzóna- és nyári időszámítás-beállítások, a legnagyobb inter-/extrapoláció.</value>
+  </data>
+  <data name="mbx_FrmImportExportGpx_ExportCompleted" xml:space="preserve">
+    <value>A GPX-fájl exportálása befejeződött</value>
+  </data>
+  <data name="Generic_GPSDOP" xml:space="preserve">
+    <value>Pontossági hígulás (DOP)</value>
+  </data>
+  <data name="Generic_GPSHPositioningError" xml:space="preserve">
+    <value>GPS vízszintes helymeghatározási hiba</value>
+  </data>
+  <data name="cmi_PasteGeoData" xml:space="preserve">
+    <value>Az összes geoadat beillesztése...</value>
+  </data>
+  <data name="cmi_CopyGeoData" xml:space="preserve">
+    <value>Az összes geoadat másolása</value>
+  </data>
+  <data name="tmi_Edit_SelectAll" xml:space="preserve">
+    <value>Összes kijelölése</value>
+  </data>
+  <data name="cmi_SelectAll" xml:space="preserve">
+    <value>Összes kijelölése</value>
+  </data>
+  <data name="tmi_Edit_SelectNone" xml:space="preserve">
+    <value>Kijelölés törlése</value>
+  </data>
+  <data name="cmi_SelectNone" xml:space="preserve">
+    <value>Kijelölés törlése</value>
+  </data>
+  <data name="tmi_Edit_InvertSelection" xml:space="preserve">
+    <value>Kijelölés megfordítása</value>
+  </data>
+  <data name="cmi_InvertSelection" xml:space="preserve">
+    <value>Kijelölés megfordítása</value>
+  </data>
+  <data name="tmi_Edit" xml:space="preserve">
+    <value>Szerkesztés</value>
+  </data>
+  <data name="tmi_Help_Donate" xml:space="preserve">
+    <value>Adományozás</value>
+  </data>
+  <data name="tmi_Help_Donate_PayPal" xml:space="preserve">
+    <value>PayPal...</value>
+  </data>
+  <data name="tmi_Help_Donate_Revolut" xml:space="preserve">
+    <value>Revolut (QR)...</value>
+  </data>
+  <data name="tmi_Help_Donate_BuyMeCoffee" xml:space="preserve">
+    <value>BuyMeACoffee...</value>
+  </data>
+  <data name="tmi_File_SaveSelected" xml:space="preserve">
+    <value>A kijelöltek mentése</value>
+  </data>
+  <data name="rbt_SetStartup_Folder" xml:space="preserve">
+    <value>Indítási mappa beállítása</value>
+  </data>
+  <data name="rbt_UseLastUsedFolder" xml:space="preserve">
+    <value>Utoljára használt mappa használata</value>
+  </data>
+  <data name="tmi_Debug" xml:space="preserve">
+    <value>Hibakeresés</value>
+  </data>
+  <data name="tmi_Debug_CustomiseWinformControls" xml:space="preserve">
+    <value>Winform-vezérlők testreszabása</value>
+  </data>
+  <data name="frm_FrmCustomiseFormControls" xml:space="preserve">
+    <value>Winform-vezérlők testreszabása</value>
+  </data>
+  <data name="ckb_RetainMapZoom" xml:space="preserve">
+    <value>A térkép nagyítási szintjének megtartása kattintások között</value>
+  </data>
+  <data name="mbx_FrmMainApp_ErrorNonHydratedItemsPresent" xml:space="preserve">
+    <value>A kijelölés olyan fájlokat tartalmaz, amelyek még nincsenek feldolgozva, és nem töltődnek be szerkesztésre.</value>
+  </data>
+  <data name="Generic_Ready" xml:space="preserve">
+    <value>Kész</value>
+  </data>
+  <data name="Generic_ReadingMetadataProgress" xml:space="preserve">
+    <value>Metaadatok olvasása: {0} / {1}</value>
+  </data>
+  <data name="Generic_Total" xml:space="preserve">
+    <value>Összesen</value>
+  </data>
+  <data name="Generic_GeoData" xml:space="preserve">
+    <value>Geoadat</value>
+  </data>
+  <data name="Generic_Files" xml:space="preserve">
+    <value>Fájlok</value>
+  </data>
+  <data name="mbx_FrmMainApp_WarningDataParseStillInProgress" xml:space="preserve">
+    <value>Az adatok feldolgozása még folyamatban van – amíg ez be nem fejeződik, a művelet nem hajtható végre. Próbálja újra egy kis idő múlva.</value>
+  </data>
+  <data name="Generic_IsEmpty" xml:space="preserve">
+    <value>Üres</value>
+  </data>
+  <data name="Generic_IsNotEmpty" xml:space="preserve">
+    <value>Nem üres</value>
+  </data>
+  <data name="Generic_Is" xml:space="preserve">
+    <value>Egyenlő</value>
+  </data>
+  <data name="Generic_IsNot" xml:space="preserve">
+    <value>Nem egyenlő</value>
+  </data>
+  <data name="Generic_Contains" xml:space="preserve">
+    <value>Tartalmazza</value>
+  </data>
+  <data name="Generic_DoesntContain" xml:space="preserve">
+    <value>Nem tartalmazza</value>
+  </data>
+  <data name="Generic_ClearAll" xml:space="preserve">
+    <value>Összes törlése</value>
+  </data>
+  <data name="ckb_AlwaysRecenterMap" xml:space="preserve">
+    <value>Mindig újraközpontosítsa a térképet?</value>
+  </data>
+  <data name="ckb_DoNotDownloadAltitude" xml:space="preserve">
+    <value>Ne töltsön le magassági értékeket az API-ból</value>
+  </data>
+  <data name="ckb_PreserveFileModifiedDate" xml:space="preserve">
+    <value>Mentéskor ne módosítsa a fájl módosítási dátumát</value>
+  </data>
+  <data name="tmi_View" xml:space="preserve">
+    <value>Nézet</value>
+  </data>
+  <data name="tmi_View_Details" xml:space="preserve">
+    <value>Részletek</value>
+  </data>
+  <data name="tmi_View_Thumbnails" xml:space="preserve">
+    <value>Indexképek</value>
+  </data>
+  <data name="tmi_View_ThumbnailSize" xml:space="preserve">
+    <value>Indexkép mérete</value>
+  </data>
+  <data name="tmi_View_ThumbnailSize_Small" xml:space="preserve">
+    <value>Kicsi</value>
+  </data>
+  <data name="tmi_View_ThumbnailSize_Medium" xml:space="preserve">
+    <value>Közepes</value>
+  </data>
+  <data name="tmi_View_ThumbnailSize_Large" xml:space="preserve">
+    <value>Nagy</value>
+  </data>
+  <data name="tmi_View_ThumbnailSize_ExtraLarge" xml:space="preserve">
+    <value>Extra nagy</value>
+  </data>
+  <data name="tmi_View_ThumbnailSize_Smaller" xml:space="preserve">
+    <value>Kisebb indexképek</value>
+  </data>
+  <data name="tmi_View_ThumbnailSize_Larger" xml:space="preserve">
+    <value>Nagyobb indexképek</value>
+  </data>
+  <data name="ttp_ThumbnailSize" xml:space="preserve">
+    <value>Indexkép mérete</value>
+  </data>
+  <data name="tmi_View_SortBy" xml:space="preserve">
+    <value>Rendezés</value>
+  </data>
+  <data name="tmi_View_SortBy_Ascending" xml:space="preserve">
+    <value>Növekvő</value>
+  </data>
+  <data name="tmi_View_SortBy_Descending" xml:space="preserve">
+    <value>Csökkenő</value>
+  </data>
+  <data name="gbx_AllFavourites" xml:space="preserve">
+    <value>Összes kedvenc</value>
+  </data>
+  <data name="gbx_FavouriteDetails" xml:space="preserve">
+    <value>Részletek</value>
+  </data>
+  <data name="gbx_FavouriteAdditionalInfo" xml:space="preserve">
+    <value>További információk</value>
+  </data>
+  <data name="lbl_FavouriteName" xml:space="preserve">
+    <value>Név:</value>
+  </data>
+  <data name="lbl_FavouriteCoordinates" xml:space="preserve">
+    <value>Koordináták:</value>
+  </data>
+  <data name="lbl_FavouriteRadius" xml:space="preserve">
+    <value>Sugár [m]:</value>
+  </data>
+  <data name="ckb_FavouriteAutoAssign" xml:space="preserve">
+    <value>Automatikus hozzárendelés</value>
+  </data>
+  <data name="ckb_FavouriteSnap" xml:space="preserve">
+    <value>Képek igazítása a kedvenc pozíciójához</value>
+  </data>
+  <data name="lbl_FavouriteTimeZone" xml:space="preserve">
+    <value>Időzóna:</value>
+  </data>
+  <data name="lbl_FavouriteKeywords" xml:space="preserve">
+    <value>Kulcsszavak:</value>
+  </data>
+  <data name="btn_FavouriteGetFromWeb" xml:space="preserve">
+    <value>Lekérés a webről</value>
+  </data>
+  <data name="btn_FavouriteClearAll" xml:space="preserve">
+    <value>Az összes érték törlése</value>
+  </data>
+  <data name="btn_FavouriteAccept" xml:space="preserve">
+    <value>Elfogadás</value>
+  </data>
+  <data name="btn_FavouriteDiscard" xml:space="preserve">
+    <value>Elvetés</value>
+  </data>
+  <data name="btn_FavouriteAddKeyword" xml:space="preserve">
+    <value>Hozzáadás</value>
+  </data>
+  <data name="btn_FavouriteRemoveKeyword" xml:space="preserve">
+    <value>Eltávolítás</value>
+  </data>
+  <data name="lbl_FavouritesCount" xml:space="preserve">
+    <value>{0} elem ({1} kijelölve)</value>
+  </data>
+  <data name="tsd_GroupBy" xml:space="preserve">
+    <value>Csoportosítás</value>
+  </data>
+  <data name="tmi_GroupByCountryCode" xml:space="preserve">
+    <value>Országkód</value>
+  </data>
+  <data name="tmi_GroupByCountry" xml:space="preserve">
+    <value>Ország</value>
+  </data>
+  <data name="tmi_GroupByState" xml:space="preserve">
+    <value>Állam/tartomány</value>
+  </data>
+  <data name="tmi_GroupByCity" xml:space="preserve">
+    <value>Város</value>
+  </data>
+  <data name="tmi_GroupByCoordinates" xml:space="preserve">
+    <value>Koordináták</value>
+  </data>
+  <data name="tmi_GroupByNone" xml:space="preserve">
+    <value>Nincs csoportosítás</value>
+  </data>
+  <data name="tmi_GroupByBlank" xml:space="preserve">
+    <value>(nincs)</value>
+  </data>
+  <data name="tsb_Duplicate" xml:space="preserve">
+    <value>Kettőzés</value>
+  </data>
+  <data name="tsb_Delete" xml:space="preserve">
+    <value>Törlés</value>
+  </data>
+  <data name="tsb_AddFromSelection" xml:space="preserve">
+    <value>Hozzáadás a kijelölt fényképből</value>
+  </data>
+  <data name="mbx_FrmManageFavourites_WarningNameTaken" xml:space="preserve">
+    <value>Egy másik kedvenc már ezt a nevet viseli.</value>
+  </data>
+  <data name="mbx_FrmManageFavourites_WarningAltitudeInvalid" xml:space="preserve">
+    <value>A magasságnak számnak kell lennie.</value>
+  </data>
+  <data name="mbx_FrmManageFavourites_WarningNoCoordinates" xml:space="preserve">
+    <value>Nincsenek felhasználható koordináták. Válasszon egy olyan fényképet, amelynek van pozíciója.</value>
+  </data>
+  <data name="mbx_FrmManageFavourites_QuestionAcceptChanges" xml:space="preserve">
+    <value>Elfogadja a kedvenc módosításait?</value>
+  </data>
+  <data name="mbx_FrmManageFavourites_QuestionDiscardAll" xml:space="preserve">
+    <value>Bezárja a kedvencek módosításainak mentése nélkül?</value>
+  </data>
+  <data name="mbx_FrmManageFavourites_InfoWebNothingFound" xml:space="preserve">
+    <value>A webszolgáltatásnak nincs adata erről a pozícióról.</value>
+  </data>
+  <data name="tpg_Keywords" xml:space="preserve">
+    <value>Kategóriák/kulcsszavak</value>
+  </data>
+  <data name="tpg_SourceDescription" xml:space="preserve">
+    <value>Forrás/leírás</value>
+  </data>
+  <data name="tpg_Contact" xml:space="preserve">
+    <value>Kapcsolat</value>
+  </data>
+  <data name="lbl_SectionSource" xml:space="preserve">
+    <value>Forrás</value>
+  </data>
+  <data name="lbl_SectionDescription" xml:space="preserve">
+    <value>Leírás</value>
+  </data>
+  <data name="lbl_Category" xml:space="preserve">
+    <value>Kategória</value>
+  </data>
+  <data name="lbl_SupplementalCategories" xml:space="preserve">
+    <value>Kiegészítő kategóriák</value>
+  </data>
+  <data name="lbl_IPTCKeywords" xml:space="preserve">
+    <value>Kulcsszavak</value>
+  </data>
+  <data name="lbl_Artist" xml:space="preserve">
+    <value>Előadó</value>
+  </data>
+  <data name="lbl_CaptionWriter" xml:space="preserve">
+    <value>Képaláírás szerzője</value>
+  </data>
+  <data name="lbl_Source" xml:space="preserve">
+    <value>Forrás</value>
+  </data>
+  <data name="lbl_Credit" xml:space="preserve">
+    <value>Forrásmegjelölés</value>
+  </data>
+  <data name="lbl_SourceURL" xml:space="preserve">
+    <value>URL</value>
+  </data>
+  <data name="lbl_Copyright" xml:space="preserve">
+    <value>Szerzői jog</value>
+  </data>
+  <data name="lbl_ObjectName" xml:space="preserve">
+    <value>Objektumnév</value>
+  </data>
+  <data name="lbl_Headline" xml:space="preserve">
+    <value>Főcím</value>
+  </data>
+  <data name="lbl_Caption" xml:space="preserve">
+    <value>Képaláírás</value>
+  </data>
+  <data name="lbl_SpecialInstructions" xml:space="preserve">
+    <value>Különleges utasítások</value>
+  </data>
+  <data name="lbl_Byline" xml:space="preserve">
+    <value>Alkotó (Byline)</value>
+  </data>
+  <data name="lbl_BylineTitle" xml:space="preserve">
+    <value>Alkotó beosztása</value>
+  </data>
+  <data name="lbl_CreatorAddress" xml:space="preserve">
+    <value>Cím</value>
+  </data>
+  <data name="lbl_CreatorCity" xml:space="preserve">
+    <value>Város</value>
+  </data>
+  <data name="lbl_CreatorPostalCode" xml:space="preserve">
+    <value>Irányítószám</value>
+  </data>
+  <data name="lbl_CreatorRegion" xml:space="preserve">
+    <value>Állam/tartomány</value>
+  </data>
+  <data name="lbl_CreatorCountry" xml:space="preserve">
+    <value>Ország</value>
+  </data>
+  <data name="lbl_CreatorPhone" xml:space="preserve">
+    <value>Telefon</value>
+  </data>
+  <data name="lbl_CreatorEmail" xml:space="preserve">
+    <value>E-mail</value>
+  </data>
+  <data name="lbl_CreatorURL" xml:space="preserve">
+    <value>URL</value>
+  </data>
+  <data name="tmi_FieldMenu_InsertFrom" xml:space="preserve">
+    <value>Beszúrás innen</value>
+  </data>
+  <data name="tmi_FieldMenu_CopyTo" xml:space="preserve">
+    <value>Másolás ide</value>
+  </data>
+  <data name="tmi_FieldMenu_CopySelectionToCategories" xml:space="preserve">
+    <value>A kijelölés másolása a kategóriákba</value>
+  </data>
+  <data name="tmi_FieldMenu_CopySelectionToKeywords" xml:space="preserve">
+    <value>A kijelölés másolása a kulcsszavakba</value>
+  </data>
+  <data name="tmi_FieldMenu_MostRecentlyUsed" xml:space="preserve">
+    <value>Legutóbb használt elemek</value>
+  </data>
+  <data name="tmi_FieldMenu_ForgetRemembered" xml:space="preserve">
+    <value>Megjegyzett elem elfelejtése</value>
+  </data>
+  <data name="lbl_ContactPrefix" xml:space="preserve">
+    <value>Kapcsolat</value>
+  </data>
+  <data name="btn_LoadFromTemplate" xml:space="preserve">
+    <value>Betöltés sablonból...</value>
+  </data>
+  <data name="btn_LoadFromImage" xml:space="preserve">
+    <value>Betöltés képből...</value>
+  </data>
+  <data name="btn_SaveAsTemplate" xml:space="preserve">
+    <value>Mentés sablonként...</value>
+  </data>
+  <data name="lbl_TemplateName" xml:space="preserve">
+    <value>Sablon:</value>
+  </data>
+  <data name="lbl_TemplateInclude" xml:space="preserve">
+    <value>Ezek használata:</value>
+  </data>
+  <data name="btn_TemplateDelete" xml:space="preserve">
+    <value>Törlés</value>
+  </data>
+  <data name="chk_TemplateGroup_Country" xml:space="preserve">
+    <value>Ország</value>
+  </data>
+  <data name="chk_TemplateGroup_State" xml:space="preserve">
+    <value>Állam/tartomány</value>
+  </data>
+  <data name="chk_TemplateGroup_City" xml:space="preserve">
+    <value>Város</value>
+  </data>
+  <data name="chk_TemplateGroup_Sublocation" xml:space="preserve">
+    <value>Részletes helyszín</value>
+  </data>
+  <data name="chk_TemplateGroup_Position" xml:space="preserve">
+    <value>GPS-pozíció</value>
+  </data>
+  <data name="chk_TemplateGroup_Altitude" xml:space="preserve">
+    <value>Magasság</value>
+  </data>
+  <data name="chk_TemplateGroup_Direction" xml:space="preserve">
+    <value>Kép iránya</value>
+  </data>
+  <data name="chk_TemplateGroup_Destination" xml:space="preserve">
+    <value>Cél</value>
+  </data>
+  <data name="chk_TemplateGroup_TakenDate" xml:space="preserve">
+    <value>Készítés dátuma</value>
+  </data>
+  <data name="chk_TemplateGroup_CreateDate" xml:space="preserve">
+    <value>Létrehozás dátuma</value>
+  </data>
+  <data name="chk_TemplateGroup_OffsetTime" xml:space="preserve">
+    <value>Időzóna-eltolás</value>
+  </data>
+  <data name="mbx_FrmEditTemplateDialog_QuestionDeleteTemplate" xml:space="preserve">
+    <value>Törli a(z) „{0}” sablont?</value>
+  </data>
+  <data name="mbx_FrmEditTemplateDialog_QuestionOverwriteTemplate" xml:space="preserve">
+    <value>Már létezik „{0}” nevű sablon. Lecseréli?</value>
+  </data>
+  <data name="mbx_FrmEditFileData_ErrorTemplateNotSaved" xml:space="preserve">
+    <value>A sablon nem menthető.</value>
+  </data>
+  <data name="mbx_FrmEditFileData_InfoImageHasNothingToLoad" xml:space="preserve">
+    <value>Ebben a fájlban nincs semmi, amit ez az űrlap be tudna tölteni.</value>
+  </data>
+  <data name="lbl_Sexagesimal" xml:space="preserve">
+    <value>Szexagezimális</value>
+  </data>
+  <data name="lbl_ImageDirection" xml:space="preserve">
+    <value>Kép iránya [°]:</value>
+  </data>
+  <data name="lbl_DestLatitude" xml:space="preserve">
+    <value>Cél szélessége:</value>
+  </data>
+  <data name="lbl_DestLongitude" xml:space="preserve">
+    <value>Cél hosszúsága:</value>
+  </data>
+  <data name="btn_GetAltitudeFromWeb" xml:space="preserve">
+    <value>Lekérés a webről</value>
+  </data>
+  <data name="mbx_FrmEditFileData_InfoCoordinatesNeededForAltitude" xml:space="preserve">
+    <value>Előbb adjon meg szélességet és hosszúságot.</value>
+  </data>
+  <data name="mbx_FrmEditFileData_WarningNoAltitudeFromWeb" xml:space="preserve">
+    <value>A webszolgáltatásnak nincs magassági adata erről a pozícióról.</value>
+  </data>
+  <data name="ckb_SyncGeoKeywords" xml:space="preserve">
+    <value>A kulcsszavak igazítása a helyhez (helynevek és geo: kulcsszavak)</value>
+  </data>
+  <data name="ckb_ShowChangelogAfterUpdate" xml:space="preserve">
+    <value>Frissítés után mutassa meg, mi változott</value>
+  </data>
+  <data name="mbx_Helper_InfoRemoveGeoDataKeywordsRemain" xml:space="preserve">
+    <value>A helyadatok eltávolításra kerültek, de a kulcsszavakhoz nem nyúltunk: a bennük lévő helynevek és „geo:” kulcsszavak változatlanul maradnak. Ha azt szeretné, hogy kövessék a helyváltozásokat, kapcsolja be a Beállításokban a „A kulcsszavak igazítása a helyhez” lehetőséget.</value>
+  </data>
+  <data name="tmi_View_FolderTree" xml:space="preserve">
+    <value>Mappafa</value>
+  </data>
+  <data name="lbl_FolderTree_Title" xml:space="preserve">
+    <value>Mappák</value>
+  </data>
+  <data name="tsb_FolderTree_Favourites" xml:space="preserve">
+    <value>Kedvenc mappák</value>
+  </data>
+  <data name="tmi_FolderTree_AddCurrent" xml:space="preserve">
+    <value>Az aktuális mappa hozzáadása a kedvencekhez</value>
+  </data>
+  <data name="tmi_FolderTree_RemoveCurrent" xml:space="preserve">
+    <value>Az aktuális mappa eltávolítása a kedvencek közül</value>
+  </data>
+  <data name="tmi_FolderTree_NoFavourites" xml:space="preserve">
+    <value>(még nincsenek kedvenc mappák)</value>
+  </data>
+  <data name="tsb_FolderTree_Refresh" xml:space="preserve">
+    <value>A mappafa frissítése</value>
+  </data>
+  <data name="tsb_FolderTree_Hide" xml:space="preserve">
+    <value>A mappafa elrejtése (Ctrl+B)</value>
+  </data>
+  <data name="cmi_FolderTree_AddThis" xml:space="preserve">
+    <value>Hozzáadás a kedvencekhez</value>
+  </data>
+  <data name="cmi_FolderTree_RemoveThis" xml:space="preserve">
+    <value>Eltávolítás a kedvencek közül</value>
+  </data>
+  <data name="tsb_Donate" xml:space="preserve">
+    <value>BuyMeACoffee (adományozás, böngészőben nyílik meg)</value>
+  </data>
+</root>

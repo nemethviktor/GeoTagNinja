@@ -169,6 +169,8 @@ There is currently no preset release cycle. I don't expect one to happen in a sy
 
 The project is now available for translation via [Weblate](https://hosted.weblate.org/engage/geotagninja/) - any translations and new additions (new languages) will sync to the project and be included in future builds.
 
+A new user starts in their Windows display language if GeoTagNinja has been translated well enough into it (at least 80% of the text), otherwise in English; the choice in `Settings` always wins. Translations for the most widely spoken languages are kept in step with the English text, except those that Weblate translators are actively working on, which are left to them.
+
 As for code updates, I'm generally happy for anyone competent to add pull requests but I don't always sync the commits as they come with GitHub until there is an actual release - it's therefore possible that my local commits are lightyears away from the public ones. If you'd like to do a pull request, drop a message/open a ticket first please and we can sync the details.
 
 ### Translation Progress
