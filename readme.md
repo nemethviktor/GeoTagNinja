@@ -65,7 +65,7 @@ There is a "short" (15 mins) demo on [YouTube](https://youtu.be/ulP1ZG7mH-I) if 
 - Optionally leave a file's modified date untouched when saving (`Settings`), so a photo keeps showing when it was taken rather than when its location was added
 - Built-in Help (`F1`): getting started, every main feature and a keyboard-shortcut list, opening at the right topic from each dialog
 - Export and import Settings and Custom Rules
-- Translatable via Weblate; currently available in several languages (see [Translation Progress](#translation-progress))
+- Translatable via Weblate; available in about 25 languages, the machine-made ones awaiting a human check (see [Translations](#translations,-contributions-&-pull-requests) and [Translation Progress](#translation-progress))
 - Automatic ExifTool updates and in-app update checks; the update prompt shows what has changed since your version, and after an update the new entries are shown once (switch off in Settings)
 
 ### Upcoming Features & Changes:
@@ -167,9 +167,14 @@ There is currently no preset release cycle. I don't expect one to happen in a sy
 
 ## Translations, Contributions & Pull Requests
 
-The project is now available for translation via [Weblate](https://hosted.weblate.org/engage/geotagninja/) - any translations and new additions (new languages) will sync to the project and be included in future builds.
+GeoTagNinja is translated via [Weblate](https://hosted.weblate.org/engage/geotagninja/). Anything you translate or correct there syncs to the project and is included in future builds, and a new language you add on Weblate will appear in the app once it has been translated.
 
-A new user starts in their Windows display language if GeoTagNinja has been translated well enough into it (at least 80% of the text), otherwise in English; the choice in `Settings` always wins. Translations for the most widely spoken languages are kept in step with the English text, except those that Weblate translators are actively working on, which are left to them.
+**How the translations are made.** Before this was set up, most of the non-English translations were incomplete and often very rough, and I can't write or check most of these languages myself. So for roughly the 30 most widely spoken languages (plus a few I've been asked for) every string that nobody has translated yet has been filled in with an LLM-made first draft, and new or changed English text gets the same treatment. Those drafts are **a starting point, not a finished translation**: they are checked mechanically (placeholders such as `{0}`, line breaks, `&&`) but not for wording. Please do check them, and correct anything that reads oddly, uses the wrong term or is plain wrong.
+
+- **A translation that a person has written is never overwritten.** The drafts only fill gaps. If a Weblate translator has chosen a rendering (for example, translating a brand name that I would have left alone), it stays, unless the English text behind it changes.
+- **Not on the list?** Languages outside the most widely spoken ones are left to Weblate; add yours there and it will show up in the app.
+- **Which language you get.** A new user starts in their Windows display language if the app is at least 80% translated into it, otherwise in English. The choice in `Settings` always wins, and nothing is stored until you make one.
+- Arabic, Persian and Urdu are translated, but the windows are not (yet) mirrored for right-to-left reading.
 
 As for code updates, I'm generally happy for anyone competent to add pull requests but I don't always sync the commits as they come with GitHub until there is an actual release - it's therefore possible that my local commits are lightyears away from the public ones. If you'd like to do a pull request, drop a message/open a ticket first please and we can sync the details.
 
