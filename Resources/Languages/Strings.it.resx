@@ -1,0 +1,2009 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<root>
+  <xsd:schema xmlns="" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:msdata="urn:schemas-microsoft-com:xml-msdata" id="root">
+    <xsd:import namespace="http://www.w3.org/XML/1998/namespace" />
+    <xsd:element name="root" msdata:IsDataSet="true">
+      <xsd:complexType>
+        <xsd:choice maxOccurs="unbounded">
+          <xsd:element name="metadata">
+            <xsd:complexType>
+              <xsd:sequence>
+                <xsd:element name="value" type="xsd:string" minOccurs="0" />
+              </xsd:sequence>
+              <xsd:attribute name="name" use="required" type="xsd:string" />
+              <xsd:attribute name="type" type="xsd:string" />
+              <xsd:attribute name="mimetype" type="xsd:string" />
+              <xsd:attribute ref="xml:space" />
+            </xsd:complexType>
+          </xsd:element>
+          <xsd:element name="assembly">
+            <xsd:complexType>
+              <xsd:attribute name="alias" type="xsd:string" />
+              <xsd:attribute name="name" type="xsd:string" />
+            </xsd:complexType>
+          </xsd:element>
+          <xsd:element name="data">
+            <xsd:complexType>
+              <xsd:sequence>
+                <xsd:element name="value" type="xsd:string" minOccurs="0" msdata:Ordinal="1" />
+                <xsd:element name="comment" type="xsd:string" minOccurs="0" msdata:Ordinal="2" />
+              </xsd:sequence>
+              <xsd:attribute name="name" type="xsd:string" use="required" msdata:Ordinal="1" />
+              <xsd:attribute name="type" type="xsd:string" msdata:Ordinal="3" />
+              <xsd:attribute name="mimetype" type="xsd:string" msdata:Ordinal="4" />
+              <xsd:attribute ref="xml:space" />
+            </xsd:complexType>
+          </xsd:element>
+          <xsd:element name="resheader">
+            <xsd:complexType>
+              <xsd:sequence>
+                <xsd:element name="value" type="xsd:string" minOccurs="0" msdata:Ordinal="1" />
+              </xsd:sequence>
+              <xsd:attribute name="name" type="xsd:string" use="required" />
+            </xsd:complexType>
+          </xsd:element>
+        </xsd:choice>
+      </xsd:complexType>
+    </xsd:element>
+  </xsd:schema>
+  <resheader name="resmimetype">
+    <value>text/microsoft-resx</value>
+  </resheader>
+  <resheader name="version">
+    <value>2.0</value>
+  </resheader>
+  <resheader name="reader">
+    <value>System.Resources.ResXResourceReader, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </resheader>
+  <resheader name="writer">
+    <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </resheader>
+  <data name="btn_ApplyAndNext" xml:space="preserve">
+    <value>Applica &amp;&amp; passa al successivo</value>
+  </data>
+  <data name="btn_InsertFromTakenDate" xml:space="preserve">
+    <value>Usa Data di scatto</value>
+  </data>
+  <data name="btn_PullMostRecentPasteSettings" xml:space="preserve">
+    <value>Ottieni le impostazioni di incolla "più recenti"</value>
+  </data>
+  <data name="btn_PullMostRecentTrackSyncShift" xml:space="preserve">
+    <value>Ottieni le impostazioni di spostamento "più recenti"</value>
+  </data>
+  <data name="btn_RemoveGeoData" xml:space="preserve">
+    <value>Rimuovi dati GPS e di posizione</value>
+  </data>
+  <data name="btn_ResetToDefaults" xml:space="preserve">
+    <value>Ripristina valori predefiniti</value>
+  </data>
+  <data name="btn_RestartLater" xml:space="preserve">
+    <value>Riavvia più tardi</value>
+  </data>
+  <data name="btn_RestartNow" xml:space="preserve">
+    <value>Riavvia ora</value>
+  </data>
+  <data name="btn_SetCurrentValues" xml:space="preserve">
+    <value>Imposta i valori correnti per tutte le immagini selezionate per la modifica...</value>
+  </data>
+  <data name="ckb_AddXMPSideCar" xml:space="preserve">
+    <value>Aggiungi/sovrascrivi file sidecar XMP</value>
+  </data>
+  <data name="ckb_DeSelectAll" xml:space="preserve">
+    <value>(De)seleziona tutto</value>
+  </data>
+  <data name="ckb_DoNotQueryAPI" xml:space="preserve">
+    <value>NON eseguire la geocodifica inversa (ottieni solo le coordinate, senza Città/stato/ecc.)</value>
+  </data>
+  <data name="ckb_ExportTrackIncludeAltitude" xml:space="preserve">
+    <value>Includi i dati di altitudine nell'esportazione</value>
+  </data>
+  <data name="ckb_ImportExport_CityRulesSettings" xml:space="preserve">
+    <value>CityRulesSettings</value>
+  </data>
+  <data name="ckb_IncludePredeterminedCountries" xml:space="preserve">
+    <value>Includere i paesi "predeterminati"? (vedi il link sopra + avvertenza/avviso)</value>
+  </data>
+  <data name="ckb_LoadTrackOntoMap" xml:space="preserve">
+    <value>Sovrapponi il file di traccia alla mappa</value>
+  </data>
+  <data name="ckb_OffsetTime" xml:space="preserve">
+    <value>Scostamento del fuso orario</value>
+  </data>
+  <data name="ckb_OverlayGPXForSelectedDatesOnly" xml:space="preserve">
+    <value>Solo per le date comprese tra la prima e l'ultima data dei file selezionati</value>
+  </data>
+  <data name="ckb_OverwriteOriginal" xml:space="preserve">
+    <value>NON creare un backup xxx_original</value>
+  </data>
+  <data name="ckb_PopulatedPlacesOnly" xml:space="preserve">
+    <value>Mostra solo i dati API filtrati su "Luoghi abitati" (fcode=PPL) [non consigliato]</value>
+  </data>
+  <data name="ckb_ProcessOriginalFile" xml:space="preserve">
+    <value>Elabora il file immagine stesso</value>
+  </data>
+  <data name="ckb_QuestionStopProcessingRows" xml:space="preserve">
+    <value>Interrompere l'elaborazione delle righe successive?</value>
+  </data>
+  <data name="ckb_RemoveGeoDataRemovesTimeOffset" xml:space="preserve">
+    <value>La funzione "Rimuovi dati geografici" rimuove anche lo scostamento del fuso orario</value>
+  </data>
+  <data name="ckb_ReplaceBlankToponyms" xml:space="preserve">
+    <value>Sostituisci i valori vuoti di Città, Stato, Sottolocalità con: </value>
+  </data>
+  <data name="ckb_ResetFileDateToCreated" xml:space="preserve">
+    <value>Reimposta data/ora del file immagine alla data di creazione</value>
+  </data>
+  <data name="ckb_ResetMapToZero" xml:space="preserve">
+    <value>Imposta la mappa su 0/0 se non ci sono dati geografici</value>
+  </data>
+  <data name="ckb_StopProcessingRules" xml:space="preserve">
+    <value>Interrompi l'elaborazione delle regole dopo la prima corrispondenza di Paese+Destinazione</value>
+  </data>
+  <data name="ckb_UpdateCheckPreRelease" xml:space="preserve">
+    <value>Verificare anche la presenza di aggiornamenti in pre-release [beta]?</value>
+  </data>
+  <data name="ckb_UseDarkMode" xml:space="preserve">
+    <value>Usare la modalità scura nell'interfaccia?</value>
+  </data>
+  <data name="ckb_UseImperialNotMetric" xml:space="preserve">
+    <value>Usa piedi per l'altitudine (anziché metri [metrico])</value>
+  </data>
+  <data name="ckb_UseTimeZone" xml:space="preserve">
+    <value>Usa questo fuso orario:</value>
+  </data>
+  <data name="clh_BlankOutTargetPoint" xml:space="preserve">
+    <value>Svuotare?</value>
+  </data>
+  <data name="clh_DataPointConditionType" xml:space="preserve">
+    <value>Se</value>
+  </data>
+  <data name="clh_DataPointConditionValue" xml:space="preserve">
+    <value>Valore</value>
+  </data>
+  <data name="clh_DataPointName" xml:space="preserve">
+    <value>Cosa</value>
+  </data>
+  <data name="clh_ExifTag" xml:space="preserve">
+    <value>Tag Exif (interno GTN)</value>
+  </data>
+  <data name="clh_Folder" xml:space="preserve">
+    <value>Cartella</value>
+  </data>
+  <data name="clh_ModifiedValue" xml:space="preserve">
+    <value>Valore modificato (non salvato)</value>
+  </data>
+  <data name="clh_OriginalValue" xml:space="preserve">
+    <value>Valore originale (salvato)</value>
+  </data>
+  <data name="clh_TargetPointName" xml:space="preserve">
+    <value>Allora</value>
+  </data>
+  <data name="clh_TargetPointNameCustomCityLogic" xml:space="preserve">
+    <value>Legge la città da</value>
+  </data>
+  <data name="clh_TargetPointOutcome" xml:space="preserve">
+    <value>Diventa</value>
+  </data>
+  <data name="clh_TargetPointOutcomeCustom" xml:space="preserve">
+    <value>Esito personalizzato</value>
+  </data>
+  <data name="cmi_OpenCoordsInAPI" xml:space="preserve">
+    <value>Apri le coordinate nell'API</value>
+  </data>
+  <data name="cmi_RemoveCachedData" xml:space="preserve">
+    <value>Rimuovi dati in cache</value>
+  </data>
+  <data name="cmi_ShowHideCols" xml:space="preserve">
+    <value>Mostra o nascondi colonne</value>
+  </data>
+  <data name="fbd_StartupFolder" xml:space="preserve">
+    <value>Sfoglia per la cartella di avvio</value>
+  </data>
+  <data name="frm_FrmEditFileData" xml:space="preserve">
+    <value>Modifica dati</value>
+  </data>
+  <data name="frm_FrmImportExportGpx" xml:space="preserve">
+    <value>Importa dati GPX/JSON</value>
+  </data>
+  <data name="frm_FrmManageFavourites" xml:space="preserve">
+    <value>Gestisci preferiti</value>
+  </data>
+  <data name="frm_FrmPasteWhat" xml:space="preserve">
+    <value>Incolla… cosa?</value>
+  </data>
+  <data name="frm_FrmPickDataFromAPIBox" xml:space="preserve">
+    <value>Scegli valori di toponomastica</value>
+  </data>
+  <data name="frm_FrmPleaseWaitBox" xml:space="preserve">
+    <value>Attendere, caricamento della cartella in corso.</value>
+  </data>
+  <data name="frm_FrmSettings" xml:space="preserve">
+    <value>Impostazioni</value>
+  </data>
+  <data name="gbx_AppSettings" xml:space="preserve">
+    <value>Impostazioni applicazione</value>
+  </data>
+  <data name="gbx_CreateDate" xml:space="preserve">
+    <value>Data di creazione</value>
+  </data>
+  <data name="gbx_Dates" xml:space="preserve">
+    <value>Date</value>
+  </data>
+  <data name="gbx_EditImageList" xml:space="preserve">
+    <value>Immagini selezionate per la modifica</value>
+  </data>
+  <data name="gbx_GeoNamesLanguageSettings" xml:space="preserve">
+    <value>Impostazioni lingua GeoNames</value>
+  </data>
+  <data name="gbx_GeoNamesSettings" xml:space="preserve">
+    <value>Impostazioni GeoNames</value>
+  </data>
+  <data name="gbx_GetAltitude" xml:space="preserve">
+    <value>Ottieni dati di altitudine</value>
+  </data>
+  <data name="gbx_GetToponomy" xml:space="preserve">
+    <value>Ottieni dati di toponomastica</value>
+  </data>
+  <data name="gbx_GPSData" xml:space="preserve">
+    <value>Dati GPS</value>
+  </data>
+  <data name="gbx_ImportExportGpxSource" xml:space="preserve">
+    <value>Origine</value>
+  </data>
+  <data name="gbx_ImportExportGpxTimeSetting" xml:space="preserve">
+    <value>Impostazione dell'ora</value>
+  </data>
+  <data name="gbx_LocationData" xml:space="preserve">
+    <value>Dati di posizione</value>
+  </data>
+  <data name="gbx_MapColourMode" xml:space="preserve">
+    <value>Modalità colori mappa</value>
+  </data>
+  <data name="gbx_OtherSettings" xml:space="preserve">
+    <value>Altre impostazioni</value>
+  </data>
+  <data name="gbx_SaveTrackTo" xml:space="preserve">
+    <value>Salva traccia (opzioni)</value>
+  </data>
+  <data name="gbx_TakenDate" xml:space="preserve">
+    <value>Data di scatto (immagine)</value>
+  </data>
+  <data name="Generic_All" xml:space="preserve">
+    <value>Tutti</value>
+  </data>
+  <data name="Generic_Cancel" xml:space="preserve">
+    <value>Annulla</value>
+  </data>
+  <data name="Generic_City" xml:space="preserve">
+    <value>Città</value>
+  </data>
+  <data name="Generic_Close" xml:space="preserve">
+    <value>Chiudi</value>
+  </data>
+  <data name="Generic_Coordinates" xml:space="preserve">
+    <value>Coordinate</value>
+  </data>
+  <data name="Generic_Country" xml:space="preserve">
+    <value>Paese</value>
+  </data>
+  <data name="Generic_CountryCode" xml:space="preserve">
+    <value>Codice paese</value>
+  </data>
+  <data name="Generic_CreateDate" xml:space="preserve">
+    <value>Data di creazione</value>
+  </data>
+  <data name="Generic_Days" xml:space="preserve">
+    <value>Giorni</value>
+  </data>
+  <data name="Generic_Decimal" xml:space="preserve">
+    <value>Decimale</value>
+  </data>
+  <data name="Generic_Delete" xml:space="preserve">
+    <value>Elimina</value>
+  </data>
+  <data name="Generic_DestCoordinates" xml:space="preserve">
+    <value>Coordinate di destinazione</value>
+  </data>
+  <data name="Generic_Export" xml:space="preserve">
+    <value>Esporta</value>
+  </data>
+  <data name="Generic_ExportTrackTimeStampType" xml:space="preserve">
+    <value>Valore di TimeStamp</value>
+  </data>
+  <data name="Generic_ExposureTime" xml:space="preserve">
+    <value>Tempo di esposizione</value>
+  </data>
+  <data name="Generic_Favourites" xml:space="preserve">
+    <value>Preferiti</value>
+  </data>
+  <data name="Generic_Feet" xml:space="preserve">
+    <value>Piedi</value>
+  </data>
+  <data name="Generic_Feet_Abbr" xml:space="preserve">
+    <value>ft</value>
+  </data>
+  <data name="Generic_FileModifyDate" xml:space="preserve">
+    <value>Data file</value>
+  </data>
+  <data name="Generic_FileName" xml:space="preserve">
+    <value>Nome file</value>
+  </data>
+  <data name="Generic_Fnumber" xml:space="preserve">
+    <value>Apertura</value>
+  </data>
+  <data name="Generic_FocalLength" xml:space="preserve">
+    <value>Lunghezza focale</value>
+  </data>
+  <data name="Generic_FocalLengthIn35mmFormat" xml:space="preserve">
+    <value>Lunghezza focale (35mm)</value>
+  </data>
+  <data name="Generic_ForAllImages" xml:space="preserve">
+    <value>Per tutte le immagini</value>
+  </data>
+  <data name="Generic_ForThisImage" xml:space="preserve">
+    <value>Per questa immagine</value>
+  </data>
+  <data name="Generic_GPSAltitude" xml:space="preserve">
+    <value>Altitudine</value>
+  </data>
+  <data name="Generic_GPSAltitudeRef" xml:space="preserve">
+    <value>Riferimento altitudine</value>
+  </data>
+  <data name="Generic_GPSDateTime" xml:space="preserve">
+    <value>Data/ora GPS</value>
+  </data>
+  <data name="Generic_GPSDestLatitude" xml:space="preserve">
+    <value>Latitudine di destinazione</value>
+  </data>
+  <data name="Generic_GPSDestLatitudeRef" xml:space="preserve">
+    <value>Riferimento latitudine di destinazione</value>
+  </data>
+  <data name="Generic_GPSDestLongitude" xml:space="preserve">
+    <value>Longitudine di destinazione</value>
+  </data>
+  <data name="Generic_GPSDestLongitudeRef" xml:space="preserve">
+    <value>Riferimento longitudine di destinazione</value>
+  </data>
+  <data name="Generic_GPSImgDirection" xml:space="preserve">
+    <value>Direzione immagine</value>
+  </data>
+  <data name="Generic_GPSImgDirectionRef" xml:space="preserve">
+    <value>Riferimento direzione immagine</value>
+  </data>
+  <data name="Generic_GPSLatitude" xml:space="preserve">
+    <value>Latitudine</value>
+  </data>
+  <data name="Generic_GPSLatitudeRef" xml:space="preserve">
+    <value>Riferimento latitudine</value>
+  </data>
+  <data name="Generic_GPSLongitude" xml:space="preserve">
+    <value>Longitudine</value>
+  </data>
+  <data name="Generic_GPSLongitudeRef" xml:space="preserve">
+    <value>Riferimento longitudine</value>
+  </data>
+  <data name="Generic_GPSSpeed" xml:space="preserve">
+    <value>Velocità</value>
+  </data>
+  <data name="Generic_GPSSpeedRef" xml:space="preserve">
+    <value>Riferimento velocità</value>
+  </data>
+  <data name="Generic_GUID" xml:space="preserve">
+    <value>GUID</value>
+  </data>
+  <data name="Generic_Hours" xml:space="preserve">
+    <value>Ore</value>
+  </data>
+  <data name="Generic_Import" xml:space="preserve">
+    <value>Importa</value>
+  </data>
+  <data name="Generic_Insert" xml:space="preserve">
+    <value>Inserisci</value>
+  </data>
+  <data name="Generic_IPTCKeywords" xml:space="preserve">
+    <value>Parole chiave IPTC</value>
+  </data>
+  <data name="Generic_ISO" xml:space="preserve">
+    <value>Velocità ISO</value>
+  </data>
+  <data name="Generic_LensSpec" xml:space="preserve">
+    <value>Obiettivo</value>
+  </data>
+  <data name="Generic_Make" xml:space="preserve">
+    <value>Marca</value>
+  </data>
+  <data name="Generic_Metres" xml:space="preserve">
+    <value>Metri</value>
+  </data>
+  <data name="Generic_Metres_Abbr" xml:space="preserve">
+    <value>m</value>
+  </data>
+  <data name="Generic_Miles" xml:space="preserve">
+    <value>Miglia</value>
+  </data>
+  <data name="Generic_Minutes" xml:space="preserve">
+    <value>Minuti</value>
+  </data>
+  <data name="Generic_Model" xml:space="preserve">
+    <value>Modello</value>
+  </data>
+  <data name="Generic_No" xml:space="preserve">
+    <value>No</value>
+  </data>
+  <data name="Generic_None" xml:space="preserve">
+    <value>Nessuno</value>
+  </data>
+  <data name="Generic_OffsetTime" xml:space="preserve">
+    <value>Scostamento del fuso orario</value>
+  </data>
+  <data name="Generic_OK" xml:space="preserve">
+    <value>OK</value>
+  </data>
+  <data name="Generic_PleaseWait" xml:space="preserve">
+    <value>Attendere...</value>
+  </data>
+  <data name="Generic_QuestionDontAskAgain" xml:space="preserve">
+    <value>Non chiedere più</value>
+  </data>
+  <data name="Generic_Rating" xml:space="preserve">
+    <value>Valutazione</value>
+  </data>
+  <data name="Generic_Rename" xml:space="preserve">
+    <value>Rinomina</value>
+  </data>
+  <data name="Generic_Save" xml:space="preserve">
+    <value>Salva le modifiche correnti</value>
+  </data>
+  <data name="Generic_Seconds" xml:space="preserve">
+    <value>Sec</value>
+  </data>
+  <data name="Generic_ShowPassword" xml:space="preserve">
+    <value>Mostra password</value>
+  </data>
+  <data name="Generic_ShowUserName" xml:space="preserve">
+    <value>Mostra nome utente</value>
+  </data>
+  <data name="Generic_State" xml:space="preserve">
+    <value>Stato/Provincia</value>
+  </data>
+  <data name="Generic_Sublocation" xml:space="preserve">
+    <value>Sottolocalità</value>
+  </data>
+  <data name="Generic_TakenDate" xml:space="preserve">
+    <value>Data di scatto</value>
+  </data>
+  <data name="Generic_TZTime" xml:space="preserve">
+    <value>Regolazione del fuso orario:</value>
+  </data>
+  <data name="Generic_UseDST" xml:space="preserve">
+    <value>Usa ora legale?</value>
+  </data>
+  <data name="Generic_XMLSubjects" xml:space="preserve">
+    <value>Soggetti XML</value>
+  </data>
+  <data name="Generic_Yes" xml:space="preserve">
+    <value>Sì</value>
+  </data>
+  <data name="lbl_ARCGIS_APIKey" xml:space="preserve">
+    <value>Chiave API ARCGIS</value>
+  </data>
+  <data name="lbl_CameraTime" xml:space="preserve">
+    <value>Data/ora fotocamera</value>
+  </data>
+  <data name="lbl_CameraTimeNote" xml:space="preserve">
+    <value>Nota: lo spostamento dell'ora serve solo quando i timestamp delle immagini non sono sincronizzati correttamente con l'ora GPS. Lasciare a 0 secondi se non necessario.</value>
+  </data>
+  <data name="lbl_CancelPressed" xml:space="preserve">
+    <value>Annullamento premuto. L'analisi delle cartelle è stata interrotta, ma i file già raccolti verranno analizzati.</value>
+  </data>
+  <data name="lbl_ChoiceOfferCount" xml:space="preserve">
+    <value>Mostra questo numero di opzioni di toponimo</value>
+  </data>
+  <data name="lbl_ChoiceRadius" xml:space="preserve">
+    <value>Nel raggio [km]</value>
+  </data>
+  <data name="lbl_ExportTrackOrderBy" xml:space="preserve">
+    <value>Ordina i TrackPoint per</value>
+  </data>
+  <data name="lbl_ExportTrackTimeStampType" xml:space="preserve">
+    <value>Valore di TimeStamp</value>
+  </data>
+  <data name="lbl_ExportTrackTimeStampTypeNote" xml:space="preserve">
+    <value>Se selezioni GPSDateTime e il file non ha tale attributo, l'esportazione non riesce.
+Alcuni file HEIC lo hanno, la maggior parte degli altri formati no.</value>
+  </data>
+  <data name="lbl_GeoMaxExtSecs" xml:space="preserve">
+    <value>Massima extrapolazione (differenza di tempo tra il timestamp di scatto e il TS del trackpoint) in secondi.</value>
+  </data>
+  <data name="lbl_GeoMaxIntSecs" xml:space="preserve">
+    <value>Massima interpolazione (tempo di "stima del percorso") in secondi. Impostare a 0 per disattivare.</value>
+  </data>
+  <data name="lbl_GeoNames_Pwd" xml:space="preserve">
+    <value>Password GeoNames</value>
+  </data>
+  <data name="lbl_GeoNames_UserName" xml:space="preserve">
+    <value>Nome utente GeoNames</value>
+  </data>
+  <data name="lbl_importFromAnotherFolder" xml:space="preserve">
+    <value>&lt;-- Clicca qui per impostare la cartella di origine dell'importazione</value>
+  </data>
+  <data name="lbl_importOneFile" xml:space="preserve">
+    <value>&lt;-- Clicca qui per impostare il file di origine dell'importazione</value>
+  </data>
+  <data name="lbl_ImportTimeAgainst" xml:space="preserve">
+    <value>Confronta il timestamp dei file di traccia con:</value>
+  </data>
+  <data name="lbl_Language" xml:space="preserve">
+    <value>Lingua</value>
+  </data>
+  <data name="lbl_OffsetTime" xml:space="preserve">
+    <value>Fuso orario</value>
+  </data>
+  <data name="lbl_ParseProgress_Normal" xml:space="preserve">
+    <value>Pronto</value>
+  </data>
+  <data name="lbl_ParseProgress_Read" xml:space="preserve">
+    <value>Lettura:</value>
+  </data>
+  <data name="lbl_ParseProgress_Write" xml:space="preserve">
+    <value>Scrittura:</value>
+  </data>
+  <data name="lbl_PleaseWaitBoxActionParsing" xml:space="preserve">
+    <value>Analisi dei dati:</value>
+  </data>
+  <data name="lbl_PleaseWaitBoxActionPopulatingListView" xml:space="preserve">
+    <value>Popolamento della griglia principale (ListView)</value>
+  </data>
+  <data name="lbl_PleaseWaitBoxActionScanning" xml:space="preserve">
+    <value>Scansione del file:</value>
+  </data>
+  <data name="lbl_PressCancelToStop" xml:space="preserve">
+    <value>Premere Annulla per interrompere.</value>
+  </data>
+  <data name="lbl_QuestionAddToponomy" xml:space="preserve">
+    <value>Vuoi assegnare anche i valori di altitudine e toponomastica?
+Se scegli No, i dati di latitudine/longitudine potrebbero non essere più sincronizzati con i dati di toponomastica incorporati.
+Se fai clic su "non chiedere più", la risposta sarà Sì e la domanda non verrà riproposta in questa sessione. Riavvia per ripristinare.</value>
+  </data>
+  <data name="lbl_SaveTrackTo" xml:space="preserve">
+    <value>Salva output in</value>
+  </data>
+  <data name="lbl_SelectColsTitle" xml:space="preserve">
+    <value>Seleziona colonne</value>
+  </data>
+  <data name="lbl_ShiftTrackTimeBy" xml:space="preserve">
+    <value>Sposta l'ora del file di traccia di:</value>
+  </data>
+  <data name="gbx_Startup_Folder" xml:space="preserve">
+    <value>Cartella di avvio</value>
+  </data>
+  <data name="lbl_TZNote" xml:space="preserve">
+    <value>Nota: se il tag data/ora non include un fuso orario, se ne può aggiungere uno (vedi sotto); altrimenti si assume l'ora di sistema locale.</value>
+  </data>
+  <data name="lbl_TZTime" xml:space="preserve">
+    <value>Regolazione del fuso orario:</value>
+  </data>
+  <data name="mbc_Error" xml:space="preserve">
+    <value>Errore</value>
+  </data>
+  <data name="mbc_Information" xml:space="preserve">
+    <value>Informazioni</value>
+  </data>
+  <data name="mbc_Question" xml:space="preserve">
+    <value>Domanda</value>
+  </data>
+  <data name="mbc_Warning" xml:space="preserve">
+    <value>Avviso</value>
+  </data>
+  <data name="mbx_DirectoryElementCollection_ErrorParsing" xml:space="preserve">
+    <value>Errore durante l'analisi della cartella in DirectoryElement</value>
+  </data>
+  <data name="mbx_FrmEditFileData_ErrorAPIError" xml:space="preserve">
+    <value>L'applicazione ha riscontrato errori nella comunicazione con l'API. Se hai ricevuto un errore di non autorizzazione, imposta il tuo nome utente come password nelle impostazioni.</value>
+  </data>
+  <data name="mbx_FrmEditFileData_ErrorInvalidSender" xml:space="preserve">
+    <value>Si tratta di un bug. Segnala un problema su GitHub indicando che il 'mittente' era: </value>
+  </data>
+  <data name="mbx_FrmEditFileData_InfoDataUpdated" xml:space="preserve">
+    <value>Dati aggiornati.</value>
+  </data>
+  <data name="mbx_FrmEditFileData_WarningFileDisappeared" xml:space="preserve">
+    <value>I file sembrano essere scomparsi.</value>
+  </data>
+  <data name="mbx_FrmEditFileData_WarningLatLongMustBeNumbers" xml:space="preserve">
+    <value>Deve contenere solo numeri. Verrà impostato su zero per impostazione predefinita.</value>
+  </data>
+  <data name="mbx_FrmImportExportGpx_AskUserWantsReport" xml:space="preserve">
+    <value>Vuoi vedere il report del processo di importazione?</value>
+  </data>
+  <data name="mbx_FrmImportExportGpx_FileOrFolderDoesntExist" xml:space="preserve">
+    <value>Il file o la cartella selezionati non sono validi.</value>
+  </data>
+  <data name="mbx_FrmImportExportGpx_NoFileSelected" xml:space="preserve">
+    <value>Nessun file selezionato da importare.</value>
+  </data>
+  <data name="mbx_FrmImportExportGpx_TrackContainsNoData" xml:space="preserve">
+    <value>Importazione della sovrapposizione della traccia non riuscita: non sono stati trovati dati pertinenti.</value>
+  </data>
+  <data name="mbx_FrmImportNoStoredShiftValues" xml:space="preserve">
+    <value>Nessun valore di "spostamento" memorizzato. I dati resteranno 0.</value>
+  </data>
+  <data name="mbx_FrmMainApp_ErrorCantCreateSQLiteDB" xml:space="preserve">
+    <value>Impossibile creare il database SQLite (segnala un problema su GitHub): </value>
+  </data>
+  <data name="mbx_FrmMainApp_ErrorCantLoadSQLiteDB" xml:space="preserve">
+    <value>Caricamento dei dati da SQL non riuscito (segnala un problema su GitHub): </value>
+  </data>
+  <data name="mbx_FrmMainApp_ErrorCantLoadWebView2" xml:space="preserve">
+    <value>Errore nel caricamento di webview2 - È stato installato?</value>
+  </data>
+  <data name="mbx_FrmMainApp_ErrorCantReadDefaultSQLiteDB" xml:space="preserve">
+    <value>Lettura dei valori predefiniti da SQL non riuscita (segnala un problema su GitHub): </value>
+  </data>
+  <data name="mbx_FrmMainApp_ErrorCantWriteSQLiteDB" xml:space="preserve">
+    <value>Database SQLite creato ma impossibile scriverlo (segnala un problema su GitHub): </value>
+  </data>
+  <data name="mbx_FrmMainApp_ErrorClearingFileDataQTables" xml:space="preserve">
+    <value>Errore durante la cancellazione delle tabelle filedata-Q (segnala un problema su GitHub): </value>
+  </data>
+  <data name="mbx_FrmMainApp_ErrorDoubleBuffer" xml:space="preserve">
+    <value>Errore DoubleBuffer (segnala un problema su GitHub): </value>
+  </data>
+  <data name="mbx_FrmMainApp_ErrorFileGoneMissing" xml:space="preserve">
+    <value>Il file non sembra più esistere: </value>
+  </data>
+  <data name="mbx_FrmMainApp_ErrorInitializeComponent" xml:space="preserve">
+    <value>Errore in FrmMainApp.InitializeComponent (segnala un problema su GitHub): </value>
+  </data>
+  <data name="mbx_FrmMainApp_ErrorInitializeWebViewEnsureCoreWebView2Async" xml:space="preserve">
+    <value>Errore in FrmMainApp.InitialiseWebView (await wbv_MapArea.EnsureCoreWebView2Async(c2wv)) (segnala un problema su GitHub): </value>
+  </data>
+  <data name="mbx_FrmMainApp_ErrorInitializeWebViewIsWebMessageEnabled" xml:space="preserve">
+    <value>Errore in FrmMainApp.InitialiseWebView (IsWebMessageEnabled) (segnala un problema su GitHub): </value>
+  </data>
+  <data name="mbx_FrmMainApp_ErrorInitializeWebViewNavigateToStringInHTMLFile" xml:space="preserve">
+    <value>Errore in FrmMainApp.InitialiseWebView (NavigateToString nel file HTMLCode) (segnala un problema su GitHub): </value>
+  </data>
+  <data name="mbx_FrmMainApp_ErrorInitializeWebViewParseCoordsFromHTMLFile" xml:space="preserve">
+    <value>Errore in FrmMainApp.InitialiseWebView (analisi delle coordinate dal file HTMLCode) (segnala un problema su GitHub): </value>
+  </data>
+  <data name="mbx_FrmMainApp_ErrorInitializeWebViewReadHTMLFile" xml:space="preserve">
+    <value>Errore in FrmMainApp.InitialiseWebView (lettura del file HTMLCode) (segnala un problema su GitHub): </value>
+  </data>
+  <data name="mbx_FrmMainApp_ErrorInitializeWebViewReplaceStringInHTMLFile" xml:space="preserve">
+    <value>Errore in FrmMainApp.InitialiseWebView (sostituzione delle costanti nel file HTMLCode) (segnala un problema su GitHub): </value>
+  </data>
+  <data name="mbx_FrmMainApp_ErrorInitializeWebViewWebMessageReceived" xml:space="preserve">
+    <value>Errore durante l'esecuzione di wbv_MapArea_WebMessageReceived (segnala un problema su GitHub): </value>
+  </data>
+  <data name="mbx_FrmMainApp_ErrorInvalidFolder" xml:space="preserve">
+    <value>La cartella inserita non sembra valida. Ripristinare C:\?</value>
+  </data>
+  <data name="mbx_FrmMainApp_ErrorLanguageFileColumnHeaders" xml:space="preserve">
+    <value>Errore durante la lettura del file di lingua e l'assegnazione delle intestazioni di colonna (segnala un problema su GitHub): </value>
+  </data>
+  <data name="mbx_FrmMainApp_ErrorNavigateMapGoHTMLCode" xml:space="preserve">
+    <value>Errore in FrmMainApp.NavigateMapGo (stringa HTMLCode) (segnala un problema su GitHub): </value>
+  </data>
+  <data name="mbx_FrmMainApp_ErrorRemoveGeoDataFailed" xml:space="preserve">
+    <value>Il processo di rimozione dei dati geografici non è riuscito o ha restituito un errore.</value>
+  </data>
+  <data name="mbx_FrmMainApp_ErrorResizingColumns" xml:space="preserve">
+    <value>Ridimensionamento delle colonne non riuscito (segnala un problema su GitHub): </value>
+  </data>
+  <data name="mbx_FrmMainApp_ErrorSettingStartupFolder" xml:space="preserve">
+    <value>Impostazione della cartella di avvio predefinita non riuscita (segnala un problema su GitHub): </value>
+  </data>
+  <data name="mbx_FrmMainApp_InfoCachedDataNotRemoved" xml:space="preserve">
+    <value>Nessun dato rimosso. Non hai selezionato elementi validi oppure quelli selezionati non avevano dati in cache.</value>
+  </data>
+  <data name="mbx_FrmMainApp_InfoCachedDataRemoved" xml:space="preserve">
+    <value>Se esistevano, i dati in cache degli elementi selezionati sono stati rimossi.</value>
+  </data>
+  <data name="mbx_FrmMainApp_InfoFavouriteNameCannotBeBlank" xml:space="preserve">
+    <value>Il nome non può essere vuoto</value>
+  </data>
+  <data name="mbx_FrmMainApp_InfoFavouriteNotValid" xml:space="preserve">
+    <value>L'elemento salvato selezionato non è valido</value>
+  </data>
+  <data name="mbx_FrmMainApp_InfoFavouriteSaved" xml:space="preserve">
+    <value>Preferito salvato correttamente</value>
+  </data>
+  <data name="mbx_FrmMainApp_NoFavouritesDefined" xml:space="preserve">
+    <value>Non hai preferiti definiti. Aggiungine uno usando i pulsanti sotto la mappa.</value>
+  </data>
+  <data name="mbx_FrmMainApp_QuestionAddDraggedDataPointToFiles" xml:space="preserve">
+    <value>Vuoi assegnare le coordinate ai file selezionati?</value>
+  </data>
+  <data name="mbx_FrmMainApp_QuestionDisableFlatMode" xml:space="preserve">
+    <value>La modalità piatta è attiva. Vuoi disattivarla?</value>
+  </data>
+  <data name="mbx_FrmMainApp_QuestionNoRowsFromAPI" xml:space="preserve">
+    <value>La query API non ha restituito informazioni valide. Vuoi svuotare i valori di toponomastica?</value>
+  </data>
+  <data name="mbx_FrmMainApp_QuestionRunImportExportInFlatMode" xml:space="preserve">
+    <value>Eseguire l'importazione/esportazione della traccia in modalità piatta non è una buona idea, perché le interazioni con le tracce usano una logica speciale che non può distinguere file con nomi identici in cartelle diverse. Sei sicuro di voler procedere?</value>
+  </data>
+  <data name="mbx_FrmMainApp_WarningMultipleImageFilesForXMP" xml:space="preserve">
+    <value>Avviso: i seguenti file sidecar hanno lo stesso nome di più file immagine: i dati potrebbero essere stati letti in modo errato:</value>
+  </data>
+  <data name="mbx_FrmMainApp_WarningNoItemSelected" xml:space="preserve">
+    <value>Nessun elemento selezionato.</value>
+  </data>
+  <data name="mbx_FrmMainApp_WarningTooManyFilesSelected" xml:space="preserve">
+    <value>Deve essere selezionato esattamente 1 file.</value>
+  </data>
+  <data name="mbx_FrmPasteWhat_NoDateShiftToPaste" xml:space="preserve">
+    <value>Nessun valore specificato nel pool di copia per lo spostamento della data/ora</value>
+  </data>
+  <data name="mbx_FrmSettings_dgv_CustomRules_ColumnCannotBeEmpty" xml:space="preserve">
+    <value>Tutte le colonne a discesa devono avere un valore non vuoto e anche il valore della condizione "se" non deve essere vuoto.</value>
+  </data>
+  <data name="mbx_FrmSettings_dgv_CustomRules_CustomOutcomeCannotBeEmpty" xml:space="preserve">
+    <value>Se scegli "Personalizzato" come Esito, la colonna Esito personalizzato non deve essere vuota. Se chiudi il modulo Impostazioni senza correggerlo, la riga verrà eliminata.</value>
+  </data>
+  <data name="mbx_FrmSettings_ErrorExportFailed" xml:space="preserve">
+    <value>Esportazione non riuscita: </value>
+  </data>
+  <data name="mbx_FrmSettings_ErrorImportFailed" xml:space="preserve">
+    <value>Importazione non riuscita: </value>
+  </data>
+  <data name="mbx_FrmSettings_PleaseRestartApp" xml:space="preserve">
+    <value>Riavvia l'applicazione perché la modifica abbia effetto.</value>
+  </data>
+  <data name="mbx_FrmSettings_QuestionWhatToExport" xml:space="preserve">
+    <value>Scegli cosa esportare. Tieni presente che la funzione di esportazione esporta i dati presenti nel database, cioè quelli salvati. Se hai modifiche in sospeso nelle Impostazioni, annullale, salvale (fai clic su OK nel modulo Impostazioni), poi torna qui.</value>
+  </data>
+  <data name="mbx_FrmSettings_QuestionWhatToImport" xml:space="preserve">
+    <value>Scegli cosa importare. Tieni presente che, al termine positivo dell'importazione, le parti corrispondenti del database verranno sovrascritte. Se qualcosa non riesce, nella cartella AppData sarà presente un file di backup del tuo database.</value>
+  </data>
+  <data name="Generic_Done" xml:space="preserve">
+    <value>Fatto.</value>
+  </data>
+  <data name="mbx_GenericDoneRestartApp" xml:space="preserve">
+    <value>Fatto - probabilmente conviene riavviare l'applicazione.</value>
+  </data>
+  <data name="mbx_GenericPathLikelyUTF" xml:space="preserve">
+    <value>Il percorso del file contiene probabilmente caratteri UTF (non standard, come asiatici, cirillici ecc.) e ciò può causare l'errore. Assicurati di aver attivato la funzione "Usa UTF-8 Unicode per il supporto linguistico mondiale" (vedi i Problemi noti nel Readme).</value>
+  </data>
+  <data name="mbx_HelperStaticExifNoAPI" xml:space="preserve">
+    <value>Impossibile contattare l'API: sei per caso offline?</value>
+  </data>
+  <data name="mbx_Helper_ErrorAsyncExifToolExecuteAsyncFailed" xml:space="preserve">
+    <value>asyncExifTool.ExecuteAsync non riuscito (segnala un problema su GitHub): </value>
+  </data>
+  <data name="mbx_Helper_ErrorCantReadDefaultSQLiteDB" xml:space="preserve">
+    <value>Lettura dei valori predefiniti da SQL non riuscita (segnala un problema su GitHub): </value>
+  </data>
+  <data name="mbx_Helper_QuestionFileQIsNotEmpty" xml:space="preserve">
+    <value>Alcuni dati sono stati modificati: vuoi salvare? 
+I dati verranno scartati se fai clic su No</value>
+  </data>
+  <data name="mbx_Helper_WarningExifToolVerAPIResponse" xml:space="preserve">
+    <value>La risposta dell'API ExifToolVerAPI è la seguente: </value>
+  </data>
+  <data name="mbx_Helper_WarningFileDisappeared" xml:space="preserve">
+    <value>I file sembrano essere scomparsi.</value>
+  </data>
+  <data name="mbx_Helper_WarningGeoNamesAPIResponse" xml:space="preserve">
+    <value>La risposta dell'API GeoNames è la seguente: </value>
+  </data>
+  <data name="mbx_Helper_WarningGTNVerAPIResponse" xml:space="preserve">
+    <value>La risposta dell'API GitHub è la seguente: </value>
+  </data>
+  <data name="mbx_Helper_WarningNoARCGISKey" xml:space="preserve">
+    <value>Per il corretto funzionamento dell'applicazione è necessario fornire una chiave API ArcGIS nelle Impostazioni.</value>
+  </data>
+  <data name="mbx_Helper_WarningNothingInWriteQueue" xml:space="preserve">
+    <value>Non c'è nulla nella coda di scrittura.</value>
+  </data>
+  <data name="mbx_Helper_WarningNothingToPaste" xml:space="preserve">
+    <value>Nulla da incollare.</value>
+  </data>
+  <data name="mbx_Helper_WarningNoWriteSettingEnabled" xml:space="preserve">
+    <value>Hai disattivato sia l'elaborazione del file originale _sia_ del sidecar XMP, quindi non c'è nulla in cui scrivere.</value>
+  </data>
+  <data name="mbx_Helper_WarningTooManyFilesSelected" xml:space="preserve">
+    <value>Funziona solo se è selezionato uno e un solo file.</value>
+  </data>
+  <data name="mns_File" xml:space="preserve">
+    <value>File</value>
+  </data>
+  <data name="mns_Help" xml:space="preserve">
+    <value>Guida</value>
+  </data>
+  <data name="mns_Settings" xml:space="preserve">
+    <value>Impostazioni</value>
+  </data>
+  <data name="pbx_Browse_Startup_Folder" xml:space="preserve">
+    <value>Sfoglia per la cartella di avvio</value>
+  </data>
+  <data name="pbx_imagePreviewCouldNotRetrieve" xml:space="preserve">
+    <value>Impossibile recuperare/generare l'anteprima dell'immagine</value>
+  </data>
+  <data name="pbx_imagePreviewEmptyText" xml:space="preserve">
+    <value>Nessuna immagine da mostrare</value>
+  </data>
+  <data name="pbx_importFromAnotherFolder" xml:space="preserve">
+    <value>Sfoglia per la cartella delle tracce</value>
+  </data>
+  <data name="pbx_importOneFile" xml:space="preserve">
+    <value>Sfoglia per il file della traccia</value>
+  </data>
+  <data name="rbt_CreateDateSetToFixedDate" xml:space="preserve">
+    <value>Imposta a data fissa</value>
+  </data>
+  <data name="rbt_CreateDateTimeShift" xml:space="preserve">
+    <value>Spostamento temporale</value>
+  </data>
+  <data name="rbt_importFromAnotherFolder" xml:space="preserve">
+    <value>Importa da un'altra cartella</value>
+  </data>
+  <data name="rbt_importFromCurrentFolder" xml:space="preserve">
+    <value>Importa dalla cartella corrente</value>
+  </data>
+  <data name="rbt_importOneFile" xml:space="preserve">
+    <value>Importa da un file scelto</value>
+  </data>
+  <data name="rbt_MapColourModeDarkInverse" xml:space="preserve">
+    <value>Scuro (inverso)</value>
+  </data>
+  <data name="rbt_MapColourModeDarkPale" xml:space="preserve">
+    <value>Scuro (tenue)</value>
+  </data>
+  <data name="rbt_MapColourModeNormal" xml:space="preserve">
+    <value>Normale</value>
+  </data>
+  <data name="rbt_PasteCreateDateActual" xml:space="preserve">
+    <value>Effettivo (valori fissi)</value>
+  </data>
+  <data name="rbt_PasteCreateDateShift" xml:space="preserve">
+    <value>Spostamento temporale</value>
+  </data>
+  <data name="rbt_PasteTakenDateActual" xml:space="preserve">
+    <value>Effettivo (valori fissi)</value>
+  </data>
+  <data name="rbt_PasteTakenDateShift" xml:space="preserve">
+    <value>Spostamento temporale</value>
+  </data>
+  <data name="rbt_TakenDateSetToFixedDate" xml:space="preserve">
+    <value>Imposta a data fissa</value>
+  </data>
+  <data name="rbt_TakenDateTimeShift" xml:space="preserve">
+    <value>Spostamento temporale</value>
+  </data>
+  <data name="rbt_TryUseGeoNamesLanguage" xml:space="preserve">
+    <value>Prova a usare questa lingua quando recuperi i nomi dei luoghi:</value>
+  </data>
+  <data name="rbt_UseGeoNamesLocalLanguage" xml:space="preserve">
+    <value>Prova a usare la "lingua locale" quando recuperi i nomi dei luoghi</value>
+  </data>
+  <data name="rbx_CustomCityLogicExplanation" xml:space="preserve">
+    <value>Si tratta di una funzione avanzata. AdminName1-4 e ToponymName si riferiscono agli output dell'API, quindi se non li capisci, probabilmente è meglio non toccare nulla. 
+Per una panoramica generale, consulta: https://github.com/nemethviktor/GeoTagNinja/issues/38#issuecomment-1356844255 .
+Questa impostazione ti permette di aggiungere paesi di tua scelta per ricavare il valore "Città" da uno dei AdminName specifici.</value>
+  </data>
+  <data name="rbx_CustomCityLogicExplanationBold" xml:space="preserve">
+    <value>Nota che le modifiche alla tabella sottostante hanno effetto immediato e il pulsante OK/Annulla non ha di per sé alcun effetto su di esse. Devi anche fare clic con il tasto destro su "Rimuovi dati in cache" per i file che potrebbero essere interessati dalle modifiche, se vuoi recuperare i dati in questa sessione (oppure riavvia l'applicazione).</value>
+  </data>
+  <data name="rbx_CustomRulesExplanation" xml:space="preserve">
+    <value>Si tratta di una funzione avanzata. AdminName1-4 e ToponymName si riferiscono agli output dell'API, quindi se non li capisci, probabilmente è meglio non toccare nulla. 
+Per quanto riguarda i "paesi predeterminati" (casella sotto): leggi qui: https://github.com/nemethviktor/GeoTagNinja/issues/38#issuecomment-1356844255 + consulta l'altra scheda. Nota: se disattivi quell'impostazione, le celle CountryCode al di fuori del gruppo pertinente verranno svuotate, ma le righe non verranno eliminate.
+Tutte le colonne sono obbligatorie tranne "Personalizzato", ma se imposti l'Esito su "Personalizzato" e lasci vuota la colonna "Personalizzato", la riga verrà ignorata. I dati non distinguono maiuscole e minuscole. Per ogni dato (ad es. Città, Stato) l'ultima riga sovrascrive le precedenti. In sostanza, usa il buon senso. Più righe aggiungi, più lento sarà il processo.
+Esempio: il dato restituito dall'API per Londra (Regno Unito) è scarso perché per quella regione adminName2 = "Greater London", che quindi verrebbe scartato (le città provengono di solito da "ToponymName"). -&gt; imposta: "Cosa" = "adminName2", "Se" = "È", "Valore" = "Greater London", "Allora" = "Città", "Diventa" = "adminName2". Ripeti l'intera operazione in una seconda riga, ma con "Allora" = "Sottolocalità" e "Diventa" = "ToponymName".</value>
+  </data>
+  <data name="rbx_CustomRulesExplanationBold" xml:space="preserve">
+    <value>Nota che le modifiche alla tabella sottostante hanno effetto immediato e il pulsante OK/Annulla non ha di per sé alcun effetto su di esse. Devi anche fare clic con il tasto destro su "Rimuovi dati in cache" per i file che potrebbero essere interessati dalle modifiche, se vuoi recuperare i dati in questa sessione (oppure riavvia l'applicazione).</value>
+  </data>
+  <data name="rbx_Register_ArcGIS" xml:space="preserve">
+    <value>Ti serve una chiave API di ArcGIS per usare la funzione di ricerca sulla mappa. 
+ArcGIS ha cambiato il processo di registrazione a partire da giugno 2024. Registrati [qui](https://location.arcgis.com/sign-up/)
+Ora devi specificare un URL del portale. Inserisci un valore qualsiasi.
+Scorri fino a/Vai a `Developer credential creator`
+Poi `New Item`
+Poi `Developer Credentials`
+Scegli `API Key` (non OAUth)
+Imposta la data di scadenza il più lontano possibile nel futuro (1 anno)
+Lascia vuoto `Referrers`
+Nella pagina successiva scegli `Geocoding (not stored)`
+Nella pagina successiva salta `Item Access`
+Nella pagina successiva aggiungi un titolo qualsiasi
+Infine fai clic su `Generate the API key and go to item details page. I am ready to copy and save the key.`
+Salva la chiave API quando richiesto. Se non lo fai subito, dovrai generarne un'altra.</value>
+  </data>
+  <data name="rbx_Register_GeoNames" xml:space="preserve">
+    <value>Ti serve un account GeoNames per usare la funzione di geocodifica inversa/ricerca (lat/long --&gt; paese/città/...). Ottienilo qui: http://www.geonames.org/login e poi attiva l'accesso ai "Free Web Services" qui: https://www.geonames.org/manageaccount</value>
+  </data>
+  <data name="tcr_EditData" xml:space="preserve">
+    <value>Modifica dati</value>
+  </data>
+  <data name="tmi_File" xml:space="preserve">
+    <value>File</value>
+  </data>
+  <data name="tmi_File_CopyGeoData" xml:space="preserve">
+    <value>Copia tutti i dati geografici</value>
+  </data>
+  <data name="frm_BatchRename" xml:space="preserve">
+    <value>Rinomina in blocco</value>
+  </data>
+  <data name="frm_BatchRename_Preview" xml:space="preserve">
+    <value>Rinomina in blocco - Anteprima</value>
+  </data>
+  <data name="gbx_BatchRename_Presets" xml:space="preserve">
+    <value>Preset</value>
+  </data>
+  <data name="gbx_BatchRename_Destination" xml:space="preserve">
+    <value>Cartella di destinazione</value>
+  </data>
+  <data name="gbx_BatchRename_Names" xml:space="preserve">
+    <value>Nuovi nomi file</value>
+  </data>
+  <data name="gbx_BatchRename_Options" xml:space="preserve">
+    <value>Opzioni</value>
+  </data>
+  <data name="gbx_BatchRename_Preview" xml:space="preserve">
+    <value>Anteprima</value>
+  </data>
+  <data name="lbl_BatchRename_Preset" xml:space="preserve">
+    <value>Preset</value>
+  </data>
+  <data name="lbl_BatchRename_Modified" xml:space="preserve">
+    <value>(Modificato)</value>
+  </data>
+  <data name="btn_BatchRename_Save" xml:space="preserve">
+    <value>Salva...</value>
+  </data>
+  <data name="btn_BatchRename_Delete" xml:space="preserve">
+    <value>Elimina</value>
+  </data>
+  <data name="rbt_BatchRename_SameFolder" xml:space="preserve">
+    <value>Rinomina nella stessa cartella</value>
+  </data>
+  <data name="rbt_BatchRename_MoveToFolder" xml:space="preserve">
+    <value>Sposta in un'altra cartella</value>
+  </data>
+  <data name="rbt_BatchRename_CopyToFolder" xml:space="preserve">
+    <value>Copia in un'altra cartella</value>
+  </data>
+  <data name="btn_BatchRename_Browse" xml:space="preserve">
+    <value>Sfoglia...</value>
+  </data>
+  <data name="lbl_BatchRename_Compatibility" xml:space="preserve">
+    <value>Compatibilità</value>
+  </data>
+  <data name="ckb_BatchRename_Windows" xml:space="preserve">
+    <value>Windows</value>
+  </data>
+  <data name="ckb_BatchRename_Mac" xml:space="preserve">
+    <value>Mac</value>
+  </data>
+  <data name="ckb_BatchRename_Unix" xml:space="preserve">
+    <value>Unix</value>
+  </data>
+  <data name="lbl_BatchRename_CurrentFilename" xml:space="preserve">
+    <value>Nome file attuale</value>
+  </data>
+  <data name="lbl_BatchRename_NewFilename" xml:space="preserve">
+    <value>Nuovo nome file</value>
+  </data>
+  <data name="lbl_BatchRename_Note" xml:space="preserve">
+    <value>Nota</value>
+  </data>
+  <data name="lbl_BatchRename_Unchanged" xml:space="preserve">
+    <value>Invariato</value>
+  </data>
+  <data name="btn_BatchRename_Rename" xml:space="preserve">
+    <value>Rinomina</value>
+  </data>
+  <data name="btn_BatchRename_PreviewAll" xml:space="preserve">
+    <value>Anteprima</value>
+  </data>
+  <data name="lbl_BatchRename_Find" xml:space="preserve">
+    <value>Trova</value>
+  </data>
+  <data name="lbl_BatchRename_ReplaceWith" xml:space="preserve">
+    <value>Sostituisci con</value>
+  </data>
+  <data name="ckb_BatchRename_IgnoreCase" xml:space="preserve">
+    <value>Ignora maiuscole/minuscole</value>
+  </data>
+  <data name="ckb_BatchRename_ReplaceAll" xml:space="preserve">
+    <value>Sostituisci tutto</value>
+  </data>
+  <data name="ckb_BatchRename_UseRegex" xml:space="preserve">
+    <value>Usa espressione regolare</value>
+  </data>
+  <data name="lbl_BatchRename_Kind_Text" xml:space="preserve">
+    <value>Testo</value>
+  </data>
+  <data name="lbl_BatchRename_Kind_NewExtension" xml:space="preserve">
+    <value>Nuova estensione</value>
+  </data>
+  <data name="lbl_BatchRename_Kind_CurrentFilename" xml:space="preserve">
+    <value>Nome file attuale</value>
+  </data>
+  <data name="lbl_BatchRename_Kind_PreservedFilename" xml:space="preserve">
+    <value>Nome file conservato</value>
+  </data>
+  <data name="lbl_BatchRename_Kind_SequenceNumber" xml:space="preserve">
+    <value>Numero progressivo</value>
+  </data>
+  <data name="lbl_BatchRename_Kind_SequenceLetter" xml:space="preserve">
+    <value>Lettera progressiva</value>
+  </data>
+  <data name="lbl_BatchRename_Kind_DateTime" xml:space="preserve">
+    <value>Data/ora</value>
+  </data>
+  <data name="lbl_BatchRename_Kind_Metadata" xml:space="preserve">
+    <value>Metadati</value>
+  </data>
+  <data name="lbl_BatchRename_Kind_FolderName" xml:space="preserve">
+    <value>Nome cartella</value>
+  </data>
+  <data name="lbl_BatchRename_Kind_StringSubstitution" xml:space="preserve">
+    <value>Sostituzione di stringa</value>
+  </data>
+  <data name="lbl_BatchRename_Case_Original" xml:space="preserve">
+    <value>Maiuscole/minuscole originali</value>
+  </data>
+  <data name="lbl_BatchRename_Case_Lower" xml:space="preserve">
+    <value>Minuscolo</value>
+  </data>
+  <data name="lbl_BatchRename_Case_Upper" xml:space="preserve">
+    <value>Maiuscolo</value>
+  </data>
+  <data name="lbl_BatchRename_Part_NameAndExtension" xml:space="preserve">
+    <value>Nome + estensione</value>
+  </data>
+  <data name="lbl_BatchRename_Part_Name" xml:space="preserve">
+    <value>Nome</value>
+  </data>
+  <data name="lbl_BatchRename_Part_Extension" xml:space="preserve">
+    <value>Estensione</value>
+  </data>
+  <data name="lbl_BatchRename_Part_NumberSuffix" xml:space="preserve">
+    <value>Suffisso numerico</value>
+  </data>
+  <data name="lbl_BatchRename_DateSource_DateTaken" xml:space="preserve">
+    <value>Data di scatto</value>
+  </data>
+  <data name="lbl_BatchRename_DateSource_DateCreated" xml:space="preserve">
+    <value>Data di creazione</value>
+  </data>
+  <data name="lbl_BatchRename_DateSource_FileModified" xml:space="preserve">
+    <value>Data modifica file</value>
+  </data>
+  <data name="lbl_BatchRename_DateSource_FileCreated" xml:space="preserve">
+    <value>Data creazione file</value>
+  </data>
+  <data name="lbl_BatchRename_DateSource_Today" xml:space="preserve">
+    <value>Oggi</value>
+  </data>
+  <data name="lbl_BatchRename_DateSource_Yesterday" xml:space="preserve">
+    <value>Ieri</value>
+  </data>
+  <data name="lbl_BatchRename_Digits_1" xml:space="preserve">
+    <value>Una cifra</value>
+  </data>
+  <data name="lbl_BatchRename_Digits_2" xml:space="preserve">
+    <value>Due cifre</value>
+  </data>
+  <data name="lbl_BatchRename_Digits_3" xml:space="preserve">
+    <value>Tre cifre</value>
+  </data>
+  <data name="lbl_BatchRename_Digits_4" xml:space="preserve">
+    <value>Quattro cifre</value>
+  </data>
+  <data name="lbl_BatchRename_Digits_5" xml:space="preserve">
+    <value>Cinque cifre</value>
+  </data>
+  <data name="lbl_BatchRename_Digits_6" xml:space="preserve">
+    <value>Sei cifre</value>
+  </data>
+  <data name="lbl_BatchRename_SubstituteSource_OriginalFilename" xml:space="preserve">
+    <value>Nome file originale</value>
+  </data>
+  <data name="lbl_BatchRename_SubstituteSource_PreservedFilename" xml:space="preserve">
+    <value>Nome file conservato</value>
+  </data>
+  <data name="lbl_BatchRename_Field_Country" xml:space="preserve">
+    <value>Paese</value>
+  </data>
+  <data name="lbl_BatchRename_Field_CountryCode" xml:space="preserve">
+    <value>Codice paese</value>
+  </data>
+  <data name="lbl_BatchRename_Field_State" xml:space="preserve">
+    <value>Stato/Provincia</value>
+  </data>
+  <data name="lbl_BatchRename_Field_City" xml:space="preserve">
+    <value>Città</value>
+  </data>
+  <data name="lbl_BatchRename_Field_Sublocation" xml:space="preserve">
+    <value>Sottolocalità</value>
+  </data>
+  <data name="lbl_BatchRename_Field_Make" xml:space="preserve">
+    <value>Marca fotocamera</value>
+  </data>
+  <data name="lbl_BatchRename_Field_Model" xml:space="preserve">
+    <value>Modello fotocamera</value>
+  </data>
+  <data name="lbl_BatchRename_Field_LensSpec" xml:space="preserve">
+    <value>Obiettivo</value>
+  </data>
+  <data name="lbl_BatchRename_Field_Rating" xml:space="preserve">
+    <value>Valutazione</value>
+  </data>
+  <data name="lbl_BatchRename_Field_ExposureTime" xml:space="preserve">
+    <value>Tempo di esposizione</value>
+  </data>
+  <data name="lbl_BatchRename_Field_Fnumber" xml:space="preserve">
+    <value>Apertura (numero F)</value>
+  </data>
+  <data name="lbl_BatchRename_Field_FocalLength" xml:space="preserve">
+    <value>Lunghezza focale</value>
+  </data>
+  <data name="lbl_BatchRename_Field_ISO" xml:space="preserve">
+    <value>ISO</value>
+  </data>
+  <data name="lbl_BatchRename_Field_Artist" xml:space="preserve">
+    <value>Autore</value>
+  </data>
+  <data name="lbl_BatchRename_Field_Byline" xml:space="preserve">
+    <value>Creatore (firma)</value>
+  </data>
+  <data name="lbl_BatchRename_Field_Copyright" xml:space="preserve">
+    <value>Copyright</value>
+  </data>
+  <data name="lbl_BatchRename_Field_Credit" xml:space="preserve">
+    <value>Crediti</value>
+  </data>
+  <data name="lbl_BatchRename_Field_Source" xml:space="preserve">
+    <value>Fonte</value>
+  </data>
+  <data name="lbl_BatchRename_Field_ObjectName" xml:space="preserve">
+    <value>Titolo (nome oggetto)</value>
+  </data>
+  <data name="lbl_BatchRename_Field_Headline" xml:space="preserve">
+    <value>Titolo principale</value>
+  </data>
+  <data name="lbl_BatchRename_Field_Category" xml:space="preserve">
+    <value>Categoria</value>
+  </data>
+  <data name="mbx_BatchRename_OneFile" xml:space="preserve">
+    <value>Verrà elaborato un file</value>
+  </data>
+  <data name="mbx_BatchRename_ManyFiles" xml:space="preserve">
+    <value>Verranno elaborati {0} file</value>
+  </data>
+  <data name="mbx_BatchRename_SomeBlocked" xml:space="preserve">
+    <value>{0} di {1} file non possono essere rinominati: vedi l'Anteprima</value>
+  </data>
+  <data name="mbx_BatchRename_PresetNamePrompt" xml:space="preserve">
+    <value>Nome del preset:</value>
+  </data>
+  <data name="mbx_BatchRename_PresetUnreadable" xml:space="preserve">
+    <value>Impossibile leggere il preset '{0}'.</value>
+  </data>
+  <data name="mbx_BatchRename_PresetReplace" xml:space="preserve">
+    <value>Esiste già un preset chiamato '{0}'. Sostituirlo?</value>
+  </data>
+  <data name="mbx_BatchRename_PresetSaveFailed" xml:space="preserve">
+    <value>Impossibile salvare il preset.</value>
+  </data>
+  <data name="mbx_BatchRename_PresetDelete" xml:space="preserve">
+    <value>Eliminare il preset '{0}'?</value>
+  </data>
+  <data name="mbx_BatchRename_Preflight" xml:space="preserve">
+    <value>Nessun file è stato rinominato. Prima bisogna risolvere questi problemi:
+
+{0}</value>
+  </data>
+  <data name="mbx_BatchRename_MoreProblems" xml:space="preserve">
+    <value>... e altri {0} (l'Anteprima li elenca tutti)</value>
+  </data>
+  <data name="mbx_BatchRename_SelectFiles" xml:space="preserve">
+    <value>Seleziona prima i file da rinominare.</value>
+  </data>
+  <data name="mbx_BatchRename_NothingRenamed" xml:space="preserve">
+    <value>Nessun file è stato rinominato (ciò che era già stato fatto è stato annullato).
+
+{0}</value>
+  </data>
+  <data name="mbx_BatchRename_StepFailed" xml:space="preserve">
+    <value>{0}
+
+Tutto ciò che è stato fatto finora è stato annullato, quindi nessun file è stato modificato.
+
+Continuare senza {1} (e senza il file che doveva prenderne il nome)?
+Sì: rinomina il resto.  No: interrompi; tutti i file restano invariati.</value>
+  </data>
+  <data name="mbx_BatchRename_NothingLeft" xml:space="preserve">
+    <value>Non c'è altro da rinominare.</value>
+  </data>
+  <data name="mbx_BatchRename_DoneSkipped" xml:space="preserve">
+    <value>{0} file elaborati. Lasciati invariati:
+{1}</value>
+  </data>
+  <data name="mbx_BatchRename_AndMore" xml:space="preserve">
+    <value>... e altri {0}</value>
+  </data>
+  <data name="mbx_BatchRename_Problem_NoDestination" xml:space="preserve">
+    <value>Nessuna cartella di destinazione scelta</value>
+  </data>
+  <data name="mbx_BatchRename_Problem_EmptyName" xml:space="preserve">
+    <value>Il nuovo nome è vuoto</value>
+  </data>
+  <data name="mbx_BatchRename_Problem_Reserved" xml:space="preserve">
+    <value>'{0}' è un nome riservato in Windows</value>
+  </data>
+  <data name="mbx_BatchRename_Problem_NameTooLong" xml:space="preserve">
+    <value>Il nuovo nome è troppo lungo</value>
+  </data>
+  <data name="mbx_BatchRename_Problem_PathTooLong" xml:space="preserve">
+    <value>Il nuovo percorso è troppo lungo</value>
+  </data>
+  <data name="mbx_BatchRename_Problem_NoDate" xml:space="preserve">
+    <value>Non c'è {0} da usare</value>
+  </data>
+  <data name="mbx_BatchRename_Problem_BadRegex" xml:space="preserve">
+    <value>L'espressione regolare non è valida</value>
+  </data>
+  <data name="mbx_BatchRename_Problem_RegexTimeout" xml:space="preserve">
+    <value>L'espressione regolare impiega troppo tempo</value>
+  </data>
+  <data name="mbx_BatchRename_Problem_NameClaimed" xml:space="preserve">
+    <value>Un altro file ottiene (o ha già) questo nome</value>
+  </data>
+  <data name="mbx_BatchRename_Problem_FileExists" xml:space="preserve">
+    <value>Esiste già un file con questo nome</value>
+  </data>
+  <data name="mbx_BatchRename_Problem_SidecarExists" xml:space="preserve">
+    <value>Esiste già un file sidecar XMP con questo nome</value>
+  </data>
+  <data name="mbx_BatchRename_Problem_Gone" xml:space="preserve">
+    <value>Il file non è più presente</value>
+  </data>
+  <data name="mbx_BatchRename_Problem_BeingSaved" xml:space="preserve">
+    <value>Il file è in fase di salvataggio da parte di GeoTagNinja</value>
+  </data>
+  <data name="mbx_BatchRename_Problem_InUse" xml:space="preserve">
+    <value>Il file è in uso da un altro programma</value>
+  </data>
+  <data name="mbx_BatchRename_Problem_FolderNotWritable" xml:space="preserve">
+    <value>Impossibile scrivere nella cartella '{0}'</value>
+  </data>
+  <data name="mbx_BatchRename_Problem_NoSpace" xml:space="preserve">
+    <value>Spazio insufficiente su {0}: necessari {1} MB, liberi {2} MB</value>
+  </data>
+  <data name="mbx_BatchRename_Problem_Unfixed" xml:space="preserve">
+    <value>Il batch ha problemi che devono essere risolti prima.</value>
+  </data>
+  <data name="tmi_File_BatchRename" xml:space="preserve">
+    <value>Rinomina in blocco...</value>
+  </data>
+  <data name="cmi_BatchRename" xml:space="preserve">
+    <value>Rinomina in blocco...</value>
+  </data>
+  <data name="tmi_File_EditFiles" xml:space="preserve">
+    <value>Modifica file...</value>
+  </data>
+  <data name="tmi_File_FlatMode" xml:space="preserve">
+    <value>Modalità piatta (analizza sottocartelle)</value>
+  </data>
+  <data name="tmi_File_ImportExportGPX" xml:space="preserve">
+    <value>Importa/esporta file di traccia GPX/JSON...</value>
+  </data>
+  <data name="tmi_File_PasteGeoData" xml:space="preserve">
+    <value>Incolla tutti i dati geografici...</value>
+  </data>
+  <data name="tmi_File_Quit" xml:space="preserve">
+    <value>Esci</value>
+  </data>
+  <data name="tmi_File_SaveAll" xml:space="preserve">
+    <value>Salva tutto</value>
+  </data>
+  <data name="tmi_Help" xml:space="preserve">
+    <value>Guida</value>
+  </data>
+  <data name="tmi_Help_About" xml:space="preserve">
+    <value>Informazioni...</value>
+  </data>
+  <data name="tmi_Help_Help" xml:space="preserve">
+    <value>Guida</value>
+  </data>
+  <data name="tmi_Help_BugReport" xml:space="preserve">
+    <value>Segnala un bug (GitHub)</value>
+  </data>
+  <data name="tmi_Help_FeedbackFeatureRequest" xml:space="preserve">
+    <value>Richiedi una nuova funzione (GitHub)</value>
+  </data>
+  <data name="tmi_Settings" xml:space="preserve">
+    <value>Impostazioni</value>
+  </data>
+  <data name="tmi_Settings_Favourites" xml:space="preserve">
+    <value>Gestisci preferiti</value>
+  </data>
+  <data name="tmi_Settings_Settings" xml:space="preserve">
+    <value>Impostazioni</value>
+  </data>
+  <data name="tpg_Application" xml:space="preserve">
+    <value>Applicazione</value>
+  </data>
+  <data name="tpg_CustomCityLogic" xml:space="preserve">
+    <value>Logica di assegnazione città personalizzata</value>
+  </data>
+  <data name="tpg_CustomRules" xml:space="preserve">
+    <value>Regole personalizzate</value>
+  </data>
+  <data name="tpg_DateTime" xml:space="preserve">
+    <value>Data e ora</value>
+  </data>
+  <data name="tpg_Exif" xml:space="preserve">
+    <value>Exif</value>
+  </data>
+  <data name="tpg_FileOptions" xml:space="preserve">
+    <value>Opzioni file</value>
+  </data>
+  <data name="tpg_GeoNames" xml:space="preserve">
+    <value>Impostazioni GeoNames</value>
+  </data>
+  <data name="tpg_ImportExport_Export" xml:space="preserve">
+    <value>Esporta tracce</value>
+  </data>
+  <data name="tpg_ImportExport_Import" xml:space="preserve">
+    <value>Importa tracce</value>
+  </data>
+  <data name="tpg_Location" xml:space="preserve">
+    <value>Posizione</value>
+  </data>
+  <data name="tpg_Map" xml:space="preserve">
+    <value>Mappa</value>
+  </data>
+  <data name="tsb_BugReport" xml:space="preserve">
+    <value>Segnala un bug (richiede un account GitHub)</value>
+  </data>
+  <data name="tsb_EditFile" xml:space="preserve">
+    <value>Modifica file</value>
+  </data>
+  <data name="tsb_FeedbackFeatureRequest" xml:space="preserve">
+    <value>Richiedi una nuova funzione (richiede un account GitHub)</value>
+  </data>
+  <data name="tsb_GetAllFromWeb" xml:space="preserve">
+    <value>Ottieni informazioni di toponomastica e altitudine per tutti i file selezionati</value>
+  </data>
+  <data name="tsb_ImportGPX" xml:space="preserve">
+    <value>Importa file di traccia GPX/JSON</value>
+  </data>
+  <data name="tsb_ExportGPX" xml:space="preserve">
+    <value>Esporta file di traccia (GPX/KML)</value>
+  </data>
+  <data name="tsb_OneFolderUp" xml:space="preserve">
+    <value>Cartella superiore</value>
+  </data>
+  <data name="tsb_Refresh_lvwFileList" xml:space="preserve">
+    <value>Aggiorna elenco file</value>
+  </data>
+  <data name="tsb_RemoveGeoData" xml:space="preserve">
+    <value>Rimuovi tutti i dati di posizione</value>
+  </data>
+  <data name="tsb_SaveFiles" xml:space="preserve">
+    <value>Salva file</value>
+  </data>
+  <data name="tsr_FolderControl" xml:space="preserve">
+    <value>Controllo cartelle</value>
+  </data>
+  <data name="tsr_MainAppToolStrip" xml:space="preserve">
+    <value>Principale</value>
+  </data>
+  <data name="ttp_GPSDataPaste" xml:space="preserve">
+    <value>Premi CTRL+V per incollare una coppia valida di decimali nei segnaposto latitudine/longitudine. 
+Gli appunti devono contenere solo una coppia di decimali, preferibilmente in impostazione "invariante" (inglese), cioè intero-punto-decimale-virgola-intero-punto-decimale, ad esempio 12.345, 56.897
+Detto questo, il codice _dovrebbe_ essere in grado di interpretare anche altri formati. Nota che se gli appunti contengono qualcosa di diverso dal formato sopra, l'operazione non riuscirà (non succederà nulla).</value>
+  </data>
+  <data name="btn_NavigateMapGo" xml:space="preserve">
+    <value>Mostra sulla mappa</value>
+  </data>
+  <data name="btn_loctToFile" xml:space="preserve">
+    <value>Salva nei file</value>
+  </data>
+  <data name="btn_loctToFileDestination" xml:space="preserve">
+    <value>Salva nella destinazione</value>
+  </data>
+  <data name="btn_SaveFavourite" xml:space="preserve">
+    <value>Salva foto</value>
+  </data>
+  <data name="btn_LoadFavourite" xml:space="preserve">
+    <value>Applica alle foto</value>
+  </data>
+  <data name="btn_ManageFavourites" xml:space="preserve">
+    <value>Gestisci...</value>
+  </data>
+  <data name="ttp_LoadFavourite" xml:space="preserve">
+    <value>Carica i metadati del file (o dei file) selezionati dai tuoi preferiti</value>
+  </data>
+  <data name="ttp_loctToFile" xml:space="preserve">
+    <value>Salva le coordinate correnti nel file (o nei file) selezionati</value>
+  </data>
+  <data name="ttp_loctToFileDestination" xml:space="preserve">
+    <value>Salva le coordinate correnti nella destinazione dei file selezionati</value>
+  </data>
+  <data name="ttp_ManageFavourites" xml:space="preserve">
+    <value>Gestisci preferiti</value>
+  </data>
+  <data name="ttp_NavigateMapGo" xml:space="preserve">
+    <value>Inserisci le coordinate dei file selezionati sulla mappa</value>
+  </data>
+  <data name="ttp_OffsetTime" xml:space="preserve">
+    <value>I fusi orari restano vuoti all'apertura, indipendentemente dal valore memorizzato. Non esiste un tag Exif per il fuso orario, ma solo 'Offset', che è qualcosa come '+01:00'. Poiché non c'è alcuna indicazione né del fuso orario né dell'ora legale, non posso accertare che '+01:00' fosse, ad esempio, BST anziché CET: uno è l'ora legale, l'altro no. Regola manualmente oppure recupera dal web: la combinazione di coordinate + data di creazione permetterebbe al programma di determinare il valore reale del fuso orario. Il valore nella casella di sola lettura verrà salvato nel file.</value>
+  </data>
+  <data name="ttp_SaveFavourite" xml:space="preserve">
+    <value>Salva (o sovrascrivi) i metadati del file selezionato nei tuoi preferiti</value>
+  </data>
+  <data name="ckb_ImportExport_ApplicationSettings" xml:space="preserve">
+    <value>ApplicationSettings</value>
+  </data>
+  <data name="ckb_ImportExport_CustomRulesSettings" xml:space="preserve">
+    <value>CustomRulesSettings</value>
+  </data>
+  <data name="ckb_ImportExport_Favourites" xml:space="preserve">
+    <value>Preferiti</value>
+  </data>
+  <data name="ckb_ImportExport_EditTemplates" xml:space="preserve">
+    <value>Modifica modelli di dati</value>
+  </data>
+  <data name="ckb_ImportExport_FieldHistory" xml:space="preserve">
+    <value>Modifica cronologia campi dei dati</value>
+  </data>
+  <data name="ckb_ImportExport_BatchRenamePresets" xml:space="preserve">
+    <value>Preset di rinomina in blocco</value>
+  </data>
+  <data name="Generic_TimeZoneID" xml:space="preserve">
+    <value>ID fuso orario</value>
+  </data>
+  <data name="Generic_Distance" xml:space="preserve">
+    <value>Distanza</value>
+  </data>
+  <data name="cmi_OpenCoordsInBrowser" xml:space="preserve">
+    <value>Apri coordinate nel browser/nelle mappe</value>
+  </data>
+  <data name="cmi_OpenCoordsInBrowserBing" xml:space="preserve">
+    <value>Bing</value>
+  </data>
+  <data name="cmi_OpenCoordsInBrowserGeoNamesMaps" xml:space="preserve">
+    <value>GeoNames (Mappe)</value>
+  </data>
+  <data name="cmi_OpenCoordsInBrowserGoogle" xml:space="preserve">
+    <value>Google Maps</value>
+  </data>
+  <data name="cmi_OpenCoordsInBrowserWeGoHere" xml:space="preserve">
+    <value>WeGo/Here</value>
+  </data>
+  <data name="cmi_OpenCoordsInBrowserOpenStreetMap" xml:space="preserve">
+    <value>OpenStreetMap</value>
+  </data>
+  <data name="tmi_File_ImportFavouritesFromGeoSetter" xml:space="preserve">
+    <value>Importa preferiti da Geosetter...</value>
+  </data>
+  <data name="ofd_Settings_GetDatabaseFileToImport_SelectDatabaseFile" xml:space="preserve">
+    <value>Seleziona un file di database</value>
+  </data>
+  <data name="ofd_tmi_File_ImportFavouritesFromGeoSetter_SelectFile" xml:space="preserve">
+    <value>Seleziona il file di esportazione dei preferiti GS</value>
+  </data>
+  <data name="mbx_FrmMainApp_ErrorImportGeoSetterFavourites" xml:space="preserve">
+    <value>Errore durante l'importazione dei preferiti di GeoSetter.</value>
+  </data>
+  <data name="mbx_FrmMainApp_InfoImportGeoSetterFavouritesDone" xml:space="preserve">
+    <value>Preferiti di GeoSetter importati. Elementi importati: </value>
+  </data>
+  <data name="ckb_ShowThumbnails" xml:space="preserve">
+    <value>Mostra miniature delle immagini anziché la griglia</value>
+  </data>
+  <data name="ttp_ShowThumbnails" xml:space="preserve">
+    <value>Questo comporta un rallentamento molto significativo (fino a 7 volte secondo le mie misure), quindi non è consigliato.</value>
+  </data>
+  <data name="Generic_SaveDefaults" xml:space="preserve">
+    <value>Salva predefiniti</value>
+  </data>
+  <data name="ttp_FrmImportExport_SaveDefaults" xml:space="preserve">
+    <value>Salva alcuni valori predefiniti. Attualmente: posizione di origine dell'importazione, impostazioni di fuso orario e ora legale, massima interpolazione/extrapolazione.</value>
+  </data>
+  <data name="mbx_FrmImportExportGpx_ExportCompleted" xml:space="preserve">
+    <value>Esportazione del file GPX completata</value>
+  </data>
+  <data name="Generic_GPSDOP" xml:space="preserve">
+    <value>Diluizione di precisione (DOP)</value>
+  </data>
+  <data name="Generic_GPSHPositioningError" xml:space="preserve">
+    <value>Errore di posizionamento orizzontale GPS</value>
+  </data>
+  <data name="cmi_PasteGeoData" xml:space="preserve">
+    <value>Incolla tutti i dati geografici...</value>
+  </data>
+  <data name="cmi_CopyGeoData" xml:space="preserve">
+    <value>Copia tutti i dati geografici</value>
+  </data>
+  <data name="tmi_Edit_SelectAll" xml:space="preserve">
+    <value>Seleziona tutto</value>
+  </data>
+  <data name="cmi_SelectAll" xml:space="preserve">
+    <value>Seleziona tutto</value>
+  </data>
+  <data name="tmi_Edit_SelectNone" xml:space="preserve">
+    <value>Deseleziona tutto</value>
+  </data>
+  <data name="cmi_SelectNone" xml:space="preserve">
+    <value>Deseleziona tutto</value>
+  </data>
+  <data name="tmi_Edit_InvertSelection" xml:space="preserve">
+    <value>Inverti selezione</value>
+  </data>
+  <data name="cmi_InvertSelection" xml:space="preserve">
+    <value>Inverti selezione</value>
+  </data>
+  <data name="tmi_Edit" xml:space="preserve">
+    <value>Modifica</value>
+  </data>
+  <data name="tmi_Help_Donate" xml:space="preserve">
+    <value>Dona</value>
+  </data>
+  <data name="tmi_Help_Donate_PayPal" xml:space="preserve">
+    <value>PayPal...</value>
+  </data>
+  <data name="tmi_Help_Donate_Revolut" xml:space="preserve">
+    <value>Revolut (QR)...</value>
+  </data>
+  <data name="tmi_Help_Donate_BuyMeCoffee" xml:space="preserve">
+    <value>BuyMeACoffee...</value>
+  </data>
+  <data name="tmi_File_SaveSelected" xml:space="preserve">
+    <value>Salva selezionati</value>
+  </data>
+  <data name="rbt_SetStartup_Folder" xml:space="preserve">
+    <value>Imposta cartella di avvio</value>
+  </data>
+  <data name="rbt_UseLastUsedFolder" xml:space="preserve">
+    <value>Usa l'ultima cartella utilizzata</value>
+  </data>
+  <data name="tmi_Debug" xml:space="preserve">
+    <value>Debug</value>
+  </data>
+  <data name="tmi_Debug_CustomiseWinformControls" xml:space="preserve">
+    <value>Personalizza controlli Winform</value>
+  </data>
+  <data name="frm_FrmCustomiseFormControls" xml:space="preserve">
+    <value>Personalizza controlli Winform</value>
+  </data>
+  <data name="ckb_RetainMapZoom" xml:space="preserve">
+    <value>Mantieni il livello di zoom della mappa tra un clic e l'altro</value>
+  </data>
+  <data name="mbx_FrmMainApp_ErrorNonHydratedItemsPresent" xml:space="preserve">
+    <value>La selezione contiene file che non sono stati analizzati e che quindi non verranno caricati per la modifica.</value>
+  </data>
+  <data name="Generic_Ready" xml:space="preserve">
+    <value>Pronto</value>
+  </data>
+  <data name="Generic_ReadingMetadataProgress" xml:space="preserve">
+    <value>Lettura dei metadati: {0} di {1}</value>
+  </data>
+  <data name="Generic_Total" xml:space="preserve">
+    <value>Totale</value>
+  </data>
+  <data name="Generic_GeoData" xml:space="preserve">
+    <value>Dati geografici</value>
+  </data>
+  <data name="Generic_Files" xml:space="preserve">
+    <value>File</value>
+  </data>
+  <data name="mbx_FrmMainApp_WarningDataParseStillInProgress" xml:space="preserve">
+    <value>L'analisi dei dati è ancora in corso: finché non termina, questa azione non può procedere. Riprova tra poco.</value>
+  </data>
+  <data name="Generic_IsEmpty" xml:space="preserve">
+    <value>È vuoto</value>
+  </data>
+  <data name="Generic_IsNotEmpty" xml:space="preserve">
+    <value>Non è vuoto</value>
+  </data>
+  <data name="Generic_Is" xml:space="preserve">
+    <value>È</value>
+  </data>
+  <data name="Generic_IsNot" xml:space="preserve">
+    <value>Non è</value>
+  </data>
+  <data name="Generic_Contains" xml:space="preserve">
+    <value>Contiene</value>
+  </data>
+  <data name="Generic_DoesntContain" xml:space="preserve">
+    <value>Non contiene</value>
+  </data>
+  <data name="Generic_ClearAll" xml:space="preserve">
+    <value>Cancella tutto</value>
+  </data>
+  <data name="ckb_AlwaysRecenterMap" xml:space="preserve">
+    <value>Ricentrare sempre la mappa?</value>
+  </data>
+  <data name="ckb_DoNotDownloadAltitude" xml:space="preserve">
+    <value>Non scaricare i valori di altitudine dall'API</value>
+  </data>
+  <data name="ckb_PreserveFileModifiedDate" xml:space="preserve">
+    <value>Non modificare la data di modifica del file durante il salvataggio</value>
+  </data>
+  <data name="tmi_View" xml:space="preserve">
+    <value>Visualizza</value>
+  </data>
+  <data name="tmi_View_Details" xml:space="preserve">
+    <value>Dettagli</value>
+  </data>
+  <data name="tmi_View_Thumbnails" xml:space="preserve">
+    <value>Miniature</value>
+  </data>
+  <data name="tmi_View_ThumbnailSize" xml:space="preserve">
+    <value>Dimensione miniature</value>
+  </data>
+  <data name="tmi_View_ThumbnailSize_Small" xml:space="preserve">
+    <value>Piccola</value>
+  </data>
+  <data name="tmi_View_ThumbnailSize_Medium" xml:space="preserve">
+    <value>Media</value>
+  </data>
+  <data name="tmi_View_ThumbnailSize_Large" xml:space="preserve">
+    <value>Grande</value>
+  </data>
+  <data name="tmi_View_ThumbnailSize_ExtraLarge" xml:space="preserve">
+    <value>Molto grande</value>
+  </data>
+  <data name="tmi_View_ThumbnailSize_Smaller" xml:space="preserve">
+    <value>Miniature più piccole</value>
+  </data>
+  <data name="tmi_View_ThumbnailSize_Larger" xml:space="preserve">
+    <value>Miniature più grandi</value>
+  </data>
+  <data name="ttp_ThumbnailSize" xml:space="preserve">
+    <value>Dimensione miniatura</value>
+  </data>
+  <data name="tmi_View_SortBy" xml:space="preserve">
+    <value>Ordina per</value>
+  </data>
+  <data name="tmi_View_SortBy_Ascending" xml:space="preserve">
+    <value>Crescente</value>
+  </data>
+  <data name="tmi_View_SortBy_Descending" xml:space="preserve">
+    <value>Decrescente</value>
+  </data>
+  <data name="gbx_AllFavourites" xml:space="preserve">
+    <value>Tutti i preferiti</value>
+  </data>
+  <data name="gbx_FavouriteDetails" xml:space="preserve">
+    <value>Dettagli</value>
+  </data>
+  <data name="gbx_FavouriteAdditionalInfo" xml:space="preserve">
+    <value>Informazioni aggiuntive</value>
+  </data>
+  <data name="lbl_FavouriteName" xml:space="preserve">
+    <value>Nome:</value>
+  </data>
+  <data name="lbl_FavouriteCoordinates" xml:space="preserve">
+    <value>Coordinate:</value>
+  </data>
+  <data name="lbl_FavouriteRadius" xml:space="preserve">
+    <value>Raggio [m]:</value>
+  </data>
+  <data name="ckb_FavouriteAutoAssign" xml:space="preserve">
+    <value>Assegnazione automatica</value>
+  </data>
+  <data name="ckb_FavouriteSnap" xml:space="preserve">
+    <value>Aggancia le immagini alla posizione del preferito</value>
+  </data>
+  <data name="lbl_FavouriteTimeZone" xml:space="preserve">
+    <value>Fuso orario:</value>
+  </data>
+  <data name="lbl_FavouriteKeywords" xml:space="preserve">
+    <value>Parole chiave:</value>
+  </data>
+  <data name="btn_FavouriteGetFromWeb" xml:space="preserve">
+    <value>Ottieni dal web</value>
+  </data>
+  <data name="btn_FavouriteClearAll" xml:space="preserve">
+    <value>Cancella tutti i valori</value>
+  </data>
+  <data name="btn_FavouriteAccept" xml:space="preserve">
+    <value>Accetta</value>
+  </data>
+  <data name="btn_FavouriteDiscard" xml:space="preserve">
+    <value>Scarta</value>
+  </data>
+  <data name="btn_FavouriteAddKeyword" xml:space="preserve">
+    <value>Aggiungi</value>
+  </data>
+  <data name="btn_FavouriteRemoveKeyword" xml:space="preserve">
+    <value>Rimuovi</value>
+  </data>
+  <data name="lbl_FavouritesCount" xml:space="preserve">
+    <value>{0} elementi ({1} selezionati)</value>
+  </data>
+  <data name="tsd_GroupBy" xml:space="preserve">
+    <value>Raggruppa per</value>
+  </data>
+  <data name="tmi_GroupByCountryCode" xml:space="preserve">
+    <value>Codice paese</value>
+  </data>
+  <data name="tmi_GroupByCountry" xml:space="preserve">
+    <value>Paese</value>
+  </data>
+  <data name="tmi_GroupByState" xml:space="preserve">
+    <value>Stato/provincia</value>
+  </data>
+  <data name="tmi_GroupByCity" xml:space="preserve">
+    <value>Città</value>
+  </data>
+  <data name="tmi_GroupByCoordinates" xml:space="preserve">
+    <value>Coordinate</value>
+  </data>
+  <data name="tmi_GroupByNone" xml:space="preserve">
+    <value>Nessun raggruppamento</value>
+  </data>
+  <data name="tmi_GroupByBlank" xml:space="preserve">
+    <value>(nessuno)</value>
+  </data>
+  <data name="tsb_Duplicate" xml:space="preserve">
+    <value>Duplica</value>
+  </data>
+  <data name="tsb_Delete" xml:space="preserve">
+    <value>Elimina</value>
+  </data>
+  <data name="tsb_AddFromSelection" xml:space="preserve">
+    <value>Aggiungi dalla foto selezionata</value>
+  </data>
+  <data name="mbx_FrmManageFavourites_WarningNameTaken" xml:space="preserve">
+    <value>Un altro preferito ha già questo nome.</value>
+  </data>
+  <data name="mbx_FrmManageFavourites_WarningAltitudeInvalid" xml:space="preserve">
+    <value>L'altitudine deve essere un numero.</value>
+  </data>
+  <data name="mbx_FrmManageFavourites_WarningNoCoordinates" xml:space="preserve">
+    <value>Non ci sono coordinate da usare. Scegli una foto che abbia una posizione.</value>
+  </data>
+  <data name="mbx_FrmManageFavourites_QuestionAcceptChanges" xml:space="preserve">
+    <value>Accettare le modifiche a questo preferito?</value>
+  </data>
+  <data name="mbx_FrmManageFavourites_QuestionDiscardAll" xml:space="preserve">
+    <value>Chiudere senza salvare le modifiche ai preferiti?</value>
+  </data>
+  <data name="mbx_FrmManageFavourites_InfoWebNothingFound" xml:space="preserve">
+    <value>Il servizio web non ha nulla per questa posizione.</value>
+  </data>
+  <data name="tpg_Keywords" xml:space="preserve">
+    <value>Categorie/Parole chiave</value>
+  </data>
+  <data name="tpg_SourceDescription" xml:space="preserve">
+    <value>Fonte/Descrizione</value>
+  </data>
+  <data name="tpg_Contact" xml:space="preserve">
+    <value>Contatto</value>
+  </data>
+  <data name="lbl_SectionSource" xml:space="preserve">
+    <value>Fonte</value>
+  </data>
+  <data name="lbl_SectionDescription" xml:space="preserve">
+    <value>Descrizione</value>
+  </data>
+  <data name="lbl_Category" xml:space="preserve">
+    <value>Categoria</value>
+  </data>
+  <data name="lbl_SupplementalCategories" xml:space="preserve">
+    <value>Categorie supplementari</value>
+  </data>
+  <data name="lbl_IPTCKeywords" xml:space="preserve">
+    <value>Parole chiave</value>
+  </data>
+  <data name="lbl_Artist" xml:space="preserve">
+    <value>Autore</value>
+  </data>
+  <data name="lbl_CaptionWriter" xml:space="preserve">
+    <value>Autore della didascalia</value>
+  </data>
+  <data name="lbl_Source" xml:space="preserve">
+    <value>Fonte</value>
+  </data>
+  <data name="lbl_Credit" xml:space="preserve">
+    <value>Crediti</value>
+  </data>
+  <data name="lbl_SourceURL" xml:space="preserve">
+    <value>URL</value>
+  </data>
+  <data name="lbl_Copyright" xml:space="preserve">
+    <value>Copyright</value>
+  </data>
+  <data name="lbl_ObjectName" xml:space="preserve">
+    <value>Nome oggetto</value>
+  </data>
+  <data name="lbl_Headline" xml:space="preserve">
+    <value>Titolo principale</value>
+  </data>
+  <data name="lbl_Caption" xml:space="preserve">
+    <value>Didascalia</value>
+  </data>
+  <data name="lbl_SpecialInstructions" xml:space="preserve">
+    <value>Istruzioni speciali</value>
+  </data>
+  <data name="lbl_Byline" xml:space="preserve">
+    <value>Firma</value>
+  </data>
+  <data name="lbl_BylineTitle" xml:space="preserve">
+    <value>Titolo della firma</value>
+  </data>
+  <data name="lbl_CreatorAddress" xml:space="preserve">
+    <value>Indirizzo</value>
+  </data>
+  <data name="lbl_CreatorCity" xml:space="preserve">
+    <value>Città</value>
+  </data>
+  <data name="lbl_CreatorPostalCode" xml:space="preserve">
+    <value>CAP</value>
+  </data>
+  <data name="lbl_CreatorRegion" xml:space="preserve">
+    <value>Stato/Provincia</value>
+  </data>
+  <data name="lbl_CreatorCountry" xml:space="preserve">
+    <value>Paese</value>
+  </data>
+  <data name="lbl_CreatorPhone" xml:space="preserve">
+    <value>Telefono</value>
+  </data>
+  <data name="lbl_CreatorEmail" xml:space="preserve">
+    <value>E-mail</value>
+  </data>
+  <data name="lbl_CreatorURL" xml:space="preserve">
+    <value>URL</value>
+  </data>
+  <data name="tmi_FieldMenu_InsertFrom" xml:space="preserve">
+    <value>Inserisci da</value>
+  </data>
+  <data name="tmi_FieldMenu_CopyTo" xml:space="preserve">
+    <value>Copia in</value>
+  </data>
+  <data name="tmi_FieldMenu_CopySelectionToCategories" xml:space="preserve">
+    <value>Copia selezione in Categorie</value>
+  </data>
+  <data name="tmi_FieldMenu_CopySelectionToKeywords" xml:space="preserve">
+    <value>Copia selezione in Parole chiave</value>
+  </data>
+  <data name="tmi_FieldMenu_MostRecentlyUsed" xml:space="preserve">
+    <value>Elementi usati più di recente</value>
+  </data>
+  <data name="tmi_FieldMenu_ForgetRemembered" xml:space="preserve">
+    <value>Dimentica un elemento memorizzato</value>
+  </data>
+  <data name="lbl_ContactPrefix" xml:space="preserve">
+    <value>Contatto</value>
+  </data>
+  <data name="btn_LoadFromTemplate" xml:space="preserve">
+    <value>Carica da modello...</value>
+  </data>
+  <data name="btn_LoadFromImage" xml:space="preserve">
+    <value>Carica da immagine...</value>
+  </data>
+  <data name="btn_SaveAsTemplate" xml:space="preserve">
+    <value>Salva come modello...</value>
+  </data>
+  <data name="lbl_TemplateName" xml:space="preserve">
+    <value>Modello:</value>
+  </data>
+  <data name="lbl_TemplateInclude" xml:space="preserve">
+    <value>Usa questi:</value>
+  </data>
+  <data name="btn_TemplateDelete" xml:space="preserve">
+    <value>Elimina</value>
+  </data>
+  <data name="chk_TemplateGroup_Country" xml:space="preserve">
+    <value>Paese</value>
+  </data>
+  <data name="chk_TemplateGroup_State" xml:space="preserve">
+    <value>Stato/Provincia</value>
+  </data>
+  <data name="chk_TemplateGroup_City" xml:space="preserve">
+    <value>Città</value>
+  </data>
+  <data name="chk_TemplateGroup_Sublocation" xml:space="preserve">
+    <value>Sottolocalità</value>
+  </data>
+  <data name="chk_TemplateGroup_Position" xml:space="preserve">
+    <value>Posizione GPS</value>
+  </data>
+  <data name="chk_TemplateGroup_Altitude" xml:space="preserve">
+    <value>Altitudine</value>
+  </data>
+  <data name="chk_TemplateGroup_Direction" xml:space="preserve">
+    <value>Direzione immagine</value>
+  </data>
+  <data name="chk_TemplateGroup_Destination" xml:space="preserve">
+    <value>Destinazione</value>
+  </data>
+  <data name="chk_TemplateGroup_TakenDate" xml:space="preserve">
+    <value>Data di scatto</value>
+  </data>
+  <data name="chk_TemplateGroup_CreateDate" xml:space="preserve">
+    <value>Data di creazione</value>
+  </data>
+  <data name="chk_TemplateGroup_OffsetTime" xml:space="preserve">
+    <value>Scostamento del fuso orario</value>
+  </data>
+  <data name="mbx_FrmEditTemplateDialog_QuestionDeleteTemplate" xml:space="preserve">
+    <value>Eliminare il modello '{0}'?</value>
+  </data>
+  <data name="mbx_FrmEditTemplateDialog_QuestionOverwriteTemplate" xml:space="preserve">
+    <value>Esiste già un modello chiamato '{0}'. Sostituirlo?</value>
+  </data>
+  <data name="mbx_FrmEditFileData_ErrorTemplateNotSaved" xml:space="preserve">
+    <value>Impossibile salvare il modello.</value>
+  </data>
+  <data name="mbx_FrmEditFileData_InfoImageHasNothingToLoad" xml:space="preserve">
+    <value>Quel file non contiene nulla che questo modulo possa caricare.</value>
+  </data>
+  <data name="lbl_Sexagesimal" xml:space="preserve">
+    <value>Sessagesimale</value>
+  </data>
+  <data name="lbl_ImageDirection" xml:space="preserve">
+    <value>Direzione immagine [°]:</value>
+  </data>
+  <data name="lbl_DestLatitude" xml:space="preserve">
+    <value>Lat. di destinazione:</value>
+  </data>
+  <data name="lbl_DestLongitude" xml:space="preserve">
+    <value>Long. di destinazione:</value>
+  </data>
+  <data name="btn_GetAltitudeFromWeb" xml:space="preserve">
+    <value>Ottieni dal web</value>
+  </data>
+  <data name="mbx_FrmEditFileData_InfoCoordinatesNeededForAltitude" xml:space="preserve">
+    <value>Inserisci prima una latitudine e una longitudine.</value>
+  </data>
+  <data name="mbx_FrmEditFileData_WarningNoAltitudeFromWeb" xml:space="preserve">
+    <value>Il servizio web non ha un'altitudine per questa posizione.</value>
+  </data>
+  <data name="ckb_SyncGeoKeywords" xml:space="preserve">
+    <value>Mantieni le parole chiave allineate alla posizione (nomi di luoghi e parole chiave geo:)</value>
+  </data>
+  <data name="ckb_ShowChangelogAfterUpdate" xml:space="preserve">
+    <value>Dopo un aggiornamento, mostra cosa è cambiato</value>
+  </data>
+  <data name="mbx_Helper_InfoRemoveGeoDataKeywordsRemain" xml:space="preserve">
+    <value>I dati di posizione sono stati rimossi, ma le parole chiave non sono state toccate: eventuali nomi di luoghi o parole chiave "geo:" restano come erano. Per farle seguire le modifiche di posizione, attiva "Mantieni le parole chiave allineate alla posizione" nelle Impostazioni.</value>
+  </data>
+  <data name="tmi_View_FolderTree" xml:space="preserve">
+    <value>Albero delle cartelle</value>
+  </data>
+  <data name="lbl_FolderTree_Title" xml:space="preserve">
+    <value>Cartelle</value>
+  </data>
+  <data name="tsb_FolderTree_Favourites" xml:space="preserve">
+    <value>Cartelle preferite</value>
+  </data>
+  <data name="tmi_FolderTree_AddCurrent" xml:space="preserve">
+    <value>Aggiungi la cartella corrente ai preferiti</value>
+  </data>
+  <data name="tmi_FolderTree_RemoveCurrent" xml:space="preserve">
+    <value>Rimuovi la cartella corrente dai preferiti</value>
+  </data>
+  <data name="tmi_FolderTree_NoFavourites" xml:space="preserve">
+    <value>(nessuna cartella preferita)</value>
+  </data>
+  <data name="tsb_FolderTree_Refresh" xml:space="preserve">
+    <value>Aggiorna l'albero delle cartelle</value>
+  </data>
+  <data name="tsb_FolderTree_Hide" xml:space="preserve">
+    <value>Nascondi l'albero delle cartelle (Ctrl+B)</value>
+  </data>
+  <data name="cmi_FolderTree_AddThis" xml:space="preserve">
+    <value>Aggiungi ai preferiti</value>
+  </data>
+  <data name="cmi_FolderTree_RemoveThis" xml:space="preserve">
+    <value>Rimuovi dai preferiti</value>
+  </data>
+  <data name="tsb_Donate" xml:space="preserve">
+    <value>BuyMeACoffee (dona, si apre nel browser)</value>
+  </data>
+  <data name="lbl_ParsingFolders" xml:space="preserve">
+    <value>Analisi di file &amp;&amp; cartelle in corso, attendere. </value>
+  </data>
+</root>

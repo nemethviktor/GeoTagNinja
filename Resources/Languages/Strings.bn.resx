@@ -1,0 +1,2009 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<root>
+  <xsd:schema xmlns="" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:msdata="urn:schemas-microsoft-com:xml-msdata" id="root">
+    <xsd:import namespace="http://www.w3.org/XML/1998/namespace" />
+    <xsd:element name="root" msdata:IsDataSet="true">
+      <xsd:complexType>
+        <xsd:choice maxOccurs="unbounded">
+          <xsd:element name="metadata">
+            <xsd:complexType>
+              <xsd:sequence>
+                <xsd:element name="value" type="xsd:string" minOccurs="0" />
+              </xsd:sequence>
+              <xsd:attribute name="name" use="required" type="xsd:string" />
+              <xsd:attribute name="type" type="xsd:string" />
+              <xsd:attribute name="mimetype" type="xsd:string" />
+              <xsd:attribute ref="xml:space" />
+            </xsd:complexType>
+          </xsd:element>
+          <xsd:element name="assembly">
+            <xsd:complexType>
+              <xsd:attribute name="alias" type="xsd:string" />
+              <xsd:attribute name="name" type="xsd:string" />
+            </xsd:complexType>
+          </xsd:element>
+          <xsd:element name="data">
+            <xsd:complexType>
+              <xsd:sequence>
+                <xsd:element name="value" type="xsd:string" minOccurs="0" msdata:Ordinal="1" />
+                <xsd:element name="comment" type="xsd:string" minOccurs="0" msdata:Ordinal="2" />
+              </xsd:sequence>
+              <xsd:attribute name="name" type="xsd:string" use="required" msdata:Ordinal="1" />
+              <xsd:attribute name="type" type="xsd:string" msdata:Ordinal="3" />
+              <xsd:attribute name="mimetype" type="xsd:string" msdata:Ordinal="4" />
+              <xsd:attribute ref="xml:space" />
+            </xsd:complexType>
+          </xsd:element>
+          <xsd:element name="resheader">
+            <xsd:complexType>
+              <xsd:sequence>
+                <xsd:element name="value" type="xsd:string" minOccurs="0" msdata:Ordinal="1" />
+              </xsd:sequence>
+              <xsd:attribute name="name" type="xsd:string" use="required" />
+            </xsd:complexType>
+          </xsd:element>
+        </xsd:choice>
+      </xsd:complexType>
+    </xsd:element>
+  </xsd:schema>
+  <resheader name="resmimetype">
+    <value>text/microsoft-resx</value>
+  </resheader>
+  <resheader name="version">
+    <value>2.0</value>
+  </resheader>
+  <resheader name="reader">
+    <value>System.Resources.ResXResourceReader, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </resheader>
+  <resheader name="writer">
+    <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </resheader>
+  <data name="btn_ApplyAndNext" xml:space="preserve">
+    <value>প্রয়োগ করুন &amp;&amp; পরবর্তীতে যান</value>
+  </data>
+  <data name="btn_InsertFromTakenDate" xml:space="preserve">
+    <value>TakenDate ব্যবহার করুন</value>
+  </data>
+  <data name="btn_PullMostRecentPasteSettings" xml:space="preserve">
+    <value>সর্বশেষ "পেস্ট" সেটিংস আনুন</value>
+  </data>
+  <data name="btn_PullMostRecentTrackSyncShift" xml:space="preserve">
+    <value>সর্বশেষ "শিফট" সেটিংস আনুন</value>
+  </data>
+  <data name="btn_RemoveGeoData" xml:space="preserve">
+    <value>GPS ও অবস্থান তথ্য মুছুন</value>
+  </data>
+  <data name="btn_ResetToDefaults" xml:space="preserve">
+    <value>ডিফল্টে ফিরিয়ে আনুন</value>
+  </data>
+  <data name="btn_RestartLater" xml:space="preserve">
+    <value>পরে পুনরায় চালু করুন</value>
+  </data>
+  <data name="btn_RestartNow" xml:space="preserve">
+    <value>এখনই পুনরায় চালু করুন</value>
+  </data>
+  <data name="btn_SetCurrentValues" xml:space="preserve">
+    <value>সম্পাদনার জন্য নির্বাচিত সব ছবিতে বর্তমান মান সেট করুন...</value>
+  </data>
+  <data name="ckb_AddXMPSideCar" xml:space="preserve">
+    <value>সাইডকার XMP যোগ করুন/ওভাররাইট করুন</value>
+  </data>
+  <data name="ckb_DeSelectAll" xml:space="preserve">
+    <value>সব চিহ্নিত/অচিহ্নিত করুন</value>
+  </data>
+  <data name="ckb_DoNotQueryAPI" xml:space="preserve">
+    <value>রিভার্স জিওকোডিং করবেন না (শুধু স্থানাঙ্ক নিন, শহর/রাজ্য ইত্যাদি নয়)</value>
+  </data>
+  <data name="ckb_ExportTrackIncludeAltitude" xml:space="preserve">
+    <value>রপ্তানিতে উচ্চতার তথ্য অন্তর্ভুক্ত করুন</value>
+  </data>
+  <data name="ckb_ImportExport_CityRulesSettings" xml:space="preserve">
+    <value>CityRulesSettings</value>
+  </data>
+  <data name="ckb_IncludePredeterminedCountries" xml:space="preserve">
+    <value>"পূর্বনির্ধারিত" দেশগুলো অন্তর্ভুক্ত করবেন? (উপরের লিংক + সতর্কতা দেখুন)</value>
+  </data>
+  <data name="ckb_LoadTrackOntoMap" xml:space="preserve">
+    <value>মানচিত্রে ট্র্যাক ফাইল আচ্ছাদন করুন</value>
+  </data>
+  <data name="ckb_OffsetTime" xml:space="preserve">
+    <value>সময় অঞ্চল অফসেট</value>
+  </data>
+  <data name="ckb_OverlayGPXForSelectedDatesOnly" xml:space="preserve">
+    <value>শুধু সেই তারিখগুলোর জন্য যা নির্বাচিত ফাইলগুলোর প্রথম &amp; শেষ তারিখের মধ্যে পড়ে</value>
+  </data>
+  <data name="ckb_OverwriteOriginal" xml:space="preserve">
+    <value>xxx_original ব্যাকআপ তৈরি করবেন না</value>
+  </data>
+  <data name="ckb_PopulatedPlacesOnly" xml:space="preserve">
+    <value>API ডেটা শুধু "জনবসতিপূর্ণ স্থান" (fcode=PPL) ফিল্টার করে দেখান [প্রস্তাবিত নয়]</value>
+  </data>
+  <data name="ckb_ProcessOriginalFile" xml:space="preserve">
+    <value>ছবির ফাইল নিজেই প্রক্রিয়া করুন</value>
+  </data>
+  <data name="ckb_QuestionStopProcessingRows" xml:space="preserve">
+    <value>আর সারি প্রক্রিয়া করা বন্ধ করবেন?</value>
+  </data>
+  <data name="ckb_RemoveGeoDataRemovesTimeOffset" xml:space="preserve">
+    <value>"জিওডেটা মুছুন" ফাংশন সময় অঞ্চল অফসেটও মুছে দেয়</value>
+  </data>
+  <data name="ckb_ReplaceBlankToponyms" xml:space="preserve">
+    <value>ফাঁকা শহর, রাজ্য, উপস্থানের মান এটি দিয়ে বদলান: </value>
+  </data>
+  <data name="ckb_ResetFileDateToCreated" xml:space="preserve">
+    <value>ছবির ফাইলের তারিখ-সময় CreateDate-এ ফিরিয়ে আনুন</value>
+  </data>
+  <data name="ckb_ResetMapToZero" xml:space="preserve">
+    <value>জিওডেটা না থাকলে মানচিত্র 0/0-তে সেট করুন</value>
+  </data>
+  <data name="ckb_StopProcessingRules" xml:space="preserve">
+    <value>প্রথম দেশ+লক্ষ্য মিলের পর নিয়ম প্রক্রিয়া বন্ধ করুন</value>
+  </data>
+  <data name="ckb_UpdateCheckPreRelease" xml:space="preserve">
+    <value>প্রি-রিলিজ [বিটা] আপডেটও কি যাচাই করবেন?</value>
+  </data>
+  <data name="ckb_UseDarkMode" xml:space="preserve">
+    <value>অ্যাপের UI-তে ডার্ক মোড ব্যবহার করবেন?</value>
+  </data>
+  <data name="ckb_UseImperialNotMetric" xml:space="preserve">
+    <value>উচ্চতার জন্য ইম্পেরিয়াল (ফুট) ব্যবহার করুন (মেট্রিক [মিটার]-এর বদলে)</value>
+  </data>
+  <data name="ckb_UseTimeZone" xml:space="preserve">
+    <value>এই সময় অঞ্চল ব্যবহার করুন:</value>
+  </data>
+  <data name="clh_BlankOutTargetPoint" xml:space="preserve">
+    <value>ফাঁকা করবেন?</value>
+  </data>
+  <data name="clh_DataPointConditionType" xml:space="preserve">
+    <value>যদি</value>
+  </data>
+  <data name="clh_DataPointConditionValue" xml:space="preserve">
+    <value>মান</value>
+  </data>
+  <data name="clh_DataPointName" xml:space="preserve">
+    <value>কী</value>
+  </data>
+  <data name="clh_ExifTag" xml:space="preserve">
+    <value>Exif (GTN অভ্যন্তরীণ) ট্যাগ</value>
+  </data>
+  <data name="clh_Folder" xml:space="preserve">
+    <value>ফোল্ডার</value>
+  </data>
+  <data name="clh_ModifiedValue" xml:space="preserve">
+    <value>পরিবর্তিত (অসংরক্ষিত) মান</value>
+  </data>
+  <data name="clh_OriginalValue" xml:space="preserve">
+    <value>মূল (সংরক্ষিত) মান</value>
+  </data>
+  <data name="clh_TargetPointName" xml:space="preserve">
+    <value>তখন</value>
+  </data>
+  <data name="clh_TargetPointNameCustomCityLogic" xml:space="preserve">
+    <value>শহর পড়া হয় যেখান থেকে</value>
+  </data>
+  <data name="clh_TargetPointOutcome" xml:space="preserve">
+    <value>হবে</value>
+  </data>
+  <data name="clh_TargetPointOutcomeCustom" xml:space="preserve">
+    <value>কাস্টম ফলাফল</value>
+  </data>
+  <data name="cmi_OpenCoordsInAPI" xml:space="preserve">
+    <value>API-তে স্থানাঙ্ক খুলুন</value>
+  </data>
+  <data name="cmi_RemoveCachedData" xml:space="preserve">
+    <value>ক্যাশ ডেটা মুছুন</value>
+  </data>
+  <data name="cmi_ShowHideCols" xml:space="preserve">
+    <value>কলাম দেখান বা লুকান</value>
+  </data>
+  <data name="fbd_StartupFolder" xml:space="preserve">
+    <value>স্টার্টআপ ফোল্ডার ব্রাউজ করুন</value>
+  </data>
+  <data name="frm_FrmEditFileData" xml:space="preserve">
+    <value>ডেটা সম্পাদনা</value>
+  </data>
+  <data name="frm_FrmImportExportGpx" xml:space="preserve">
+    <value>GPX/JSON ডেটা আমদানি</value>
+  </data>
+  <data name="frm_FrmManageFavourites" xml:space="preserve">
+    <value>প্রিয় পরিচালনা</value>
+  </data>
+  <data name="frm_FrmPasteWhat" xml:space="preserve">
+    <value>পেস্ট…কী?</value>
+  </data>
+  <data name="frm_FrmPickDataFromAPIBox" xml:space="preserve">
+    <value>স্থাননামের মান বেছে নিন</value>
+  </data>
+  <data name="frm_FrmPleaseWaitBox" xml:space="preserve">
+    <value>ফোল্ডার লোড হওয়া পর্যন্ত অপেক্ষা করুন।</value>
+  </data>
+  <data name="frm_FrmSettings" xml:space="preserve">
+    <value>সেটিংস</value>
+  </data>
+  <data name="gbx_AppSettings" xml:space="preserve">
+    <value>অ্যাপ্লিকেশন সেটিংস</value>
+  </data>
+  <data name="gbx_CreateDate" xml:space="preserve">
+    <value>তৈরির তারিখ</value>
+  </data>
+  <data name="gbx_Dates" xml:space="preserve">
+    <value>তারিখসমূহ</value>
+  </data>
+  <data name="gbx_EditImageList" xml:space="preserve">
+    <value>সম্পাদনার জন্য নির্বাচিত ছবি</value>
+  </data>
+  <data name="gbx_GeoNamesLanguageSettings" xml:space="preserve">
+    <value>GeoNames ভাষা সেটিংস</value>
+  </data>
+  <data name="gbx_GeoNamesSettings" xml:space="preserve">
+    <value>GeoNames সেটিংস</value>
+  </data>
+  <data name="gbx_GetAltitude" xml:space="preserve">
+    <value>উচ্চতার তথ্য নিন</value>
+  </data>
+  <data name="gbx_GetToponomy" xml:space="preserve">
+    <value>স্থাননাম তথ্য নিন</value>
+  </data>
+  <data name="gbx_GPSData" xml:space="preserve">
+    <value>GPS ডেটা</value>
+  </data>
+  <data name="gbx_ImportExportGpxSource" xml:space="preserve">
+    <value>উৎস</value>
+  </data>
+  <data name="gbx_ImportExportGpxTimeSetting" xml:space="preserve">
+    <value>সময় সেটিং</value>
+  </data>
+  <data name="gbx_LocationData" xml:space="preserve">
+    <value>অবস্থান ডেটা</value>
+  </data>
+  <data name="gbx_MapColourMode" xml:space="preserve">
+    <value>মানচিত্রের রং মোড</value>
+  </data>
+  <data name="gbx_OtherSettings" xml:space="preserve">
+    <value>অন্যান্য সেটিংস</value>
+  </data>
+  <data name="gbx_SaveTrackTo" xml:space="preserve">
+    <value>ট্র্যাক সংরক্ষণ (বিকল্প)</value>
+  </data>
+  <data name="gbx_TakenDate" xml:space="preserve">
+    <value>ছবি তোলার তারিখ</value>
+  </data>
+  <data name="Generic_All" xml:space="preserve">
+    <value>সব</value>
+  </data>
+  <data name="Generic_Cancel" xml:space="preserve">
+    <value>বাতিল</value>
+  </data>
+  <data name="Generic_City" xml:space="preserve">
+    <value>শহর</value>
+  </data>
+  <data name="Generic_Close" xml:space="preserve">
+    <value>বন্ধ করুন</value>
+  </data>
+  <data name="Generic_Coordinates" xml:space="preserve">
+    <value>স্থানাঙ্ক</value>
+  </data>
+  <data name="Generic_Country" xml:space="preserve">
+    <value>দেশ</value>
+  </data>
+  <data name="Generic_CountryCode" xml:space="preserve">
+    <value>দেশের কোড</value>
+  </data>
+  <data name="Generic_CreateDate" xml:space="preserve">
+    <value>তৈরির তারিখ</value>
+  </data>
+  <data name="Generic_Days" xml:space="preserve">
+    <value>দিন</value>
+  </data>
+  <data name="Generic_Decimal" xml:space="preserve">
+    <value>দশমিক</value>
+  </data>
+  <data name="Generic_Delete" xml:space="preserve">
+    <value>মুছুন</value>
+  </data>
+  <data name="Generic_DestCoordinates" xml:space="preserve">
+    <value>গন্তব্য স্থানাঙ্ক</value>
+  </data>
+  <data name="Generic_Export" xml:space="preserve">
+    <value>রপ্তানি</value>
+  </data>
+  <data name="Generic_ExportTrackTimeStampType" xml:space="preserve">
+    <value>TimeStamp মান</value>
+  </data>
+  <data name="Generic_ExposureTime" xml:space="preserve">
+    <value>এক্সপোজার সময়</value>
+  </data>
+  <data name="Generic_Favourites" xml:space="preserve">
+    <value>প্রিয়</value>
+  </data>
+  <data name="Generic_Feet" xml:space="preserve">
+    <value>ফুট</value>
+  </data>
+  <data name="Generic_Feet_Abbr" xml:space="preserve">
+    <value>ft</value>
+  </data>
+  <data name="Generic_FileModifyDate" xml:space="preserve">
+    <value>ফাইলের তারিখ</value>
+  </data>
+  <data name="Generic_FileName" xml:space="preserve">
+    <value>ফাইলের নাম</value>
+  </data>
+  <data name="Generic_Fnumber" xml:space="preserve">
+    <value>অ্যাপারচার</value>
+  </data>
+  <data name="Generic_FocalLength" xml:space="preserve">
+    <value>ফোকাল দৈর্ঘ্য</value>
+  </data>
+  <data name="Generic_FocalLengthIn35mmFormat" xml:space="preserve">
+    <value>ফোকাল দৈর্ঘ্য (35mm)</value>
+  </data>
+  <data name="Generic_ForAllImages" xml:space="preserve">
+    <value>সব ছবির জন্য</value>
+  </data>
+  <data name="Generic_ForThisImage" xml:space="preserve">
+    <value>এই ছবির জন্য</value>
+  </data>
+  <data name="Generic_GPSAltitude" xml:space="preserve">
+    <value>উচ্চতা</value>
+  </data>
+  <data name="Generic_GPSAltitudeRef" xml:space="preserve">
+    <value>উচ্চতা রেফ</value>
+  </data>
+  <data name="Generic_GPSDateTime" xml:space="preserve">
+    <value>GPS DateTime</value>
+  </data>
+  <data name="Generic_GPSDestLatitude" xml:space="preserve">
+    <value>গন্তব্য অক্ষাংশ</value>
+  </data>
+  <data name="Generic_GPSDestLatitudeRef" xml:space="preserve">
+    <value>গন্তব্য অক্ষাংশ রেফ</value>
+  </data>
+  <data name="Generic_GPSDestLongitude" xml:space="preserve">
+    <value>গন্তব্য দ্রাঘিমাংশ</value>
+  </data>
+  <data name="Generic_GPSDestLongitudeRef" xml:space="preserve">
+    <value>গন্তব্য দ্রাঘিমাংশ রেফ</value>
+  </data>
+  <data name="Generic_GPSImgDirection" xml:space="preserve">
+    <value>ছবির দিক</value>
+  </data>
+  <data name="Generic_GPSImgDirectionRef" xml:space="preserve">
+    <value>ছবির দিক রেফ</value>
+  </data>
+  <data name="Generic_GPSLatitude" xml:space="preserve">
+    <value>অক্ষাংশ</value>
+  </data>
+  <data name="Generic_GPSLatitudeRef" xml:space="preserve">
+    <value>অক্ষাংশ রেফ</value>
+  </data>
+  <data name="Generic_GPSLongitude" xml:space="preserve">
+    <value>দ্রাঘিমাংশ</value>
+  </data>
+  <data name="Generic_GPSLongitudeRef" xml:space="preserve">
+    <value>দ্রাঘিমাংশ রেফ</value>
+  </data>
+  <data name="Generic_GPSSpeed" xml:space="preserve">
+    <value>গতি</value>
+  </data>
+  <data name="Generic_GPSSpeedRef" xml:space="preserve">
+    <value>গতি রেফ</value>
+  </data>
+  <data name="Generic_GUID" xml:space="preserve">
+    <value>GUID</value>
+  </data>
+  <data name="Generic_Hours" xml:space="preserve">
+    <value>ঘণ্টা</value>
+  </data>
+  <data name="Generic_Import" xml:space="preserve">
+    <value>আমদানি</value>
+  </data>
+  <data name="Generic_Insert" xml:space="preserve">
+    <value>সন্নিবেশ করুন</value>
+  </data>
+  <data name="Generic_IPTCKeywords" xml:space="preserve">
+    <value>IPTC কীওয়ার্ড</value>
+  </data>
+  <data name="Generic_ISO" xml:space="preserve">
+    <value>ISO গতি</value>
+  </data>
+  <data name="Generic_LensSpec" xml:space="preserve">
+    <value>লেন্স</value>
+  </data>
+  <data name="Generic_Make" xml:space="preserve">
+    <value>প্রস্তুতকারক</value>
+  </data>
+  <data name="Generic_Metres" xml:space="preserve">
+    <value>মিটার</value>
+  </data>
+  <data name="Generic_Metres_Abbr" xml:space="preserve">
+    <value>m</value>
+  </data>
+  <data name="Generic_Miles" xml:space="preserve">
+    <value>মাইল</value>
+  </data>
+  <data name="Generic_Minutes" xml:space="preserve">
+    <value>মিনিট</value>
+  </data>
+  <data name="Generic_Model" xml:space="preserve">
+    <value>মডেল</value>
+  </data>
+  <data name="Generic_No" xml:space="preserve">
+    <value>না</value>
+  </data>
+  <data name="Generic_None" xml:space="preserve">
+    <value>কোনোটিই না</value>
+  </data>
+  <data name="Generic_OffsetTime" xml:space="preserve">
+    <value>সময় অঞ্চল অফসেট</value>
+  </data>
+  <data name="Generic_OK" xml:space="preserve">
+    <value>ঠিক আছে</value>
+  </data>
+  <data name="Generic_PleaseWait" xml:space="preserve">
+    <value>অপেক্ষা করুন...</value>
+  </data>
+  <data name="Generic_QuestionDontAskAgain" xml:space="preserve">
+    <value>আর জিজ্ঞেস করবেন না</value>
+  </data>
+  <data name="Generic_Rating" xml:space="preserve">
+    <value>রেটিং</value>
+  </data>
+  <data name="Generic_Rename" xml:space="preserve">
+    <value>নাম পরিবর্তন</value>
+  </data>
+  <data name="Generic_Save" xml:space="preserve">
+    <value>বর্তমান পরিবর্তনগুলো সংরক্ষণ করুন</value>
+  </data>
+  <data name="Generic_Seconds" xml:space="preserve">
+    <value>সেকেন্ড</value>
+  </data>
+  <data name="Generic_ShowPassword" xml:space="preserve">
+    <value>পাসওয়ার্ড দেখান</value>
+  </data>
+  <data name="Generic_ShowUserName" xml:space="preserve">
+    <value>ইউজারনেম দেখান</value>
+  </data>
+  <data name="Generic_State" xml:space="preserve">
+    <value>রাজ্য/প্রদেশ</value>
+  </data>
+  <data name="Generic_Sublocation" xml:space="preserve">
+    <value>উপস্থান</value>
+  </data>
+  <data name="Generic_TakenDate" xml:space="preserve">
+    <value>তোলার তারিখ</value>
+  </data>
+  <data name="Generic_TZTime" xml:space="preserve">
+    <value>সময় অঞ্চল সমন্বয়:</value>
+  </data>
+  <data name="Generic_UseDST" xml:space="preserve">
+    <value>DST ব্যবহার করবেন?</value>
+  </data>
+  <data name="Generic_XMLSubjects" xml:space="preserve">
+    <value>XML বিষয়সমূহ</value>
+  </data>
+  <data name="Generic_Yes" xml:space="preserve">
+    <value>হ্যাঁ</value>
+  </data>
+  <data name="lbl_ARCGIS_APIKey" xml:space="preserve">
+    <value>ARCGIS API কী</value>
+  </data>
+  <data name="lbl_CameraTime" xml:space="preserve">
+    <value>ক্যামেরার তারিখ/সময়</value>
+  </data>
+  <data name="lbl_CameraTimeNote" xml:space="preserve">
+    <value>দ্রষ্টব্য: সময় শিফট কেবল তখনই প্রয়োজন যখন ছবির টাইমস্ট্যাম্প GPS সময়ের সঙ্গে সঠিকভাবে মেলানো না থাকে। প্রয়োজন না হলে 0 সেকেন্ড রাখুন।</value>
+  </data>
+  <data name="lbl_CancelPressed" xml:space="preserve">
+    <value>বাতিল চাপা হয়েছে। ফোল্ডার বিশ্লেষণ বন্ধ হয়েছে, তবে এখন পর্যন্ত সংগ্রহ করা ফাইলগুলো বিশ্লেষণ করা হবে।</value>
+  </data>
+  <data name="lbl_ChoiceOfferCount" xml:space="preserve">
+    <value>এতগুলো স্থাননাম বিকল্প দেখান</value>
+  </data>
+  <data name="lbl_ChoiceRadius" xml:space="preserve">
+    <value>ব্যাসার্ধে [কিমি]</value>
+  </data>
+  <data name="lbl_ExportTrackOrderBy" xml:space="preserve">
+    <value>TrackPoints সাজান যার মাধ্যমে</value>
+  </data>
+  <data name="lbl_ExportTrackTimeStampType" xml:space="preserve">
+    <value>TimeStamp মান</value>
+  </data>
+  <data name="lbl_ExportTrackTimeStampTypeNote" xml:space="preserve">
+    <value>আপনি GPSDateTime নির্বাচন করলে এবং ফাইলে সেই অ্যাট্রিবিউট না থাকলে রপ্তানি ব্যর্থ হবে। 
+কিছু HEIC ফাইলে এটি থাকে, বেশিরভাগ অন্য ফরম্যাটে থাকে না।</value>
+  </data>
+  <data name="lbl_GeoMaxExtSecs" xml:space="preserve">
+    <value>সর্বোচ্চ এক্সট্রাপোলেশন (তোলার TimeStamp ও Trackpoint TS-এর মধ্যে সময়ের পার্থক্য) সেকেন্ডে।</value>
+  </data>
+  <data name="lbl_GeoMaxIntSecs" xml:space="preserve">
+    <value>সর্বোচ্চ ইন্টারপোলেশন ('পথ অনুমান') সময় সেকেন্ডে। বন্ধ রাখতে 0 সেট করুন।</value>
+  </data>
+  <data name="lbl_GeoNames_Pwd" xml:space="preserve">
+    <value>GeoNames পাসওয়ার্ড</value>
+  </data>
+  <data name="lbl_GeoNames_UserName" xml:space="preserve">
+    <value>GeoNames ইউজারনেম</value>
+  </data>
+  <data name="lbl_importFromAnotherFolder" xml:space="preserve">
+    <value>&lt;-- আমদানির উৎস ফোল্ডার সেট করতে এখানে ক্লিক করুন</value>
+  </data>
+  <data name="lbl_importOneFile" xml:space="preserve">
+    <value>&lt;-- আমদানির উৎস ফাইল সেট করতে এখানে ক্লিক করুন</value>
+  </data>
+  <data name="lbl_ImportTimeAgainst" xml:space="preserve">
+    <value>ট্র্যাক ফাইলের টাইমস্ট্যাম্পের সঙ্গে তুলনা করুন:</value>
+  </data>
+  <data name="lbl_Language" xml:space="preserve">
+    <value>ভাষা</value>
+  </data>
+  <data name="lbl_OffsetTime" xml:space="preserve">
+    <value>সময় অঞ্চল</value>
+  </data>
+  <data name="lbl_ParseProgress_Normal" xml:space="preserve">
+    <value>প্রস্তুত</value>
+  </data>
+  <data name="lbl_ParseProgress_Read" xml:space="preserve">
+    <value>পড়া হচ্ছে:</value>
+  </data>
+  <data name="lbl_ParseProgress_Write" xml:space="preserve">
+    <value>লেখা হচ্ছে:</value>
+  </data>
+  <data name="lbl_ParsingFolders" xml:space="preserve">
+    <value>ফাইল &amp;&amp; ফোল্ডার বিশ্লেষণ করা হচ্ছে, অপেক্ষা করুন। </value>
+  </data>
+  <data name="lbl_PleaseWaitBoxActionParsing" xml:space="preserve">
+    <value>ডেটা বিশ্লেষণ:</value>
+  </data>
+  <data name="lbl_PleaseWaitBoxActionPopulatingListView" xml:space="preserve">
+    <value>প্রধান গ্রিড (ListView) পূরণ করা হচ্ছে</value>
+  </data>
+  <data name="lbl_PleaseWaitBoxActionScanning" xml:space="preserve">
+    <value>ফাইল স্ক্যান করা হচ্ছে:</value>
+  </data>
+  <data name="lbl_PressCancelToStop" xml:space="preserve">
+    <value>থামাতে বাতিল চাপুন।</value>
+  </data>
+  <data name="lbl_QuestionAddToponomy" xml:space="preserve">
+    <value>আপনি কি উচ্চতা ও স্থাননাম মানও নির্ধারণ করতে চান?
+না বেছে নিলে আপনার অক্ষাংশ/দ্রাঘিমাংশ ডেটা এম্বেড করা স্থাননাম ডেটার সঙ্গে অমিল হয়ে যেতে পারে।
+যদি 'আর জিজ্ঞেস করবেন না' ক্লিক করেন, উত্তরটি হ্যাঁ হিসেবে ধরা হবে এবং এই সেশনে আর জিজ্ঞেস করা হবে না। পুনরায় সেট করতে অ্যাপ পুনরায় চালু করুন।</value>
+  </data>
+  <data name="lbl_SaveTrackTo" xml:space="preserve">
+    <value>আউটপুট সংরক্ষণের স্থান</value>
+  </data>
+  <data name="lbl_SelectColsTitle" xml:space="preserve">
+    <value>কলাম নির্বাচন করুন</value>
+  </data>
+  <data name="lbl_ShiftTrackTimeBy" xml:space="preserve">
+    <value>ট্র্যাক ফাইলের সময় এতটুকু শিফট করুন:</value>
+  </data>
+  <data name="gbx_Startup_Folder" xml:space="preserve">
+    <value>স্টার্টআপ ফোল্ডার</value>
+  </data>
+  <data name="lbl_TZNote" xml:space="preserve">
+    <value>দ্রষ্টব্য: তারিখ/সময় ট্যাগে সময় অঞ্চল না থাকলে একটি যোগ করা হতে পারে (নিচে দেখুন), অন্যথায় স্থানীয় সিস্টেম সময় ধরে নেওয়া হয়।</value>
+  </data>
+  <data name="lbl_TZTime" xml:space="preserve">
+    <value>সময় অঞ্চল সমন্বয়:</value>
+  </data>
+  <data name="mbc_Error" xml:space="preserve">
+    <value>ত্রুটি</value>
+  </data>
+  <data name="mbc_Information" xml:space="preserve">
+    <value>তথ্য</value>
+  </data>
+  <data name="mbc_Question" xml:space="preserve">
+    <value>প্রশ্ন</value>
+  </data>
+  <data name="mbc_Warning" xml:space="preserve">
+    <value>সতর্কতা</value>
+  </data>
+  <data name="mbx_DirectoryElementCollection_ErrorParsing" xml:space="preserve">
+    <value>ফোল্ডারকে DirectoryElements-এ বিশ্লেষণের সময় ত্রুটি</value>
+  </data>
+  <data name="mbx_FrmEditFileData_ErrorAPIError" xml:space="preserve">
+    <value>API-এর সঙ্গে যোগাযোগে অ্যাপে ত্রুটি হয়েছে। Unauthorised ত্রুটি পেলে অনুগ্রহ করে সেটিংসে আপনার ইউজারনেমকে পাসওয়ার্ড হিসেবে সেট করুন।</value>
+  </data>
+  <data name="mbx_FrmEditFileData_ErrorInvalidSender" xml:space="preserve">
+    <value>এটি একটি বাগ হবে।  অনুগ্রহ করে GitHub-এ একটি ইস্যু জানান এবং 'sender' ছিল: </value>
+  </data>
+  <data name="mbx_FrmEditFileData_InfoDataUpdated" xml:space="preserve">
+    <value>ডেটা আপডেট করা হয়েছে।</value>
+  </data>
+  <data name="mbx_FrmEditFileData_WarningFileDisappeared" xml:space="preserve">
+    <value>আপনার ফাইলগুলো যেন হারিয়ে গেছে।</value>
+  </data>
+  <data name="mbx_FrmEditFileData_WarningLatLongMustBeNumbers" xml:space="preserve">
+    <value>এখানে শুধু সংখ্যা থাকতে হবে। ডিফল্ট হবে শূন্য।</value>
+  </data>
+  <data name="mbx_FrmImportExportGpx_AskUserWantsReport" xml:space="preserve">
+    <value>আমদানি প্রক্রিয়ার প্রতিবেদন দেখতে চান?</value>
+  </data>
+  <data name="mbx_FrmImportExportGpx_FileOrFolderDoesntExist" xml:space="preserve">
+    <value>আপনি যে ফাইল বা ফোল্ডার বেছেছেন তা বৈধ নয়।</value>
+  </data>
+  <data name="mbx_FrmImportExportGpx_NoFileSelected" xml:space="preserve">
+    <value>আমদানির জন্য কোনো ফাইল নির্বাচন করা হয়নি।</value>
+  </data>
+  <data name="mbx_FrmImportExportGpx_TrackContainsNoData" xml:space="preserve">
+    <value>ট্র্যাক আচ্ছাদন আমদানি ব্যর্থ হয়েছে - প্রাসঙ্গিক ডেটা পাওয়া যায়নি।</value>
+  </data>
+  <data name="mbx_FrmImportNoStoredShiftValues" xml:space="preserve">
+    <value>সংরক্ষিত "শিফট" মান নেই। ডেটা 0 থাকবে।</value>
+  </data>
+  <data name="mbx_FrmMainApp_ErrorCantCreateSQLiteDB" xml:space="preserve">
+    <value>SQLite ডেটাবেস তৈরি করা যাচ্ছে না (GitHub-এ একটি ইস্যু জানান): </value>
+  </data>
+  <data name="mbx_FrmMainApp_ErrorCantLoadSQLiteDB" xml:space="preserve">
+    <value>SQL থেকে ডেটা লোড ব্যর্থ হয়েছে (GitHub-এ একটি ইস্যু জানান): </value>
+  </data>
+  <data name="mbx_FrmMainApp_ErrorCantLoadWebView2" xml:space="preserve">
+    <value>webview2 লোড করতে ত্রুটি - এটি ইনস্টল করেছেন?</value>
+  </data>
+  <data name="mbx_FrmMainApp_ErrorCantReadDefaultSQLiteDB" xml:space="preserve">
+    <value>SQL থেকে ডিফল্ট মান পড়তে ব্যর্থ (GitHub-এ একটি ইস্যু জানান): </value>
+  </data>
+  <data name="mbx_FrmMainApp_ErrorCantWriteSQLiteDB" xml:space="preserve">
+    <value>ডেটাবেস তৈরি হয়েছে কিন্তু SQLite ডেটাবেসে লেখা যাচ্ছে না (GitHub-এ একটি ইস্যু জানান): </value>
+  </data>
+  <data name="mbx_FrmMainApp_ErrorClearingFileDataQTables" xml:space="preserve">
+    <value>filedata-Q টেবিল খালি করতে ত্রুটি (GitHub-এ একটি ইস্যু জানান): </value>
+  </data>
+  <data name="mbx_FrmMainApp_ErrorDoubleBuffer" xml:space="preserve">
+    <value>DoubleBuffer ত্রুটি (GitHub-এ একটি ইস্যু জানান): </value>
+  </data>
+  <data name="mbx_FrmMainApp_ErrorFileGoneMissing" xml:space="preserve">
+    <value>ফাইলটি আর আছে বলে মনে হচ্ছে না: </value>
+  </data>
+  <data name="mbx_FrmMainApp_ErrorInitializeComponent" xml:space="preserve">
+    <value>FrmMainApp.InitializeComponent-এ ত্রুটি (GitHub-এ একটি ইস্যু জানান): </value>
+  </data>
+  <data name="mbx_FrmMainApp_ErrorInitializeWebViewEnsureCoreWebView2Async" xml:space="preserve">
+    <value>FrmMainApp.InitialiseWebView-এ ত্রুটি (await wbv_MapArea.EnsureCoreWebView2Async(c2wv)) (GitHub-এ একটি ইস্যু জানান): </value>
+  </data>
+  <data name="mbx_FrmMainApp_ErrorInitializeWebViewIsWebMessageEnabled" xml:space="preserve">
+    <value>FrmMainApp.InitialiseWebView-এ ত্রুটি (IsWebMessageEnabled) (GitHub-এ একটি ইস্যু জানান): </value>
+  </data>
+  <data name="mbx_FrmMainApp_ErrorInitializeWebViewNavigateToStringInHTMLFile" xml:space="preserve">
+    <value>FrmMainApp.InitialiseWebView-এ ত্রুটি (HTMLCode ফাইলে NavigateToString) (GitHub-এ একটি ইস্যু জানান): </value>
+  </data>
+  <data name="mbx_FrmMainApp_ErrorInitializeWebViewParseCoordsFromHTMLFile" xml:space="preserve">
+    <value>FrmMainApp.InitialiseWebView-এ ত্রুটি (HTMLCode ফাইল থেকে স্থানাঙ্ক বিশ্লেষণ) (GitHub-এ একটি ইস্যু জানান): </value>
+  </data>
+  <data name="mbx_FrmMainApp_ErrorInitializeWebViewReadHTMLFile" xml:space="preserve">
+    <value>FrmMainApp.InitialiseWebView-এ ত্রুটি (HTMLCode ফাইল পড়া) (GitHub-এ একটি ইস্যু জানান): </value>
+  </data>
+  <data name="mbx_FrmMainApp_ErrorInitializeWebViewReplaceStringInHTMLFile" xml:space="preserve">
+    <value>FrmMainApp.InitialiseWebView-এ ত্রুটি (HTMLCode ফাইলের ধ্রুবক বদলানো) (GitHub-এ একটি ইস্যু জানান): </value>
+  </data>
+  <data name="mbx_FrmMainApp_ErrorInitializeWebViewWebMessageReceived" xml:space="preserve">
+    <value>wbv_MapArea_WebMessageReceived সম্পাদনের সময় ত্রুটি (GitHub-এ একটি ইস্যু জানান): </value>
+  </data>
+  <data name="mbx_FrmMainApp_ErrorInvalidFolder" xml:space="preserve">
+    <value>আপনার লেখা ফোল্ডারটি বৈধ বলে মনে হচ্ছে না। C:\ এ ফিরে যাবেন?</value>
+  </data>
+  <data name="mbx_FrmMainApp_ErrorLanguageFileColumnHeaders" xml:space="preserve">
+    <value>ভাষা ফাইল পড়ে কলাম শিরোনাম বরাদ্দ করতে ত্রুটি হয়েছে (GitHub-এ একটি ইস্যু জানান): </value>
+  </data>
+  <data name="mbx_FrmMainApp_ErrorNavigateMapGoHTMLCode" xml:space="preserve">
+    <value>FrmMainApp.NavigateMapGo-এ ত্রুটি (string HTMLCode) (GitHub-এ একটি ইস্যু জানান): </value>
+  </data>
+  <data name="mbx_FrmMainApp_ErrorRemoveGeoDataFailed" xml:space="preserve">
+    <value>জিওডেটা মুছে ফেলার প্রক্রিয়া ব্যর্থ হয়েছে/ত্রুটি ফেরত দিয়েছে।</value>
+  </data>
+  <data name="mbx_FrmMainApp_ErrorResizingColumns" xml:space="preserve">
+    <value>কলামের আকার পরিবর্তন ব্যর্থ (GitHub-এ একটি ইস্যু জানান): </value>
+  </data>
+  <data name="mbx_FrmMainApp_ErrorSettingStartupFolder" xml:space="preserve">
+    <value>ডিফল্ট স্টার্টআপ ফোল্ডার সেট করা ব্যর্থ (GitHub-এ একটি ইস্যু জানান): </value>
+  </data>
+  <data name="mbx_FrmMainApp_InfoCachedDataNotRemoved" xml:space="preserve">
+    <value>কোনো ডেটা মুছা হয়নি। হয় আপনি বৈধ আইটেম নির্বাচন করেননি, নয়তো বেছে নেওয়া আইটেমগুলোতে ক্যাশ ডেটা ছিল না।</value>
+  </data>
+  <data name="mbx_FrmMainApp_InfoCachedDataRemoved" xml:space="preserve">
+    <value>থাকলে, নির্বাচিত আইটেমগুলোর ক্যাশ ডেটা মুছে ফেলা হয়েছে।</value>
+  </data>
+  <data name="mbx_FrmMainApp_InfoFavouriteNameCannotBeBlank" xml:space="preserve">
+    <value>নাম খালি রাখা যাবে না</value>
+  </data>
+  <data name="mbx_FrmMainApp_InfoFavouriteNotValid" xml:space="preserve">
+    <value>আপনার নির্বাচিত সংরক্ষিত আইটেমটি বৈধ নয়</value>
+  </data>
+  <data name="mbx_FrmMainApp_InfoFavouriteSaved" xml:space="preserve">
+    <value>প্রিয় সফলভাবে সংরক্ষিত হয়েছে</value>
+  </data>
+  <data name="mbx_FrmMainApp_NoFavouritesDefined" xml:space="preserve">
+    <value>আপনার কোনো প্রিয় নেই। মানচিত্রের নিচের বোতাম ব্যবহার করে একটি যোগ করুন।</value>
+  </data>
+  <data name="mbx_FrmMainApp_QuestionAddDraggedDataPointToFiles" xml:space="preserve">
+    <value>নির্বাচিত ফাইলে স্থানাঙ্ক নির্ধারণ করতে চান?</value>
+  </data>
+  <data name="mbx_FrmMainApp_QuestionDisableFlatMode" xml:space="preserve">
+    <value>ফ্ল্যাট মোড চালু আছে। এটি বন্ধ করতে চান?</value>
+  </data>
+  <data name="mbx_FrmMainApp_QuestionNoRowsFromAPI" xml:space="preserve">
+    <value>API অনুসন্ধান কোনো বৈধ তথ্য ফেরত দেয়নি। স্থাননামের মানগুলো ফাঁকা করতে চান?</value>
+  </data>
+  <data name="mbx_FrmMainApp_QuestionRunImportExportInFlatMode" xml:space="preserve">
+    <value>ফ্ল্যাট মোডে ট্র্যাক আমদানি/রপ্তানি চালানো ভালো ধারণা নয়, কারণ ট্র্যাক সংক্রান্ত কার্যক্রম বিশেষ যুক্তি ব্যবহার করে, যা বিভিন্ন ফোল্ডারে একই নামের সম্ভাব্য ফাইলগুলোর মধ্যে পার্থক্য করতে পারে না। আপনি কি নিশ্চিতভাবে এটি চালাতে চান?</value>
+  </data>
+  <data name="mbx_FrmMainApp_WarningMultipleImageFilesForXMP" xml:space="preserve">
+    <value>সতর্কতা: নিচের সাইডকার ফাইলগুলোর নাম একাধিক ছবির ফাইলের সঙ্গে মিলে যায় - ডেটা ভুলভাবে পড়া হয়ে থাকতে পারে:</value>
+  </data>
+  <data name="mbx_FrmMainApp_WarningNoItemSelected" xml:space="preserve">
+    <value>কোনো আইটেম নির্বাচন করা হয়নি।</value>
+  </data>
+  <data name="mbx_FrmMainApp_WarningTooManyFilesSelected" xml:space="preserve">
+    <value>ঠিক 1টি ফাইল নির্বাচন করতে হবে।</value>
+  </data>
+  <data name="mbx_FrmPasteWhat_NoDateShiftToPaste" xml:space="preserve">
+    <value>কপি পুলে DateTime শিফটের জন্য কোনো মান নির্দিষ্ট করা নেই</value>
+  </data>
+  <data name="mbx_FrmSettings_dgv_CustomRules_ColumnCannotBeEmpty" xml:space="preserve">
+    <value>সব ড্রপডাউন কলামে একটি মান থাকতে হবে, এবং "যদি" শর্তের মানও খালি রাখা যাবে না।</value>
+  </data>
+  <data name="mbx_FrmSettings_dgv_CustomRules_CustomOutcomeCannotBeEmpty" xml:space="preserve">
+    <value>"হবে" কলামে "কাস্টম" বেছে নিলে "কাস্টম ফলাফল" কলাম খালি রাখা যাবে না। আপনি সেটিংস ফর্ম বন্ধ করলে এবং এটি ঠিক না করা হলে আপনার সারিটি মুছে ফেলা হবে।</value>
+  </data>
+  <data name="mbx_FrmSettings_ErrorExportFailed" xml:space="preserve">
+    <value>রপ্তানি ব্যর্থ: </value>
+  </data>
+  <data name="mbx_FrmSettings_ErrorImportFailed" xml:space="preserve">
+    <value>আমদানি ব্যর্থ: </value>
+  </data>
+  <data name="mbx_FrmSettings_PleaseRestartApp" xml:space="preserve">
+    <value>পরিবর্তনটি কার্যকর করতে অ্যাপটি পুনরায় চালু করুন।</value>
+  </data>
+  <data name="mbx_FrmSettings_QuestionWhatToExport" xml:space="preserve">
+    <value>রপ্তানি করার বিষয় বেছে নিন। মনে রাখবেন, রপ্তানি ফাংশন ডেটাবেসে _থাকা_ ডেটা রপ্তানি করে, অর্থাৎ যা সংরক্ষিত হয়েছে। সেটিংসে অসংরক্ষিত পরিবর্তন থাকলে ফিরে গিয়ে সেগুলো সংরক্ষণ করুন (সেটিংস ফর্মে ঠিক আছে-তে ক্লিক করে), তারপর এখানে ফিরে আসুন।</value>
+  </data>
+  <data name="mbx_FrmSettings_QuestionWhatToImport" xml:space="preserve">
+    <value>আমদানি করার বিষয় বেছে নিন। মনে রাখবেন, আমদানি প্রক্রিয়া সফলভাবে শেষ হলে ডেটাবেসের সংশ্লিষ্ট অংশগুলো ওভাররাইট হয়ে যাবে। কিছু ব্যর্থ হলে আপনার AppData ফোল্ডারে ডেটাবেসের একটি ব্যাকআপ ফাইল থাকবে।</value>
+  </data>
+  <data name="Generic_Done" xml:space="preserve">
+    <value>সম্পন্ন।</value>
+  </data>
+  <data name="mbx_GenericDoneRestartApp" xml:space="preserve">
+    <value>সম্পন্ন - সম্ভবত অ্যাপটি পুনরায় চালু করতে চাইবেন।</value>
+  </data>
+  <data name="mbx_GenericPathLikelyUTF" xml:space="preserve">
+    <value>ফাইলের পথে সম্ভবত UTF (অ-মানক, যেমন এশীয়, সিরিলিক ইত্যাদি) অক্ষর আছে, যা এই ত্রুটির কারণ হতে পারে। অনুগ্রহ করে নিশ্চিত করুন যে “Use Unicode UTF-8 for worldwide language support” বৈশিষ্ট্যটি চালু আছে। (এ বিষয়ে Readme-এর Known Issues অংশ দেখুন)</value>
+  </data>
+  <data name="mbx_HelperStaticExifNoAPI" xml:space="preserve">
+    <value>API-তে পৌঁছানো যায়নি - আপনি কি অফলাইনে আছেন?</value>
+  </data>
+  <data name="mbx_Helper_ErrorAsyncExifToolExecuteAsyncFailed" xml:space="preserve">
+    <value>asyncExifTool.ExecuteAsync ব্যর্থ হয়েছে (GitHub-এ একটি ইস্যু জানান): </value>
+  </data>
+  <data name="mbx_Helper_ErrorCantReadDefaultSQLiteDB" xml:space="preserve">
+    <value>SQL থেকে ডিফল্ট মান পড়তে ব্যর্থ (GitHub-এ একটি ইস্যু জানান): </value>
+  </data>
+  <data name="mbx_Helper_QuestionFileQIsNotEmpty" xml:space="preserve">
+    <value>কিছু ডেটা পরিবর্তিত হয়েছে - সংরক্ষণ করতে চান? 
+না ক্লিক করলে ডেটা বাতিল হবে</value>
+  </data>
+  <data name="mbx_Helper_WarningExifToolVerAPIResponse" xml:space="preserve">
+    <value>ExifToolVerAPIResponse API নিচের প্রতিক্রিয়া ফেরত দিয়েছে: </value>
+  </data>
+  <data name="mbx_Helper_WarningFileDisappeared" xml:space="preserve">
+    <value>আপনার ফাইলগুলো যেন হারিয়ে গেছে।</value>
+  </data>
+  <data name="mbx_Helper_WarningGeoNamesAPIResponse" xml:space="preserve">
+    <value>GeoNames API নিচের প্রতিক্রিয়া ফেরত দিয়েছে: </value>
+  </data>
+  <data name="mbx_Helper_WarningGTNVerAPIResponse" xml:space="preserve">
+    <value>GitHub API নিচের প্রতিক্রিয়া ফেরত দিয়েছে: </value>
+  </data>
+  <data name="mbx_Helper_WarningNoARCGISKey" xml:space="preserve">
+    <value>অ্যাপটি ঠিকমতো কাজ করার জন্য সেটিংসে একটি ArcGIS API কী দিতে হবে।</value>
+  </data>
+  <data name="mbx_Helper_WarningNothingInWriteQueue" xml:space="preserve">
+    <value>আপনার লেখার সারিতে কিছু নেই।</value>
+  </data>
+  <data name="mbx_Helper_WarningNothingToPaste" xml:space="preserve">
+    <value>পেস্ট করার কিছু নেই।</value>
+  </data>
+  <data name="mbx_Helper_WarningNoWriteSettingEnabled" xml:space="preserve">
+    <value>আপনি মূল ফাইল _এবং_ সাইডকার XMP দুটোরই প্রক্রিয়াকরণ বন্ধ করে দিয়েছেন, তাই লেখার কিছু নেই।</value>
+  </data>
+  <data name="mbx_Helper_WarningTooManyFilesSelected" xml:space="preserve">
+    <value>শুধু একটি ফাইল নির্বাচন করা থাকলেই এটি কাজ করবে।</value>
+  </data>
+  <data name="mns_File" xml:space="preserve">
+    <value>ফাইল</value>
+  </data>
+  <data name="mns_Help" xml:space="preserve">
+    <value>সাহায্য</value>
+  </data>
+  <data name="mns_Settings" xml:space="preserve">
+    <value>সেটিংস</value>
+  </data>
+  <data name="pbx_Browse_Startup_Folder" xml:space="preserve">
+    <value>স্টার্টআপ ফোল্ডার ব্রাউজ করুন</value>
+  </data>
+  <data name="pbx_imagePreviewCouldNotRetrieve" xml:space="preserve">
+    <value>ছবির প্রিভিউ আনা/তৈরি করা যায়নি</value>
+  </data>
+  <data name="pbx_imagePreviewEmptyText" xml:space="preserve">
+    <value>দেখানোর মতো কোনো ছবি নেই</value>
+  </data>
+  <data name="pbx_importFromAnotherFolder" xml:space="preserve">
+    <value>ট্র্যাক ফোল্ডার ব্রাউজ করুন</value>
+  </data>
+  <data name="pbx_importOneFile" xml:space="preserve">
+    <value>ট্র্যাক ফাইল ব্রাউজ করুন</value>
+  </data>
+  <data name="rbt_CreateDateSetToFixedDate" xml:space="preserve">
+    <value>নির্দিষ্ট তারিখে সেট করুন</value>
+  </data>
+  <data name="rbt_CreateDateTimeShift" xml:space="preserve">
+    <value>সময় শিফট</value>
+  </data>
+  <data name="rbt_importFromAnotherFolder" xml:space="preserve">
+    <value>অন্য ফোল্ডার থেকে আমদানি করুন</value>
+  </data>
+  <data name="rbt_importFromCurrentFolder" xml:space="preserve">
+    <value>বর্তমান ফোল্ডার থেকে আমদানি করুন</value>
+  </data>
+  <data name="rbt_importOneFile" xml:space="preserve">
+    <value>একটি নির্বাচিত ফাইল থেকে আমদানি করুন</value>
+  </data>
+  <data name="rbt_MapColourModeDarkInverse" xml:space="preserve">
+    <value>ডার্ক (বিপরীত)</value>
+  </data>
+  <data name="rbt_MapColourModeDarkPale" xml:space="preserve">
+    <value>ডার্ক (ফ্যাকাশে)</value>
+  </data>
+  <data name="rbt_MapColourModeNormal" xml:space="preserve">
+    <value>স্বাভাবিক</value>
+  </data>
+  <data name="rbt_PasteCreateDateActual" xml:space="preserve">
+    <value>প্রকৃত (নির্দিষ্ট মান)</value>
+  </data>
+  <data name="rbt_PasteCreateDateShift" xml:space="preserve">
+    <value>সময় শিফট</value>
+  </data>
+  <data name="rbt_PasteTakenDateActual" xml:space="preserve">
+    <value>প্রকৃত (নির্দিষ্ট মান)</value>
+  </data>
+  <data name="rbt_PasteTakenDateShift" xml:space="preserve">
+    <value>সময় শিফট</value>
+  </data>
+  <data name="rbt_TakenDateSetToFixedDate" xml:space="preserve">
+    <value>নির্দিষ্ট তারিখে সেট করুন</value>
+  </data>
+  <data name="rbt_TakenDateTimeShift" xml:space="preserve">
+    <value>সময় শিফট</value>
+  </data>
+  <data name="rbt_TryUseGeoNamesLanguage" xml:space="preserve">
+    <value>স্থানের নাম আনার সময় এই ভাষা ব্যবহার করার চেষ্টা করুন:</value>
+  </data>
+  <data name="rbt_UseGeoNamesLocalLanguage" xml:space="preserve">
+    <value>স্থানের নাম আনার সময় "স্থানীয় ভাষা" ব্যবহার করার চেষ্টা করুন</value>
+  </data>
+  <data name="rbx_CustomCityLogicExplanation" xml:space="preserve">
+    <value>এটি একটি উন্নত বৈশিষ্ট্য। AdminName1-4 &amp; ToponymName API-এর আউটপুটকে বোঝায়, তাই এটি না বুঝলে সম্ভবত এতে হাত না দেওয়াই ভালো। 
+সামগ্রিক বিবরণের জন্য দেখুন: https://github.com/nemethviktor/GeoTagNinja/issues/38#issuecomment-1356844255 .
+এই সেটিংসের কাজ হলো, নির্দিষ্ট AdminName-গুলোর একটি থেকে "শহর" মান পেতে আপনি নিজের পছন্দের দেশের তালিকা যোগ করতে পারেন।</value>
+  </data>
+  <data name="rbx_CustomCityLogicExplanationBold" xml:space="preserve">
+    <value>মনে রাখবেন, নিচের টেবিলে পরিবর্তনগুলো সঙ্গে সঙ্গে কার্যকর হয় এবং ঠিক আছে/বাতিল বোতামের এতে সরাসরি কোনো প্রভাব নেই। এই সেশনে নতুন ডেটা আনতে চাইলে, পরিবর্তনে প্রভাবিত ফাইলগুলোর জন্য ডান-ক্লিক করে ক্যাশ ডেটা মুছুন ক্লিক করতে হবে (অথবা শুধু অ্যাপ পুনরায় চালু করুন।)</value>
+  </data>
+  <data name="rbx_CustomRulesExplanation" xml:space="preserve">
+    <value>এটি একটি উন্নত বৈশিষ্ট্য। AdminName1-4 &amp; ToponymName API-এর আউটপুটকে বোঝায়, তাই এটি না বুঝলে সম্ভবত এতে হাত না দেওয়াই ভালো। 
+প্রসঙ্গ: "পূর্বনির্ধারিত দেশ" (নিচের চেকবক্স): এ বিষয়ে পড়ুন: https://github.com/nemethviktor/GeoTagNinja/issues/38#issuecomment-1356844255 + অন্য ট্যাবটিও দেখুন - মনে রাখবেন, এই সেটিং বন্ধ করলে সংশ্লিষ্ট গ্রুপের বাইরে পড়া CountryCode ঘরগুলো ফাঁকা হয়ে যাবে, তবে সারিগুলো আসলে বাদ যাবে না।
+"কাস্টম" ছাড়া সব কলাম বাধ্যতামূলক, তবে "হবে" ফলাফল "কাস্টম" করে "কাস্টম ফলাফল" কলাম খালি রাখলে সারিটি উপেক্ষা করা হবে। ডেটার বড়-ছোট হাতের অক্ষর আলাদা করা হয় না। প্রতিটি ডেটাপয়েন্টের (যেমন শহর, রাজ্য) জন্য শেষ সারিটি আগের সারিগুলোকে ওভাররাইট করে। মোটের উপর বিবেচনা করে চলুন। যত বেশি সারি যোগ করবেন, তত ধীরগতি হবে।
+উদাহরণ: লন্ডন, UK-এর জন্য API-এর ডিফল্ট ডেটা খারাপ, কারণ ঐ অঞ্চলে adminName2 = "Greater London", তাই সেটি এভাবে বাদ পড়ে যায় (শহর সাধারণত "ToponymName" থেকে আসে)। -&gt; সেট করুন: "কী" = "adminName2", "যদি" = "হয়", "মান" = "Greater London", "তখন" = "শহর", "হবে" = "adminName2"। পুরো বিষয়টি দ্বিতীয় সারিতে পুনরাবৃত্তি করুন, তবে "তখন" = "Sub_Loction" এবং "হবে" = "ToponymName"।</value>
+  </data>
+  <data name="rbx_CustomRulesExplanationBold" xml:space="preserve">
+    <value>মনে রাখবেন, নিচের টেবিলে পরিবর্তনগুলো সঙ্গে সঙ্গে কার্যকর হয় এবং ঠিক আছে/বাতিল বোতামের এতে সরাসরি কোনো প্রভাব নেই। এই সেশনে নতুন ডেটা আনতে চাইলে, পরিবর্তনে প্রভাবিত ফাইলগুলোর জন্য ডান-ক্লিক করে ক্যাশ ডেটা মুছুন ক্লিক করতে হবে (অথবা শুধু অ্যাপ পুনরায় চালু করুন।)</value>
+  </data>
+  <data name="rbx_Register_ArcGIS" xml:space="preserve">
+    <value>মানচিত্র অনুসন্ধানের কাজের জন্য আপনার একটি ArcGIS API কী লাগবে। 
+ArcGIS ২০২৪ সালের জুন থেকে তাদের নিবন্ধন প্রক্রিয়া বদলেছে। [এখানে](https://location.arcgis.com/sign-up/) নিবন্ধন করুন
+এখন আপনাকে একটি portal url নির্দিষ্ট করতে হবে। যা খুশি লিখুন।
+`Developer credential creator`-এ স্ক্রল করুন/যান
+তারপর `New Item`
+তারপর `Developer Credentials`
+`API Key` বেছে নিন (OAUth নয়)
+মেয়াদ শেষের তারিখ যতদূর সম্ভব ভবিষ্যতে সেট করুন (১ বছর)
+`Referrers` ফাঁকা রাখুন
+পরের পৃষ্ঠায় `Geocoding (not stored)` বেছে নিন
+পরের পৃষ্ঠায় `Item Access` এড়িয়ে যান
+পরের পৃষ্ঠায় যেকোনো শিরোনাম যোগ করুন
+শেষে `Generate the API key and go to item details page. I am ready to copy and save the key.` ক্লিক করুন
+অনুরোধ করা হলে API কী সংরক্ষণ করুন। তখনই না করলে আরেকটি তৈরি করতে হবে।</value>
+  </data>
+  <data name="rbx_Register_GeoNames" xml:space="preserve">
+    <value>রিভার্স জিওকোডিং/অনুসন্ধান ফাংশন (অক্ষাংশ/দ্রাঘিমাংশ --&gt; দেশ/শহর/...) ব্যবহার করতে আপনার একটি GeoNames অ্যাকাউন্ট লাগবে। এখানে একটি তৈরি করুন: http://www.geonames.org/login এবং তারপর এখানে "Free Web Services" অ্যাক্সেস চালু করুন: https://www.geonames.org/manageaccount</value>
+  </data>
+  <data name="tcr_EditData" xml:space="preserve">
+    <value>ডেটা সম্পাদনা</value>
+  </data>
+  <data name="tmi_File" xml:space="preserve">
+    <value>ফাইল</value>
+  </data>
+  <data name="tmi_File_CopyGeoData" xml:space="preserve">
+    <value>সব জিওডেটা কপি করুন</value>
+  </data>
+  <data name="frm_BatchRename" xml:space="preserve">
+    <value>ব্যাচ নাম পরিবর্তন</value>
+  </data>
+  <data name="frm_BatchRename_Preview" xml:space="preserve">
+    <value>ব্যাচ নাম পরিবর্তন - প্রিভিউ</value>
+  </data>
+  <data name="gbx_BatchRename_Presets" xml:space="preserve">
+    <value>প্রিসেট</value>
+  </data>
+  <data name="gbx_BatchRename_Destination" xml:space="preserve">
+    <value>গন্তব্য ফোল্ডার</value>
+  </data>
+  <data name="gbx_BatchRename_Names" xml:space="preserve">
+    <value>নতুন ফাইলের নাম</value>
+  </data>
+  <data name="gbx_BatchRename_Options" xml:space="preserve">
+    <value>বিকল্পসমূহ</value>
+  </data>
+  <data name="gbx_BatchRename_Preview" xml:space="preserve">
+    <value>প্রিভিউ</value>
+  </data>
+  <data name="lbl_BatchRename_Preset" xml:space="preserve">
+    <value>প্রিসেট</value>
+  </data>
+  <data name="lbl_BatchRename_Modified" xml:space="preserve">
+    <value>(পরিবর্তিত)</value>
+  </data>
+  <data name="btn_BatchRename_Save" xml:space="preserve">
+    <value>সংরক্ষণ...</value>
+  </data>
+  <data name="btn_BatchRename_Delete" xml:space="preserve">
+    <value>মুছুন</value>
+  </data>
+  <data name="rbt_BatchRename_SameFolder" xml:space="preserve">
+    <value>একই ফোল্ডারে নাম পরিবর্তন করুন</value>
+  </data>
+  <data name="rbt_BatchRename_MoveToFolder" xml:space="preserve">
+    <value>অন্য ফোল্ডারে সরান</value>
+  </data>
+  <data name="rbt_BatchRename_CopyToFolder" xml:space="preserve">
+    <value>অন্য ফোল্ডারে কপি করুন</value>
+  </data>
+  <data name="btn_BatchRename_Browse" xml:space="preserve">
+    <value>ব্রাউজ করুন...</value>
+  </data>
+  <data name="lbl_BatchRename_Compatibility" xml:space="preserve">
+    <value>সামঞ্জস্য</value>
+  </data>
+  <data name="ckb_BatchRename_Windows" xml:space="preserve">
+    <value>Windows</value>
+  </data>
+  <data name="ckb_BatchRename_Mac" xml:space="preserve">
+    <value>Mac</value>
+  </data>
+  <data name="ckb_BatchRename_Unix" xml:space="preserve">
+    <value>Unix</value>
+  </data>
+  <data name="lbl_BatchRename_CurrentFilename" xml:space="preserve">
+    <value>বর্তমান ফাইলের নাম</value>
+  </data>
+  <data name="lbl_BatchRename_NewFilename" xml:space="preserve">
+    <value>নতুন ফাইলের নাম</value>
+  </data>
+  <data name="lbl_BatchRename_Note" xml:space="preserve">
+    <value>দ্রষ্টব্য</value>
+  </data>
+  <data name="lbl_BatchRename_Unchanged" xml:space="preserve">
+    <value>অপরিবর্তিত</value>
+  </data>
+  <data name="btn_BatchRename_Rename" xml:space="preserve">
+    <value>নাম পরিবর্তন</value>
+  </data>
+  <data name="btn_BatchRename_PreviewAll" xml:space="preserve">
+    <value>প্রিভিউ</value>
+  </data>
+  <data name="lbl_BatchRename_Find" xml:space="preserve">
+    <value>খুঁজুন</value>
+  </data>
+  <data name="lbl_BatchRename_ReplaceWith" xml:space="preserve">
+    <value>এটি দিয়ে বদলান</value>
+  </data>
+  <data name="ckb_BatchRename_IgnoreCase" xml:space="preserve">
+    <value>বড়/ছোট হাতের অক্ষর উপেক্ষা করুন</value>
+  </data>
+  <data name="ckb_BatchRename_ReplaceAll" xml:space="preserve">
+    <value>সব বদলান</value>
+  </data>
+  <data name="ckb_BatchRename_UseRegex" xml:space="preserve">
+    <value>Regular Expression ব্যবহার করুন</value>
+  </data>
+  <data name="lbl_BatchRename_Kind_Text" xml:space="preserve">
+    <value>টেক্সট</value>
+  </data>
+  <data name="lbl_BatchRename_Kind_NewExtension" xml:space="preserve">
+    <value>নতুন এক্সটেনশন</value>
+  </data>
+  <data name="lbl_BatchRename_Kind_CurrentFilename" xml:space="preserve">
+    <value>বর্তমান ফাইলের নাম</value>
+  </data>
+  <data name="lbl_BatchRename_Kind_PreservedFilename" xml:space="preserve">
+    <value>সংরক্ষিত ফাইলের নাম</value>
+  </data>
+  <data name="lbl_BatchRename_Kind_SequenceNumber" xml:space="preserve">
+    <value>ক্রমিক সংখ্যা</value>
+  </data>
+  <data name="lbl_BatchRename_Kind_SequenceLetter" xml:space="preserve">
+    <value>ক্রমিক অক্ষর</value>
+  </data>
+  <data name="lbl_BatchRename_Kind_DateTime" xml:space="preserve">
+    <value>তারিখ ও সময়</value>
+  </data>
+  <data name="lbl_BatchRename_Kind_Metadata" xml:space="preserve">
+    <value>মেটাডেটা</value>
+  </data>
+  <data name="lbl_BatchRename_Kind_FolderName" xml:space="preserve">
+    <value>ফোল্ডারের নাম</value>
+  </data>
+  <data name="lbl_BatchRename_Kind_StringSubstitution" xml:space="preserve">
+    <value>স্ট্রিং বদল</value>
+  </data>
+  <data name="lbl_BatchRename_Case_Original" xml:space="preserve">
+    <value>মূল বর্ণ-আকার</value>
+  </data>
+  <data name="lbl_BatchRename_Case_Lower" xml:space="preserve">
+    <value>ছোট হাতের অক্ষর</value>
+  </data>
+  <data name="lbl_BatchRename_Case_Upper" xml:space="preserve">
+    <value>বড় হাতের অক্ষর</value>
+  </data>
+  <data name="lbl_BatchRename_Part_NameAndExtension" xml:space="preserve">
+    <value>নাম + এক্সটেনশন</value>
+  </data>
+  <data name="lbl_BatchRename_Part_Name" xml:space="preserve">
+    <value>নাম</value>
+  </data>
+  <data name="lbl_BatchRename_Part_Extension" xml:space="preserve">
+    <value>এক্সটেনশন</value>
+  </data>
+  <data name="lbl_BatchRename_Part_NumberSuffix" xml:space="preserve">
+    <value>সংখ্যা প্রত্যয়</value>
+  </data>
+  <data name="lbl_BatchRename_DateSource_DateTaken" xml:space="preserve">
+    <value>তোলার তারিখ</value>
+  </data>
+  <data name="lbl_BatchRename_DateSource_DateCreated" xml:space="preserve">
+    <value>তৈরির তারিখ</value>
+  </data>
+  <data name="lbl_BatchRename_DateSource_FileModified" xml:space="preserve">
+    <value>ফাইল পরিবর্তনের তারিখ</value>
+  </data>
+  <data name="lbl_BatchRename_DateSource_FileCreated" xml:space="preserve">
+    <value>ফাইল তৈরির তারিখ</value>
+  </data>
+  <data name="lbl_BatchRename_DateSource_Today" xml:space="preserve">
+    <value>আজ</value>
+  </data>
+  <data name="lbl_BatchRename_DateSource_Yesterday" xml:space="preserve">
+    <value>গতকাল</value>
+  </data>
+  <data name="lbl_BatchRename_Digits_1" xml:space="preserve">
+    <value>এক অঙ্ক</value>
+  </data>
+  <data name="lbl_BatchRename_Digits_2" xml:space="preserve">
+    <value>দুই অঙ্ক</value>
+  </data>
+  <data name="lbl_BatchRename_Digits_3" xml:space="preserve">
+    <value>তিন অঙ্ক</value>
+  </data>
+  <data name="lbl_BatchRename_Digits_4" xml:space="preserve">
+    <value>চার অঙ্ক</value>
+  </data>
+  <data name="lbl_BatchRename_Digits_5" xml:space="preserve">
+    <value>পাঁচ অঙ্ক</value>
+  </data>
+  <data name="lbl_BatchRename_Digits_6" xml:space="preserve">
+    <value>ছয় অঙ্ক</value>
+  </data>
+  <data name="lbl_BatchRename_SubstituteSource_OriginalFilename" xml:space="preserve">
+    <value>মূল ফাইলের নাম</value>
+  </data>
+  <data name="lbl_BatchRename_SubstituteSource_PreservedFilename" xml:space="preserve">
+    <value>সংরক্ষিত ফাইলের নাম</value>
+  </data>
+  <data name="lbl_BatchRename_Field_Country" xml:space="preserve">
+    <value>দেশ</value>
+  </data>
+  <data name="lbl_BatchRename_Field_CountryCode" xml:space="preserve">
+    <value>দেশের কোড</value>
+  </data>
+  <data name="lbl_BatchRename_Field_State" xml:space="preserve">
+    <value>রাজ্য/প্রদেশ</value>
+  </data>
+  <data name="lbl_BatchRename_Field_City" xml:space="preserve">
+    <value>শহর</value>
+  </data>
+  <data name="lbl_BatchRename_Field_Sublocation" xml:space="preserve">
+    <value>উপস্থান</value>
+  </data>
+  <data name="lbl_BatchRename_Field_Make" xml:space="preserve">
+    <value>ক্যামেরার প্রস্তুতকারক</value>
+  </data>
+  <data name="lbl_BatchRename_Field_Model" xml:space="preserve">
+    <value>ক্যামেরার মডেল</value>
+  </data>
+  <data name="lbl_BatchRename_Field_LensSpec" xml:space="preserve">
+    <value>লেন্স</value>
+  </data>
+  <data name="lbl_BatchRename_Field_Rating" xml:space="preserve">
+    <value>রেটিং</value>
+  </data>
+  <data name="lbl_BatchRename_Field_ExposureTime" xml:space="preserve">
+    <value>এক্সপোজার সময়</value>
+  </data>
+  <data name="lbl_BatchRename_Field_Fnumber" xml:space="preserve">
+    <value>অ্যাপারচার (F-সংখ্যা)</value>
+  </data>
+  <data name="lbl_BatchRename_Field_FocalLength" xml:space="preserve">
+    <value>ফোকাল দৈর্ঘ্য</value>
+  </data>
+  <data name="lbl_BatchRename_Field_ISO" xml:space="preserve">
+    <value>ISO</value>
+  </data>
+  <data name="lbl_BatchRename_Field_Artist" xml:space="preserve">
+    <value>শিল্পী</value>
+  </data>
+  <data name="lbl_BatchRename_Field_Byline" xml:space="preserve">
+    <value>স্রষ্টা (Byline)</value>
+  </data>
+  <data name="lbl_BatchRename_Field_Copyright" xml:space="preserve">
+    <value>কপিরাইট</value>
+  </data>
+  <data name="lbl_BatchRename_Field_Credit" xml:space="preserve">
+    <value>ক্রেডিট</value>
+  </data>
+  <data name="lbl_BatchRename_Field_Source" xml:space="preserve">
+    <value>উৎস</value>
+  </data>
+  <data name="lbl_BatchRename_Field_ObjectName" xml:space="preserve">
+    <value>শিরোনাম (Object Name)</value>
+  </data>
+  <data name="lbl_BatchRename_Field_Headline" xml:space="preserve">
+    <value>হেডলাইন</value>
+  </data>
+  <data name="lbl_BatchRename_Field_Category" xml:space="preserve">
+    <value>বিভাগ</value>
+  </data>
+  <data name="mbx_BatchRename_OneFile" xml:space="preserve">
+    <value>একটি ফাইল প্রক্রিয়া করা হবে</value>
+  </data>
+  <data name="mbx_BatchRename_ManyFiles" xml:space="preserve">
+    <value>{0}টি ফাইল প্রক্রিয়া করা হবে</value>
+  </data>
+  <data name="mbx_BatchRename_SomeBlocked" xml:space="preserve">
+    <value>{1}টির মধ্যে {0}টি ফাইলের নাম পরিবর্তন করা যাবে না: প্রিভিউ দেখুন</value>
+  </data>
+  <data name="mbx_BatchRename_PresetNamePrompt" xml:space="preserve">
+    <value>প্রিসেটের নাম:</value>
+  </data>
+  <data name="mbx_BatchRename_PresetUnreadable" xml:space="preserve">
+    <value>প্রিসেট '{0}' পড়া যায়নি।</value>
+  </data>
+  <data name="mbx_BatchRename_PresetReplace" xml:space="preserve">
+    <value>'{0}' নামের একটি প্রিসেট আগে থেকেই আছে। এটি বদলাবেন?</value>
+  </data>
+  <data name="mbx_BatchRename_PresetSaveFailed" xml:space="preserve">
+    <value>প্রিসেট সংরক্ষণ করা যায়নি।</value>
+  </data>
+  <data name="mbx_BatchRename_PresetDelete" xml:space="preserve">
+    <value>প্রিসেট '{0}' মুছবেন?</value>
+  </data>
+  <data name="mbx_BatchRename_Preflight" xml:space="preserve">
+    <value>কিছুরই নাম পরিবর্তন করা হয়নি। আগে এগুলো ঠিক করতে হবে:
+
+{0}</value>
+  </data>
+  <data name="mbx_BatchRename_MoreProblems" xml:space="preserve">
+    <value>... এবং আরও {0}টি (প্রিভিউতে সবগুলো দেখুন)</value>
+  </data>
+  <data name="mbx_BatchRename_SelectFiles" xml:space="preserve">
+    <value>প্রথমে নাম পরিবর্তন করার ফাইলগুলো নির্বাচন করুন।</value>
+  </data>
+  <data name="mbx_BatchRename_NothingRenamed" xml:space="preserve">
+    <value>কিছুরই নাম পরিবর্তন করা হয়নি (ইতিমধ্যে যা করা হয়েছিল তা ফিরিয়ে দেওয়া হয়েছে)।
+
+{0}</value>
+  </data>
+  <data name="mbx_BatchRename_StepFailed" xml:space="preserve">
+    <value>{0}
+
+এখন পর্যন্ত যা করা হয়েছে সব ফিরিয়ে দেওয়া হয়েছে, তাই কোনো ফাইলে হাত দেওয়া হয়নি।
+
+{1} ছাড়া চালিয়ে যাবেন (এবং যে ফাইলটি এই নাম নিতে যাচ্ছিল সেটিও)?
+হ্যাঁ: বাকিগুলোর নাম পরিবর্তন করুন।  না: থামুন; সব ফাইল আগের মতোই থাকবে।</value>
+  </data>
+  <data name="mbx_BatchRename_NothingLeft" xml:space="preserve">
+    <value>নাম পরিবর্তনের জন্য আর কিছু নেই।</value>
+  </data>
+  <data name="mbx_BatchRename_DoneSkipped" xml:space="preserve">
+    <value>{0}টি ফাইল প্রক্রিয়া করা হয়েছে। যেমন ছিল তেমন রাখা হয়েছে:
+{1}</value>
+  </data>
+  <data name="mbx_BatchRename_AndMore" xml:space="preserve">
+    <value>... এবং আরও {0}টি</value>
+  </data>
+  <data name="mbx_BatchRename_Problem_NoDestination" xml:space="preserve">
+    <value>কোনো গন্তব্য ফোল্ডার বেছে নেওয়া হয়নি</value>
+  </data>
+  <data name="mbx_BatchRename_Problem_EmptyName" xml:space="preserve">
+    <value>নতুন নামটি খালি</value>
+  </data>
+  <data name="mbx_BatchRename_Problem_Reserved" xml:space="preserve">
+    <value>'{0}' Windows-এ সংরক্ষিত একটি নাম</value>
+  </data>
+  <data name="mbx_BatchRename_Problem_NameTooLong" xml:space="preserve">
+    <value>নতুন নামটি অনেক বড়</value>
+  </data>
+  <data name="mbx_BatchRename_Problem_PathTooLong" xml:space="preserve">
+    <value>নতুন পথটি অনেক দীর্ঘ</value>
+  </data>
+  <data name="mbx_BatchRename_Problem_NoDate" xml:space="preserve">
+    <value>ব্যবহার করার মতো কোনো {0} নেই</value>
+  </data>
+  <data name="mbx_BatchRename_Problem_BadRegex" xml:space="preserve">
+    <value>Regular expression বৈধ নয়</value>
+  </data>
+  <data name="mbx_BatchRename_Problem_RegexTimeout" xml:space="preserve">
+    <value>Regular expression অনেক সময় নিচ্ছে</value>
+  </data>
+  <data name="mbx_BatchRename_Problem_NameClaimed" xml:space="preserve">
+    <value>অন্য একটি ফাইল এই নামটি পাচ্ছে (বা ইতিমধ্যে আছে)</value>
+  </data>
+  <data name="mbx_BatchRename_Problem_FileExists" xml:space="preserve">
+    <value>এই নামের একটি ফাইল আগে থেকেই আছে</value>
+  </data>
+  <data name="mbx_BatchRename_Problem_SidecarExists" xml:space="preserve">
+    <value>এই নামের একটি XMP সাইডকার আগে থেকেই আছে</value>
+  </data>
+  <data name="mbx_BatchRename_Problem_Gone" xml:space="preserve">
+    <value>ফাইলটি আর নেই</value>
+  </data>
+  <data name="mbx_BatchRename_Problem_BeingSaved" xml:space="preserve">
+    <value>ফাইলটি GeoTagNinja সংরক্ষণ করছে</value>
+  </data>
+  <data name="mbx_BatchRename_Problem_InUse" xml:space="preserve">
+    <value>ফাইলটি অন্য একটি প্রোগ্রাম ব্যবহার করছে</value>
+  </data>
+  <data name="mbx_BatchRename_Problem_FolderNotWritable" xml:space="preserve">
+    <value>ফোল্ডার '{0}'-এ লেখা যাচ্ছে না</value>
+  </data>
+  <data name="mbx_BatchRename_Problem_NoSpace" xml:space="preserve">
+    <value>{0}-এ পর্যাপ্ত জায়গা নেই: {1} MB প্রয়োজন, {2} MB খালি আছে</value>
+  </data>
+  <data name="mbx_BatchRename_Problem_Unfixed" xml:space="preserve">
+    <value>ব্যাচে আগে ঠিক করা দরকার এমন সমস্যা আছে।</value>
+  </data>
+  <data name="tmi_File_BatchRename" xml:space="preserve">
+    <value>ব্যাচ নাম পরিবর্তন...</value>
+  </data>
+  <data name="cmi_BatchRename" xml:space="preserve">
+    <value>ব্যাচ নাম পরিবর্তন...</value>
+  </data>
+  <data name="tmi_File_EditFiles" xml:space="preserve">
+    <value>ফাইল সম্পাদনা করুন...</value>
+  </data>
+  <data name="tmi_File_FlatMode" xml:space="preserve">
+    <value>ফ্ল্যাট মোড (সাবফোল্ডার বিশ্লেষণ)</value>
+  </data>
+  <data name="tmi_File_ImportExportGPX" xml:space="preserve">
+    <value>GPX/JSON ট্র্যাক ফাইল আমদানি/রপ্তানি...</value>
+  </data>
+  <data name="tmi_File_PasteGeoData" xml:space="preserve">
+    <value>সব জিওডেটা পেস্ট করুন...</value>
+  </data>
+  <data name="tmi_File_Quit" xml:space="preserve">
+    <value>প্রস্থান</value>
+  </data>
+  <data name="tmi_File_SaveAll" xml:space="preserve">
+    <value>সব সংরক্ষণ করুন</value>
+  </data>
+  <data name="tmi_Help" xml:space="preserve">
+    <value>সাহায্য</value>
+  </data>
+  <data name="tmi_Help_About" xml:space="preserve">
+    <value>সম্পর্কে...</value>
+  </data>
+  <data name="tmi_Help_Help" xml:space="preserve">
+    <value>সাহায্য</value>
+  </data>
+  <data name="tmi_Help_BugReport" xml:space="preserve">
+    <value>বাগ রিপোর্ট জানান (GitHub)</value>
+  </data>
+  <data name="tmi_Help_FeedbackFeatureRequest" xml:space="preserve">
+    <value>ফিচারের অনুরোধ জানান (GitHub)</value>
+  </data>
+  <data name="tmi_Settings" xml:space="preserve">
+    <value>সেটিংস</value>
+  </data>
+  <data name="tmi_Settings_Favourites" xml:space="preserve">
+    <value>প্রিয় পরিচালনা</value>
+  </data>
+  <data name="tmi_Settings_Settings" xml:space="preserve">
+    <value>সেটিংস</value>
+  </data>
+  <data name="tpg_Application" xml:space="preserve">
+    <value>অ্যাপ্লিকেশন</value>
+  </data>
+  <data name="tpg_CustomCityLogic" xml:space="preserve">
+    <value>কাস্টম শহর নির্ধারণের যুক্তি</value>
+  </data>
+  <data name="tpg_CustomRules" xml:space="preserve">
+    <value>কাস্টম নিয়মাবলি</value>
+  </data>
+  <data name="tpg_DateTime" xml:space="preserve">
+    <value>তারিখ &amp; সময়</value>
+  </data>
+  <data name="tpg_Exif" xml:space="preserve">
+    <value>Exif</value>
+  </data>
+  <data name="tpg_FileOptions" xml:space="preserve">
+    <value>ফাইলের বিকল্প</value>
+  </data>
+  <data name="tpg_GeoNames" xml:space="preserve">
+    <value>GeoNames সেটিংস</value>
+  </data>
+  <data name="tpg_ImportExport_Export" xml:space="preserve">
+    <value>ট্র্যাক রপ্তানি</value>
+  </data>
+  <data name="tpg_ImportExport_Import" xml:space="preserve">
+    <value>ট্র্যাক আমদানি</value>
+  </data>
+  <data name="tpg_Location" xml:space="preserve">
+    <value>অবস্থান</value>
+  </data>
+  <data name="tpg_Map" xml:space="preserve">
+    <value>মানচিত্র</value>
+  </data>
+  <data name="tsb_BugReport" xml:space="preserve">
+    <value>বাগ রিপোর্ট জানান (GitHub অ্যাকাউন্ট প্রয়োজন)</value>
+  </data>
+  <data name="tsb_EditFile" xml:space="preserve">
+    <value>ফাইল সম্পাদনা করুন</value>
+  </data>
+  <data name="tsb_FeedbackFeatureRequest" xml:space="preserve">
+    <value>ফিচারের অনুরোধ জানান (GitHub অ্যাকাউন্ট প্রয়োজন)</value>
+  </data>
+  <data name="tsb_GetAllFromWeb" xml:space="preserve">
+    <value>নির্বাচিত সব ফাইলের স্থাননাম &amp; উচ্চতার তথ্য আনুন</value>
+  </data>
+  <data name="tsb_ImportGPX" xml:space="preserve">
+    <value>GPX/JSON ট্র্যাক ফাইল আমদানি করুন</value>
+  </data>
+  <data name="tsb_ExportGPX" xml:space="preserve">
+    <value>ট্র্যাক ফাইল রপ্তানি করুন (GPX/KML)</value>
+  </data>
+  <data name="tsb_OneFolderUp" xml:space="preserve">
+    <value>মূল ফোল্ডার</value>
+  </data>
+  <data name="tsb_Refresh_lvwFileList" xml:space="preserve">
+    <value>ফাইলের তালিকা রিফ্রেশ করুন</value>
+  </data>
+  <data name="tsb_RemoveGeoData" xml:space="preserve">
+    <value>সব অবস্থান ডেটা মুছুন</value>
+  </data>
+  <data name="tsb_SaveFiles" xml:space="preserve">
+    <value>ফাইল সংরক্ষণ করুন</value>
+  </data>
+  <data name="tsr_FolderControl" xml:space="preserve">
+    <value>ফোল্ডার নিয়ন্ত্রণ</value>
+  </data>
+  <data name="tsr_MainAppToolStrip" xml:space="preserve">
+    <value>মূল</value>
+  </data>
+  <data name="ttp_GPSDataPaste" xml:space="preserve">
+    <value>অক্ষাংশ/দ্রাঘিমাংশের স্থানধারকে বৈধ দশমিকের জোড়া পেস্ট করতে CTRL+V চাপুন। 
+ক্লিপবোর্ডে শুধু একজোড়া দশমিক থাকা উচিত, আদর্শভাবে "invariant" (ইংরেজি) সেটআপে, অর্থাৎ integer-dot-decimal-comma-integer-dot-decimal, যেমন 12.345, 56.897
+তবে কোডটি অন্য ফরম্যাটও বুঝতে পারা উচিত। মনে রাখবেন, ক্লিপবোর্ডে উপরের বাইরে অন্য কিছু থাকলে অপারেশন ব্যর্থ হবে (কিছুই ঘটবে না।)</value>
+  </data>
+  <data name="btn_NavigateMapGo" xml:space="preserve">
+    <value>মানচিত্রে দেখান</value>
+  </data>
+  <data name="btn_loctToFile" xml:space="preserve">
+    <value>ফাইলে সংরক্ষণ করুন</value>
+  </data>
+  <data name="btn_loctToFileDestination" xml:space="preserve">
+    <value>গন্তব্যে সংরক্ষণ করুন</value>
+  </data>
+  <data name="btn_SaveFavourite" xml:space="preserve">
+    <value>ছবি সংরক্ষণ করুন</value>
+  </data>
+  <data name="btn_LoadFavourite" xml:space="preserve">
+    <value>ছবিতে প্রয়োগ করুন</value>
+  </data>
+  <data name="btn_ManageFavourites" xml:space="preserve">
+    <value>পরিচালনা করুন...</value>
+  </data>
+  <data name="ttp_LoadFavourite" xml:space="preserve">
+    <value>আপনার প্রিয় থেকে নির্বাচিত ফাইলের মেটাডেটা লোড করুন</value>
+  </data>
+  <data name="ttp_loctToFile" xml:space="preserve">
+    <value>বর্তমান স্থানাঙ্ক নির্বাচিত ফাইলে সংরক্ষণ করুন</value>
+  </data>
+  <data name="ttp_loctToFileDestination" xml:space="preserve">
+    <value>বর্তমান স্থানাঙ্ক নির্বাচিত ফাইলের গন্তব্যে সংরক্ষণ করুন</value>
+  </data>
+  <data name="ttp_ManageFavourites" xml:space="preserve">
+    <value>প্রিয় পরিচালনা</value>
+  </data>
+  <data name="ttp_NavigateMapGo" xml:space="preserve">
+    <value>নির্বাচিত ফাইলের স্থানাঙ্ক মানচিত্রে বসান</value>
+  </data>
+  <data name="ttp_OffsetTime" xml:space="preserve">
+    <value>সংরক্ষিত মান যা-ই থাকুক, খোলার সময় সময় অঞ্চল ফাঁকা থাকে। TZ-এর জন্য কোনো Exif ট্যাগ নেই, শুধু 'Offset' আছে, যা '+01:00'-এর মতো। TZ বা DST কোনোটির সরাসরি ইঙ্গিত না থাকায় আমি নিশ্চিত হতে পারি না যে '+01:00' আসলে BST ছিল নাকি CET, যার একটি DST এবং অন্যটি নয়। হয় ম্যানুয়ালি সমন্বয় করুন, নয়তো ওয়েব থেকে আনুন - স্থানাঙ্ক + createDate একসঙ্গে প্রোগ্রামকে প্রকৃত TZ মান সঠিকভাবে জানিয়ে দেবে। শুধু-পড়ার টেক্সটবক্সের মানটি ফাইলে সংরক্ষিত হবে।</value>
+  </data>
+  <data name="ttp_SaveFavourite" xml:space="preserve">
+    <value>বর্তমান নির্বাচিত ফাইলের মেটাডেটা আপনার প্রিয়তে সংরক্ষণ (বা ওভাররাইট) করুন</value>
+  </data>
+  <data name="ckb_ImportExport_ApplicationSettings" xml:space="preserve">
+    <value>ApplicationSettings</value>
+  </data>
+  <data name="ckb_ImportExport_CustomRulesSettings" xml:space="preserve">
+    <value>CustomRulesSettings</value>
+  </data>
+  <data name="ckb_ImportExport_Favourites" xml:space="preserve">
+    <value>প্রিয়</value>
+  </data>
+  <data name="ckb_ImportExport_EditTemplates" xml:space="preserve">
+    <value>ডেটা টেমপ্লেট সম্পাদনা</value>
+  </data>
+  <data name="ckb_ImportExport_FieldHistory" xml:space="preserve">
+    <value>ডেটা ফিল্ড ইতিহাস সম্পাদনা</value>
+  </data>
+  <data name="ckb_ImportExport_BatchRenamePresets" xml:space="preserve">
+    <value>ব্যাচ নাম পরিবর্তন প্রিসেট</value>
+  </data>
+  <data name="Generic_TimeZoneID" xml:space="preserve">
+    <value>সময় অঞ্চল ID</value>
+  </data>
+  <data name="Generic_Distance" xml:space="preserve">
+    <value>দূরত্ব</value>
+  </data>
+  <data name="cmi_OpenCoordsInBrowser" xml:space="preserve">
+    <value>ব্রাউজার/মানচিত্রে স্থানাঙ্ক খুলুন</value>
+  </data>
+  <data name="cmi_OpenCoordsInBrowserBing" xml:space="preserve">
+    <value>Bing</value>
+  </data>
+  <data name="cmi_OpenCoordsInBrowserGeoNamesMaps" xml:space="preserve">
+    <value>GeoNames (Maps)</value>
+  </data>
+  <data name="cmi_OpenCoordsInBrowserGoogle" xml:space="preserve">
+    <value>Google Maps</value>
+  </data>
+  <data name="cmi_OpenCoordsInBrowserWeGoHere" xml:space="preserve">
+    <value>WeGo/Here</value>
+  </data>
+  <data name="cmi_OpenCoordsInBrowserOpenStreetMap" xml:space="preserve">
+    <value>OpenStreetMap</value>
+  </data>
+  <data name="tmi_File_ImportFavouritesFromGeoSetter" xml:space="preserve">
+    <value>Geosetter থেকে প্রিয় আমদানি করুন...</value>
+  </data>
+  <data name="ofd_Settings_GetDatabaseFileToImport_SelectDatabaseFile" xml:space="preserve">
+    <value>একটি ডেটাবেস ফাইল নির্বাচন করুন</value>
+  </data>
+  <data name="ofd_tmi_File_ImportFavouritesFromGeoSetter_SelectFile" xml:space="preserve">
+    <value>GS প্রিয় রপ্তানি ফাইল নির্বাচন করুন</value>
+  </data>
+  <data name="mbx_FrmMainApp_ErrorImportGeoSetterFavourites" xml:space="preserve">
+    <value>GeoSetter প্রিয় আমদানির সময় ত্রুটি।</value>
+  </data>
+  <data name="mbx_FrmMainApp_InfoImportGeoSetterFavouritesDone" xml:space="preserve">
+    <value>GeoSetter প্রিয় আমদানি হয়েছে। আমদানি করা আইটেম: </value>
+  </data>
+  <data name="ckb_ShowThumbnails" xml:space="preserve">
+    <value>গ্রিডের বদলে ছবির থাম্বনেইল দেখান</value>
+  </data>
+  <data name="ttp_ShowThumbnails" xml:space="preserve">
+    <value>এতে কর্মক্ষমতার উল্লেখযোগ্য ক্ষতি হয় (আমার পরিমাপে প্রায় 7 গুণ পর্যন্ত), তাই এটি প্রস্তাবিত নয়।</value>
+  </data>
+  <data name="Generic_SaveDefaults" xml:space="preserve">
+    <value>ডিফল্ট সংরক্ষণ করুন</value>
+  </data>
+  <data name="ttp_FrmImportExport_SaveDefaults" xml:space="preserve">
+    <value>কিছু ডিফল্ট সংরক্ষণ করে। বর্তমানে: আমদানির উৎসের অবস্থান, TZ ও DST সেটিংস, সর্বোচ্চ ইন্টার/এক্সট্রাপোলেশন।</value>
+  </data>
+  <data name="mbx_FrmImportExportGpx_ExportCompleted" xml:space="preserve">
+    <value>GPX ফাইল রপ্তানি সম্পন্ন হয়েছে</value>
+  </data>
+  <data name="Generic_GPSDOP" xml:space="preserve">
+    <value>নির্ভুলতার হ্রাস (DOP)</value>
+  </data>
+  <data name="Generic_GPSHPositioningError" xml:space="preserve">
+    <value>GPS অনুভূমিক অবস্থান ত্রুটি</value>
+  </data>
+  <data name="cmi_PasteGeoData" xml:space="preserve">
+    <value>সব জিওডেটা পেস্ট করুন...</value>
+  </data>
+  <data name="cmi_CopyGeoData" xml:space="preserve">
+    <value>সব জিওডেটা কপি করুন</value>
+  </data>
+  <data name="tmi_Edit_SelectAll" xml:space="preserve">
+    <value>সব নির্বাচন করুন</value>
+  </data>
+  <data name="cmi_SelectAll" xml:space="preserve">
+    <value>সব নির্বাচন করুন</value>
+  </data>
+  <data name="tmi_Edit_SelectNone" xml:space="preserve">
+    <value>নির্বাচন বাতিল করুন</value>
+  </data>
+  <data name="cmi_SelectNone" xml:space="preserve">
+    <value>নির্বাচন বাতিল করুন</value>
+  </data>
+  <data name="tmi_Edit_InvertSelection" xml:space="preserve">
+    <value>নির্বাচন উল্টে দিন</value>
+  </data>
+  <data name="cmi_InvertSelection" xml:space="preserve">
+    <value>নির্বাচন উল্টে দিন</value>
+  </data>
+  <data name="tmi_Edit" xml:space="preserve">
+    <value>সম্পাদনা</value>
+  </data>
+  <data name="tmi_Help_Donate" xml:space="preserve">
+    <value>অনুদান</value>
+  </data>
+  <data name="tmi_Help_Donate_PayPal" xml:space="preserve">
+    <value>PayPal...</value>
+  </data>
+  <data name="tmi_Help_Donate_Revolut" xml:space="preserve">
+    <value>Revolut (QR)...</value>
+  </data>
+  <data name="tmi_Help_Donate_BuyMeCoffee" xml:space="preserve">
+    <value>BuyMeACoffee...</value>
+  </data>
+  <data name="tmi_File_SaveSelected" xml:space="preserve">
+    <value>নির্বাচিত সংরক্ষণ করুন</value>
+  </data>
+  <data name="rbt_SetStartup_Folder" xml:space="preserve">
+    <value>স্টার্টআপ ফোল্ডার সেট করুন</value>
+  </data>
+  <data name="rbt_UseLastUsedFolder" xml:space="preserve">
+    <value>শেষ ব্যবহৃত ফোল্ডার ব্যবহার করুন</value>
+  </data>
+  <data name="tmi_Debug" xml:space="preserve">
+    <value>ডিবাগ</value>
+  </data>
+  <data name="tmi_Debug_CustomiseWinformControls" xml:space="preserve">
+    <value>Winform নিয়ন্ত্রণ কাস্টমাইজ করুন</value>
+  </data>
+  <data name="frm_FrmCustomiseFormControls" xml:space="preserve">
+    <value>Winform নিয়ন্ত্রণ কাস্টমাইজ করুন</value>
+  </data>
+  <data name="ckb_RetainMapZoom" xml:space="preserve">
+    <value>ক্লিকের মধ্যে মানচিত্রের জুম স্তর ধরে রাখুন</value>
+  </data>
+  <data name="mbx_FrmMainApp_ErrorNonHydratedItemsPresent" xml:space="preserve">
+    <value>আপনার নির্বাচনে এমন ফাইল আছে যেগুলো এখনও বিশ্লেষণ করা হয়নি এবং সম্পাদনার জন্য লোড হবে না।</value>
+  </data>
+  <data name="Generic_Ready" xml:space="preserve">
+    <value>প্রস্তুত</value>
+  </data>
+  <data name="Generic_ReadingMetadataProgress" xml:space="preserve">
+    <value>মেটাডেটা পড়া হচ্ছে: {1}টির মধ্যে {0}</value>
+  </data>
+  <data name="Generic_Total" xml:space="preserve">
+    <value>মোট</value>
+  </data>
+  <data name="Generic_GeoData" xml:space="preserve">
+    <value>জিওডেটা</value>
+  </data>
+  <data name="Generic_Files" xml:space="preserve">
+    <value>ফাইল</value>
+  </data>
+  <data name="mbx_FrmMainApp_WarningDataParseStillInProgress" xml:space="preserve">
+    <value>ডেটা বিশ্লেষণ এখনও চলছে - শেষ না হওয়া পর্যন্ত এই কাজ এগোতে পারবে না। একটু পরে আবার চেষ্টা করুন।</value>
+  </data>
+  <data name="Generic_IsEmpty" xml:space="preserve">
+    <value>খালি</value>
+  </data>
+  <data name="Generic_IsNotEmpty" xml:space="preserve">
+    <value>খালি নয়</value>
+  </data>
+  <data name="Generic_Is" xml:space="preserve">
+    <value>হয়</value>
+  </data>
+  <data name="Generic_IsNot" xml:space="preserve">
+    <value>হয় না</value>
+  </data>
+  <data name="Generic_Contains" xml:space="preserve">
+    <value>ধারণ করে</value>
+  </data>
+  <data name="Generic_DoesntContain" xml:space="preserve">
+    <value>ধারণ করে না</value>
+  </data>
+  <data name="Generic_ClearAll" xml:space="preserve">
+    <value>সব মুছুন</value>
+  </data>
+  <data name="ckb_AlwaysRecenterMap" xml:space="preserve">
+    <value>সবসময় মানচিত্র পুনরায় কেন্দ্রে আনবেন?</value>
+  </data>
+  <data name="ckb_DoNotDownloadAltitude" xml:space="preserve">
+    <value>API থেকে উচ্চতার মান ডাউনলোড করবেন না</value>
+  </data>
+  <data name="ckb_PreserveFileModifiedDate" xml:space="preserve">
+    <value>সংরক্ষণের সময় ফাইলের পরিবর্তনের তারিখ বদলাবেন না</value>
+  </data>
+  <data name="tmi_View" xml:space="preserve">
+    <value>দেখুন</value>
+  </data>
+  <data name="tmi_View_Details" xml:space="preserve">
+    <value>বিস্তারিত</value>
+  </data>
+  <data name="tmi_View_Thumbnails" xml:space="preserve">
+    <value>থাম্বনেইল</value>
+  </data>
+  <data name="tmi_View_ThumbnailSize" xml:space="preserve">
+    <value>থাম্বনেইলের আকার</value>
+  </data>
+  <data name="tmi_View_ThumbnailSize_Small" xml:space="preserve">
+    <value>ছোট</value>
+  </data>
+  <data name="tmi_View_ThumbnailSize_Medium" xml:space="preserve">
+    <value>মাঝারি</value>
+  </data>
+  <data name="tmi_View_ThumbnailSize_Large" xml:space="preserve">
+    <value>বড়</value>
+  </data>
+  <data name="tmi_View_ThumbnailSize_ExtraLarge" xml:space="preserve">
+    <value>অনেক বড়</value>
+  </data>
+  <data name="tmi_View_ThumbnailSize_Smaller" xml:space="preserve">
+    <value>ছোট থাম্বনেইল</value>
+  </data>
+  <data name="tmi_View_ThumbnailSize_Larger" xml:space="preserve">
+    <value>বড় থাম্বনেইল</value>
+  </data>
+  <data name="ttp_ThumbnailSize" xml:space="preserve">
+    <value>থাম্বনেইলের আকার</value>
+  </data>
+  <data name="tmi_View_SortBy" xml:space="preserve">
+    <value>সাজান</value>
+  </data>
+  <data name="tmi_View_SortBy_Ascending" xml:space="preserve">
+    <value>ঊর্ধ্বক্রম</value>
+  </data>
+  <data name="tmi_View_SortBy_Descending" xml:space="preserve">
+    <value>নিম্নক্রম</value>
+  </data>
+  <data name="gbx_AllFavourites" xml:space="preserve">
+    <value>সব প্রিয়</value>
+  </data>
+  <data name="gbx_FavouriteDetails" xml:space="preserve">
+    <value>বিস্তারিত</value>
+  </data>
+  <data name="gbx_FavouriteAdditionalInfo" xml:space="preserve">
+    <value>অতিরিক্ত তথ্য</value>
+  </data>
+  <data name="lbl_FavouriteName" xml:space="preserve">
+    <value>নাম:</value>
+  </data>
+  <data name="lbl_FavouriteCoordinates" xml:space="preserve">
+    <value>স্থানাঙ্ক:</value>
+  </data>
+  <data name="lbl_FavouriteRadius" xml:space="preserve">
+    <value>ব্যাসার্ধ [m]:</value>
+  </data>
+  <data name="ckb_FavouriteAutoAssign" xml:space="preserve">
+    <value>স্বয়ংক্রিয়ভাবে নির্ধারণ করুন</value>
+  </data>
+  <data name="ckb_FavouriteSnap" xml:space="preserve">
+    <value>ছবিগুলো প্রিয় অবস্থানে স্ন্যাপ করুন</value>
+  </data>
+  <data name="lbl_FavouriteTimeZone" xml:space="preserve">
+    <value>সময় অঞ্চল:</value>
+  </data>
+  <data name="lbl_FavouriteKeywords" xml:space="preserve">
+    <value>কীওয়ার্ড:</value>
+  </data>
+  <data name="btn_FavouriteGetFromWeb" xml:space="preserve">
+    <value>ওয়েব থেকে আনুন</value>
+  </data>
+  <data name="btn_FavouriteClearAll" xml:space="preserve">
+    <value>সব মান মুছুন</value>
+  </data>
+  <data name="btn_FavouriteAccept" xml:space="preserve">
+    <value>গ্রহণ করুন</value>
+  </data>
+  <data name="btn_FavouriteDiscard" xml:space="preserve">
+    <value>বাতিল করুন</value>
+  </data>
+  <data name="btn_FavouriteAddKeyword" xml:space="preserve">
+    <value>যোগ করুন</value>
+  </data>
+  <data name="btn_FavouriteRemoveKeyword" xml:space="preserve">
+    <value>সরান</value>
+  </data>
+  <data name="lbl_FavouritesCount" xml:space="preserve">
+    <value>{0}টি আইটেম ({1}টি নির্বাচিত)</value>
+  </data>
+  <data name="tsd_GroupBy" xml:space="preserve">
+    <value>গ্রুপ করুন</value>
+  </data>
+  <data name="tmi_GroupByCountryCode" xml:space="preserve">
+    <value>দেশের কোড</value>
+  </data>
+  <data name="tmi_GroupByCountry" xml:space="preserve">
+    <value>দেশ</value>
+  </data>
+  <data name="tmi_GroupByState" xml:space="preserve">
+    <value>রাজ্য/প্রদেশ</value>
+  </data>
+  <data name="tmi_GroupByCity" xml:space="preserve">
+    <value>শহর</value>
+  </data>
+  <data name="tmi_GroupByCoordinates" xml:space="preserve">
+    <value>স্থানাঙ্ক</value>
+  </data>
+  <data name="tmi_GroupByNone" xml:space="preserve">
+    <value>কোনো গ্রুপ নেই</value>
+  </data>
+  <data name="tmi_GroupByBlank" xml:space="preserve">
+    <value>(কোনোটিই না)</value>
+  </data>
+  <data name="tsb_Duplicate" xml:space="preserve">
+    <value>ডুপ্লিকেট করুন</value>
+  </data>
+  <data name="tsb_Delete" xml:space="preserve">
+    <value>মুছুন</value>
+  </data>
+  <data name="tsb_AddFromSelection" xml:space="preserve">
+    <value>নির্বাচিত ছবি থেকে যোগ করুন</value>
+  </data>
+  <data name="mbx_FrmManageFavourites_WarningNameTaken" xml:space="preserve">
+    <value>এই নামে আরেকটি প্রিয় আগে থেকেই আছে।</value>
+  </data>
+  <data name="mbx_FrmManageFavourites_WarningAltitudeInvalid" xml:space="preserve">
+    <value>উচ্চতা অবশ্যই একটি সংখ্যা হতে হবে।</value>
+  </data>
+  <data name="mbx_FrmManageFavourites_WarningNoCoordinates" xml:space="preserve">
+    <value>ব্যবহার করার মতো কোনো স্থানাঙ্ক নেই। অবস্থানযুক্ত একটি ছবি বেছে নিন।</value>
+  </data>
+  <data name="mbx_FrmManageFavourites_QuestionAcceptChanges" xml:space="preserve">
+    <value>এই প্রিয়র পরিবর্তনগুলো গ্রহণ করবেন?</value>
+  </data>
+  <data name="mbx_FrmManageFavourites_QuestionDiscardAll" xml:space="preserve">
+    <value>প্রিয়র পরিবর্তন সংরক্ষণ না করে বন্ধ করবেন?</value>
+  </data>
+  <data name="mbx_FrmManageFavourites_InfoWebNothingFound" xml:space="preserve">
+    <value>ওয়েব সার্ভিসে এই অবস্থানের কোনো তথ্য নেই।</value>
+  </data>
+  <data name="tpg_Keywords" xml:space="preserve">
+    <value>বিভাগ/কীওয়ার্ড</value>
+  </data>
+  <data name="tpg_SourceDescription" xml:space="preserve">
+    <value>উৎস/বিবরণ</value>
+  </data>
+  <data name="tpg_Contact" xml:space="preserve">
+    <value>যোগাযোগ</value>
+  </data>
+  <data name="lbl_SectionSource" xml:space="preserve">
+    <value>উৎস</value>
+  </data>
+  <data name="lbl_SectionDescription" xml:space="preserve">
+    <value>বিবরণ</value>
+  </data>
+  <data name="lbl_Category" xml:space="preserve">
+    <value>বিভাগ</value>
+  </data>
+  <data name="lbl_SupplementalCategories" xml:space="preserve">
+    <value>অতিরিক্ত বিভাগ</value>
+  </data>
+  <data name="lbl_IPTCKeywords" xml:space="preserve">
+    <value>কীওয়ার্ড</value>
+  </data>
+  <data name="lbl_Artist" xml:space="preserve">
+    <value>শিল্পী</value>
+  </data>
+  <data name="lbl_CaptionWriter" xml:space="preserve">
+    <value>ক্যাপশন লেখক</value>
+  </data>
+  <data name="lbl_Source" xml:space="preserve">
+    <value>উৎস</value>
+  </data>
+  <data name="lbl_Credit" xml:space="preserve">
+    <value>ক্রেডিট</value>
+  </data>
+  <data name="lbl_SourceURL" xml:space="preserve">
+    <value>URL</value>
+  </data>
+  <data name="lbl_Copyright" xml:space="preserve">
+    <value>কপিরাইট</value>
+  </data>
+  <data name="lbl_ObjectName" xml:space="preserve">
+    <value>অবজেক্টের নাম</value>
+  </data>
+  <data name="lbl_Headline" xml:space="preserve">
+    <value>হেডলাইন</value>
+  </data>
+  <data name="lbl_Caption" xml:space="preserve">
+    <value>ক্যাপশন</value>
+  </data>
+  <data name="lbl_SpecialInstructions" xml:space="preserve">
+    <value>বিশেষ নির্দেশনা</value>
+  </data>
+  <data name="lbl_Byline" xml:space="preserve">
+    <value>Byline</value>
+  </data>
+  <data name="lbl_BylineTitle" xml:space="preserve">
+    <value>Byline শিরোনাম</value>
+  </data>
+  <data name="lbl_CreatorAddress" xml:space="preserve">
+    <value>ঠিকানা</value>
+  </data>
+  <data name="lbl_CreatorCity" xml:space="preserve">
+    <value>শহর</value>
+  </data>
+  <data name="lbl_CreatorPostalCode" xml:space="preserve">
+    <value>পোস্টাল কোড</value>
+  </data>
+  <data name="lbl_CreatorRegion" xml:space="preserve">
+    <value>রাজ্য/প্রদেশ</value>
+  </data>
+  <data name="lbl_CreatorCountry" xml:space="preserve">
+    <value>দেশ</value>
+  </data>
+  <data name="lbl_CreatorPhone" xml:space="preserve">
+    <value>ফোন</value>
+  </data>
+  <data name="lbl_CreatorEmail" xml:space="preserve">
+    <value>ইমেইল</value>
+  </data>
+  <data name="lbl_CreatorURL" xml:space="preserve">
+    <value>URL</value>
+  </data>
+  <data name="tmi_FieldMenu_InsertFrom" xml:space="preserve">
+    <value>থেকে সন্নিবেশ করুন</value>
+  </data>
+  <data name="tmi_FieldMenu_CopyTo" xml:space="preserve">
+    <value>এতে কপি করুন</value>
+  </data>
+  <data name="tmi_FieldMenu_CopySelectionToCategories" xml:space="preserve">
+    <value>নির্বাচন বিভাগে কপি করুন</value>
+  </data>
+  <data name="tmi_FieldMenu_CopySelectionToKeywords" xml:space="preserve">
+    <value>নির্বাচন কীওয়ার্ডে কপি করুন</value>
+  </data>
+  <data name="tmi_FieldMenu_MostRecentlyUsed" xml:space="preserve">
+    <value>সর্বশেষ ব্যবহৃত আইটেম</value>
+  </data>
+  <data name="tmi_FieldMenu_ForgetRemembered" xml:space="preserve">
+    <value>একটি মনে রাখা আইটেম ভুলে যান</value>
+  </data>
+  <data name="lbl_ContactPrefix" xml:space="preserve">
+    <value>যোগাযোগ</value>
+  </data>
+  <data name="btn_LoadFromTemplate" xml:space="preserve">
+    <value>টেমপ্লেট থেকে লোড করুন...</value>
+  </data>
+  <data name="btn_LoadFromImage" xml:space="preserve">
+    <value>ছবি থেকে লোড করুন...</value>
+  </data>
+  <data name="btn_SaveAsTemplate" xml:space="preserve">
+    <value>টেমপ্লেট হিসেবে সংরক্ষণ করুন...</value>
+  </data>
+  <data name="lbl_TemplateName" xml:space="preserve">
+    <value>টেমপ্লেট:</value>
+  </data>
+  <data name="lbl_TemplateInclude" xml:space="preserve">
+    <value>এগুলো ব্যবহার করুন:</value>
+  </data>
+  <data name="btn_TemplateDelete" xml:space="preserve">
+    <value>মুছুন</value>
+  </data>
+  <data name="chk_TemplateGroup_Country" xml:space="preserve">
+    <value>দেশ</value>
+  </data>
+  <data name="chk_TemplateGroup_State" xml:space="preserve">
+    <value>রাজ্য/প্রদেশ</value>
+  </data>
+  <data name="chk_TemplateGroup_City" xml:space="preserve">
+    <value>শহর</value>
+  </data>
+  <data name="chk_TemplateGroup_Sublocation" xml:space="preserve">
+    <value>উপস্থান</value>
+  </data>
+  <data name="chk_TemplateGroup_Position" xml:space="preserve">
+    <value>GPS অবস্থান</value>
+  </data>
+  <data name="chk_TemplateGroup_Altitude" xml:space="preserve">
+    <value>উচ্চতা</value>
+  </data>
+  <data name="chk_TemplateGroup_Direction" xml:space="preserve">
+    <value>ছবির দিক</value>
+  </data>
+  <data name="chk_TemplateGroup_Destination" xml:space="preserve">
+    <value>গন্তব্য</value>
+  </data>
+  <data name="chk_TemplateGroup_TakenDate" xml:space="preserve">
+    <value>তোলার তারিখ</value>
+  </data>
+  <data name="chk_TemplateGroup_CreateDate" xml:space="preserve">
+    <value>তৈরির তারিখ</value>
+  </data>
+  <data name="chk_TemplateGroup_OffsetTime" xml:space="preserve">
+    <value>সময় অঞ্চল অফসেট</value>
+  </data>
+  <data name="mbx_FrmEditTemplateDialog_QuestionDeleteTemplate" xml:space="preserve">
+    <value>টেমপ্লেট '{0}' মুছবেন?</value>
+  </data>
+  <data name="mbx_FrmEditTemplateDialog_QuestionOverwriteTemplate" xml:space="preserve">
+    <value>'{0}' নামের একটি টেমপ্লেট আগে থেকেই আছে। এটি বদলাবেন?</value>
+  </data>
+  <data name="mbx_FrmEditFileData_ErrorTemplateNotSaved" xml:space="preserve">
+    <value>টেমপ্লেট সংরক্ষণ করা যায়নি।</value>
+  </data>
+  <data name="mbx_FrmEditFileData_InfoImageHasNothingToLoad" xml:space="preserve">
+    <value>এই ফর্ম লোড করতে পারে এমন কিছুই ওই ফাইলে নেই।</value>
+  </data>
+  <data name="lbl_Sexagesimal" xml:space="preserve">
+    <value>ষাটভিত্তিক (Sexagesimal)</value>
+  </data>
+  <data name="lbl_ImageDirection" xml:space="preserve">
+    <value>ছবির দিক [°]:</value>
+  </data>
+  <data name="lbl_DestLatitude" xml:space="preserve">
+    <value>গন্তব্য অক্ষাংশ:</value>
+  </data>
+  <data name="lbl_DestLongitude" xml:space="preserve">
+    <value>গন্তব্য দ্রাঘিমাংশ:</value>
+  </data>
+  <data name="btn_GetAltitudeFromWeb" xml:space="preserve">
+    <value>ওয়েব থেকে আনুন</value>
+  </data>
+  <data name="mbx_FrmEditFileData_InfoCoordinatesNeededForAltitude" xml:space="preserve">
+    <value>প্রথমে একটি অক্ষাংশ ও একটি দ্রাঘিমাংশ লিখুন।</value>
+  </data>
+  <data name="mbx_FrmEditFileData_WarningNoAltitudeFromWeb" xml:space="preserve">
+    <value>ওয়েব সার্ভিসে এই অবস্থানের কোনো উচ্চতা নেই।</value>
+  </data>
+  <data name="ckb_SyncGeoKeywords" xml:space="preserve">
+    <value>অবস্থানের সঙ্গে কীওয়ার্ড মিলিয়ে রাখুন (স্থানের নাম ও geo: কীওয়ার্ড)</value>
+  </data>
+  <data name="ckb_ShowChangelogAfterUpdate" xml:space="preserve">
+    <value>আপডেটের পর কী পরিবর্তন হয়েছে তা দেখান</value>
+  </data>
+  <data name="mbx_Helper_InfoRemoveGeoDataKeywordsRemain" xml:space="preserve">
+    <value>অবস্থান ডেটা মুছে ফেলা হয়েছে, তবে আপনার কীওয়ার্ড স্পর্শ করা হয়নি: সেগুলোর মধ্যে থাকা যেকোনো স্থানের নাম বা "geo:" কীওয়ার্ড যেমন ছিল তেমনই আছে। অবস্থানের পরিবর্তনের সঙ্গে সেগুলোও মেলাতে চাইলে সেটিংসে "অবস্থানের সঙ্গে কীওয়ার্ড মিলিয়ে রাখুন" চালু করুন।</value>
+  </data>
+  <data name="tmi_View_FolderTree" xml:space="preserve">
+    <value>ফোল্ডার ট্রি</value>
+  </data>
+  <data name="lbl_FolderTree_Title" xml:space="preserve">
+    <value>ফোল্ডার</value>
+  </data>
+  <data name="tsb_FolderTree_Favourites" xml:space="preserve">
+    <value>প্রিয় ফোল্ডার</value>
+  </data>
+  <data name="tmi_FolderTree_AddCurrent" xml:space="preserve">
+    <value>বর্তমান ফোল্ডার প্রিয়তে যোগ করুন</value>
+  </data>
+  <data name="tmi_FolderTree_RemoveCurrent" xml:space="preserve">
+    <value>বর্তমান ফোল্ডার প্রিয় থেকে সরান</value>
+  </data>
+  <data name="tmi_FolderTree_NoFavourites" xml:space="preserve">
+    <value>(এখনও কোনো প্রিয় ফোল্ডার নেই)</value>
+  </data>
+  <data name="tsb_FolderTree_Refresh" xml:space="preserve">
+    <value>ফোল্ডার ট্রি রিফ্রেশ করুন</value>
+  </data>
+  <data name="tsb_FolderTree_Hide" xml:space="preserve">
+    <value>ফোল্ডার ট্রি লুকান (Ctrl+B)</value>
+  </data>
+  <data name="cmi_FolderTree_AddThis" xml:space="preserve">
+    <value>প্রিয়তে যোগ করুন</value>
+  </data>
+  <data name="cmi_FolderTree_RemoveThis" xml:space="preserve">
+    <value>প্রিয় থেকে সরান</value>
+  </data>
+  <data name="tsb_Donate" xml:space="preserve">
+    <value>BuyMeACoffee (অনুদান, ব্রাউজারে খোলে)</value>
+  </data>
+</root>

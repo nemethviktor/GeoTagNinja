@@ -1,0 +1,2009 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<root>
+  <xsd:schema xmlns="" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:msdata="urn:schemas-microsoft-com:xml-msdata" id="root">
+    <xsd:import namespace="http://www.w3.org/XML/1998/namespace" />
+    <xsd:element name="root" msdata:IsDataSet="true">
+      <xsd:complexType>
+        <xsd:choice maxOccurs="unbounded">
+          <xsd:element name="metadata">
+            <xsd:complexType>
+              <xsd:sequence>
+                <xsd:element name="value" type="xsd:string" minOccurs="0" />
+              </xsd:sequence>
+              <xsd:attribute name="name" use="required" type="xsd:string" />
+              <xsd:attribute name="type" type="xsd:string" />
+              <xsd:attribute name="mimetype" type="xsd:string" />
+              <xsd:attribute ref="xml:space" />
+            </xsd:complexType>
+          </xsd:element>
+          <xsd:element name="assembly">
+            <xsd:complexType>
+              <xsd:attribute name="alias" type="xsd:string" />
+              <xsd:attribute name="name" type="xsd:string" />
+            </xsd:complexType>
+          </xsd:element>
+          <xsd:element name="data">
+            <xsd:complexType>
+              <xsd:sequence>
+                <xsd:element name="value" type="xsd:string" minOccurs="0" msdata:Ordinal="1" />
+                <xsd:element name="comment" type="xsd:string" minOccurs="0" msdata:Ordinal="2" />
+              </xsd:sequence>
+              <xsd:attribute name="name" type="xsd:string" use="required" msdata:Ordinal="1" />
+              <xsd:attribute name="type" type="xsd:string" msdata:Ordinal="3" />
+              <xsd:attribute name="mimetype" type="xsd:string" msdata:Ordinal="4" />
+              <xsd:attribute ref="xml:space" />
+            </xsd:complexType>
+          </xsd:element>
+          <xsd:element name="resheader">
+            <xsd:complexType>
+              <xsd:sequence>
+                <xsd:element name="value" type="xsd:string" minOccurs="0" msdata:Ordinal="1" />
+              </xsd:sequence>
+              <xsd:attribute name="name" type="xsd:string" use="required" />
+            </xsd:complexType>
+          </xsd:element>
+        </xsd:choice>
+      </xsd:complexType>
+    </xsd:element>
+  </xsd:schema>
+  <resheader name="resmimetype">
+    <value>text/microsoft-resx</value>
+  </resheader>
+  <resheader name="version">
+    <value>2.0</value>
+  </resheader>
+  <resheader name="reader">
+    <value>System.Resources.ResXResourceReader, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </resheader>
+  <resheader name="writer">
+    <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </resheader>
+  <data name="btn_ApplyAndNext" xml:space="preserve">
+    <value>Áp dụng &amp;&amp; Tiếp theo</value>
+  </data>
+  <data name="btn_InsertFromTakenDate" xml:space="preserve">
+    <value>Dùng Ngày chụp</value>
+  </data>
+  <data name="btn_PullMostRecentPasteSettings" xml:space="preserve">
+    <value>Lấy cài đặt Dán "gần nhất"</value>
+  </data>
+  <data name="btn_PullMostRecentTrackSyncShift" xml:space="preserve">
+    <value>Lấy cài đặt Dịch chuyển "gần nhất"</value>
+  </data>
+  <data name="btn_RemoveGeoData" xml:space="preserve">
+    <value>Xóa dữ liệu GPS và vị trí</value>
+  </data>
+  <data name="btn_ResetToDefaults" xml:space="preserve">
+    <value>Đặt lại về mặc định</value>
+  </data>
+  <data name="btn_RestartLater" xml:space="preserve">
+    <value>Khởi động lại sau</value>
+  </data>
+  <data name="btn_RestartNow" xml:space="preserve">
+    <value>Khởi động lại ngay</value>
+  </data>
+  <data name="btn_SetCurrentValues" xml:space="preserve">
+    <value>Đặt giá trị hiện tại cho tất cả ảnh được chọn để chỉnh sửa...</value>
+  </data>
+  <data name="ckb_AddXMPSideCar" xml:space="preserve">
+    <value>Thêm/ghi đè tệp XMP đi kèm</value>
+  </data>
+  <data name="ckb_DeSelectAll" xml:space="preserve">
+    <value>(Bỏ) chọn tất cả</value>
+  </data>
+  <data name="ckb_DoNotQueryAPI" xml:space="preserve">
+    <value>KHÔNG tra cứu địa danh ngược (chỉ lấy tọa độ, không lấy Thành phố/Tỉnh/bang v.v.)</value>
+  </data>
+  <data name="ckb_ExportTrackIncludeAltitude" xml:space="preserve">
+    <value>Bao gồm dữ liệu độ cao khi xuất</value>
+  </data>
+  <data name="ckb_ImportExport_CityRulesSettings" xml:space="preserve">
+    <value>CityRulesSettings</value>
+  </data>
+  <data name="ckb_IncludePredeterminedCountries" xml:space="preserve">
+    <value>Bao gồm các quốc gia "Được xác định trước"? (xem liên kết ở trên + lưu ý/cảnh báo)</value>
+  </data>
+  <data name="ckb_LoadTrackOntoMap" xml:space="preserve">
+    <value>Phủ tệp lộ trình lên bản đồ</value>
+  </data>
+  <data name="ckb_OffsetTime" xml:space="preserve">
+    <value>Chênh lệch múi giờ</value>
+  </data>
+  <data name="ckb_OverlayGPXForSelectedDatesOnly" xml:space="preserve">
+    <value>Chỉ với các ngày nằm trong khoảng từ ngày đầu đến ngày cuối của các tệp đã chọn</value>
+  </data>
+  <data name="ckb_OverwriteOriginal" xml:space="preserve">
+    <value>KHÔNG tạo bản sao lưu xxx_original</value>
+  </data>
+  <data name="ckb_PopulatedPlacesOnly" xml:space="preserve">
+    <value>Chỉ hiển thị dữ liệu API được lọc theo "Địa điểm có người ở" (fcode=PPL) [không khuyến nghị]</value>
+  </data>
+  <data name="ckb_ProcessOriginalFile" xml:space="preserve">
+    <value>Xử lý chính tệp ảnh</value>
+  </data>
+  <data name="ckb_QuestionStopProcessingRows" xml:space="preserve">
+    <value>Dừng xử lý các hàng tiếp theo?</value>
+  </data>
+  <data name="ckb_RemoveGeoDataRemovesTimeOffset" xml:space="preserve">
+    <value>Chức năng "Xóa dữ liệu vị trí" cũng xóa chênh lệch múi giờ</value>
+  </data>
+  <data name="ckb_ReplaceBlankToponyms" xml:space="preserve">
+    <value>Thay các giá trị Thành phố, Tỉnh/bang, Địa điểm phụ đang trống bằng: </value>
+  </data>
+  <data name="ckb_ResetFileDateToCreated" xml:space="preserve">
+    <value>Đặt lại ngày giờ tệp ảnh theo Ngày tạo</value>
+  </data>
+  <data name="ckb_ResetMapToZero" xml:space="preserve">
+    <value>Đặt bản đồ về 0/0 nếu không có dữ liệu vị trí</value>
+  </data>
+  <data name="ckb_StopProcessingRules" xml:space="preserve">
+    <value>Dừng xử lý quy tắc sau lần khớp đầu tiên Quốc gia+Mục tiêu</value>
+  </data>
+  <data name="ckb_UpdateCheckPreRelease" xml:space="preserve">
+    <value>Cũng kiểm tra bản cập nhật thử nghiệm [beta]?</value>
+  </data>
+  <data name="ckb_UseDarkMode" xml:space="preserve">
+    <value>Dùng chế độ tối cho giao diện ứng dụng?</value>
+  </data>
+  <data name="ckb_UseImperialNotMetric" xml:space="preserve">
+    <value>Dùng đơn vị Anh (Feet) cho độ cao (thay vì hệ mét [Mét])</value>
+  </data>
+  <data name="ckb_UseTimeZone" xml:space="preserve">
+    <value>Dùng múi giờ này:</value>
+  </data>
+  <data name="clh_BlankOutTargetPoint" xml:space="preserve">
+    <value>Để trống?</value>
+  </data>
+  <data name="clh_DataPointConditionType" xml:space="preserve">
+    <value>Nếu</value>
+  </data>
+  <data name="clh_DataPointConditionValue" xml:space="preserve">
+    <value>Giá trị</value>
+  </data>
+  <data name="clh_DataPointName" xml:space="preserve">
+    <value>Trường</value>
+  </data>
+  <data name="clh_ExifTag" xml:space="preserve">
+    <value>Thẻ Exif (nội bộ GTN)</value>
+  </data>
+  <data name="clh_Folder" xml:space="preserve">
+    <value>Thư mục</value>
+  </data>
+  <data name="clh_ModifiedValue" xml:space="preserve">
+    <value>Giá trị đã sửa (chưa lưu)</value>
+  </data>
+  <data name="clh_OriginalValue" xml:space="preserve">
+    <value>Giá trị gốc (đã lưu)</value>
+  </data>
+  <data name="clh_TargetPointName" xml:space="preserve">
+    <value>Thì</value>
+  </data>
+  <data name="clh_TargetPointNameCustomCityLogic" xml:space="preserve">
+    <value>Đọc thành phố từ</value>
+  </data>
+  <data name="clh_TargetPointOutcome" xml:space="preserve">
+    <value>Trở thành</value>
+  </data>
+  <data name="clh_TargetPointOutcomeCustom" xml:space="preserve">
+    <value>Kết quả tùy chỉnh</value>
+  </data>
+  <data name="cmi_OpenCoordsInAPI" xml:space="preserve">
+    <value>Mở tọa độ trong API</value>
+  </data>
+  <data name="cmi_RemoveCachedData" xml:space="preserve">
+    <value>Xóa dữ liệu đệm</value>
+  </data>
+  <data name="cmi_ShowHideCols" xml:space="preserve">
+    <value>Hiện hoặc ẩn cột</value>
+  </data>
+  <data name="fbd_StartupFolder" xml:space="preserve">
+    <value>Chọn thư mục khởi động</value>
+  </data>
+  <data name="frm_FrmEditFileData" xml:space="preserve">
+    <value>Chỉnh sửa dữ liệu</value>
+  </data>
+  <data name="frm_FrmImportExportGpx" xml:space="preserve">
+    <value>Nhập dữ liệu GPX/JSON</value>
+  </data>
+  <data name="frm_FrmManageFavourites" xml:space="preserve">
+    <value>Quản lý mục yêu thích</value>
+  </data>
+  <data name="frm_FrmPasteWhat" xml:space="preserve">
+    <value>Dán…dữ liệu gì?</value>
+  </data>
+  <data name="frm_FrmPickDataFromAPIBox" xml:space="preserve">
+    <value>Chọn giá trị địa danh</value>
+  </data>
+  <data name="frm_FrmPleaseWaitBox" xml:space="preserve">
+    <value>Vui lòng chờ trong khi thư mục đang tải.</value>
+  </data>
+  <data name="frm_FrmSettings" xml:space="preserve">
+    <value>Cài đặt</value>
+  </data>
+  <data name="gbx_AppSettings" xml:space="preserve">
+    <value>Cài đặt ứng dụng</value>
+  </data>
+  <data name="gbx_CreateDate" xml:space="preserve">
+    <value>Ngày tạo</value>
+  </data>
+  <data name="gbx_Dates" xml:space="preserve">
+    <value>Ngày tháng</value>
+  </data>
+  <data name="gbx_EditImageList" xml:space="preserve">
+    <value>Ảnh đã chọn để chỉnh sửa</value>
+  </data>
+  <data name="gbx_GeoNamesLanguageSettings" xml:space="preserve">
+    <value>Cài đặt ngôn ngữ GeoNames</value>
+  </data>
+  <data name="gbx_GeoNamesSettings" xml:space="preserve">
+    <value>Cài đặt GeoNames</value>
+  </data>
+  <data name="gbx_GetAltitude" xml:space="preserve">
+    <value>Lấy dữ liệu độ cao</value>
+  </data>
+  <data name="gbx_GetToponomy" xml:space="preserve">
+    <value>Lấy dữ liệu địa danh</value>
+  </data>
+  <data name="gbx_GPSData" xml:space="preserve">
+    <value>Dữ liệu GPS</value>
+  </data>
+  <data name="gbx_ImportExportGpxSource" xml:space="preserve">
+    <value>Nguồn</value>
+  </data>
+  <data name="gbx_ImportExportGpxTimeSetting" xml:space="preserve">
+    <value>Cài đặt thời gian</value>
+  </data>
+  <data name="gbx_LocationData" xml:space="preserve">
+    <value>Dữ liệu vị trí</value>
+  </data>
+  <data name="gbx_MapColourMode" xml:space="preserve">
+    <value>Chế độ màu bản đồ</value>
+  </data>
+  <data name="gbx_OtherSettings" xml:space="preserve">
+    <value>Cài đặt khác</value>
+  </data>
+  <data name="gbx_SaveTrackTo" xml:space="preserve">
+    <value>Lưu lộ trình (Tùy chọn)</value>
+  </data>
+  <data name="gbx_TakenDate" xml:space="preserve">
+    <value>Ngày chụp (ảnh)</value>
+  </data>
+  <data name="Generic_All" xml:space="preserve">
+    <value>Tất cả</value>
+  </data>
+  <data name="Generic_Cancel" xml:space="preserve">
+    <value>Hủy</value>
+  </data>
+  <data name="Generic_City" xml:space="preserve">
+    <value>Thành phố</value>
+  </data>
+  <data name="Generic_Close" xml:space="preserve">
+    <value>Đóng</value>
+  </data>
+  <data name="Generic_Coordinates" xml:space="preserve">
+    <value>Tọa độ</value>
+  </data>
+  <data name="Generic_Country" xml:space="preserve">
+    <value>Quốc gia</value>
+  </data>
+  <data name="Generic_CountryCode" xml:space="preserve">
+    <value>Mã quốc gia</value>
+  </data>
+  <data name="Generic_CreateDate" xml:space="preserve">
+    <value>Ngày tạo</value>
+  </data>
+  <data name="Generic_Days" xml:space="preserve">
+    <value>Ngày</value>
+  </data>
+  <data name="Generic_Decimal" xml:space="preserve">
+    <value>Thập phân</value>
+  </data>
+  <data name="Generic_Delete" xml:space="preserve">
+    <value>Xóa</value>
+  </data>
+  <data name="Generic_DestCoordinates" xml:space="preserve">
+    <value>Tọa độ đích</value>
+  </data>
+  <data name="Generic_Export" xml:space="preserve">
+    <value>Xuất</value>
+  </data>
+  <data name="Generic_ExportTrackTimeStampType" xml:space="preserve">
+    <value>Giá trị dấu thời gian</value>
+  </data>
+  <data name="Generic_ExposureTime" xml:space="preserve">
+    <value>Thời gian phơi sáng</value>
+  </data>
+  <data name="Generic_Favourites" xml:space="preserve">
+    <value>Yêu thích</value>
+  </data>
+  <data name="Generic_Feet" xml:space="preserve">
+    <value>Feet</value>
+  </data>
+  <data name="Generic_Feet_Abbr" xml:space="preserve">
+    <value>ft</value>
+  </data>
+  <data name="Generic_FileModifyDate" xml:space="preserve">
+    <value>Ngày tệp</value>
+  </data>
+  <data name="Generic_FileName" xml:space="preserve">
+    <value>Tên tệp</value>
+  </data>
+  <data name="Generic_Fnumber" xml:space="preserve">
+    <value>Khẩu độ</value>
+  </data>
+  <data name="Generic_FocalLength" xml:space="preserve">
+    <value>Tiêu cự</value>
+  </data>
+  <data name="Generic_FocalLengthIn35mmFormat" xml:space="preserve">
+    <value>Tiêu cự (35mm)</value>
+  </data>
+  <data name="Generic_ForAllImages" xml:space="preserve">
+    <value>Cho tất cả ảnh</value>
+  </data>
+  <data name="Generic_ForThisImage" xml:space="preserve">
+    <value>Cho ảnh này</value>
+  </data>
+  <data name="Generic_GPSAltitude" xml:space="preserve">
+    <value>Độ cao</value>
+  </data>
+  <data name="Generic_GPSAltitudeRef" xml:space="preserve">
+    <value>Tham chiếu độ cao</value>
+  </data>
+  <data name="Generic_GPSDateTime" xml:space="preserve">
+    <value>Ngày giờ GPS</value>
+  </data>
+  <data name="Generic_GPSDestLatitude" xml:space="preserve">
+    <value>Vĩ độ đích</value>
+  </data>
+  <data name="Generic_GPSDestLatitudeRef" xml:space="preserve">
+    <value>Tham chiếu vĩ độ đích</value>
+  </data>
+  <data name="Generic_GPSDestLongitude" xml:space="preserve">
+    <value>Kinh độ đích</value>
+  </data>
+  <data name="Generic_GPSDestLongitudeRef" xml:space="preserve">
+    <value>Tham chiếu kinh độ đích</value>
+  </data>
+  <data name="Generic_GPSImgDirection" xml:space="preserve">
+    <value>Hướng ảnh</value>
+  </data>
+  <data name="Generic_GPSImgDirectionRef" xml:space="preserve">
+    <value>Tham chiếu hướng ảnh</value>
+  </data>
+  <data name="Generic_GPSLatitude" xml:space="preserve">
+    <value>Vĩ độ</value>
+  </data>
+  <data name="Generic_GPSLatitudeRef" xml:space="preserve">
+    <value>Tham chiếu vĩ độ</value>
+  </data>
+  <data name="Generic_GPSLongitude" xml:space="preserve">
+    <value>Kinh độ</value>
+  </data>
+  <data name="Generic_GPSLongitudeRef" xml:space="preserve">
+    <value>Tham chiếu kinh độ</value>
+  </data>
+  <data name="Generic_GPSSpeed" xml:space="preserve">
+    <value>Tốc độ</value>
+  </data>
+  <data name="Generic_GPSSpeedRef" xml:space="preserve">
+    <value>Đơn vị tốc độ</value>
+  </data>
+  <data name="Generic_GUID" xml:space="preserve">
+    <value>GUID</value>
+  </data>
+  <data name="Generic_Hours" xml:space="preserve">
+    <value>Giờ</value>
+  </data>
+  <data name="Generic_Import" xml:space="preserve">
+    <value>Nhập</value>
+  </data>
+  <data name="Generic_Insert" xml:space="preserve">
+    <value>Chèn</value>
+  </data>
+  <data name="Generic_IPTCKeywords" xml:space="preserve">
+    <value>Từ khóa IPTC</value>
+  </data>
+  <data name="Generic_ISO" xml:space="preserve">
+    <value>Tốc độ ISO</value>
+  </data>
+  <data name="Generic_LensSpec" xml:space="preserve">
+    <value>Ống kính</value>
+  </data>
+  <data name="Generic_Make" xml:space="preserve">
+    <value>Hãng</value>
+  </data>
+  <data name="Generic_Metres" xml:space="preserve">
+    <value>Mét</value>
+  </data>
+  <data name="Generic_Metres_Abbr" xml:space="preserve">
+    <value>m</value>
+  </data>
+  <data name="Generic_Miles" xml:space="preserve">
+    <value>Dặm</value>
+  </data>
+  <data name="Generic_Minutes" xml:space="preserve">
+    <value>Phút</value>
+  </data>
+  <data name="Generic_Model" xml:space="preserve">
+    <value>Model</value>
+  </data>
+  <data name="Generic_No" xml:space="preserve">
+    <value>Không</value>
+  </data>
+  <data name="Generic_None" xml:space="preserve">
+    <value>Không có</value>
+  </data>
+  <data name="Generic_OffsetTime" xml:space="preserve">
+    <value>Chênh lệch múi giờ</value>
+  </data>
+  <data name="Generic_OK" xml:space="preserve">
+    <value>OK</value>
+  </data>
+  <data name="Generic_PleaseWait" xml:space="preserve">
+    <value>Vui lòng chờ...</value>
+  </data>
+  <data name="Generic_QuestionDontAskAgain" xml:space="preserve">
+    <value>Đừng hỏi lại</value>
+  </data>
+  <data name="Generic_Rating" xml:space="preserve">
+    <value>Đánh giá</value>
+  </data>
+  <data name="Generic_Rename" xml:space="preserve">
+    <value>Đổi tên</value>
+  </data>
+  <data name="Generic_Save" xml:space="preserve">
+    <value>Lưu các thay đổi hiện tại</value>
+  </data>
+  <data name="Generic_Seconds" xml:space="preserve">
+    <value>Giây</value>
+  </data>
+  <data name="Generic_ShowPassword" xml:space="preserve">
+    <value>Hiện mật khẩu</value>
+  </data>
+  <data name="Generic_ShowUserName" xml:space="preserve">
+    <value>Hiện tên người dùng</value>
+  </data>
+  <data name="Generic_State" xml:space="preserve">
+    <value>Tỉnh/bang</value>
+  </data>
+  <data name="Generic_Sublocation" xml:space="preserve">
+    <value>Địa điểm phụ</value>
+  </data>
+  <data name="Generic_TakenDate" xml:space="preserve">
+    <value>Ngày chụp</value>
+  </data>
+  <data name="Generic_TZTime" xml:space="preserve">
+    <value>Điều chỉnh múi giờ:</value>
+  </data>
+  <data name="Generic_UseDST" xml:space="preserve">
+    <value>Dùng giờ mùa hè?</value>
+  </data>
+  <data name="Generic_XMLSubjects" xml:space="preserve">
+    <value>Chủ đề XML</value>
+  </data>
+  <data name="Generic_Yes" xml:space="preserve">
+    <value>Có</value>
+  </data>
+  <data name="lbl_ARCGIS_APIKey" xml:space="preserve">
+    <value>Khóa API ArcGIS</value>
+  </data>
+  <data name="lbl_CameraTime" xml:space="preserve">
+    <value>Ngày/giờ máy ảnh</value>
+  </data>
+  <data name="lbl_CameraTimeNote" xml:space="preserve">
+    <value>Lưu ý: Dịch chuyển thời gian chỉ cần khi dấu thời gian của ảnh không đồng bộ đúng với giờ GPS. Để 0 giây nếu không cần thiết.</value>
+  </data>
+  <data name="lbl_CancelPressed" xml:space="preserve">
+    <value>Đã nhấn Hủy. Việc phân tích thư mục đã dừng, nhưng các tệp đã thu thập sẽ được phân tích.</value>
+  </data>
+  <data name="lbl_ChoiceOfferCount" xml:space="preserve">
+    <value>Hiển thị số lượng lựa chọn địa danh này</value>
+  </data>
+  <data name="lbl_ChoiceRadius" xml:space="preserve">
+    <value>Trong bán kính [km]</value>
+  </data>
+  <data name="lbl_ExportTrackOrderBy" xml:space="preserve">
+    <value>Sắp xếp các điểm lộ trình theo</value>
+  </data>
+  <data name="lbl_ExportTrackTimeStampType" xml:space="preserve">
+    <value>Giá trị dấu thời gian</value>
+  </data>
+  <data name="lbl_ExportTrackTimeStampTypeNote" xml:space="preserve">
+    <value>Nếu bạn chọn GPSDateTime mà tệp không có thuộc tính này thì việc xuất sẽ thất bại. 
+Một số tệp HEIC có thuộc tính này, hầu hết các định dạng khác thì không.</value>
+  </data>
+  <data name="lbl_GeoMaxExtSecs" xml:space="preserve">
+    <value>Thời gian ngoại suy tối đa (chênh lệch giữa dấu thời gian chụp và dấu thời gian điểm lộ trình), tính bằng giây.</value>
+  </data>
+  <data name="lbl_GeoMaxIntSecs" xml:space="preserve">
+    <value>Thời gian nội suy tối đa ('đoán đường đi'), tính bằng giây. Đặt 0 để tắt.</value>
+  </data>
+  <data name="lbl_GeoNames_Pwd" xml:space="preserve">
+    <value>Mật khẩu GeoNames</value>
+  </data>
+  <data name="lbl_GeoNames_UserName" xml:space="preserve">
+    <value>Tên người dùng GeoNames</value>
+  </data>
+  <data name="lbl_importFromAnotherFolder" xml:space="preserve">
+    <value>&lt;-- Nhấp vào đây để đặt thư mục nguồn nhập</value>
+  </data>
+  <data name="lbl_importOneFile" xml:space="preserve">
+    <value>&lt;-- Nhấp vào đây để đặt tệp nguồn nhập</value>
+  </data>
+  <data name="lbl_ImportTimeAgainst" xml:space="preserve">
+    <value>So sánh dấu thời gian trong các tệp lộ trình với:</value>
+  </data>
+  <data name="lbl_Language" xml:space="preserve">
+    <value>Ngôn ngữ</value>
+  </data>
+  <data name="lbl_OffsetTime" xml:space="preserve">
+    <value>Múi giờ</value>
+  </data>
+  <data name="lbl_ParseProgress_Normal" xml:space="preserve">
+    <value>Sẵn sàng</value>
+  </data>
+  <data name="lbl_ParseProgress_Read" xml:space="preserve">
+    <value>Đang đọc:</value>
+  </data>
+  <data name="lbl_ParseProgress_Write" xml:space="preserve">
+    <value>Đang ghi:</value>
+  </data>
+  <data name="lbl_ParsingFolders" xml:space="preserve">
+    <value>Đang phân tích tệp &amp;&amp; thư mục, vui lòng chờ. </value>
+  </data>
+  <data name="lbl_PleaseWaitBoxActionParsing" xml:space="preserve">
+    <value>Đang phân tích dữ liệu:</value>
+  </data>
+  <data name="lbl_PleaseWaitBoxActionPopulatingListView" xml:space="preserve">
+    <value>Đang điền lưới chính (ListView)</value>
+  </data>
+  <data name="lbl_PleaseWaitBoxActionScanning" xml:space="preserve">
+    <value>Đang quét tệp:</value>
+  </data>
+  <data name="lbl_PressCancelToStop" xml:space="preserve">
+    <value>Nhấn Hủy để dừng.</value>
+  </data>
+  <data name="lbl_QuestionAddToponomy" xml:space="preserve">
+    <value>Bạn có muốn gán thêm giá trị độ cao và địa danh không?
+Nếu chọn Không, dữ liệu vĩ/kinh độ có thể không còn đồng bộ với dữ liệu địa danh đã nhúng.
+Nếu nhấn 'ngừng hỏi', câu trả lời sẽ được coi là Có và sẽ không hỏi lại trong phiên này. Khởi động lại để đặt lại.</value>
+  </data>
+  <data name="lbl_SaveTrackTo" xml:space="preserve">
+    <value>Lưu kết quả vào</value>
+  </data>
+  <data name="lbl_SelectColsTitle" xml:space="preserve">
+    <value>Chọn cột</value>
+  </data>
+  <data name="lbl_ShiftTrackTimeBy" xml:space="preserve">
+    <value>Dịch chuyển thời gian tệp lộ trình một khoảng:</value>
+  </data>
+  <data name="gbx_Startup_Folder" xml:space="preserve">
+    <value>Thư mục khởi động</value>
+  </data>
+  <data name="lbl_TZNote" xml:space="preserve">
+    <value>Lưu ý: Nếu thẻ ngày/giờ không có múi giờ thì có thể thêm một múi giờ (xem bên dưới), nếu không thì sẽ dùng giờ hệ thống cục bộ.</value>
+  </data>
+  <data name="lbl_TZTime" xml:space="preserve">
+    <value>Điều chỉnh múi giờ:</value>
+  </data>
+  <data name="mbc_Error" xml:space="preserve">
+    <value>Lỗi</value>
+  </data>
+  <data name="mbc_Information" xml:space="preserve">
+    <value>Thông tin</value>
+  </data>
+  <data name="mbc_Question" xml:space="preserve">
+    <value>Câu hỏi</value>
+  </data>
+  <data name="mbc_Warning" xml:space="preserve">
+    <value>Cảnh báo</value>
+  </data>
+  <data name="mbx_DirectoryElementCollection_ErrorParsing" xml:space="preserve">
+    <value>Lỗi khi phân tích thư mục thành DirectoryElements</value>
+  </data>
+  <data name="mbx_FrmEditFileData_ErrorAPIError" xml:space="preserve">
+    <value>Ứng dụng gặp lỗi khi giao tiếp với API. Nếu bạn gặp lỗi Unauthorised (không được phép), vui lòng đặt tên người dùng làm mật khẩu trong cài đặt.</value>
+  </data>
+  <data name="mbx_FrmEditFileData_ErrorInvalidSender" xml:space="preserve">
+    <value>Đây sẽ là một lỗi.  Vui lòng báo cáo vấn đề trên GitHub, và 'sender' là: </value>
+  </data>
+  <data name="mbx_FrmEditFileData_InfoDataUpdated" xml:space="preserve">
+    <value>Đã cập nhật dữ liệu.</value>
+  </data>
+  <data name="mbx_FrmEditFileData_WarningFileDisappeared" xml:space="preserve">
+    <value>Có vẻ như các tệp của bạn đã biến mất.</value>
+  </data>
+  <data name="mbx_FrmEditFileData_WarningLatLongMustBeNumbers" xml:space="preserve">
+    <value>Chỉ được nhập số. Sẽ mặc định là số 0.</value>
+  </data>
+  <data name="mbx_FrmImportExportGpx_AskUserWantsReport" xml:space="preserve">
+    <value>Bạn có muốn xem báo cáo về quá trình nhập không?</value>
+  </data>
+  <data name="mbx_FrmImportExportGpx_FileOrFolderDoesntExist" xml:space="preserve">
+    <value>Tệp hoặc thư mục bạn chọn không hợp lệ.</value>
+  </data>
+  <data name="mbx_FrmImportExportGpx_NoFileSelected" xml:space="preserve">
+    <value>Chưa chọn tệp nào để nhập.</value>
+  </data>
+  <data name="mbx_FrmImportExportGpx_TrackContainsNoData" xml:space="preserve">
+    <value>Không nhập được lớp phủ lộ trình - không tìm thấy dữ liệu phù hợp.</value>
+  </data>
+  <data name="mbx_FrmImportNoStoredShiftValues" xml:space="preserve">
+    <value>Chưa lưu giá trị "dịch chuyển" nào. Dữ liệu sẽ giữ nguyên là 0.</value>
+  </data>
+  <data name="mbx_FrmMainApp_ErrorCantCreateSQLiteDB" xml:space="preserve">
+    <value>Không thể tạo cơ sở dữ liệu SQLite (vui lòng báo cáo vấn đề trên GitHub): </value>
+  </data>
+  <data name="mbx_FrmMainApp_ErrorCantLoadSQLiteDB" xml:space="preserve">
+    <value>Tải dữ liệu từ SQL thất bại (vui lòng báo cáo vấn đề trên GitHub): </value>
+  </data>
+  <data name="mbx_FrmMainApp_ErrorCantLoadWebView2" xml:space="preserve">
+    <value>Lỗi khi tải WebView2 - Bạn đã cài đặt nó chưa?</value>
+  </data>
+  <data name="mbx_FrmMainApp_ErrorCantReadDefaultSQLiteDB" xml:space="preserve">
+    <value>Không đọc được giá trị mặc định từ SQL (vui lòng báo cáo vấn đề trên GitHub): </value>
+  </data>
+  <data name="mbx_FrmMainApp_ErrorCantWriteSQLiteDB" xml:space="preserve">
+    <value>Đã tạo nhưng không thể ghi cơ sở dữ liệu SQLite (vui lòng báo cáo vấn đề trên GitHub): </value>
+  </data>
+  <data name="mbx_FrmMainApp_ErrorClearingFileDataQTables" xml:space="preserve">
+    <value>Lỗi khi xóa các bảng filedata-Q (vui lòng báo cáo vấn đề trên GitHub): </value>
+  </data>
+  <data name="mbx_FrmMainApp_ErrorDoubleBuffer" xml:space="preserve">
+    <value>Lỗi DoubleBuffer (vui lòng báo cáo vấn đề trên GitHub): </value>
+  </data>
+  <data name="mbx_FrmMainApp_ErrorFileGoneMissing" xml:space="preserve">
+    <value>Tệp có vẻ không còn tồn tại: </value>
+  </data>
+  <data name="mbx_FrmMainApp_ErrorInitializeComponent" xml:space="preserve">
+    <value>Lỗi trong FrmMainApp.InitializeComponent (vui lòng báo cáo vấn đề trên GitHub): </value>
+  </data>
+  <data name="mbx_FrmMainApp_ErrorInitializeWebViewEnsureCoreWebView2Async" xml:space="preserve">
+    <value>Lỗi trong FrmMainApp.InitialiseWebView (await wbv_MapArea.EnsureCoreWebView2Async(c2wv)) (vui lòng báo cáo vấn đề trên GitHub): </value>
+  </data>
+  <data name="mbx_FrmMainApp_ErrorInitializeWebViewIsWebMessageEnabled" xml:space="preserve">
+    <value>Lỗi trong FrmMainApp.InitialiseWebView (IsWebMessageEnabled) (vui lòng báo cáo vấn đề trên GitHub): </value>
+  </data>
+  <data name="mbx_FrmMainApp_ErrorInitializeWebViewNavigateToStringInHTMLFile" xml:space="preserve">
+    <value>Lỗi trong FrmMainApp.InitialiseWebView (NavigateToString trong tệp HTMLCode) (vui lòng báo cáo vấn đề trên GitHub): </value>
+  </data>
+  <data name="mbx_FrmMainApp_ErrorInitializeWebViewParseCoordsFromHTMLFile" xml:space="preserve">
+    <value>Lỗi trong FrmMainApp.InitialiseWebView (phân tích tọa độ từ tệp HTMLCode) (vui lòng báo cáo vấn đề trên GitHub): </value>
+  </data>
+  <data name="mbx_FrmMainApp_ErrorInitializeWebViewReadHTMLFile" xml:space="preserve">
+    <value>Lỗi trong FrmMainApp.InitialiseWebView (đọc tệp HTMLCode) (vui lòng báo cáo vấn đề trên GitHub): </value>
+  </data>
+  <data name="mbx_FrmMainApp_ErrorInitializeWebViewReplaceStringInHTMLFile" xml:space="preserve">
+    <value>Lỗi trong FrmMainApp.InitialiseWebView (thay thế hằng số trong tệp HTMLCode) (vui lòng báo cáo vấn đề trên GitHub): </value>
+  </data>
+  <data name="mbx_FrmMainApp_ErrorInitializeWebViewWebMessageReceived" xml:space="preserve">
+    <value>Lỗi khi thực hiện wbv_MapArea_WebMessageReceived (vui lòng báo cáo vấn đề trên GitHub): </value>
+  </data>
+  <data name="mbx_FrmMainApp_ErrorInvalidFolder" xml:space="preserve">
+    <value>Thư mục bạn nhập có vẻ không hợp lệ. Quay lại C:\?</value>
+  </data>
+  <data name="mbx_FrmMainApp_ErrorLanguageFileColumnHeaders" xml:space="preserve">
+    <value>Đã xảy ra lỗi khi đọc tệp ngôn ngữ và gán tiêu đề cột (vui lòng báo cáo vấn đề trên GitHub): </value>
+  </data>
+  <data name="mbx_FrmMainApp_ErrorNavigateMapGoHTMLCode" xml:space="preserve">
+    <value>Lỗi trong FrmMainApp.NavigateMapGo (chuỗi HTMLCode) (vui lòng báo cáo vấn đề trên GitHub): </value>
+  </data>
+  <data name="mbx_FrmMainApp_ErrorRemoveGeoDataFailed" xml:space="preserve">
+    <value>Quá trình xóa dữ liệu vị trí thất bại hoặc trả về lỗi.</value>
+  </data>
+  <data name="mbx_FrmMainApp_ErrorResizingColumns" xml:space="preserve">
+    <value>Thay đổi kích thước cột thất bại (vui lòng báo cáo vấn đề trên GitHub): </value>
+  </data>
+  <data name="mbx_FrmMainApp_ErrorSettingStartupFolder" xml:space="preserve">
+    <value>Đặt thư mục khởi động mặc định thất bại (vui lòng báo cáo vấn đề trên GitHub): </value>
+  </data>
+  <data name="mbx_FrmMainApp_InfoCachedDataNotRemoved" xml:space="preserve">
+    <value>Không có dữ liệu nào bị xóa. Hoặc bạn chưa chọn mục hợp lệ, hoặc các mục đã chọn không có dữ liệu đệm.</value>
+  </data>
+  <data name="mbx_FrmMainApp_InfoCachedDataRemoved" xml:space="preserve">
+    <value>Nếu có, dữ liệu đệm của các mục đã chọn đã được xóa.</value>
+  </data>
+  <data name="mbx_FrmMainApp_InfoFavouriteNameCannotBeBlank" xml:space="preserve">
+    <value>Tên không được để trống</value>
+  </data>
+  <data name="mbx_FrmMainApp_InfoFavouriteNotValid" xml:space="preserve">
+    <value>Mục đã lưu bạn chọn không hợp lệ</value>
+  </data>
+  <data name="mbx_FrmMainApp_InfoFavouriteSaved" xml:space="preserve">
+    <value>Đã lưu mục yêu thích</value>
+  </data>
+  <data name="mbx_FrmMainApp_NoFavouritesDefined" xml:space="preserve">
+    <value>Bạn chưa có mục yêu thích nào. Hãy thêm bằng các nút bên dưới bản đồ.</value>
+  </data>
+  <data name="mbx_FrmMainApp_QuestionAddDraggedDataPointToFiles" xml:space="preserve">
+    <value>Bạn có muốn gán tọa độ cho các tệp đã chọn không?</value>
+  </data>
+  <data name="mbx_FrmMainApp_QuestionDisableFlatMode" xml:space="preserve">
+    <value>Chế độ phẳng đang bật. Bạn có muốn tắt không?</value>
+  </data>
+  <data name="mbx_FrmMainApp_QuestionNoRowsFromAPI" xml:space="preserve">
+    <value>Truy vấn API không trả về thông tin hợp lệ nào. Bạn có muốn để trống các giá trị địa danh không?</value>
+  </data>
+  <data name="mbx_FrmMainApp_QuestionRunImportExportInFlatMode" xml:space="preserve">
+    <value>Chạy nhập/xuất lộ trình khi ở Chế độ phẳng là không nên, vì các thao tác với lộ trình dùng logic đặc biệt không phân biệt được các tệp trùng tên ở các thư mục khác nhau. Bạn có chắc chắn muốn chạy không?</value>
+  </data>
+  <data name="mbx_FrmMainApp_WarningMultipleImageFilesForXMP" xml:space="preserve">
+    <value>Cảnh báo: các tệp đi kèm sau có tên trùng với nhiều tệp ảnh - dữ liệu có thể đã bị đọc sai:</value>
+  </data>
+  <data name="mbx_FrmMainApp_WarningNoItemSelected" xml:space="preserve">
+    <value>Chưa chọn mục nào.</value>
+  </data>
+  <data name="mbx_FrmMainApp_WarningTooManyFilesSelected" xml:space="preserve">
+    <value>Phải chọn đúng 1 tệp.</value>
+  </data>
+  <data name="mbx_FrmPasteWhat_NoDateShiftToPaste" xml:space="preserve">
+    <value>Chưa có giá trị nào trong Nhóm sao chép cho dịch chuyển ngày giờ</value>
+  </data>
+  <data name="mbx_FrmSettings_dgv_CustomRules_ColumnCannotBeEmpty" xml:space="preserve">
+    <value>Mọi cột danh sách thả xuống phải có giá trị, và giá trị điều kiện "nếu" cũng không được để trống.</value>
+  </data>
+  <data name="mbx_FrmSettings_dgv_CustomRules_CustomOutcomeCannotBeEmpty" xml:space="preserve">
+    <value>Nếu chọn "Tùy chỉnh" cho Kết quả thì cột Kết quả tùy chỉnh không được để trống. Nếu đóng form Cài đặt mà chưa sửa, dòng của bạn sẽ bị xóa.</value>
+  </data>
+  <data name="mbx_FrmSettings_ErrorExportFailed" xml:space="preserve">
+    <value>Xuất thất bại: </value>
+  </data>
+  <data name="mbx_FrmSettings_ErrorImportFailed" xml:space="preserve">
+    <value>Nhập thất bại: </value>
+  </data>
+  <data name="mbx_FrmSettings_PleaseRestartApp" xml:space="preserve">
+    <value>Vui lòng khởi động lại ứng dụng để thay đổi có hiệu lực.</value>
+  </data>
+  <data name="mbx_FrmSettings_QuestionWhatToExport" xml:space="preserve">
+    <value>Chọn nội dung cần xuất. Lưu ý rằng chức năng xuất chỉ xuất dữ liệu _có trong_ cơ sở dữ liệu, tức là dữ liệu đã được lưu. Nếu bạn có thay đổi chưa lưu trong Cài đặt, hãy thoát ra, lưu chúng (nhấn OK trong form Cài đặt), rồi quay lại đây.</value>
+  </data>
+  <data name="mbx_FrmSettings_QuestionWhatToImport" xml:space="preserve">
+    <value>Chọn nội dung cần nhập. Lưu ý rằng khi quá trình nhập hoàn tất thành công, các phần liên quan của cơ sở dữ liệu sẽ bị ghi đè. Nếu có lỗi, sẽ có một tệp sao lưu cơ sở dữ liệu trong thư mục AppData của bạn.</value>
+  </data>
+  <data name="Generic_Done" xml:space="preserve">
+    <value>Xong.</value>
+  </data>
+  <data name="mbx_GenericDoneRestartApp" xml:space="preserve">
+    <value>Xong - có lẽ bạn nên khởi động lại ứng dụng.</value>
+  </data>
+  <data name="mbx_GenericPathLikelyUTF" xml:space="preserve">
+    <value>Đường dẫn tệp có thể chứa ký tự UTF (không chuẩn, như chữ châu Á, chữ Kirin, v.v.) và điều này có thể gây lỗi. Vui lòng đảm bảo bạn đã bật tính năng “Sử dụng Unicode UTF-8 cho hỗ trợ ngôn ngữ trên toàn thế giới”. (xem mục Vấn đề đã biết trong Readme)</value>
+  </data>
+  <data name="mbx_HelperStaticExifNoAPI" xml:space="preserve">
+    <value>Không kết nối được tới API - có phải bạn đang ngoại tuyến không?</value>
+  </data>
+  <data name="mbx_Helper_ErrorAsyncExifToolExecuteAsyncFailed" xml:space="preserve">
+    <value>asyncExifTool.ExecuteAsync thất bại (vui lòng báo cáo vấn đề trên GitHub): </value>
+  </data>
+  <data name="mbx_Helper_ErrorCantReadDefaultSQLiteDB" xml:space="preserve">
+    <value>Không đọc được giá trị mặc định từ SQL (vui lòng báo cáo vấn đề trên GitHub): </value>
+  </data>
+  <data name="mbx_Helper_QuestionFileQIsNotEmpty" xml:space="preserve">
+    <value>Một số dữ liệu đã thay đổi - bạn có muốn lưu không? 
+Dữ liệu sẽ bị hủy nếu bạn nhấn Không</value>
+  </data>
+  <data name="mbx_Helper_WarningExifToolVerAPIResponse" xml:space="preserve">
+    <value>API ExifToolVerAPIResponse trả về phản hồi sau: </value>
+  </data>
+  <data name="mbx_Helper_WarningFileDisappeared" xml:space="preserve">
+    <value>Có vẻ như các tệp của bạn đã biến mất.</value>
+  </data>
+  <data name="mbx_Helper_WarningGeoNamesAPIResponse" xml:space="preserve">
+    <value>API GeoNames trả về phản hồi sau: </value>
+  </data>
+  <data name="mbx_Helper_WarningGTNVerAPIResponse" xml:space="preserve">
+    <value>API GitHub trả về phản hồi sau: </value>
+  </data>
+  <data name="mbx_Helper_WarningNoARCGISKey" xml:space="preserve">
+    <value>Bạn cần cung cấp Khóa API ArcGIS trong Cài đặt để ứng dụng hoạt động đúng.</value>
+  </data>
+  <data name="mbx_Helper_WarningNothingInWriteQueue" xml:space="preserve">
+    <value>Hàng đợi ghi của bạn đang trống.</value>
+  </data>
+  <data name="mbx_Helper_WarningNothingToPaste" xml:space="preserve">
+    <value>Không có gì để dán.</value>
+  </data>
+  <data name="mbx_Helper_WarningNoWriteSettingEnabled" xml:space="preserve">
+    <value>Bạn đã tắt cả xử lý tệp gốc _và_ XMP đi kèm nên không có gì để ghi.</value>
+  </data>
+  <data name="mbx_Helper_WarningTooManyFilesSelected" xml:space="preserve">
+    <value>Thao tác này chỉ hoạt động khi bạn chọn đúng một tệp.</value>
+  </data>
+  <data name="mns_File" xml:space="preserve">
+    <value>Tệp</value>
+  </data>
+  <data name="mns_Help" xml:space="preserve">
+    <value>Trợ giúp</value>
+  </data>
+  <data name="mns_Settings" xml:space="preserve">
+    <value>Cài đặt</value>
+  </data>
+  <data name="pbx_Browse_Startup_Folder" xml:space="preserve">
+    <value>Chọn thư mục khởi động</value>
+  </data>
+  <data name="pbx_imagePreviewCouldNotRetrieve" xml:space="preserve">
+    <value>Không thể lấy/tạo bản xem trước ảnh</value>
+  </data>
+  <data name="pbx_imagePreviewEmptyText" xml:space="preserve">
+    <value>Không có ảnh để hiển thị</value>
+  </data>
+  <data name="pbx_importFromAnotherFolder" xml:space="preserve">
+    <value>Chọn thư mục lộ trình</value>
+  </data>
+  <data name="pbx_importOneFile" xml:space="preserve">
+    <value>Chọn tệp lộ trình</value>
+  </data>
+  <data name="rbt_CreateDateSetToFixedDate" xml:space="preserve">
+    <value>Đặt thành ngày cố định</value>
+  </data>
+  <data name="rbt_CreateDateTimeShift" xml:space="preserve">
+    <value>Dịch chuyển thời gian</value>
+  </data>
+  <data name="rbt_importFromAnotherFolder" xml:space="preserve">
+    <value>Nhập từ thư mục khác</value>
+  </data>
+  <data name="rbt_importFromCurrentFolder" xml:space="preserve">
+    <value>Nhập từ thư mục hiện tại</value>
+  </data>
+  <data name="rbt_importOneFile" xml:space="preserve">
+    <value>Nhập từ tệp đã chọn</value>
+  </data>
+  <data name="rbt_MapColourModeDarkInverse" xml:space="preserve">
+    <value>Tối (đảo ngược)</value>
+  </data>
+  <data name="rbt_MapColourModeDarkPale" xml:space="preserve">
+    <value>Tối (nhạt)</value>
+  </data>
+  <data name="rbt_MapColourModeNormal" xml:space="preserve">
+    <value>Bình thường</value>
+  </data>
+  <data name="rbt_PasteCreateDateActual" xml:space="preserve">
+    <value>Thực tế (giá trị cố định)</value>
+  </data>
+  <data name="rbt_PasteCreateDateShift" xml:space="preserve">
+    <value>Dịch chuyển thời gian</value>
+  </data>
+  <data name="rbt_PasteTakenDateActual" xml:space="preserve">
+    <value>Thực tế (giá trị cố định)</value>
+  </data>
+  <data name="rbt_PasteTakenDateShift" xml:space="preserve">
+    <value>Dịch chuyển thời gian</value>
+  </data>
+  <data name="rbt_TakenDateSetToFixedDate" xml:space="preserve">
+    <value>Đặt thành ngày cố định</value>
+  </data>
+  <data name="rbt_TakenDateTimeShift" xml:space="preserve">
+    <value>Dịch chuyển thời gian</value>
+  </data>
+  <data name="rbt_TryUseGeoNamesLanguage" xml:space="preserve">
+    <value>Thử dùng ngôn ngữ này khi lấy tên địa điểm:</value>
+  </data>
+  <data name="rbt_UseGeoNamesLocalLanguage" xml:space="preserve">
+    <value>Thử dùng "ngôn ngữ địa phương" khi lấy tên địa điểm</value>
+  </data>
+  <data name="rbx_CustomCityLogicExplanation" xml:space="preserve">
+    <value>Đây là tính năng nâng cao. AdminName1-4 và ToponymName là các đầu ra của API, nên nếu bạn không hiểu những thứ đó thì tốt nhất đừng động vào. 
+Để xem tổng quan, hãy xem: https://github.com/nemethviktor/GeoTagNinja/issues/38#issuecomment-1356844255 .
+Cài đặt này cho phép bạn thêm các quốc gia tùy chọn để lấy giá trị "Thành phố" từ một trong các AdminName cụ thể.</value>
+  </data>
+  <data name="rbx_CustomCityLogicExplanationBold" xml:space="preserve">
+    <value>Lưu ý: các thay đổi trong bảng bên dưới có hiệu lực ngay lập tức và nút OK/Hủy không tác động trực tiếp tới chúng. Bạn cũng cần nhấp chuột phải và chọn Xóa dữ liệu đệm cho các tệp có thể bị ảnh hưởng bởi thay đổi nếu muốn lấy dữ liệu trong phiên này (hoặc chỉ cần khởi động lại ứng dụng).</value>
+  </data>
+  <data name="rbx_CustomRulesExplanation" xml:space="preserve">
+    <value>Đây là tính năng nâng cao. AdminName1-4 và ToponymName là các đầu ra của API, nên nếu bạn không hiểu những thứ đó thì tốt nhất đừng động vào. 
+Về "Các quốc gia được xác định trước" (hộp kiểm bên dưới): đọc thông tin tại đây: https://github.com/nemethviktor/GeoTagNinja/issues/38#issuecomment-1356844255 + xem thêm tab khác - Lưu ý nếu bạn tắt cài đặt đó thì các ô CountryCode nằm ngoài nhóm liên quan sẽ bị để trống nhưng các hàng đó sẽ không bị xóa.
+Tất cả các cột đều bắt buộc, trừ cột "Tùy chỉnh", nhưng nếu bạn đặt Kết quả là "Tùy chỉnh" và để trống cột "Tùy chỉnh" thì hàng đó sẽ bị bỏ qua. Dữ liệu không phân biệt chữ hoa/thường. Với mỗi trường dữ liệu (ví dụ Thành phố, Tỉnh/bang), hàng cuối cùng sẽ ghi đè các hàng trước. Nói chung hãy hợp lý. Càng thêm nhiều hàng thì càng chậm.
+Ví dụ: dữ liệu mặc định API trả về cho London, UK khá kém vì với khu vực đó adminName2 = "Greater London", và nó sẽ bị loại bỏ (thành phố thường lấy từ "ToponymName"). -&gt; đặt: "Trường" = "adminName2", "Nếu" = "là", "Giá trị điều kiện" = "Greater London", "Thì" = "Thành phố", "Trở thành" = "adminName2". Lặp lại toàn bộ trong hàng thứ 2 nhưng "Thì" = "Sub_Loction" và "Trở thành" = "ToponymName".</value>
+  </data>
+  <data name="rbx_CustomRulesExplanationBold" xml:space="preserve">
+    <value>Lưu ý: các thay đổi trong bảng bên dưới có hiệu lực ngay lập tức và nút OK/Hủy không tác động trực tiếp tới chúng. Bạn cũng cần nhấp chuột phải và chọn Xóa dữ liệu đệm cho các tệp có thể bị ảnh hưởng bởi thay đổi nếu muốn lấy dữ liệu trong phiên này (hoặc chỉ cần khởi động lại ứng dụng).</value>
+  </data>
+  <data name="rbx_Register_ArcGIS" xml:space="preserve">
+    <value>Bạn cần khóa API ArcGIS để sử dụng chức năng tìm kiếm trên bản đồ. 
+ArcGIS đã thay đổi quy trình đăng ký từ tháng 6 năm 2024. Đăng ký [tại đây](https://location.arcgis.com/sign-up/)
+Bây giờ bạn cần chỉ định một URL portal. Nhập bất kỳ nội dung nào bạn muốn.
+Cuộn/đi đến `Developer credential creator`
+Sau đó `New Item`
+Sau đó `Developer Credentials`
+Chọn `API Key` (không phải OAUth)
+Đặt ngày hết hạn xa nhất có thể (1 năm)
+Để trống `Referrers`
+Ở trang tiếp theo chọn `Geocoding (not stored)`
+Ở trang tiếp theo bỏ qua `Item Access`
+Ở trang tiếp theo thêm tiêu đề bất kỳ
+Cuối cùng nhấn `Generate the API key and go to item details page. I am ready to copy and save the key.`
+Lưu khóa API khi được yêu cầu. Nếu không lưu lúc đó, bạn sẽ phải tạo một khóa khác.</value>
+  </data>
+  <data name="rbx_Register_GeoNames" xml:space="preserve">
+    <value>Bạn cần một tài khoản GeoNames để sử dụng chức năng tra cứu địa danh ngược/tìm kiếm (vĩ/kinh độ --&gt; quốc gia/thành phố/...). Lấy tài khoản tại đây: http://www.geonames.org/login rồi bật quyền truy cập "Free Web Services" tại đây: https://www.geonames.org/manageaccount</value>
+  </data>
+  <data name="tcr_EditData" xml:space="preserve">
+    <value>Chỉnh sửa dữ liệu</value>
+  </data>
+  <data name="tmi_File" xml:space="preserve">
+    <value>Tệp</value>
+  </data>
+  <data name="tmi_File_CopyGeoData" xml:space="preserve">
+    <value>Sao chép toàn bộ dữ liệu vị trí</value>
+  </data>
+  <data name="frm_BatchRename" xml:space="preserve">
+    <value>Đổi tên hàng loạt</value>
+  </data>
+  <data name="frm_BatchRename_Preview" xml:space="preserve">
+    <value>Đổi tên hàng loạt - Xem trước</value>
+  </data>
+  <data name="gbx_BatchRename_Presets" xml:space="preserve">
+    <value>Cấu hình sẵn</value>
+  </data>
+  <data name="gbx_BatchRename_Destination" xml:space="preserve">
+    <value>Thư mục đích</value>
+  </data>
+  <data name="gbx_BatchRename_Names" xml:space="preserve">
+    <value>Tên tệp mới</value>
+  </data>
+  <data name="gbx_BatchRename_Options" xml:space="preserve">
+    <value>Tùy chọn</value>
+  </data>
+  <data name="gbx_BatchRename_Preview" xml:space="preserve">
+    <value>Xem trước</value>
+  </data>
+  <data name="lbl_BatchRename_Preset" xml:space="preserve">
+    <value>Cấu hình sẵn</value>
+  </data>
+  <data name="lbl_BatchRename_Modified" xml:space="preserve">
+    <value>(đã sửa)</value>
+  </data>
+  <data name="btn_BatchRename_Save" xml:space="preserve">
+    <value>Lưu...</value>
+  </data>
+  <data name="btn_BatchRename_Delete" xml:space="preserve">
+    <value>Xóa</value>
+  </data>
+  <data name="rbt_BatchRename_SameFolder" xml:space="preserve">
+    <value>Đổi tên trong cùng thư mục</value>
+  </data>
+  <data name="rbt_BatchRename_MoveToFolder" xml:space="preserve">
+    <value>Di chuyển sang thư mục khác</value>
+  </data>
+  <data name="rbt_BatchRename_CopyToFolder" xml:space="preserve">
+    <value>Sao chép sang thư mục khác</value>
+  </data>
+  <data name="btn_BatchRename_Browse" xml:space="preserve">
+    <value>Chọn...</value>
+  </data>
+  <data name="lbl_BatchRename_Compatibility" xml:space="preserve">
+    <value>Tương thích</value>
+  </data>
+  <data name="ckb_BatchRename_Windows" xml:space="preserve">
+    <value>Windows</value>
+  </data>
+  <data name="ckb_BatchRename_Mac" xml:space="preserve">
+    <value>Mac</value>
+  </data>
+  <data name="ckb_BatchRename_Unix" xml:space="preserve">
+    <value>Unix</value>
+  </data>
+  <data name="lbl_BatchRename_CurrentFilename" xml:space="preserve">
+    <value>Tên tệp hiện tại</value>
+  </data>
+  <data name="lbl_BatchRename_NewFilename" xml:space="preserve">
+    <value>Tên tệp mới</value>
+  </data>
+  <data name="lbl_BatchRename_Note" xml:space="preserve">
+    <value>Ghi chú</value>
+  </data>
+  <data name="lbl_BatchRename_Unchanged" xml:space="preserve">
+    <value>Không đổi</value>
+  </data>
+  <data name="btn_BatchRename_Rename" xml:space="preserve">
+    <value>Đổi tên</value>
+  </data>
+  <data name="btn_BatchRename_PreviewAll" xml:space="preserve">
+    <value>Xem trước</value>
+  </data>
+  <data name="lbl_BatchRename_Find" xml:space="preserve">
+    <value>Tìm</value>
+  </data>
+  <data name="lbl_BatchRename_ReplaceWith" xml:space="preserve">
+    <value>Thay bằng</value>
+  </data>
+  <data name="ckb_BatchRename_IgnoreCase" xml:space="preserve">
+    <value>Bỏ qua chữ hoa/thường</value>
+  </data>
+  <data name="ckb_BatchRename_ReplaceAll" xml:space="preserve">
+    <value>Thay tất cả</value>
+  </data>
+  <data name="ckb_BatchRename_UseRegex" xml:space="preserve">
+    <value>Dùng biểu thức chính quy</value>
+  </data>
+  <data name="lbl_BatchRename_Kind_Text" xml:space="preserve">
+    <value>Văn bản</value>
+  </data>
+  <data name="lbl_BatchRename_Kind_NewExtension" xml:space="preserve">
+    <value>Phần mở rộng mới</value>
+  </data>
+  <data name="lbl_BatchRename_Kind_CurrentFilename" xml:space="preserve">
+    <value>Tên tệp hiện tại</value>
+  </data>
+  <data name="lbl_BatchRename_Kind_PreservedFilename" xml:space="preserve">
+    <value>Tên tệp giữ nguyên</value>
+  </data>
+  <data name="lbl_BatchRename_Kind_SequenceNumber" xml:space="preserve">
+    <value>Số thứ tự</value>
+  </data>
+  <data name="lbl_BatchRename_Kind_SequenceLetter" xml:space="preserve">
+    <value>Chữ thứ tự</value>
+  </data>
+  <data name="lbl_BatchRename_Kind_DateTime" xml:space="preserve">
+    <value>Ngày giờ</value>
+  </data>
+  <data name="lbl_BatchRename_Kind_Metadata" xml:space="preserve">
+    <value>Siêu dữ liệu</value>
+  </data>
+  <data name="lbl_BatchRename_Kind_FolderName" xml:space="preserve">
+    <value>Tên thư mục</value>
+  </data>
+  <data name="lbl_BatchRename_Kind_StringSubstitution" xml:space="preserve">
+    <value>Thay thế chuỗi</value>
+  </data>
+  <data name="lbl_BatchRename_Case_Original" xml:space="preserve">
+    <value>Giữ nguyên chữ hoa/thường</value>
+  </data>
+  <data name="lbl_BatchRename_Case_Lower" xml:space="preserve">
+    <value>Chữ thường</value>
+  </data>
+  <data name="lbl_BatchRename_Case_Upper" xml:space="preserve">
+    <value>Chữ hoa</value>
+  </data>
+  <data name="lbl_BatchRename_Part_NameAndExtension" xml:space="preserve">
+    <value>Tên + Phần mở rộng</value>
+  </data>
+  <data name="lbl_BatchRename_Part_Name" xml:space="preserve">
+    <value>Tên</value>
+  </data>
+  <data name="lbl_BatchRename_Part_Extension" xml:space="preserve">
+    <value>Phần mở rộng</value>
+  </data>
+  <data name="lbl_BatchRename_Part_NumberSuffix" xml:space="preserve">
+    <value>Hậu tố số</value>
+  </data>
+  <data name="lbl_BatchRename_DateSource_DateTaken" xml:space="preserve">
+    <value>Ngày chụp</value>
+  </data>
+  <data name="lbl_BatchRename_DateSource_DateCreated" xml:space="preserve">
+    <value>Ngày tạo</value>
+  </data>
+  <data name="lbl_BatchRename_DateSource_FileModified" xml:space="preserve">
+    <value>Ngày sửa đổi tệp</value>
+  </data>
+  <data name="lbl_BatchRename_DateSource_FileCreated" xml:space="preserve">
+    <value>Ngày tạo tệp</value>
+  </data>
+  <data name="lbl_BatchRename_DateSource_Today" xml:space="preserve">
+    <value>Hôm nay</value>
+  </data>
+  <data name="lbl_BatchRename_DateSource_Yesterday" xml:space="preserve">
+    <value>Hôm qua</value>
+  </data>
+  <data name="lbl_BatchRename_Digits_1" xml:space="preserve">
+    <value>Một chữ số</value>
+  </data>
+  <data name="lbl_BatchRename_Digits_2" xml:space="preserve">
+    <value>Hai chữ số</value>
+  </data>
+  <data name="lbl_BatchRename_Digits_3" xml:space="preserve">
+    <value>Ba chữ số</value>
+  </data>
+  <data name="lbl_BatchRename_Digits_4" xml:space="preserve">
+    <value>Bốn chữ số</value>
+  </data>
+  <data name="lbl_BatchRename_Digits_5" xml:space="preserve">
+    <value>Năm chữ số</value>
+  </data>
+  <data name="lbl_BatchRename_Digits_6" xml:space="preserve">
+    <value>Sáu chữ số</value>
+  </data>
+  <data name="lbl_BatchRename_SubstituteSource_OriginalFilename" xml:space="preserve">
+    <value>Tên tệp gốc</value>
+  </data>
+  <data name="lbl_BatchRename_SubstituteSource_PreservedFilename" xml:space="preserve">
+    <value>Tên tệp giữ nguyên</value>
+  </data>
+  <data name="lbl_BatchRename_Field_Country" xml:space="preserve">
+    <value>Quốc gia</value>
+  </data>
+  <data name="lbl_BatchRename_Field_CountryCode" xml:space="preserve">
+    <value>Mã quốc gia</value>
+  </data>
+  <data name="lbl_BatchRename_Field_State" xml:space="preserve">
+    <value>Tỉnh/bang</value>
+  </data>
+  <data name="lbl_BatchRename_Field_City" xml:space="preserve">
+    <value>Thành phố</value>
+  </data>
+  <data name="lbl_BatchRename_Field_Sublocation" xml:space="preserve">
+    <value>Địa điểm phụ</value>
+  </data>
+  <data name="lbl_BatchRename_Field_Make" xml:space="preserve">
+    <value>Hãng máy ảnh</value>
+  </data>
+  <data name="lbl_BatchRename_Field_Model" xml:space="preserve">
+    <value>Model máy ảnh</value>
+  </data>
+  <data name="lbl_BatchRename_Field_LensSpec" xml:space="preserve">
+    <value>Ống kính</value>
+  </data>
+  <data name="lbl_BatchRename_Field_Rating" xml:space="preserve">
+    <value>Đánh giá</value>
+  </data>
+  <data name="lbl_BatchRename_Field_ExposureTime" xml:space="preserve">
+    <value>Thời gian phơi sáng</value>
+  </data>
+  <data name="lbl_BatchRename_Field_Fnumber" xml:space="preserve">
+    <value>Khẩu độ (số F)</value>
+  </data>
+  <data name="lbl_BatchRename_Field_FocalLength" xml:space="preserve">
+    <value>Tiêu cự</value>
+  </data>
+  <data name="lbl_BatchRename_Field_ISO" xml:space="preserve">
+    <value>ISO</value>
+  </data>
+  <data name="lbl_BatchRename_Field_Artist" xml:space="preserve">
+    <value>Tác giả</value>
+  </data>
+  <data name="lbl_BatchRename_Field_Byline" xml:space="preserve">
+    <value>Người tạo (Byline)</value>
+  </data>
+  <data name="lbl_BatchRename_Field_Copyright" xml:space="preserve">
+    <value>Bản quyền</value>
+  </data>
+  <data name="lbl_BatchRename_Field_Credit" xml:space="preserve">
+    <value>Ghi công</value>
+  </data>
+  <data name="lbl_BatchRename_Field_Source" xml:space="preserve">
+    <value>Nguồn</value>
+  </data>
+  <data name="lbl_BatchRename_Field_ObjectName" xml:space="preserve">
+    <value>Tiêu đề (Object Name)</value>
+  </data>
+  <data name="lbl_BatchRename_Field_Headline" xml:space="preserve">
+    <value>Tiêu đề tin</value>
+  </data>
+  <data name="lbl_BatchRename_Field_Category" xml:space="preserve">
+    <value>Danh mục</value>
+  </data>
+  <data name="mbx_BatchRename_OneFile" xml:space="preserve">
+    <value>Sẽ xử lý một tệp</value>
+  </data>
+  <data name="mbx_BatchRename_ManyFiles" xml:space="preserve">
+    <value>Sẽ xử lý {0} tệp</value>
+  </data>
+  <data name="mbx_BatchRename_SomeBlocked" xml:space="preserve">
+    <value>{0} trên {1} tệp không thể đổi tên: xem Xem trước</value>
+  </data>
+  <data name="mbx_BatchRename_PresetNamePrompt" xml:space="preserve">
+    <value>Tên cấu hình sẵn:</value>
+  </data>
+  <data name="mbx_BatchRename_PresetUnreadable" xml:space="preserve">
+    <value>Không đọc được cấu hình sẵn '{0}'.</value>
+  </data>
+  <data name="mbx_BatchRename_PresetReplace" xml:space="preserve">
+    <value>Đã tồn tại cấu hình sẵn tên '{0}'. Thay thế không?</value>
+  </data>
+  <data name="mbx_BatchRename_PresetSaveFailed" xml:space="preserve">
+    <value>Không thể lưu cấu hình sẵn.</value>
+  </data>
+  <data name="mbx_BatchRename_PresetDelete" xml:space="preserve">
+    <value>Xóa cấu hình sẵn '{0}'?</value>
+  </data>
+  <data name="mbx_BatchRename_Preflight" xml:space="preserve">
+    <value>Chưa có tệp nào được đổi tên. Cần xử lý các mục sau trước:
+
+{0}</value>
+  </data>
+  <data name="mbx_BatchRename_MoreProblems" xml:space="preserve">
+    <value>... và {0} mục khác (Xem trước liệt kê tất cả)</value>
+  </data>
+  <data name="mbx_BatchRename_SelectFiles" xml:space="preserve">
+    <value>Hãy chọn các tệp cần đổi tên trước.</value>
+  </data>
+  <data name="mbx_BatchRename_NothingRenamed" xml:space="preserve">
+    <value>Chưa đổi tên tệp nào (mọi thay đổi đã thực hiện đã được hoàn tác).
+
+{0}</value>
+  </data>
+  <data name="mbx_BatchRename_StepFailed" xml:space="preserve">
+    <value>{0}
+
+Mọi thao tác đến thời điểm này đã được hoàn tác, nên chưa tệp nào bị thay đổi.
+
+Tiếp tục mà không có {1} (và mọi tệp định nhận tên đó)?
+Có: đổi tên phần còn lại.  Không: dừng; tất cả tệp giữ nguyên như cũ.</value>
+  </data>
+  <data name="mbx_BatchRename_NothingLeft" xml:space="preserve">
+    <value>Không còn tệp nào để đổi tên.</value>
+  </data>
+  <data name="mbx_BatchRename_DoneSkipped" xml:space="preserve">
+    <value>Đã xử lý {0} tệp. Các tệp giữ nguyên:
+{1}</value>
+  </data>
+  <data name="mbx_BatchRename_AndMore" xml:space="preserve">
+    <value>... và {0} mục khác</value>
+  </data>
+  <data name="mbx_BatchRename_Problem_NoDestination" xml:space="preserve">
+    <value>Chưa chọn thư mục đích</value>
+  </data>
+  <data name="mbx_BatchRename_Problem_EmptyName" xml:space="preserve">
+    <value>Tên mới đang trống</value>
+  </data>
+  <data name="mbx_BatchRename_Problem_Reserved" xml:space="preserve">
+    <value>'{0}' là tên được Windows dành riêng</value>
+  </data>
+  <data name="mbx_BatchRename_Problem_NameTooLong" xml:space="preserve">
+    <value>Tên mới quá dài</value>
+  </data>
+  <data name="mbx_BatchRename_Problem_PathTooLong" xml:space="preserve">
+    <value>Đường dẫn mới quá dài</value>
+  </data>
+  <data name="mbx_BatchRename_Problem_NoDate" xml:space="preserve">
+    <value>Không có {0} để sử dụng</value>
+  </data>
+  <data name="mbx_BatchRename_Problem_BadRegex" xml:space="preserve">
+    <value>Biểu thức chính quy không hợp lệ</value>
+  </data>
+  <data name="mbx_BatchRename_Problem_RegexTimeout" xml:space="preserve">
+    <value>Biểu thức chính quy chạy quá lâu</value>
+  </data>
+  <data name="mbx_BatchRename_Problem_NameClaimed" xml:space="preserve">
+    <value>Có tệp khác nhận (hoặc đã có) tên này</value>
+  </data>
+  <data name="mbx_BatchRename_Problem_FileExists" xml:space="preserve">
+    <value>Đã tồn tại tệp có tên này</value>
+  </data>
+  <data name="mbx_BatchRename_Problem_SidecarExists" xml:space="preserve">
+    <value>Đã tồn tại tệp XMP đi kèm có tên này</value>
+  </data>
+  <data name="mbx_BatchRename_Problem_Gone" xml:space="preserve">
+    <value>Tệp không còn ở đó nữa</value>
+  </data>
+  <data name="mbx_BatchRename_Problem_BeingSaved" xml:space="preserve">
+    <value>Tệp đang được GeoTagNinja lưu</value>
+  </data>
+  <data name="mbx_BatchRename_Problem_InUse" xml:space="preserve">
+    <value>Tệp đang được chương trình khác sử dụng</value>
+  </data>
+  <data name="mbx_BatchRename_Problem_FolderNotWritable" xml:space="preserve">
+    <value>Không thể ghi vào thư mục '{0}'</value>
+  </data>
+  <data name="mbx_BatchRename_Problem_NoSpace" xml:space="preserve">
+    <value>Không đủ dung lượng trên {0}: cần {1} MB, còn trống {2} MB</value>
+  </data>
+  <data name="mbx_BatchRename_Problem_Unfixed" xml:space="preserve">
+    <value>Lô này có lỗi cần sửa trước.</value>
+  </data>
+  <data name="tmi_File_BatchRename" xml:space="preserve">
+    <value>Đổi tên hàng loạt...</value>
+  </data>
+  <data name="cmi_BatchRename" xml:space="preserve">
+    <value>Đổi tên hàng loạt...</value>
+  </data>
+  <data name="tmi_File_EditFiles" xml:space="preserve">
+    <value>Chỉnh sửa tệp...</value>
+  </data>
+  <data name="tmi_File_FlatMode" xml:space="preserve">
+    <value>Chế độ phẳng (phân tích thư mục con)</value>
+  </data>
+  <data name="tmi_File_ImportExportGPX" xml:space="preserve">
+    <value>Nhập/Xuất tệp lộ trình GPX/JSON...</value>
+  </data>
+  <data name="tmi_File_PasteGeoData" xml:space="preserve">
+    <value>Dán toàn bộ dữ liệu vị trí...</value>
+  </data>
+  <data name="tmi_File_Quit" xml:space="preserve">
+    <value>Thoát</value>
+  </data>
+  <data name="tmi_File_SaveAll" xml:space="preserve">
+    <value>Lưu tất cả</value>
+  </data>
+  <data name="tmi_Help" xml:space="preserve">
+    <value>Trợ giúp</value>
+  </data>
+  <data name="tmi_Help_About" xml:space="preserve">
+    <value>Giới thiệu...</value>
+  </data>
+  <data name="tmi_Help_Help" xml:space="preserve">
+    <value>Trợ giúp</value>
+  </data>
+  <data name="tmi_Help_BugReport" xml:space="preserve">
+    <value>Báo cáo lỗi (GitHub)</value>
+  </data>
+  <data name="tmi_Help_FeedbackFeatureRequest" xml:space="preserve">
+    <value>Đề xuất tính năng (GitHub)</value>
+  </data>
+  <data name="tmi_Settings" xml:space="preserve">
+    <value>Cài đặt</value>
+  </data>
+  <data name="tmi_Settings_Favourites" xml:space="preserve">
+    <value>Quản lý mục yêu thích</value>
+  </data>
+  <data name="tmi_Settings_Settings" xml:space="preserve">
+    <value>Cài đặt</value>
+  </data>
+  <data name="tpg_Application" xml:space="preserve">
+    <value>Ứng dụng</value>
+  </data>
+  <data name="tpg_CustomCityLogic" xml:space="preserve">
+    <value>Logic gán thành phố tùy chỉnh</value>
+  </data>
+  <data name="tpg_CustomRules" xml:space="preserve">
+    <value>Quy tắc tùy chỉnh</value>
+  </data>
+  <data name="tpg_DateTime" xml:space="preserve">
+    <value>Ngày &amp; giờ</value>
+  </data>
+  <data name="tpg_Exif" xml:space="preserve">
+    <value>Exif</value>
+  </data>
+  <data name="tpg_FileOptions" xml:space="preserve">
+    <value>Tùy chọn tệp</value>
+  </data>
+  <data name="tpg_GeoNames" xml:space="preserve">
+    <value>Cài đặt GeoNames</value>
+  </data>
+  <data name="tpg_ImportExport_Export" xml:space="preserve">
+    <value>Xuất lộ trình</value>
+  </data>
+  <data name="tpg_ImportExport_Import" xml:space="preserve">
+    <value>Nhập lộ trình</value>
+  </data>
+  <data name="tpg_Location" xml:space="preserve">
+    <value>Vị trí</value>
+  </data>
+  <data name="tpg_Map" xml:space="preserve">
+    <value>Bản đồ</value>
+  </data>
+  <data name="tsb_BugReport" xml:space="preserve">
+    <value>Báo cáo lỗi (cần tài khoản GitHub)</value>
+  </data>
+  <data name="tsb_EditFile" xml:space="preserve">
+    <value>Chỉnh sửa tệp</value>
+  </data>
+  <data name="tsb_FeedbackFeatureRequest" xml:space="preserve">
+    <value>Đề xuất tính năng (cần tài khoản GitHub)</value>
+  </data>
+  <data name="tsb_GetAllFromWeb" xml:space="preserve">
+    <value>Lấy thông tin địa danh &amp; độ cao cho tất cả tệp đã chọn</value>
+  </data>
+  <data name="tsb_ImportGPX" xml:space="preserve">
+    <value>Nhập tệp lộ trình GPX/JSON</value>
+  </data>
+  <data name="tsb_ExportGPX" xml:space="preserve">
+    <value>Xuất tệp lộ trình (GPX/KML)</value>
+  </data>
+  <data name="tsb_OneFolderUp" xml:space="preserve">
+    <value>Thư mục cha</value>
+  </data>
+  <data name="tsb_Refresh_lvwFileList" xml:space="preserve">
+    <value>Làm mới danh sách tệp</value>
+  </data>
+  <data name="tsb_RemoveGeoData" xml:space="preserve">
+    <value>Xóa toàn bộ dữ liệu vị trí</value>
+  </data>
+  <data name="tsb_SaveFiles" xml:space="preserve">
+    <value>Lưu tệp</value>
+  </data>
+  <data name="tsr_FolderControl" xml:space="preserve">
+    <value>Điều khiển thư mục</value>
+  </data>
+  <data name="tsr_MainAppToolStrip" xml:space="preserve">
+    <value>Chính</value>
+  </data>
+  <data name="ttp_GPSDataPaste" xml:space="preserve">
+    <value>Nhấn CTRL+V để dán một cặp số thập phân hợp lệ vào ô vĩ/kinh độ. 
+Clipboard chỉ nên chứa một cặp số thập phân, tốt nhất theo định dạng "không phụ thuộc vùng" (kiểu tiếng Anh): số-nguyên.thập-phân,số-nguyên.thập-phân, ví dụ 12.345, 56.897
+Dù vậy mã _nên_ có thể đọc được các định dạng khác. Lưu ý nếu clipboard có nội dung khác ngoài những gì nêu trên thì thao tác sẽ thất bại (không có gì xảy ra.)</value>
+  </data>
+  <data name="btn_NavigateMapGo" xml:space="preserve">
+    <value>Hiển thị trên bản đồ</value>
+  </data>
+  <data name="btn_loctToFile" xml:space="preserve">
+    <value>Lưu vào tệp</value>
+  </data>
+  <data name="btn_loctToFileDestination" xml:space="preserve">
+    <value>Lưu vào thư mục đích</value>
+  </data>
+  <data name="btn_SaveFavourite" xml:space="preserve">
+    <value>Lưu ảnh</value>
+  </data>
+  <data name="btn_LoadFavourite" xml:space="preserve">
+    <value>Áp dụng cho ảnh</value>
+  </data>
+  <data name="btn_ManageFavourites" xml:space="preserve">
+    <value>Quản lý...</value>
+  </data>
+  <data name="ttp_LoadFavourite" xml:space="preserve">
+    <value>Tải siêu dữ liệu cho các tệp đã chọn từ mục yêu thích của bạn</value>
+  </data>
+  <data name="ttp_loctToFile" xml:space="preserve">
+    <value>Lưu tọa độ hiện tại vào các tệp đã chọn</value>
+  </data>
+  <data name="ttp_loctToFileDestination" xml:space="preserve">
+    <value>Lưu tọa độ hiện tại vào thư mục đích của các tệp đã chọn</value>
+  </data>
+  <data name="ttp_ManageFavourites" xml:space="preserve">
+    <value>Quản lý mục yêu thích</value>
+  </data>
+  <data name="ttp_NavigateMapGo" xml:space="preserve">
+    <value>Đưa tọa độ của các tệp đã chọn lên bản đồ</value>
+  </data>
+  <data name="ttp_OffsetTime" xml:space="preserve">
+    <value>Múi giờ luôn để trống khi mở, bất kể giá trị đã lưu là gì. Không có thẻ Exif cho múi giờ, chỉ có 'Offset' có dạng như '+01:00'. Vì không có dấu hiệu nào cho biết múi giờ hay giờ mùa hè, tôi không thể xác định '+01:00' thực tế là BST chứ không phải CET, một cái là giờ mùa hè còn cái kia thì không. Hãy điều chỉnh thủ công hoặc lấy từ web - sự kết hợp giữa tọa độ và ngày tạo sẽ cho chương trình biết giá trị múi giờ thật. Giá trị trong ô chỉ đọc sẽ được lưu vào tệp.</value>
+  </data>
+  <data name="ttp_SaveFavourite" xml:space="preserve">
+    <value>Lưu (hoặc ghi đè) siêu dữ liệu của tệp đang chọn vào mục yêu thích của bạn</value>
+  </data>
+  <data name="ckb_ImportExport_ApplicationSettings" xml:space="preserve">
+    <value>ApplicationSettings</value>
+  </data>
+  <data name="ckb_ImportExport_CustomRulesSettings" xml:space="preserve">
+    <value>CustomRulesSettings</value>
+  </data>
+  <data name="ckb_ImportExport_Favourites" xml:space="preserve">
+    <value>Mục yêu thích</value>
+  </data>
+  <data name="ckb_ImportExport_EditTemplates" xml:space="preserve">
+    <value>Chỉnh sửa mẫu dữ liệu</value>
+  </data>
+  <data name="ckb_ImportExport_FieldHistory" xml:space="preserve">
+    <value>Lịch sử trường chỉnh sửa dữ liệu</value>
+  </data>
+  <data name="ckb_ImportExport_BatchRenamePresets" xml:space="preserve">
+    <value>Cấu hình sẵn đổi tên hàng loạt</value>
+  </data>
+  <data name="Generic_TimeZoneID" xml:space="preserve">
+    <value>Mã múi giờ</value>
+  </data>
+  <data name="Generic_Distance" xml:space="preserve">
+    <value>Khoảng cách</value>
+  </data>
+  <data name="cmi_OpenCoordsInBrowser" xml:space="preserve">
+    <value>Mở tọa độ trong trình duyệt/Bản đồ</value>
+  </data>
+  <data name="cmi_OpenCoordsInBrowserBing" xml:space="preserve">
+    <value>Bing</value>
+  </data>
+  <data name="cmi_OpenCoordsInBrowserGeoNamesMaps" xml:space="preserve">
+    <value>GeoNames (Maps)</value>
+  </data>
+  <data name="cmi_OpenCoordsInBrowserGoogle" xml:space="preserve">
+    <value>Google Maps</value>
+  </data>
+  <data name="cmi_OpenCoordsInBrowserWeGoHere" xml:space="preserve">
+    <value>WeGo/Here</value>
+  </data>
+  <data name="cmi_OpenCoordsInBrowserOpenStreetMap" xml:space="preserve">
+    <value>OpenStreetMap</value>
+  </data>
+  <data name="tmi_File_ImportFavouritesFromGeoSetter" xml:space="preserve">
+    <value>Nhập mục yêu thích từ GeoSetter...</value>
+  </data>
+  <data name="ofd_Settings_GetDatabaseFileToImport_SelectDatabaseFile" xml:space="preserve">
+    <value>Chọn tệp cơ sở dữ liệu</value>
+  </data>
+  <data name="ofd_tmi_File_ImportFavouritesFromGeoSetter_SelectFile" xml:space="preserve">
+    <value>Chọn tệp xuất mục yêu thích GS</value>
+  </data>
+  <data name="mbx_FrmMainApp_ErrorImportGeoSetterFavourites" xml:space="preserve">
+    <value>Lỗi khi nhập mục yêu thích GeoSetter.</value>
+  </data>
+  <data name="mbx_FrmMainApp_InfoImportGeoSetterFavouritesDone" xml:space="preserve">
+    <value>Đã nhập mục yêu thích GeoSetter. Số mục đã nhập: </value>
+  </data>
+  <data name="ckb_ShowThumbnails" xml:space="preserve">
+    <value>Hiển thị ảnh thu nhỏ thay vì lưới</value>
+  </data>
+  <data name="ttp_ShowThumbnails" xml:space="preserve">
+    <value>Tùy chọn này làm giảm hiệu năng rất đáng kể (tối đa gấp 7 lần theo phép đo của tôi) nên không được khuyến nghị.</value>
+  </data>
+  <data name="Generic_SaveDefaults" xml:space="preserve">
+    <value>Lưu mặc định</value>
+  </data>
+  <data name="ttp_FrmImportExport_SaveDefaults" xml:space="preserve">
+    <value>Lưu một số mặc định. Hiện tại gồm: vị trí nguồn nhập, cài đặt múi giờ &amp; giờ mùa hè, nội suy/ngoại suy tối đa.</value>
+  </data>
+  <data name="mbx_FrmImportExportGpx_ExportCompleted" xml:space="preserve">
+    <value>Đã hoàn tất xuất tệp GPX</value>
+  </data>
+  <data name="Generic_GPSDOP" xml:space="preserve">
+    <value>Độ suy giảm độ chính xác (DOP)</value>
+  </data>
+  <data name="Generic_GPSHPositioningError" xml:space="preserve">
+    <value>Sai số định vị ngang GPS</value>
+  </data>
+  <data name="cmi_PasteGeoData" xml:space="preserve">
+    <value>Dán toàn bộ dữ liệu vị trí...</value>
+  </data>
+  <data name="cmi_CopyGeoData" xml:space="preserve">
+    <value>Sao chép toàn bộ dữ liệu vị trí</value>
+  </data>
+  <data name="tmi_Edit_SelectAll" xml:space="preserve">
+    <value>Chọn tất cả</value>
+  </data>
+  <data name="cmi_SelectAll" xml:space="preserve">
+    <value>Chọn tất cả</value>
+  </data>
+  <data name="tmi_Edit_SelectNone" xml:space="preserve">
+    <value>Bỏ chọn tất cả</value>
+  </data>
+  <data name="cmi_SelectNone" xml:space="preserve">
+    <value>Bỏ chọn tất cả</value>
+  </data>
+  <data name="tmi_Edit_InvertSelection" xml:space="preserve">
+    <value>Đảo lựa chọn</value>
+  </data>
+  <data name="cmi_InvertSelection" xml:space="preserve">
+    <value>Đảo lựa chọn</value>
+  </data>
+  <data name="tmi_Edit" xml:space="preserve">
+    <value>Chỉnh sửa</value>
+  </data>
+  <data name="tmi_Help_Donate" xml:space="preserve">
+    <value>Ủng hộ</value>
+  </data>
+  <data name="tmi_Help_Donate_PayPal" xml:space="preserve">
+    <value>PayPal...</value>
+  </data>
+  <data name="tmi_Help_Donate_Revolut" xml:space="preserve">
+    <value>Revolut (QR)...</value>
+  </data>
+  <data name="tmi_Help_Donate_BuyMeCoffee" xml:space="preserve">
+    <value>BuyMeACoffee...</value>
+  </data>
+  <data name="tmi_File_SaveSelected" xml:space="preserve">
+    <value>Lưu mục đã chọn</value>
+  </data>
+  <data name="rbt_SetStartup_Folder" xml:space="preserve">
+    <value>Đặt thư mục khởi động</value>
+  </data>
+  <data name="rbt_UseLastUsedFolder" xml:space="preserve">
+    <value>Dùng thư mục đã dùng gần nhất</value>
+  </data>
+  <data name="tmi_Debug" xml:space="preserve">
+    <value>Gỡ lỗi</value>
+  </data>
+  <data name="tmi_Debug_CustomiseWinformControls" xml:space="preserve">
+    <value>Tùy chỉnh điều khiển Winform</value>
+  </data>
+  <data name="frm_FrmCustomiseFormControls" xml:space="preserve">
+    <value>Tùy chỉnh điều khiển Winform</value>
+  </data>
+  <data name="ckb_RetainMapZoom" xml:space="preserve">
+    <value>Giữ nguyên mức thu phóng bản đồ giữa các lần nhấp</value>
+  </data>
+  <data name="mbx_FrmMainApp_ErrorNonHydratedItemsPresent" xml:space="preserve">
+    <value>Lựa chọn của bạn có các tệp chưa được phân tích và sẽ không được tải để chỉnh sửa.</value>
+  </data>
+  <data name="Generic_Ready" xml:space="preserve">
+    <value>Sẵn sàng</value>
+  </data>
+  <data name="Generic_ReadingMetadataProgress" xml:space="preserve">
+    <value>Đang đọc siêu dữ liệu: {0} trên {1}</value>
+  </data>
+  <data name="Generic_Total" xml:space="preserve">
+    <value>Tổng</value>
+  </data>
+  <data name="Generic_GeoData" xml:space="preserve">
+    <value>Dữ liệu vị trí</value>
+  </data>
+  <data name="Generic_Files" xml:space="preserve">
+    <value>Tệp</value>
+  </data>
+  <data name="mbx_FrmMainApp_WarningDataParseStillInProgress" xml:space="preserve">
+    <value>Việc phân tích dữ liệu vẫn đang diễn ra - cho đến khi xong, thao tác này không thể tiếp tục. Hãy thử lại sau ít phút.</value>
+  </data>
+  <data name="Generic_IsEmpty" xml:space="preserve">
+    <value>Trống</value>
+  </data>
+  <data name="Generic_IsNotEmpty" xml:space="preserve">
+    <value>Không trống</value>
+  </data>
+  <data name="Generic_Is" xml:space="preserve">
+    <value>Là</value>
+  </data>
+  <data name="Generic_IsNot" xml:space="preserve">
+    <value>Không phải</value>
+  </data>
+  <data name="Generic_Contains" xml:space="preserve">
+    <value>Chứa</value>
+  </data>
+  <data name="Generic_DoesntContain" xml:space="preserve">
+    <value>Không chứa</value>
+  </data>
+  <data name="Generic_ClearAll" xml:space="preserve">
+    <value>Xóa tất cả</value>
+  </data>
+  <data name="ckb_AlwaysRecenterMap" xml:space="preserve">
+    <value>Luôn căn giữa lại bản đồ?</value>
+  </data>
+  <data name="ckb_DoNotDownloadAltitude" xml:space="preserve">
+    <value>Không tải giá trị độ cao từ API</value>
+  </data>
+  <data name="ckb_PreserveFileModifiedDate" xml:space="preserve">
+    <value>Không thay đổi ngày sửa đổi của tệp khi lưu</value>
+  </data>
+  <data name="tmi_View" xml:space="preserve">
+    <value>Xem</value>
+  </data>
+  <data name="tmi_View_Details" xml:space="preserve">
+    <value>Chi tiết</value>
+  </data>
+  <data name="tmi_View_Thumbnails" xml:space="preserve">
+    <value>Ảnh thu nhỏ</value>
+  </data>
+  <data name="tmi_View_ThumbnailSize" xml:space="preserve">
+    <value>Kích thước ảnh thu nhỏ</value>
+  </data>
+  <data name="tmi_View_ThumbnailSize_Small" xml:space="preserve">
+    <value>Nhỏ</value>
+  </data>
+  <data name="tmi_View_ThumbnailSize_Medium" xml:space="preserve">
+    <value>Vừa</value>
+  </data>
+  <data name="tmi_View_ThumbnailSize_Large" xml:space="preserve">
+    <value>Lớn</value>
+  </data>
+  <data name="tmi_View_ThumbnailSize_ExtraLarge" xml:space="preserve">
+    <value>Rất lớn</value>
+  </data>
+  <data name="tmi_View_ThumbnailSize_Smaller" xml:space="preserve">
+    <value>Ảnh thu nhỏ nhỏ hơn</value>
+  </data>
+  <data name="tmi_View_ThumbnailSize_Larger" xml:space="preserve">
+    <value>Ảnh thu nhỏ lớn hơn</value>
+  </data>
+  <data name="ttp_ThumbnailSize" xml:space="preserve">
+    <value>Kích thước ảnh thu nhỏ</value>
+  </data>
+  <data name="tmi_View_SortBy" xml:space="preserve">
+    <value>Sắp xếp theo</value>
+  </data>
+  <data name="tmi_View_SortBy_Ascending" xml:space="preserve">
+    <value>Tăng dần</value>
+  </data>
+  <data name="tmi_View_SortBy_Descending" xml:space="preserve">
+    <value>Giảm dần</value>
+  </data>
+  <data name="gbx_AllFavourites" xml:space="preserve">
+    <value>Tất cả mục yêu thích</value>
+  </data>
+  <data name="gbx_FavouriteDetails" xml:space="preserve">
+    <value>Chi tiết</value>
+  </data>
+  <data name="gbx_FavouriteAdditionalInfo" xml:space="preserve">
+    <value>Thông tin bổ sung</value>
+  </data>
+  <data name="lbl_FavouriteName" xml:space="preserve">
+    <value>Tên:</value>
+  </data>
+  <data name="lbl_FavouriteCoordinates" xml:space="preserve">
+    <value>Tọa độ:</value>
+  </data>
+  <data name="lbl_FavouriteRadius" xml:space="preserve">
+    <value>Bán kính [m]:</value>
+  </data>
+  <data name="ckb_FavouriteAutoAssign" xml:space="preserve">
+    <value>Tự động gán</value>
+  </data>
+  <data name="ckb_FavouriteSnap" xml:space="preserve">
+    <value>Bắt ảnh về vị trí yêu thích</value>
+  </data>
+  <data name="lbl_FavouriteTimeZone" xml:space="preserve">
+    <value>Múi giờ:</value>
+  </data>
+  <data name="lbl_FavouriteKeywords" xml:space="preserve">
+    <value>Từ khóa:</value>
+  </data>
+  <data name="btn_FavouriteGetFromWeb" xml:space="preserve">
+    <value>Lấy từ web</value>
+  </data>
+  <data name="btn_FavouriteClearAll" xml:space="preserve">
+    <value>Xóa tất cả giá trị</value>
+  </data>
+  <data name="btn_FavouriteAccept" xml:space="preserve">
+    <value>Chấp nhận</value>
+  </data>
+  <data name="btn_FavouriteDiscard" xml:space="preserve">
+    <value>Hủy bỏ</value>
+  </data>
+  <data name="btn_FavouriteAddKeyword" xml:space="preserve">
+    <value>Thêm</value>
+  </data>
+  <data name="btn_FavouriteRemoveKeyword" xml:space="preserve">
+    <value>Xóa</value>
+  </data>
+  <data name="lbl_FavouritesCount" xml:space="preserve">
+    <value>{0} mục ({1} đã chọn)</value>
+  </data>
+  <data name="tsd_GroupBy" xml:space="preserve">
+    <value>Nhóm theo</value>
+  </data>
+  <data name="tmi_GroupByCountryCode" xml:space="preserve">
+    <value>Mã quốc gia</value>
+  </data>
+  <data name="tmi_GroupByCountry" xml:space="preserve">
+    <value>Quốc gia</value>
+  </data>
+  <data name="tmi_GroupByState" xml:space="preserve">
+    <value>Tỉnh/bang</value>
+  </data>
+  <data name="tmi_GroupByCity" xml:space="preserve">
+    <value>Thành phố</value>
+  </data>
+  <data name="tmi_GroupByCoordinates" xml:space="preserve">
+    <value>Tọa độ</value>
+  </data>
+  <data name="tmi_GroupByNone" xml:space="preserve">
+    <value>Không nhóm</value>
+  </data>
+  <data name="tmi_GroupByBlank" xml:space="preserve">
+    <value>(không có)</value>
+  </data>
+  <data name="tsb_Duplicate" xml:space="preserve">
+    <value>Nhân bản</value>
+  </data>
+  <data name="tsb_Delete" xml:space="preserve">
+    <value>Xóa</value>
+  </data>
+  <data name="tsb_AddFromSelection" xml:space="preserve">
+    <value>Thêm từ ảnh đã chọn</value>
+  </data>
+  <data name="mbx_FrmManageFavourites_WarningNameTaken" xml:space="preserve">
+    <value>Đã có mục yêu thích khác mang tên này.</value>
+  </data>
+  <data name="mbx_FrmManageFavourites_WarningAltitudeInvalid" xml:space="preserve">
+    <value>Độ cao phải là một số.</value>
+  </data>
+  <data name="mbx_FrmManageFavourites_WarningNoCoordinates" xml:space="preserve">
+    <value>Không có tọa độ để sử dụng. Hãy chọn ảnh có vị trí.</value>
+  </data>
+  <data name="mbx_FrmManageFavourites_QuestionAcceptChanges" xml:space="preserve">
+    <value>Chấp nhận các thay đổi cho mục yêu thích này?</value>
+  </data>
+  <data name="mbx_FrmManageFavourites_QuestionDiscardAll" xml:space="preserve">
+    <value>Đóng mà không lưu các thay đổi mục yêu thích?</value>
+  </data>
+  <data name="mbx_FrmManageFavourites_InfoWebNothingFound" xml:space="preserve">
+    <value>Dịch vụ web không có dữ liệu cho vị trí này.</value>
+  </data>
+  <data name="tpg_Keywords" xml:space="preserve">
+    <value>Danh mục/Từ khóa</value>
+  </data>
+  <data name="tpg_SourceDescription" xml:space="preserve">
+    <value>Nguồn/Mô tả</value>
+  </data>
+  <data name="tpg_Contact" xml:space="preserve">
+    <value>Liên hệ</value>
+  </data>
+  <data name="lbl_SectionSource" xml:space="preserve">
+    <value>Nguồn</value>
+  </data>
+  <data name="lbl_SectionDescription" xml:space="preserve">
+    <value>Mô tả</value>
+  </data>
+  <data name="lbl_Category" xml:space="preserve">
+    <value>Danh mục</value>
+  </data>
+  <data name="lbl_SupplementalCategories" xml:space="preserve">
+    <value>Danh mục bổ sung</value>
+  </data>
+  <data name="lbl_IPTCKeywords" xml:space="preserve">
+    <value>Từ khóa</value>
+  </data>
+  <data name="lbl_Artist" xml:space="preserve">
+    <value>Tác giả</value>
+  </data>
+  <data name="lbl_CaptionWriter" xml:space="preserve">
+    <value>Người viết chú thích</value>
+  </data>
+  <data name="lbl_Source" xml:space="preserve">
+    <value>Nguồn</value>
+  </data>
+  <data name="lbl_Credit" xml:space="preserve">
+    <value>Ghi công</value>
+  </data>
+  <data name="lbl_SourceURL" xml:space="preserve">
+    <value>URL</value>
+  </data>
+  <data name="lbl_Copyright" xml:space="preserve">
+    <value>Bản quyền</value>
+  </data>
+  <data name="lbl_ObjectName" xml:space="preserve">
+    <value>Tên đối tượng</value>
+  </data>
+  <data name="lbl_Headline" xml:space="preserve">
+    <value>Tiêu đề tin</value>
+  </data>
+  <data name="lbl_Caption" xml:space="preserve">
+    <value>Chú thích</value>
+  </data>
+  <data name="lbl_SpecialInstructions" xml:space="preserve">
+    <value>Hướng dẫn đặc biệt</value>
+  </data>
+  <data name="lbl_Byline" xml:space="preserve">
+    <value>Byline</value>
+  </data>
+  <data name="lbl_BylineTitle" xml:space="preserve">
+    <value>Chức danh Byline</value>
+  </data>
+  <data name="lbl_CreatorAddress" xml:space="preserve">
+    <value>Địa chỉ</value>
+  </data>
+  <data name="lbl_CreatorCity" xml:space="preserve">
+    <value>Thành phố</value>
+  </data>
+  <data name="lbl_CreatorPostalCode" xml:space="preserve">
+    <value>Mã bưu điện</value>
+  </data>
+  <data name="lbl_CreatorRegion" xml:space="preserve">
+    <value>Tỉnh/bang</value>
+  </data>
+  <data name="lbl_CreatorCountry" xml:space="preserve">
+    <value>Quốc gia</value>
+  </data>
+  <data name="lbl_CreatorPhone" xml:space="preserve">
+    <value>Điện thoại</value>
+  </data>
+  <data name="lbl_CreatorEmail" xml:space="preserve">
+    <value>E-Mail</value>
+  </data>
+  <data name="lbl_CreatorURL" xml:space="preserve">
+    <value>URL</value>
+  </data>
+  <data name="tmi_FieldMenu_InsertFrom" xml:space="preserve">
+    <value>Chèn từ</value>
+  </data>
+  <data name="tmi_FieldMenu_CopyTo" xml:space="preserve">
+    <value>Sao chép sang</value>
+  </data>
+  <data name="tmi_FieldMenu_CopySelectionToCategories" xml:space="preserve">
+    <value>Sao chép lựa chọn sang Danh mục</value>
+  </data>
+  <data name="tmi_FieldMenu_CopySelectionToKeywords" xml:space="preserve">
+    <value>Sao chép lựa chọn sang Từ khóa</value>
+  </data>
+  <data name="tmi_FieldMenu_MostRecentlyUsed" xml:space="preserve">
+    <value>Các mục đã dùng gần đây</value>
+  </data>
+  <data name="tmi_FieldMenu_ForgetRemembered" xml:space="preserve">
+    <value>Quên một mục đã ghi nhớ</value>
+  </data>
+  <data name="lbl_ContactPrefix" xml:space="preserve">
+    <value>Liên hệ</value>
+  </data>
+  <data name="btn_LoadFromTemplate" xml:space="preserve">
+    <value>Tải từ mẫu...</value>
+  </data>
+  <data name="btn_LoadFromImage" xml:space="preserve">
+    <value>Tải từ ảnh...</value>
+  </data>
+  <data name="btn_SaveAsTemplate" xml:space="preserve">
+    <value>Lưu thành mẫu...</value>
+  </data>
+  <data name="lbl_TemplateName" xml:space="preserve">
+    <value>Mẫu:</value>
+  </data>
+  <data name="lbl_TemplateInclude" xml:space="preserve">
+    <value>Dùng các mục này:</value>
+  </data>
+  <data name="btn_TemplateDelete" xml:space="preserve">
+    <value>Xóa</value>
+  </data>
+  <data name="chk_TemplateGroup_Country" xml:space="preserve">
+    <value>Quốc gia</value>
+  </data>
+  <data name="chk_TemplateGroup_State" xml:space="preserve">
+    <value>Tỉnh/bang</value>
+  </data>
+  <data name="chk_TemplateGroup_City" xml:space="preserve">
+    <value>Thành phố</value>
+  </data>
+  <data name="chk_TemplateGroup_Sublocation" xml:space="preserve">
+    <value>Địa điểm phụ</value>
+  </data>
+  <data name="chk_TemplateGroup_Position" xml:space="preserve">
+    <value>Vị trí GPS</value>
+  </data>
+  <data name="chk_TemplateGroup_Altitude" xml:space="preserve">
+    <value>Độ cao</value>
+  </data>
+  <data name="chk_TemplateGroup_Direction" xml:space="preserve">
+    <value>Hướng ảnh</value>
+  </data>
+  <data name="chk_TemplateGroup_Destination" xml:space="preserve">
+    <value>Tọa độ đích</value>
+  </data>
+  <data name="chk_TemplateGroup_TakenDate" xml:space="preserve">
+    <value>Ngày chụp</value>
+  </data>
+  <data name="chk_TemplateGroup_CreateDate" xml:space="preserve">
+    <value>Ngày tạo</value>
+  </data>
+  <data name="chk_TemplateGroup_OffsetTime" xml:space="preserve">
+    <value>Chênh lệch múi giờ</value>
+  </data>
+  <data name="mbx_FrmEditTemplateDialog_QuestionDeleteTemplate" xml:space="preserve">
+    <value>Xóa mẫu '{0}'?</value>
+  </data>
+  <data name="mbx_FrmEditTemplateDialog_QuestionOverwriteTemplate" xml:space="preserve">
+    <value>Đã có mẫu tên '{0}'. Thay thế không?</value>
+  </data>
+  <data name="mbx_FrmEditFileData_ErrorTemplateNotSaved" xml:space="preserve">
+    <value>Không thể lưu mẫu.</value>
+  </data>
+  <data name="mbx_FrmEditFileData_InfoImageHasNothingToLoad" xml:space="preserve">
+    <value>Tệp đó không có gì mà form này có thể tải.</value>
+  </data>
+  <data name="lbl_Sexagesimal" xml:space="preserve">
+    <value>Độ, phút, giây</value>
+  </data>
+  <data name="lbl_ImageDirection" xml:space="preserve">
+    <value>Hướng ảnh [°]:</value>
+  </data>
+  <data name="lbl_DestLatitude" xml:space="preserve">
+    <value>Vĩ độ đích:</value>
+  </data>
+  <data name="lbl_DestLongitude" xml:space="preserve">
+    <value>Kinh độ đích:</value>
+  </data>
+  <data name="btn_GetAltitudeFromWeb" xml:space="preserve">
+    <value>Lấy từ web</value>
+  </data>
+  <data name="mbx_FrmEditFileData_InfoCoordinatesNeededForAltitude" xml:space="preserve">
+    <value>Hãy nhập vĩ độ và kinh độ trước.</value>
+  </data>
+  <data name="mbx_FrmEditFileData_WarningNoAltitudeFromWeb" xml:space="preserve">
+    <value>Dịch vụ web không có độ cao cho vị trí này.</value>
+  </data>
+  <data name="ckb_SyncGeoKeywords" xml:space="preserve">
+    <value>Giữ từ khóa đồng bộ với vị trí (tên địa danh và từ khóa geo:)</value>
+  </data>
+  <data name="ckb_ShowChangelogAfterUpdate" xml:space="preserve">
+    <value>Sau khi cập nhật, hiển thị những gì đã thay đổi</value>
+  </data>
+  <data name="mbx_Helper_InfoRemoveGeoDataKeywordsRemain" xml:space="preserve">
+    <value>Dữ liệu vị trí đã được xóa, nhưng từ khóa của bạn không bị động đến: mọi tên địa danh hoặc từ khóa "geo:" trong đó vẫn giữ nguyên. Để chúng theo các thay đổi vị trí, hãy bật "Giữ từ khóa đồng bộ với vị trí" trong Cài đặt.</value>
+  </data>
+  <data name="tmi_View_FolderTree" xml:space="preserve">
+    <value>Cây thư mục</value>
+  </data>
+  <data name="lbl_FolderTree_Title" xml:space="preserve">
+    <value>Thư mục</value>
+  </data>
+  <data name="tsb_FolderTree_Favourites" xml:space="preserve">
+    <value>Thư mục yêu thích</value>
+  </data>
+  <data name="tmi_FolderTree_AddCurrent" xml:space="preserve">
+    <value>Thêm thư mục hiện tại vào yêu thích</value>
+  </data>
+  <data name="tmi_FolderTree_RemoveCurrent" xml:space="preserve">
+    <value>Xóa thư mục hiện tại khỏi yêu thích</value>
+  </data>
+  <data name="tmi_FolderTree_NoFavourites" xml:space="preserve">
+    <value>(chưa có thư mục yêu thích)</value>
+  </data>
+  <data name="tsb_FolderTree_Refresh" xml:space="preserve">
+    <value>Làm mới cây thư mục</value>
+  </data>
+  <data name="tsb_FolderTree_Hide" xml:space="preserve">
+    <value>Ẩn cây thư mục (Ctrl+B)</value>
+  </data>
+  <data name="cmi_FolderTree_AddThis" xml:space="preserve">
+    <value>Thêm vào yêu thích</value>
+  </data>
+  <data name="cmi_FolderTree_RemoveThis" xml:space="preserve">
+    <value>Xóa khỏi yêu thích</value>
+  </data>
+  <data name="tsb_Donate" xml:space="preserve">
+    <value>BuyMeACoffee (ủng hộ, mở trong trình duyệt)</value>
+  </data>
+</root>

@@ -1,0 +1,2009 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<root>
+  <xsd:schema xmlns="" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:msdata="urn:schemas-microsoft-com:xml-msdata" id="root">
+    <xsd:import namespace="http://www.w3.org/XML/1998/namespace" />
+    <xsd:element name="root" msdata:IsDataSet="true">
+      <xsd:complexType>
+        <xsd:choice maxOccurs="unbounded">
+          <xsd:element name="metadata">
+            <xsd:complexType>
+              <xsd:sequence>
+                <xsd:element name="value" type="xsd:string" minOccurs="0" />
+              </xsd:sequence>
+              <xsd:attribute name="name" use="required" type="xsd:string" />
+              <xsd:attribute name="type" type="xsd:string" />
+              <xsd:attribute name="mimetype" type="xsd:string" />
+              <xsd:attribute ref="xml:space" />
+            </xsd:complexType>
+          </xsd:element>
+          <xsd:element name="assembly">
+            <xsd:complexType>
+              <xsd:attribute name="alias" type="xsd:string" />
+              <xsd:attribute name="name" type="xsd:string" />
+            </xsd:complexType>
+          </xsd:element>
+          <xsd:element name="data">
+            <xsd:complexType>
+              <xsd:sequence>
+                <xsd:element name="value" type="xsd:string" minOccurs="0" msdata:Ordinal="1" />
+                <xsd:element name="comment" type="xsd:string" minOccurs="0" msdata:Ordinal="2" />
+              </xsd:sequence>
+              <xsd:attribute name="name" type="xsd:string" use="required" msdata:Ordinal="1" />
+              <xsd:attribute name="type" type="xsd:string" msdata:Ordinal="3" />
+              <xsd:attribute name="mimetype" type="xsd:string" msdata:Ordinal="4" />
+              <xsd:attribute ref="xml:space" />
+            </xsd:complexType>
+          </xsd:element>
+          <xsd:element name="resheader">
+            <xsd:complexType>
+              <xsd:sequence>
+                <xsd:element name="value" type="xsd:string" minOccurs="0" msdata:Ordinal="1" />
+              </xsd:sequence>
+              <xsd:attribute name="name" type="xsd:string" use="required" />
+            </xsd:complexType>
+          </xsd:element>
+        </xsd:choice>
+      </xsd:complexType>
+    </xsd:element>
+  </xsd:schema>
+  <resheader name="resmimetype">
+    <value>text/microsoft-resx</value>
+  </resheader>
+  <resheader name="version">
+    <value>2.0</value>
+  </resheader>
+  <resheader name="reader">
+    <value>System.Resources.ResXResourceReader, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </resheader>
+  <resheader name="writer">
+    <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </resheader>
+  <data name="btn_ApplyAndNext" xml:space="preserve">
+    <value>적용 &amp;&amp; 다음으로 이동</value>
+  </data>
+  <data name="btn_InsertFromTakenDate" xml:space="preserve">
+    <value>TakenDate 사용</value>
+  </data>
+  <data name="btn_PullMostRecentPasteSettings" xml:space="preserve">
+    <value>"최신" 붙여넣기 설정 가져오기</value>
+  </data>
+  <data name="btn_PullMostRecentTrackSyncShift" xml:space="preserve">
+    <value>"최신" 시간 이동 설정 가져오기</value>
+  </data>
+  <data name="btn_RemoveGeoData" xml:space="preserve">
+    <value>GPS 및 위치 데이터 제거</value>
+  </data>
+  <data name="btn_ResetToDefaults" xml:space="preserve">
+    <value>기본값으로 재설정</value>
+  </data>
+  <data name="btn_RestartLater" xml:space="preserve">
+    <value>나중에 다시 시작</value>
+  </data>
+  <data name="btn_RestartNow" xml:space="preserve">
+    <value>지금 다시 시작</value>
+  </data>
+  <data name="btn_SetCurrentValues" xml:space="preserve">
+    <value>편집을 위해 선택한 모든 이미지에 현재 값 설정...</value>
+  </data>
+  <data name="ckb_AddXMPSideCar" xml:space="preserve">
+    <value>사이드카 XMP 추가/덮어쓰기</value>
+  </data>
+  <data name="ckb_DeSelectAll" xml:space="preserve">
+    <value>전체 선택/해제</value>
+  </data>
+  <data name="ckb_DoNotQueryAPI" xml:space="preserve">
+    <value>역지오코딩 하지 않음 (좌표만 가져오고 도시/주 등은 가져오지 않음)</value>
+  </data>
+  <data name="ckb_ExportTrackIncludeAltitude" xml:space="preserve">
+    <value>내보내기에 고도 데이터 포함</value>
+  </data>
+  <data name="ckb_ImportExport_CityRulesSettings" xml:space="preserve">
+    <value>CityRulesSettings</value>
+  </data>
+  <data name="ckb_IncludePredeterminedCountries" xml:space="preserve">
+    <value>"사전 정의된" 국가를 포함하시겠습니까? (위 링크 및 주의 사항 참고)</value>
+  </data>
+  <data name="ckb_LoadTrackOntoMap" xml:space="preserve">
+    <value>트랙 파일을 지도에 겹쳐 표시</value>
+  </data>
+  <data name="ckb_OffsetTime" xml:space="preserve">
+    <value>시간대 오프셋</value>
+  </data>
+  <data name="ckb_OverlayGPXForSelectedDatesOnly" xml:space="preserve">
+    <value>선택한 파일의 첫 날짜와 마지막 날짜 사이에 해당하는 날짜만</value>
+  </data>
+  <data name="ckb_OverwriteOriginal" xml:space="preserve">
+    <value>xxx_original 백업을 만들지 않음</value>
+  </data>
+  <data name="ckb_PopulatedPlacesOnly" xml:space="preserve">
+    <value>API 데이터를 "인구 밀집 지역"(fcode=PPL)으로 필터링하여 표시 [권장하지 않음]</value>
+  </data>
+  <data name="ckb_ProcessOriginalFile" xml:space="preserve">
+    <value>이미지 파일 자체를 처리</value>
+  </data>
+  <data name="ckb_QuestionStopProcessingRows" xml:space="preserve">
+    <value>나머지 행 처리를 중지하시겠습니까?</value>
+  </data>
+  <data name="ckb_RemoveGeoDataRemovesTimeOffset" xml:space="preserve">
+    <value>"위치 데이터 제거" 기능은 시간대 오프셋도 함께 제거합니다</value>
+  </data>
+  <data name="ckb_ReplaceBlankToponyms" xml:space="preserve">
+    <value>비어 있는 도시, 주, 하위 위치 값을 다음으로 바꾸기: </value>
+  </data>
+  <data name="ckb_ResetFileDateToCreated" xml:space="preserve">
+    <value>이미지 파일 날짜/시간을 생성 날짜로 재설정</value>
+  </data>
+  <data name="ckb_ResetMapToZero" xml:space="preserve">
+    <value>위치 데이터가 없으면 지도를 0/0으로 설정</value>
+  </data>
+  <data name="ckb_StopProcessingRules" xml:space="preserve">
+    <value>첫 번째 국가+대상 일치 후 규칙 처리 중지</value>
+  </data>
+  <data name="ckb_UpdateCheckPreRelease" xml:space="preserve">
+    <value>사전 출시 [베타] 업데이트도 확인하시겠습니까?</value>
+  </data>
+  <data name="ckb_UseDarkMode" xml:space="preserve">
+    <value>앱 UI에 다크 모드를 사용하시겠습니까?</value>
+  </data>
+  <data name="ckb_UseImperialNotMetric" xml:space="preserve">
+    <value>고도를 미터 대신 피트(야드파운드법)로 표시</value>
+  </data>
+  <data name="ckb_UseTimeZone" xml:space="preserve">
+    <value>다음 시간대 사용:</value>
+  </data>
+  <data name="clh_BlankOutTargetPoint" xml:space="preserve">
+    <value>비우시겠습니까?</value>
+  </data>
+  <data name="clh_DataPointConditionType" xml:space="preserve">
+    <value>조건</value>
+  </data>
+  <data name="clh_DataPointConditionValue" xml:space="preserve">
+    <value>값</value>
+  </data>
+  <data name="clh_DataPointName" xml:space="preserve">
+    <value>항목</value>
+  </data>
+  <data name="clh_ExifTag" xml:space="preserve">
+    <value>Exif (GTN 내부) 태그</value>
+  </data>
+  <data name="clh_Folder" xml:space="preserve">
+    <value>폴더</value>
+  </data>
+  <data name="clh_ModifiedValue" xml:space="preserve">
+    <value>수정된 (저장되지 않은) 값</value>
+  </data>
+  <data name="clh_OriginalValue" xml:space="preserve">
+    <value>원래 (저장된) 값</value>
+  </data>
+  <data name="clh_TargetPointName" xml:space="preserve">
+    <value>그다음</value>
+  </data>
+  <data name="clh_TargetPointNameCustomCityLogic" xml:space="preserve">
+    <value>도시를 읽는 위치</value>
+  </data>
+  <data name="clh_TargetPointOutcome" xml:space="preserve">
+    <value>결과</value>
+  </data>
+  <data name="clh_TargetPointOutcomeCustom" xml:space="preserve">
+    <value>사용자 지정 결과</value>
+  </data>
+  <data name="cmi_OpenCoordsInAPI" xml:space="preserve">
+    <value>API에서 좌표 열기</value>
+  </data>
+  <data name="cmi_RemoveCachedData" xml:space="preserve">
+    <value>캐시된 데이터 제거</value>
+  </data>
+  <data name="cmi_ShowHideCols" xml:space="preserve">
+    <value>열 표시 또는 숨기기</value>
+  </data>
+  <data name="fbd_StartupFolder" xml:space="preserve">
+    <value>시작 폴더 찾아보기</value>
+  </data>
+  <data name="frm_FrmEditFileData" xml:space="preserve">
+    <value>데이터 편집</value>
+  </data>
+  <data name="frm_FrmImportExportGpx" xml:space="preserve">
+    <value>GPX/JSON 데이터 가져오기</value>
+  </data>
+  <data name="frm_FrmManageFavourites" xml:space="preserve">
+    <value>즐겨찾기 관리</value>
+  </data>
+  <data name="frm_FrmPasteWhat" xml:space="preserve">
+    <value>붙여넣기…무엇을?</value>
+  </data>
+  <data name="frm_FrmPickDataFromAPIBox" xml:space="preserve">
+    <value>지명 값 선택</value>
+  </data>
+  <data name="frm_FrmPleaseWaitBox" xml:space="preserve">
+    <value>폴더를 불러오는 동안 잠시 기다려 주십시오.</value>
+  </data>
+  <data name="frm_FrmSettings" xml:space="preserve">
+    <value>설정</value>
+  </data>
+  <data name="gbx_AppSettings" xml:space="preserve">
+    <value>앱 설정</value>
+  </data>
+  <data name="gbx_CreateDate" xml:space="preserve">
+    <value>생성 날짜</value>
+  </data>
+  <data name="gbx_Dates" xml:space="preserve">
+    <value>날짜</value>
+  </data>
+  <data name="gbx_EditImageList" xml:space="preserve">
+    <value>편집을 위해 선택한 이미지</value>
+  </data>
+  <data name="gbx_GeoNamesLanguageSettings" xml:space="preserve">
+    <value>GeoNames 언어 설정</value>
+  </data>
+  <data name="gbx_GeoNamesSettings" xml:space="preserve">
+    <value>GeoNames 설정</value>
+  </data>
+  <data name="gbx_GetAltitude" xml:space="preserve">
+    <value>고도 데이터 가져오기</value>
+  </data>
+  <data name="gbx_GetToponomy" xml:space="preserve">
+    <value>지명 데이터 가져오기</value>
+  </data>
+  <data name="gbx_GPSData" xml:space="preserve">
+    <value>GPS 데이터</value>
+  </data>
+  <data name="gbx_ImportExportGpxSource" xml:space="preserve">
+    <value>소스</value>
+  </data>
+  <data name="gbx_ImportExportGpxTimeSetting" xml:space="preserve">
+    <value>시간 설정</value>
+  </data>
+  <data name="gbx_LocationData" xml:space="preserve">
+    <value>위치 데이터</value>
+  </data>
+  <data name="gbx_MapColourMode" xml:space="preserve">
+    <value>지도 색상 모드</value>
+  </data>
+  <data name="gbx_OtherSettings" xml:space="preserve">
+    <value>기타 설정</value>
+  </data>
+  <data name="gbx_SaveTrackTo" xml:space="preserve">
+    <value>트랙 저장 (옵션)</value>
+  </data>
+  <data name="gbx_TakenDate" xml:space="preserve">
+    <value>촬영 날짜</value>
+  </data>
+  <data name="Generic_All" xml:space="preserve">
+    <value>전체</value>
+  </data>
+  <data name="Generic_Cancel" xml:space="preserve">
+    <value>취소</value>
+  </data>
+  <data name="Generic_City" xml:space="preserve">
+    <value>도시</value>
+  </data>
+  <data name="Generic_Close" xml:space="preserve">
+    <value>닫기</value>
+  </data>
+  <data name="Generic_Coordinates" xml:space="preserve">
+    <value>좌표</value>
+  </data>
+  <data name="Generic_Country" xml:space="preserve">
+    <value>국가</value>
+  </data>
+  <data name="Generic_CountryCode" xml:space="preserve">
+    <value>국가 코드</value>
+  </data>
+  <data name="Generic_CreateDate" xml:space="preserve">
+    <value>생성 날짜</value>
+  </data>
+  <data name="Generic_Days" xml:space="preserve">
+    <value>일</value>
+  </data>
+  <data name="Generic_Decimal" xml:space="preserve">
+    <value>십진법</value>
+  </data>
+  <data name="Generic_Delete" xml:space="preserve">
+    <value>삭제</value>
+  </data>
+  <data name="Generic_DestCoordinates" xml:space="preserve">
+    <value>목적지 좌표</value>
+  </data>
+  <data name="Generic_Export" xml:space="preserve">
+    <value>내보내기</value>
+  </data>
+  <data name="Generic_ExportTrackTimeStampType" xml:space="preserve">
+    <value>타임스탬프 값</value>
+  </data>
+  <data name="Generic_ExposureTime" xml:space="preserve">
+    <value>노출 시간</value>
+  </data>
+  <data name="Generic_Favourites" xml:space="preserve">
+    <value>즐겨찾기</value>
+  </data>
+  <data name="Generic_Feet" xml:space="preserve">
+    <value>피트</value>
+  </data>
+  <data name="Generic_Feet_Abbr" xml:space="preserve">
+    <value>ft</value>
+  </data>
+  <data name="Generic_FileModifyDate" xml:space="preserve">
+    <value>파일 날짜</value>
+  </data>
+  <data name="Generic_FileName" xml:space="preserve">
+    <value>파일 이름</value>
+  </data>
+  <data name="Generic_Fnumber" xml:space="preserve">
+    <value>조리개</value>
+  </data>
+  <data name="Generic_FocalLength" xml:space="preserve">
+    <value>초점 거리</value>
+  </data>
+  <data name="Generic_FocalLengthIn35mmFormat" xml:space="preserve">
+    <value>초점 거리 (35mm)</value>
+  </data>
+  <data name="Generic_ForAllImages" xml:space="preserve">
+    <value>모든 이미지에</value>
+  </data>
+  <data name="Generic_ForThisImage" xml:space="preserve">
+    <value>이 이미지에</value>
+  </data>
+  <data name="Generic_GPSAltitude" xml:space="preserve">
+    <value>고도</value>
+  </data>
+  <data name="Generic_GPSAltitudeRef" xml:space="preserve">
+    <value>고도 기준</value>
+  </data>
+  <data name="Generic_GPSDateTime" xml:space="preserve">
+    <value>GPS 날짜/시간</value>
+  </data>
+  <data name="Generic_GPSDestLatitude" xml:space="preserve">
+    <value>목적지 위도</value>
+  </data>
+  <data name="Generic_GPSDestLatitudeRef" xml:space="preserve">
+    <value>목적지 위도 기준</value>
+  </data>
+  <data name="Generic_GPSDestLongitude" xml:space="preserve">
+    <value>목적지 경도</value>
+  </data>
+  <data name="Generic_GPSDestLongitudeRef" xml:space="preserve">
+    <value>목적지 경도 기준</value>
+  </data>
+  <data name="Generic_GPSImgDirection" xml:space="preserve">
+    <value>이미지 방향</value>
+  </data>
+  <data name="Generic_GPSImgDirectionRef" xml:space="preserve">
+    <value>이미지 방향 기준</value>
+  </data>
+  <data name="Generic_GPSLatitude" xml:space="preserve">
+    <value>위도</value>
+  </data>
+  <data name="Generic_GPSLatitudeRef" xml:space="preserve">
+    <value>위도 기준</value>
+  </data>
+  <data name="Generic_GPSLongitude" xml:space="preserve">
+    <value>경도</value>
+  </data>
+  <data name="Generic_GPSLongitudeRef" xml:space="preserve">
+    <value>경도 기준</value>
+  </data>
+  <data name="Generic_GPSSpeed" xml:space="preserve">
+    <value>속도</value>
+  </data>
+  <data name="Generic_GPSSpeedRef" xml:space="preserve">
+    <value>속도 기준</value>
+  </data>
+  <data name="Generic_GUID" xml:space="preserve">
+    <value>GUID</value>
+  </data>
+  <data name="Generic_Hours" xml:space="preserve">
+    <value>시간</value>
+  </data>
+  <data name="Generic_Import" xml:space="preserve">
+    <value>가져오기</value>
+  </data>
+  <data name="Generic_Insert" xml:space="preserve">
+    <value>삽입</value>
+  </data>
+  <data name="Generic_IPTCKeywords" xml:space="preserve">
+    <value>IPTC 키워드</value>
+  </data>
+  <data name="Generic_ISO" xml:space="preserve">
+    <value>ISO 감도</value>
+  </data>
+  <data name="Generic_LensSpec" xml:space="preserve">
+    <value>렌즈</value>
+  </data>
+  <data name="Generic_Make" xml:space="preserve">
+    <value>제조사</value>
+  </data>
+  <data name="Generic_Metres" xml:space="preserve">
+    <value>미터</value>
+  </data>
+  <data name="Generic_Metres_Abbr" xml:space="preserve">
+    <value>m</value>
+  </data>
+  <data name="Generic_Miles" xml:space="preserve">
+    <value>마일</value>
+  </data>
+  <data name="Generic_Minutes" xml:space="preserve">
+    <value>분</value>
+  </data>
+  <data name="Generic_Model" xml:space="preserve">
+    <value>모델</value>
+  </data>
+  <data name="Generic_No" xml:space="preserve">
+    <value>아니요</value>
+  </data>
+  <data name="Generic_None" xml:space="preserve">
+    <value>없음</value>
+  </data>
+  <data name="Generic_OffsetTime" xml:space="preserve">
+    <value>시간대 오프셋</value>
+  </data>
+  <data name="Generic_OK" xml:space="preserve">
+    <value>확인</value>
+  </data>
+  <data name="Generic_PleaseWait" xml:space="preserve">
+    <value>잠시 기다려 주십시오...</value>
+  </data>
+  <data name="Generic_QuestionDontAskAgain" xml:space="preserve">
+    <value>다시 묻지 않음</value>
+  </data>
+  <data name="Generic_Rating" xml:space="preserve">
+    <value>평점</value>
+  </data>
+  <data name="Generic_Rename" xml:space="preserve">
+    <value>이름 바꾸기</value>
+  </data>
+  <data name="Generic_Save" xml:space="preserve">
+    <value>현재 변경 내용 저장</value>
+  </data>
+  <data name="Generic_Seconds" xml:space="preserve">
+    <value>초</value>
+  </data>
+  <data name="Generic_ShowPassword" xml:space="preserve">
+    <value>비밀번호 표시</value>
+  </data>
+  <data name="Generic_ShowUserName" xml:space="preserve">
+    <value>사용자 이름 표시</value>
+  </data>
+  <data name="Generic_State" xml:space="preserve">
+    <value>주/도</value>
+  </data>
+  <data name="Generic_Sublocation" xml:space="preserve">
+    <value>하위 위치</value>
+  </data>
+  <data name="Generic_TakenDate" xml:space="preserve">
+    <value>촬영 날짜</value>
+  </data>
+  <data name="Generic_TZTime" xml:space="preserve">
+    <value>시간대 조정:</value>
+  </data>
+  <data name="Generic_UseDST" xml:space="preserve">
+    <value>일광 절약 시간을 사용하시겠습니까?</value>
+  </data>
+  <data name="Generic_XMLSubjects" xml:space="preserve">
+    <value>XML 주제</value>
+  </data>
+  <data name="Generic_Yes" xml:space="preserve">
+    <value>예</value>
+  </data>
+  <data name="lbl_ARCGIS_APIKey" xml:space="preserve">
+    <value>ARCGIS API 키</value>
+  </data>
+  <data name="lbl_CameraTime" xml:space="preserve">
+    <value>카메라 날짜/시간</value>
+  </data>
+  <data name="lbl_CameraTimeNote" xml:space="preserve">
+    <value>참고: 이미지 타임스탬프가 GPS 시간과 올바르게 동기화되지 않은 경우에만 시간 이동이 필요합니다. 필요하지 않으면 0초로 두십시오.</value>
+  </data>
+  <data name="lbl_CancelPressed" xml:space="preserve">
+    <value>취소를 눌렀습니다. 폴더 분석은 중지되었지만 수집된 파일은 분석됩니다.</value>
+  </data>
+  <data name="lbl_ChoiceOfferCount" xml:space="preserve">
+    <value>표시할 지명 옵션 수</value>
+  </data>
+  <data name="lbl_ChoiceRadius" xml:space="preserve">
+    <value>반경 [km]</value>
+  </data>
+  <data name="lbl_ExportTrackOrderBy" xml:space="preserve">
+    <value>트랙 포인트 정렬 기준</value>
+  </data>
+  <data name="lbl_ExportTrackTimeStampType" xml:space="preserve">
+    <value>타임스탬프 값</value>
+  </data>
+  <data name="lbl_ExportTrackTimeStampTypeNote" xml:space="preserve">
+    <value>GPSDateTime을 선택했는데 파일에 해당 속성이 없으면 내보내기가 실패합니다.
+일부 HEIC 파일에는 이 속성이 있지만 대부분의 다른 형식에는 없습니다.</value>
+  </data>
+  <data name="lbl_GeoMaxExtSecs" xml:space="preserve">
+    <value>최대 외삽 시간(촬영 타임스탬프와 트랙 포인트 타임스탬프 간의 시간 차이), 초 단위.</value>
+  </data>
+  <data name="lbl_GeoMaxIntSecs" xml:space="preserve">
+    <value>최대 보간('경로 추정') 시간(초). 비활성화하려면 0으로 설정하십시오.</value>
+  </data>
+  <data name="lbl_GeoNames_Pwd" xml:space="preserve">
+    <value>GeoNames 비밀번호</value>
+  </data>
+  <data name="lbl_GeoNames_UserName" xml:space="preserve">
+    <value>GeoNames 사용자 이름</value>
+  </data>
+  <data name="lbl_importFromAnotherFolder" xml:space="preserve">
+    <value>&lt;-- 여기를 클릭하여 가져오기 원본 폴더 설정</value>
+  </data>
+  <data name="lbl_importOneFile" xml:space="preserve">
+    <value>&lt;-- 여기를 클릭하여 가져오기 원본 파일 설정</value>
+  </data>
+  <data name="lbl_ImportTimeAgainst" xml:space="preserve">
+    <value>트랙 파일의 타임스탬프를 다음과 비교:</value>
+  </data>
+  <data name="lbl_Language" xml:space="preserve">
+    <value>언어</value>
+  </data>
+  <data name="lbl_OffsetTime" xml:space="preserve">
+    <value>시간대</value>
+  </data>
+  <data name="lbl_ParseProgress_Normal" xml:space="preserve">
+    <value>준비됨</value>
+  </data>
+  <data name="lbl_ParseProgress_Read" xml:space="preserve">
+    <value>읽는 중:</value>
+  </data>
+  <data name="lbl_ParseProgress_Write" xml:space="preserve">
+    <value>쓰는 중:</value>
+  </data>
+  <data name="lbl_PleaseWaitBoxActionParsing" xml:space="preserve">
+    <value>데이터 분석 중:</value>
+  </data>
+  <data name="lbl_PleaseWaitBoxActionPopulatingListView" xml:space="preserve">
+    <value>주 그리드(ListView)를 채우는 중</value>
+  </data>
+  <data name="lbl_PleaseWaitBoxActionScanning" xml:space="preserve">
+    <value>파일 검사 중:</value>
+  </data>
+  <data name="lbl_PressCancelToStop" xml:space="preserve">
+    <value>중지하려면 취소를 누르십시오.</value>
+  </data>
+  <data name="lbl_QuestionAddToponomy" xml:space="preserve">
+    <value>고도와 지명 값도 지정하시겠습니까?
+아니요를 선택하면 위도/경도 데이터가 포함된 지명 데이터와 동기화되지 않을 수 있습니다.
+'다시 묻지 않음'을 클릭하면 예로 간주되며, 이번 세션 동안 다시 묻지 않습니다. 재설정하려면 다시 시작하십시오.</value>
+  </data>
+  <data name="lbl_SaveTrackTo" xml:space="preserve">
+    <value>출력 저장 위치</value>
+  </data>
+  <data name="lbl_SelectColsTitle" xml:space="preserve">
+    <value>열 선택</value>
+  </data>
+  <data name="lbl_ShiftTrackTimeBy" xml:space="preserve">
+    <value>트랙 파일 시간 이동:</value>
+  </data>
+  <data name="gbx_Startup_Folder" xml:space="preserve">
+    <value>시작 폴더</value>
+  </data>
+  <data name="lbl_TZNote" xml:space="preserve">
+    <value>참고: 날짜/시간 태그에 시간대가 없으면 시간대가 추가될 수 있습니다(아래 참고). 그렇지 않으면 시스템 로컬 시간을 사용합니다.</value>
+  </data>
+  <data name="lbl_TZTime" xml:space="preserve">
+    <value>시간대 조정:</value>
+  </data>
+  <data name="mbc_Error" xml:space="preserve">
+    <value>오류</value>
+  </data>
+  <data name="mbc_Information" xml:space="preserve">
+    <value>정보</value>
+  </data>
+  <data name="mbc_Question" xml:space="preserve">
+    <value>질문</value>
+  </data>
+  <data name="mbc_Warning" xml:space="preserve">
+    <value>경고</value>
+  </data>
+  <data name="mbx_DirectoryElementCollection_ErrorParsing" xml:space="preserve">
+    <value>폴더를 DirectoryElements로 분석하는 중 오류가 발생했습니다</value>
+  </data>
+  <data name="mbx_FrmEditFileData_ErrorAPIError" xml:space="preserve">
+    <value>앱에서 API 통신 중 오류가 발생했습니다. 권한 없음(Unauthorised) 오류가 나타나면 설정에서 사용자 이름을 비밀번호로도 입력하십시오.</value>
+  </data>
+  <data name="mbx_FrmEditFileData_ErrorInvalidSender" xml:space="preserve">
+    <value>이는 버그입니다. GitHub에 이슈를 등록하시고, '송신자'가 다음이었다고 알려 주십시오: </value>
+  </data>
+  <data name="mbx_FrmEditFileData_InfoDataUpdated" xml:space="preserve">
+    <value>데이터가 업데이트되었습니다.</value>
+  </data>
+  <data name="mbx_FrmEditFileData_WarningFileDisappeared" xml:space="preserve">
+    <value>파일이 사라진 것 같습니다.</value>
+  </data>
+  <data name="mbx_FrmEditFileData_WarningLatLongMustBeNumbers" xml:space="preserve">
+    <value>숫자만 입력해야 합니다. 기본값은 0입니다.</value>
+  </data>
+  <data name="mbx_FrmImportExportGpx_AskUserWantsReport" xml:space="preserve">
+    <value>가져오기 과정에 대한 보고서를 보시겠습니까?</value>
+  </data>
+  <data name="mbx_FrmImportExportGpx_FileOrFolderDoesntExist" xml:space="preserve">
+    <value>선택한 파일 또는 폴더가 올바르지 않습니다.</value>
+  </data>
+  <data name="mbx_FrmImportExportGpx_NoFileSelected" xml:space="preserve">
+    <value>가져올 파일이 선택되지 않았습니다.</value>
+  </data>
+  <data name="mbx_FrmImportExportGpx_TrackContainsNoData" xml:space="preserve">
+    <value>트랙 오버레이 가져오기 실패 - 관련 데이터를 찾지 못했습니다.</value>
+  </data>
+  <data name="mbx_FrmImportNoStoredShiftValues" xml:space="preserve">
+    <value>저장된 "시간 이동" 값이 없습니다. 데이터는 0으로 유지됩니다.</value>
+  </data>
+  <data name="mbx_FrmMainApp_ErrorCantCreateSQLiteDB" xml:space="preserve">
+    <value>SQLite 데이터베이스를 만들 수 없습니다(GitHub에 이슈를 등록해 주십시오): </value>
+  </data>
+  <data name="mbx_FrmMainApp_ErrorCantLoadSQLiteDB" xml:space="preserve">
+    <value>SQL에서 데이터를 불러오지 못했습니다(GitHub에 이슈를 등록해 주십시오): </value>
+  </data>
+  <data name="mbx_FrmMainApp_ErrorCantLoadWebView2" xml:space="preserve">
+    <value>webview2 로드 오류 - 설치하셨습니까?</value>
+  </data>
+  <data name="mbx_FrmMainApp_ErrorCantReadDefaultSQLiteDB" xml:space="preserve">
+    <value>SQL에서 기본값을 읽지 못했습니다(GitHub에 이슈를 등록해 주십시오): </value>
+  </data>
+  <data name="mbx_FrmMainApp_ErrorCantWriteSQLiteDB" xml:space="preserve">
+    <value>생성되었지만 SQLite 데이터베이스에 쓸 수 없습니다(GitHub에 이슈를 등록해 주십시오): </value>
+  </data>
+  <data name="mbx_FrmMainApp_ErrorClearingFileDataQTables" xml:space="preserve">
+    <value>filedata-Q 테이블을 비우는 중 오류가 발생했습니다(GitHub에 이슈를 등록해 주십시오): </value>
+  </data>
+  <data name="mbx_FrmMainApp_ErrorDoubleBuffer" xml:space="preserve">
+    <value>DoubleBuffer 오류(GitHub에 이슈를 등록해 주십시오): </value>
+  </data>
+  <data name="mbx_FrmMainApp_ErrorFileGoneMissing" xml:space="preserve">
+    <value>파일이 더 이상 존재하지 않는 것 같습니다: </value>
+  </data>
+  <data name="mbx_FrmMainApp_ErrorInitializeComponent" xml:space="preserve">
+    <value>FrmMainApp.InitializeComponent 오류(GitHub에 이슈를 등록해 주십시오): </value>
+  </data>
+  <data name="mbx_FrmMainApp_ErrorInitializeWebViewEnsureCoreWebView2Async" xml:space="preserve">
+    <value>FrmMainApp.InitialiseWebView 오류 (await wbv_MapArea.EnsureCoreWebView2Async(c2wv)) (GitHub에 이슈를 등록해 주십시오): </value>
+  </data>
+  <data name="mbx_FrmMainApp_ErrorInitializeWebViewIsWebMessageEnabled" xml:space="preserve">
+    <value>FrmMainApp.InitialiseWebView 오류 (IsWebMessageEnabled) (GitHub에 이슈를 등록해 주십시오): </value>
+  </data>
+  <data name="mbx_FrmMainApp_ErrorInitializeWebViewNavigateToStringInHTMLFile" xml:space="preserve">
+    <value>FrmMainApp.InitialiseWebView 오류 (HTMLCode 파일의 NavigateToString) (GitHub에 이슈를 등록해 주십시오): </value>
+  </data>
+  <data name="mbx_FrmMainApp_ErrorInitializeWebViewParseCoordsFromHTMLFile" xml:space="preserve">
+    <value>FrmMainApp.InitialiseWebView 오류 (HTMLCode 파일에서 좌표 분석) (github에 이슈를 등록해 주십시오): </value>
+  </data>
+  <data name="mbx_FrmMainApp_ErrorInitializeWebViewReadHTMLFile" xml:space="preserve">
+    <value>FrmMainApp.InitialiseWebView 오류 (HTMLCode 파일 읽기) (github에 이슈를 등록해 주십시오): </value>
+  </data>
+  <data name="mbx_FrmMainApp_ErrorInitializeWebViewReplaceStringInHTMLFile" xml:space="preserve">
+    <value>FrmMainApp.InitialiseWebView 오류 (HTMLCode 파일의 상수 바꾸기) (github에 이슈를 등록해 주십시오): </value>
+  </data>
+  <data name="mbx_FrmMainApp_ErrorInitializeWebViewWebMessageReceived" xml:space="preserve">
+    <value>wbv_MapArea_WebMessageReceived 수행 중 오류 (GitHub에 이슈를 등록해 주십시오): </value>
+  </data>
+  <data name="mbx_FrmMainApp_ErrorInvalidFolder" xml:space="preserve">
+    <value>입력한 폴더가 올바르지 않은 것 같습니다. C:\?로 되돌릴까요?</value>
+  </data>
+  <data name="mbx_FrmMainApp_ErrorLanguageFileColumnHeaders" xml:space="preserve">
+    <value>언어 파일을 읽고 열 머리글을 지정하는 중 오류가 발생했습니다(github에 이슈를 등록해 주십시오): </value>
+  </data>
+  <data name="mbx_FrmMainApp_ErrorNavigateMapGoHTMLCode" xml:space="preserve">
+    <value>FrmMainApp.NavigateMapGo 오류 (string HTMLCode) (GitHub에 이슈를 등록해 주십시오): </value>
+  </data>
+  <data name="mbx_FrmMainApp_ErrorRemoveGeoDataFailed" xml:space="preserve">
+    <value>위치 데이터 제거 과정이 실패했거나 오류를 반환했습니다.</value>
+  </data>
+  <data name="mbx_FrmMainApp_ErrorResizingColumns" xml:space="preserve">
+    <value>열 크기 조정 실패(GitHub에 이슈를 등록해 주십시오): </value>
+  </data>
+  <data name="mbx_FrmMainApp_ErrorSettingStartupFolder" xml:space="preserve">
+    <value>기본 시작 폴더 설정 실패(GitHub에 이슈를 등록해 주십시오): </value>
+  </data>
+  <data name="mbx_FrmMainApp_InfoCachedDataNotRemoved" xml:space="preserve">
+    <value>데이터가 제거되지 않았습니다. 유효한 항목을 선택하지 않았거나 선택한 항목에 캐시된 데이터가 없습니다.</value>
+  </data>
+  <data name="mbx_FrmMainApp_InfoCachedDataRemoved" xml:space="preserve">
+    <value>캐시된 데이터가 있었다면 선택한 항목의 캐시된 데이터가 제거되었습니다.</value>
+  </data>
+  <data name="mbx_FrmMainApp_InfoFavouriteNameCannotBeBlank" xml:space="preserve">
+    <value>이름은 비워 둘 수 없습니다</value>
+  </data>
+  <data name="mbx_FrmMainApp_InfoFavouriteNotValid" xml:space="preserve">
+    <value>선택한 저장 항목이 올바르지 않습니다</value>
+  </data>
+  <data name="mbx_FrmMainApp_InfoFavouriteSaved" xml:space="preserve">
+    <value>즐겨찾기가 저장되었습니다</value>
+  </data>
+  <data name="mbx_FrmMainApp_NoFavouritesDefined" xml:space="preserve">
+    <value>정의된 즐겨찾기가 없습니다. 지도 아래 버튼으로 추가하십시오.</value>
+  </data>
+  <data name="mbx_FrmMainApp_QuestionAddDraggedDataPointToFiles" xml:space="preserve">
+    <value>선택한 파일에 좌표를 지정하시겠습니까?</value>
+  </data>
+  <data name="mbx_FrmMainApp_QuestionDisableFlatMode" xml:space="preserve">
+    <value>플랫 모드가 켜져 있습니다. 끄시겠습니까?</value>
+  </data>
+  <data name="mbx_FrmMainApp_QuestionNoRowsFromAPI" xml:space="preserve">
+    <value>API 조회에서 유효한 정보가 반환되지 않았습니다. 지명 값을 비우시겠습니까?</value>
+  </data>
+  <data name="mbx_FrmMainApp_QuestionRunImportExportInFlatMode" xml:space="preserve">
+    <value>플랫 모드에서 트랙 가져오기/내보내기를 실행하는 것은 좋지 않습니다. 트랙 작업은 특수한 로직을 사용하며, 여러 폴더에 같은 이름의 파일이 있을 경우 이를 구별할 수 없기 때문입니다. 정말 실행하시겠습니까?</value>
+  </data>
+  <data name="mbx_FrmMainApp_WarningMultipleImageFilesForXMP" xml:space="preserve">
+    <value>경고: 다음 사이드카 파일이 여러 이미지 파일과 이름을 공유합니다. 데이터가 잘못 읽혔을 수 있습니다:</value>
+  </data>
+  <data name="mbx_FrmMainApp_WarningNoItemSelected" xml:space="preserve">
+    <value>선택된 항목이 없습니다.</value>
+  </data>
+  <data name="mbx_FrmMainApp_WarningTooManyFilesSelected" xml:space="preserve">
+    <value>정확히 파일 1개를 선택해야 합니다.</value>
+  </data>
+  <data name="mbx_FrmPasteWhat_NoDateShiftToPaste" xml:space="preserve">
+    <value>복사 풀에 날짜/시간 이동 값이 지정되지 않았습니다</value>
+  </data>
+  <data name="mbx_FrmSettings_dgv_CustomRules_ColumnCannotBeEmpty" xml:space="preserve">
+    <value>모든 드롭다운 열에는 값이 있어야 하며, "조건" 값도 비워 둘 수 없습니다.</value>
+  </data>
+  <data name="mbx_FrmSettings_dgv_CustomRules_CustomOutcomeCannotBeEmpty" xml:space="preserve">
+    <value>결과로 "사용자 지정"을 선택하면 사용자 지정 결과 열을 비워 둘 수 없습니다. 설정 창을 닫은 뒤에도 이 문제가 해결되지 않으면 해당 행이 삭제됩니다.</value>
+  </data>
+  <data name="mbx_FrmSettings_ErrorExportFailed" xml:space="preserve">
+    <value>내보내기 실패: </value>
+  </data>
+  <data name="mbx_FrmSettings_ErrorImportFailed" xml:space="preserve">
+    <value>가져오기 실패: </value>
+  </data>
+  <data name="mbx_FrmSettings_PleaseRestartApp" xml:space="preserve">
+    <value>변경 사항을 적용하려면 앱을 다시 시작하십시오.</value>
+  </data>
+  <data name="mbx_FrmSettings_QuestionWhatToExport" xml:space="preserve">
+    <value>내보낼 항목을 선택하십시오. 내보내기 기능은 데이터베이스에 있는, 즉 저장된 데이터를 내보냅니다. 설정에 보류 중인 변경 사항이 있으면 취소하지 말고 먼저 저장(설정 창에서 확인 클릭)한 뒤 여기로 돌아오십시오.</value>
+  </data>
+  <data name="mbx_FrmSettings_QuestionWhatToImport" xml:space="preserve">
+    <value>가져올 항목을 선택하십시오. 가져오기가 성공적으로 완료되면 데이터베이스의 관련 부분이 덮어쓰기됩니다. 실패하면 AppData 폴더에 데이터베이스 백업 파일이 남습니다.</value>
+  </data>
+  <data name="Generic_Done" xml:space="preserve">
+    <value>완료.</value>
+  </data>
+  <data name="mbx_GenericDoneRestartApp" xml:space="preserve">
+    <value>완료 - 앱을 다시 시작하는 것이 좋습니다.</value>
+  </data>
+  <data name="mbx_GenericPathLikelyUTF" xml:space="preserve">
+    <value>파일 경로에 UTF 문자(아시아 문자, 키릴 문자 등 비표준 문자)가 포함되어 있을 수 있으며, 이로 인해 오류가 발생할 수 있습니다. “전 세계 언어 지원을 위해 Unicode UTF-8 사용” 기능을 켜 두었는지 확인하십시오. (이에 대해서는 Readme의 알려진 문제를 참고하십시오)</value>
+  </data>
+  <data name="mbx_HelperStaticExifNoAPI" xml:space="preserve">
+    <value>API에 연결하지 못했습니다. 혹시 오프라인 상태입니까?</value>
+  </data>
+  <data name="mbx_Helper_ErrorAsyncExifToolExecuteAsyncFailed" xml:space="preserve">
+    <value>asyncExifTool.ExecuteAsync 실패(GitHub에 이슈를 등록해 주십시오): </value>
+  </data>
+  <data name="mbx_Helper_ErrorCantReadDefaultSQLiteDB" xml:space="preserve">
+    <value>SQL에서 기본값을 읽지 못했습니다(GitHub에 이슈를 등록해 주십시오): </value>
+  </data>
+  <data name="mbx_Helper_QuestionFileQIsNotEmpty" xml:space="preserve">
+    <value>일부 데이터가 변경되었습니다. 저장하시겠습니까? 
+아니요를 클릭하면 데이터가 버려집니다</value>
+  </data>
+  <data name="mbx_Helper_WarningExifToolVerAPIResponse" xml:space="preserve">
+    <value>ExifToolVerAPIResponse API가 다음 응답을 반환했습니다: </value>
+  </data>
+  <data name="mbx_Helper_WarningFileDisappeared" xml:space="preserve">
+    <value>파일이 사라진 것 같습니다.</value>
+  </data>
+  <data name="mbx_Helper_WarningGeoNamesAPIResponse" xml:space="preserve">
+    <value>GeoNames API가 다음 응답을 반환했습니다: </value>
+  </data>
+  <data name="mbx_Helper_WarningGTNVerAPIResponse" xml:space="preserve">
+    <value>GitHub API가 다음 응답을 반환했습니다: </value>
+  </data>
+  <data name="mbx_Helper_WarningNoARCGISKey" xml:space="preserve">
+    <value>앱이 제대로 작동하려면 설정에서 ArcGIS API 키를 입력해야 합니다.</value>
+  </data>
+  <data name="mbx_Helper_WarningNothingInWriteQueue" xml:space="preserve">
+    <value>쓰기 대기열에 아무것도 없습니다.</value>
+  </data>
+  <data name="mbx_Helper_WarningNothingToPaste" xml:space="preserve">
+    <value>붙여넣을 것이 없습니다.</value>
+  </data>
+  <data name="mbx_Helper_WarningNoWriteSettingEnabled" xml:space="preserve">
+    <value>원본 파일 처리와 사이드카 XMP가 모두 꺼져 있어 쓸 대상이 없습니다.</value>
+  </data>
+  <data name="mbx_Helper_WarningTooManyFilesSelected" xml:space="preserve">
+    <value>파일을 하나만 선택했을 때만 작동합니다.</value>
+  </data>
+  <data name="mns_File" xml:space="preserve">
+    <value>파일</value>
+  </data>
+  <data name="mns_Help" xml:space="preserve">
+    <value>도움말</value>
+  </data>
+  <data name="mns_Settings" xml:space="preserve">
+    <value>설정</value>
+  </data>
+  <data name="pbx_Browse_Startup_Folder" xml:space="preserve">
+    <value>시작 폴더 찾아보기</value>
+  </data>
+  <data name="pbx_imagePreviewCouldNotRetrieve" xml:space="preserve">
+    <value>이미지 미리 보기를 가져오거나 생성할 수 없습니다</value>
+  </data>
+  <data name="pbx_imagePreviewEmptyText" xml:space="preserve">
+    <value>표시할 이미지가 없습니다</value>
+  </data>
+  <data name="pbx_importFromAnotherFolder" xml:space="preserve">
+    <value>트랙 폴더 찾아보기</value>
+  </data>
+  <data name="pbx_importOneFile" xml:space="preserve">
+    <value>트랙 파일 찾아보기</value>
+  </data>
+  <data name="rbt_CreateDateSetToFixedDate" xml:space="preserve">
+    <value>고정 날짜로 설정</value>
+  </data>
+  <data name="rbt_CreateDateTimeShift" xml:space="preserve">
+    <value>시간 이동</value>
+  </data>
+  <data name="rbt_importFromAnotherFolder" xml:space="preserve">
+    <value>다른 폴더에서 가져오기</value>
+  </data>
+  <data name="rbt_importFromCurrentFolder" xml:space="preserve">
+    <value>현재 폴더에서 가져오기</value>
+  </data>
+  <data name="rbt_importOneFile" xml:space="preserve">
+    <value>선택한 파일에서 가져오기</value>
+  </data>
+  <data name="rbt_MapColourModeDarkInverse" xml:space="preserve">
+    <value>어둡게 (반전)</value>
+  </data>
+  <data name="rbt_MapColourModeDarkPale" xml:space="preserve">
+    <value>어둡게 (연하게)</value>
+  </data>
+  <data name="rbt_MapColourModeNormal" xml:space="preserve">
+    <value>일반</value>
+  </data>
+  <data name="rbt_PasteCreateDateActual" xml:space="preserve">
+    <value>실제 (고정 값)</value>
+  </data>
+  <data name="rbt_PasteCreateDateShift" xml:space="preserve">
+    <value>시간 이동</value>
+  </data>
+  <data name="rbt_PasteTakenDateActual" xml:space="preserve">
+    <value>실제 (고정 값)</value>
+  </data>
+  <data name="rbt_PasteTakenDateShift" xml:space="preserve">
+    <value>시간 이동</value>
+  </data>
+  <data name="rbt_TakenDateSetToFixedDate" xml:space="preserve">
+    <value>고정 날짜로 설정</value>
+  </data>
+  <data name="rbt_TakenDateTimeShift" xml:space="preserve">
+    <value>시간 이동</value>
+  </data>
+  <data name="rbt_TryUseGeoNamesLanguage" xml:space="preserve">
+    <value>위치 이름을 가져올 때 이 언어 사용 시도:</value>
+  </data>
+  <data name="rbt_UseGeoNamesLocalLanguage" xml:space="preserve">
+    <value>위치 이름을 가져올 때 "현지 언어" 사용 시도</value>
+  </data>
+  <data name="rbx_CustomCityLogicExplanation" xml:space="preserve">
+    <value>고급 기능입니다. AdminName1-4 &amp; ToponymName은 API 출력을 가리키므로 이에 대해 잘 모르면 이 설정은 건드리지 않는 것이 좋습니다. 
+전체 개요는 다음을 확인하십시오: https://github.com/nemethviktor/GeoTagNinja/issues/38#issuecomment-1356844255 .
+이 설정으로 특정 AdminName 중 하나에서 "도시" 값을 가져올 국가를 직접 추가할 수 있습니다.</value>
+  </data>
+  <data name="rbx_CustomCityLogicExplanationBold" xml:space="preserve">
+    <value>아래 표의 변경 사항은 즉시 적용되며, 확인/취소 버튼은 이에 영향을 주지 않습니다. 이번 세션에서 데이터를 다시 가져오려면 변경 사항의 영향을 받는 파일을 마우스 오른쪽 버튼으로 클릭하고 캐시된 데이터 재설정을 클릭해야 합니다(또는 앱을 다시 시작하십시오).</value>
+  </data>
+  <data name="rbx_CustomRulesExplanation" xml:space="preserve">
+    <value>고급 기능입니다. AdminName1-4 &amp; ToponymName은 API 출력을 가리키므로 이에 대해 잘 모르면 이 설정은 건드리지 않는 것이 좋습니다. 
+"사전 정의된 국가"(아래 체크박스)에 관해서는 다음에서 자세히 읽을 수 있습니다: https://github.com/nemethviktor/GeoTagNinja/issues/38#issuecomment-1356844255 + 다른 탭도 확인하십시오. 참고로 이 설정을 끄면 해당 그룹에 속하지 않는 국가 코드 셀은 비워지지만 행 자체는 삭제되지 않습니다.
+"사용자 지정"을 제외한 모든 열은 필수이며, 결과를 "사용자 지정"으로 설정하고 "사용자 지정" 열을 비워 두면 해당 행은 무시됩니다. 데이터는 대소문자를 구분하지 않습니다. 각 데이터 항목(예: 도시, 주)에 대해서는 마지막 행이 이전 행을 덮어씁니다. 요컨대 상식적으로 설정하십시오. 행을 많이 추가할수록 속도가 느려집니다.
+예: API에서 반환된 런던(영국) 기본 데이터는 해당 지역의 adminName2가 "Greater London"이어서 부적절하며 버려집니다(도시는 보통 "ToponymName"에서 가져옵니다). -&gt; 다음과 같이 설정하십시오: "항목" = "adminName2", "조건" = "같음", "조건 값" = "Greater London", "그다음" = "City", "결과" = "adminName2". 같은 내용을 두 번째 행에 반복하되 "그다음" = "Sub_Loction", "결과" = "ToponymName"으로 설정하십시오.</value>
+  </data>
+  <data name="rbx_CustomRulesExplanationBold" xml:space="preserve">
+    <value>아래 표의 변경 사항은 즉시 적용되며, 확인/취소 버튼은 이에 영향을 주지 않습니다. 이번 세션에서 데이터를 다시 가져오려면 변경 사항의 영향을 받는 파일을 마우스 오른쪽 버튼으로 클릭하고 캐시된 데이터 재설정을 클릭해야 합니다(또는 앱을 다시 시작하십시오).</value>
+  </data>
+  <data name="rbx_Register_ArcGIS" xml:space="preserve">
+    <value>ArcGIS 지도 검색 기능을 사용하려면 ArcGIS API 키가 필요합니다. 
+ArcGIS는 2024년 6월부터 등록 절차를 변경했습니다. [여기](https://location.arcgis.com/sign-up/)에서 등록하십시오.
+이제 포털 URL을 지정해야 합니다. 원하는 값을 입력하면 됩니다.
+`Developer credential creator`로 스크롤하거나 이동하십시오.
+그다음 `New Item`
+그다음 `Developer Credentials`
+`API Key`를 선택하십시오 (OAuth 아님)
+만료 날짜는 가능한 한 멀리 설정하십시오 (1년)
+`Referrers`는 비워 두십시오.
+다음 페이지에서 `Geocoding (not stored)`를 선택하십시오.
+다음 페이지에서 `Item Access`는 건너뛰십시오.
+다음 페이지에서 원하는 제목을 추가하십시오.
+마지막으로 `Generate the API key and go to item details page. I am ready to copy and save the key.`를 클릭하십시오.
+메시지가 나타나면 API 키를 저장하십시오. 지금 저장하지 않으면 키를 다시 생성해야 합니다.</value>
+  </data>
+  <data name="rbx_Register_GeoNames" xml:space="preserve">
+    <value>지역 지오코딩/검색 기능(위도/경도 --&gt; 국가/도시/...)을 사용하려면 GeoNames 계정이 필요합니다. 다음에서 계정을 만드십시오: http://www.geonames.org/login 그런 다음 다음 페이지에서 "Free Web Services" 액세스를 활성화하십시오: https://www.geonames.org/manageaccount</value>
+  </data>
+  <data name="tcr_EditData" xml:space="preserve">
+    <value>데이터 편집</value>
+  </data>
+  <data name="tmi_File" xml:space="preserve">
+    <value>파일</value>
+  </data>
+  <data name="tmi_File_CopyGeoData" xml:space="preserve">
+    <value>모든 지오데이터 복사</value>
+  </data>
+  <data name="frm_BatchRename" xml:space="preserve">
+    <value>일괄 이름 바꾸기</value>
+  </data>
+  <data name="frm_BatchRename_Preview" xml:space="preserve">
+    <value>일괄 이름 바꾸기 - 미리 보기</value>
+  </data>
+  <data name="gbx_BatchRename_Presets" xml:space="preserve">
+    <value>프리셋</value>
+  </data>
+  <data name="gbx_BatchRename_Destination" xml:space="preserve">
+    <value>대상 폴더</value>
+  </data>
+  <data name="gbx_BatchRename_Names" xml:space="preserve">
+    <value>새 파일 이름</value>
+  </data>
+  <data name="gbx_BatchRename_Options" xml:space="preserve">
+    <value>옵션</value>
+  </data>
+  <data name="gbx_BatchRename_Preview" xml:space="preserve">
+    <value>미리 보기</value>
+  </data>
+  <data name="lbl_BatchRename_Preset" xml:space="preserve">
+    <value>프리셋</value>
+  </data>
+  <data name="lbl_BatchRename_Modified" xml:space="preserve">
+    <value>(수정됨)</value>
+  </data>
+  <data name="btn_BatchRename_Save" xml:space="preserve">
+    <value>저장...</value>
+  </data>
+  <data name="btn_BatchRename_Delete" xml:space="preserve">
+    <value>삭제</value>
+  </data>
+  <data name="rbt_BatchRename_SameFolder" xml:space="preserve">
+    <value>같은 폴더에서 이름 바꾸기</value>
+  </data>
+  <data name="rbt_BatchRename_MoveToFolder" xml:space="preserve">
+    <value>다른 폴더로 이동</value>
+  </data>
+  <data name="rbt_BatchRename_CopyToFolder" xml:space="preserve">
+    <value>다른 폴더로 복사</value>
+  </data>
+  <data name="btn_BatchRename_Browse" xml:space="preserve">
+    <value>찾아보기...</value>
+  </data>
+  <data name="lbl_BatchRename_Compatibility" xml:space="preserve">
+    <value>호환성</value>
+  </data>
+  <data name="ckb_BatchRename_Windows" xml:space="preserve">
+    <value>Windows</value>
+  </data>
+  <data name="ckb_BatchRename_Mac" xml:space="preserve">
+    <value>Mac</value>
+  </data>
+  <data name="ckb_BatchRename_Unix" xml:space="preserve">
+    <value>Unix</value>
+  </data>
+  <data name="lbl_BatchRename_CurrentFilename" xml:space="preserve">
+    <value>현재 파일 이름</value>
+  </data>
+  <data name="lbl_BatchRename_NewFilename" xml:space="preserve">
+    <value>새 파일 이름</value>
+  </data>
+  <data name="lbl_BatchRename_Note" xml:space="preserve">
+    <value>메모</value>
+  </data>
+  <data name="lbl_BatchRename_Unchanged" xml:space="preserve">
+    <value>변경 안 됨</value>
+  </data>
+  <data name="btn_BatchRename_Rename" xml:space="preserve">
+    <value>이름 바꾸기</value>
+  </data>
+  <data name="btn_BatchRename_PreviewAll" xml:space="preserve">
+    <value>미리 보기</value>
+  </data>
+  <data name="lbl_BatchRename_Find" xml:space="preserve">
+    <value>찾기</value>
+  </data>
+  <data name="lbl_BatchRename_ReplaceWith" xml:space="preserve">
+    <value>바꿀 문자열</value>
+  </data>
+  <data name="ckb_BatchRename_IgnoreCase" xml:space="preserve">
+    <value>대소문자 무시</value>
+  </data>
+  <data name="ckb_BatchRename_ReplaceAll" xml:space="preserve">
+    <value>모두 바꾸기</value>
+  </data>
+  <data name="ckb_BatchRename_UseRegex" xml:space="preserve">
+    <value>정규 표현식 사용</value>
+  </data>
+  <data name="lbl_BatchRename_Kind_Text" xml:space="preserve">
+    <value>텍스트</value>
+  </data>
+  <data name="lbl_BatchRename_Kind_NewExtension" xml:space="preserve">
+    <value>새 확장자</value>
+  </data>
+  <data name="lbl_BatchRename_Kind_CurrentFilename" xml:space="preserve">
+    <value>현재 파일 이름</value>
+  </data>
+  <data name="lbl_BatchRename_Kind_PreservedFilename" xml:space="preserve">
+    <value>보존된 파일 이름</value>
+  </data>
+  <data name="lbl_BatchRename_Kind_SequenceNumber" xml:space="preserve">
+    <value>순번</value>
+  </data>
+  <data name="lbl_BatchRename_Kind_SequenceLetter" xml:space="preserve">
+    <value>순차 문자</value>
+  </data>
+  <data name="lbl_BatchRename_Kind_DateTime" xml:space="preserve">
+    <value>날짜 시간</value>
+  </data>
+  <data name="lbl_BatchRename_Kind_Metadata" xml:space="preserve">
+    <value>메타데이터</value>
+  </data>
+  <data name="lbl_BatchRename_Kind_FolderName" xml:space="preserve">
+    <value>폴더 이름</value>
+  </data>
+  <data name="lbl_BatchRename_Kind_StringSubstitution" xml:space="preserve">
+    <value>문자열 치환</value>
+  </data>
+  <data name="lbl_BatchRename_Case_Original" xml:space="preserve">
+    <value>원래 대소문자</value>
+  </data>
+  <data name="lbl_BatchRename_Case_Lower" xml:space="preserve">
+    <value>소문자</value>
+  </data>
+  <data name="lbl_BatchRename_Case_Upper" xml:space="preserve">
+    <value>대문자</value>
+  </data>
+  <data name="lbl_BatchRename_Part_NameAndExtension" xml:space="preserve">
+    <value>이름 + 확장자</value>
+  </data>
+  <data name="lbl_BatchRename_Part_Name" xml:space="preserve">
+    <value>이름</value>
+  </data>
+  <data name="lbl_BatchRename_Part_Extension" xml:space="preserve">
+    <value>확장자</value>
+  </data>
+  <data name="lbl_BatchRename_Part_NumberSuffix" xml:space="preserve">
+    <value>번호 접미사</value>
+  </data>
+  <data name="lbl_BatchRename_DateSource_DateTaken" xml:space="preserve">
+    <value>촬영 날짜</value>
+  </data>
+  <data name="lbl_BatchRename_DateSource_DateCreated" xml:space="preserve">
+    <value>생성 날짜</value>
+  </data>
+  <data name="lbl_BatchRename_DateSource_FileModified" xml:space="preserve">
+    <value>파일 수정 날짜</value>
+  </data>
+  <data name="lbl_BatchRename_DateSource_FileCreated" xml:space="preserve">
+    <value>파일 생성 날짜</value>
+  </data>
+  <data name="lbl_BatchRename_DateSource_Today" xml:space="preserve">
+    <value>오늘</value>
+  </data>
+  <data name="lbl_BatchRename_DateSource_Yesterday" xml:space="preserve">
+    <value>어제</value>
+  </data>
+  <data name="lbl_BatchRename_Digits_1" xml:space="preserve">
+    <value>한 자리</value>
+  </data>
+  <data name="lbl_BatchRename_Digits_2" xml:space="preserve">
+    <value>두 자리</value>
+  </data>
+  <data name="lbl_BatchRename_Digits_3" xml:space="preserve">
+    <value>세 자리</value>
+  </data>
+  <data name="lbl_BatchRename_Digits_4" xml:space="preserve">
+    <value>네 자리</value>
+  </data>
+  <data name="lbl_BatchRename_Digits_5" xml:space="preserve">
+    <value>다섯 자리</value>
+  </data>
+  <data name="lbl_BatchRename_Digits_6" xml:space="preserve">
+    <value>여섯 자리</value>
+  </data>
+  <data name="lbl_BatchRename_SubstituteSource_OriginalFilename" xml:space="preserve">
+    <value>원래 파일 이름</value>
+  </data>
+  <data name="lbl_BatchRename_SubstituteSource_PreservedFilename" xml:space="preserve">
+    <value>보존된 파일 이름</value>
+  </data>
+  <data name="lbl_BatchRename_Field_Country" xml:space="preserve">
+    <value>국가</value>
+  </data>
+  <data name="lbl_BatchRename_Field_CountryCode" xml:space="preserve">
+    <value>국가 코드</value>
+  </data>
+  <data name="lbl_BatchRename_Field_State" xml:space="preserve">
+    <value>주/도</value>
+  </data>
+  <data name="lbl_BatchRename_Field_City" xml:space="preserve">
+    <value>도시</value>
+  </data>
+  <data name="lbl_BatchRename_Field_Sublocation" xml:space="preserve">
+    <value>하위 위치</value>
+  </data>
+  <data name="lbl_BatchRename_Field_Make" xml:space="preserve">
+    <value>카메라 제조사</value>
+  </data>
+  <data name="lbl_BatchRename_Field_Model" xml:space="preserve">
+    <value>카메라 모델</value>
+  </data>
+  <data name="lbl_BatchRename_Field_LensSpec" xml:space="preserve">
+    <value>렌즈</value>
+  </data>
+  <data name="lbl_BatchRename_Field_Rating" xml:space="preserve">
+    <value>평점</value>
+  </data>
+  <data name="lbl_BatchRename_Field_ExposureTime" xml:space="preserve">
+    <value>노출 시간</value>
+  </data>
+  <data name="lbl_BatchRename_Field_Fnumber" xml:space="preserve">
+    <value>조리개 (F 값)</value>
+  </data>
+  <data name="lbl_BatchRename_Field_FocalLength" xml:space="preserve">
+    <value>초점 거리</value>
+  </data>
+  <data name="lbl_BatchRename_Field_ISO" xml:space="preserve">
+    <value>ISO</value>
+  </data>
+  <data name="lbl_BatchRename_Field_Artist" xml:space="preserve">
+    <value>작성자</value>
+  </data>
+  <data name="lbl_BatchRename_Field_Byline" xml:space="preserve">
+    <value>작성자 (바이라인)</value>
+  </data>
+  <data name="lbl_BatchRename_Field_Copyright" xml:space="preserve">
+    <value>저작권</value>
+  </data>
+  <data name="lbl_BatchRename_Field_Credit" xml:space="preserve">
+    <value>크레딧</value>
+  </data>
+  <data name="lbl_BatchRename_Field_Source" xml:space="preserve">
+    <value>출처</value>
+  </data>
+  <data name="lbl_BatchRename_Field_ObjectName" xml:space="preserve">
+    <value>제목 (Object Name)</value>
+  </data>
+  <data name="lbl_BatchRename_Field_Headline" xml:space="preserve">
+    <value>표제</value>
+  </data>
+  <data name="lbl_BatchRename_Field_Category" xml:space="preserve">
+    <value>범주</value>
+  </data>
+  <data name="mbx_BatchRename_OneFile" xml:space="preserve">
+    <value>파일 한 개를 처리합니다</value>
+  </data>
+  <data name="mbx_BatchRename_ManyFiles" xml:space="preserve">
+    <value>{0}개의 파일을 처리합니다</value>
+  </data>
+  <data name="mbx_BatchRename_SomeBlocked" xml:space="preserve">
+    <value>{1}개 파일 중 {0}개는 이름을 바꿀 수 없습니다: 미리 보기 참고</value>
+  </data>
+  <data name="mbx_BatchRename_PresetNamePrompt" xml:space="preserve">
+    <value>프리셋 이름:</value>
+  </data>
+  <data name="mbx_BatchRename_PresetUnreadable" xml:space="preserve">
+    <value>프리셋 '{0}'을(를) 읽을 수 없습니다.</value>
+  </data>
+  <data name="mbx_BatchRename_PresetReplace" xml:space="preserve">
+    <value>'{0}'(이)라는 프리셋이 이미 있습니다. 바꾸시겠습니까?</value>
+  </data>
+  <data name="mbx_BatchRename_PresetSaveFailed" xml:space="preserve">
+    <value>프리셋을 저장할 수 없습니다.</value>
+  </data>
+  <data name="mbx_BatchRename_PresetDelete" xml:space="preserve">
+    <value>프리셋 '{0}'을(를) 삭제하시겠습니까?</value>
+  </data>
+  <data name="mbx_BatchRename_Preflight" xml:space="preserve">
+    <value>아무것도 이름이 바뀌지 않았습니다. 먼저 다음 문제를 해결해야 합니다:
+
+{0}</value>
+  </data>
+  <data name="mbx_BatchRename_MoreProblems" xml:space="preserve">
+    <value>... 그 외 {0}개 (미리 보기에서 전체 목록 확인)</value>
+  </data>
+  <data name="mbx_BatchRename_SelectFiles" xml:space="preserve">
+    <value>먼저 이름을 바꿀 파일을 선택하십시오.</value>
+  </data>
+  <data name="mbx_BatchRename_NothingRenamed" xml:space="preserve">
+    <value>이름이 바뀐 항목이 없습니다(이미 처리된 항목은 원래대로 되돌렸습니다).
+
+{0}</value>
+  </data>
+  <data name="mbx_BatchRename_StepFailed" xml:space="preserve">
+    <value>{0}
+
+지금까지 처리한 내용은 모두 원래대로 되돌렸으므로 어떤 파일도 변경되지 않았습니다.
+
+{1} 없이 계속하시겠습니까(그 이름을 쓸 예정이던 파일 포함)?
+예: 나머지 파일의 이름을 바꿉니다.  아니요: 중지하며 모든 파일은 그대로 유지됩니다.</value>
+  </data>
+  <data name="mbx_BatchRename_NothingLeft" xml:space="preserve">
+    <value>이름을 바꿀 파일이 더 이상 없습니다.</value>
+  </data>
+  <data name="mbx_BatchRename_DoneSkipped" xml:space="preserve">
+    <value>{0}개 파일을 처리했습니다. 그대로 둔 파일:
+{1}</value>
+  </data>
+  <data name="mbx_BatchRename_AndMore" xml:space="preserve">
+    <value>... 그 외 {0}개</value>
+  </data>
+  <data name="mbx_BatchRename_Problem_NoDestination" xml:space="preserve">
+    <value>대상 폴더가 선택되지 않았습니다</value>
+  </data>
+  <data name="mbx_BatchRename_Problem_EmptyName" xml:space="preserve">
+    <value>새 이름이 비어 있습니다</value>
+  </data>
+  <data name="mbx_BatchRename_Problem_Reserved" xml:space="preserve">
+    <value>'{0}'은(는) Windows에서 예약된 이름입니다</value>
+  </data>
+  <data name="mbx_BatchRename_Problem_NameTooLong" xml:space="preserve">
+    <value>새 이름이 너무 깁니다</value>
+  </data>
+  <data name="mbx_BatchRename_Problem_PathTooLong" xml:space="preserve">
+    <value>새 경로가 너무 깁니다</value>
+  </data>
+  <data name="mbx_BatchRename_Problem_NoDate" xml:space="preserve">
+    <value>사용할 {0}이(가) 없습니다</value>
+  </data>
+  <data name="mbx_BatchRename_Problem_BadRegex" xml:space="preserve">
+    <value>정규 표현식이 올바르지 않습니다</value>
+  </data>
+  <data name="mbx_BatchRename_Problem_RegexTimeout" xml:space="preserve">
+    <value>정규 표현식의 처리 시간이 너무 깁니다</value>
+  </data>
+  <data name="mbx_BatchRename_Problem_NameClaimed" xml:space="preserve">
+    <value>다른 파일이 이 이름을 사용 중이거나 이미 가지고 있습니다</value>
+  </data>
+  <data name="mbx_BatchRename_Problem_FileExists" xml:space="preserve">
+    <value>이 이름의 파일이 이미 있습니다</value>
+  </data>
+  <data name="mbx_BatchRename_Problem_SidecarExists" xml:space="preserve">
+    <value>이 이름의 XMP 사이드카 파일이 이미 있습니다</value>
+  </data>
+  <data name="mbx_BatchRename_Problem_Gone" xml:space="preserve">
+    <value>파일이 더 이상 없습니다</value>
+  </data>
+  <data name="mbx_BatchRename_Problem_BeingSaved" xml:space="preserve">
+    <value>GeoTagNinja가 파일을 저장하는 중입니다</value>
+  </data>
+  <data name="mbx_BatchRename_Problem_InUse" xml:space="preserve">
+    <value>다른 프로그램에서 파일을 사용 중입니다</value>
+  </data>
+  <data name="mbx_BatchRename_Problem_FolderNotWritable" xml:space="preserve">
+    <value>폴더 '{0}'에 쓸 수 없습니다</value>
+  </data>
+  <data name="mbx_BatchRename_Problem_NoSpace" xml:space="preserve">
+    <value>{0}에 공간이 부족합니다: {1}MB 필요, {2}MB 사용 가능</value>
+  </data>
+  <data name="mbx_BatchRename_Problem_Unfixed" xml:space="preserve">
+    <value>일괄 작업에 먼저 해결해야 할 문제가 있습니다.</value>
+  </data>
+  <data name="tmi_File_BatchRename" xml:space="preserve">
+    <value>일괄 이름 바꾸기...</value>
+  </data>
+  <data name="cmi_BatchRename" xml:space="preserve">
+    <value>일괄 이름 바꾸기...</value>
+  </data>
+  <data name="tmi_File_EditFiles" xml:space="preserve">
+    <value>파일 편집...</value>
+  </data>
+  <data name="tmi_File_FlatMode" xml:space="preserve">
+    <value>플랫 모드 (하위 폴더 분석)</value>
+  </data>
+  <data name="tmi_File_ImportExportGPX" xml:space="preserve">
+    <value>GPX/JSON 트랙 파일 가져오기/내보내기...</value>
+  </data>
+  <data name="tmi_File_PasteGeoData" xml:space="preserve">
+    <value>모든 지오데이터 붙여넣기...</value>
+  </data>
+  <data name="tmi_File_Quit" xml:space="preserve">
+    <value>종료</value>
+  </data>
+  <data name="tmi_File_SaveAll" xml:space="preserve">
+    <value>모두 저장</value>
+  </data>
+  <data name="tmi_Help" xml:space="preserve">
+    <value>도움말</value>
+  </data>
+  <data name="tmi_Help_About" xml:space="preserve">
+    <value>정보...</value>
+  </data>
+  <data name="tmi_Help_Help" xml:space="preserve">
+    <value>도움말</value>
+  </data>
+  <data name="tmi_Help_BugReport" xml:space="preserve">
+    <value>버그 보고 (GitHub)</value>
+  </data>
+  <data name="tmi_Help_FeedbackFeatureRequest" xml:space="preserve">
+    <value>기능 요청 (GitHub)</value>
+  </data>
+  <data name="tmi_Settings" xml:space="preserve">
+    <value>설정</value>
+  </data>
+  <data name="tmi_Settings_Favourites" xml:space="preserve">
+    <value>즐겨찾기 관리</value>
+  </data>
+  <data name="tmi_Settings_Settings" xml:space="preserve">
+    <value>설정</value>
+  </data>
+  <data name="tpg_Application" xml:space="preserve">
+    <value>애플리케이션</value>
+  </data>
+  <data name="tpg_CustomCityLogic" xml:space="preserve">
+    <value>사용자 지정 도시 할당 로직</value>
+  </data>
+  <data name="tpg_CustomRules" xml:space="preserve">
+    <value>사용자 지정 규칙</value>
+  </data>
+  <data name="tpg_DateTime" xml:space="preserve">
+    <value>날짜 및 시간</value>
+  </data>
+  <data name="tpg_Exif" xml:space="preserve">
+    <value>Exif</value>
+  </data>
+  <data name="tpg_FileOptions" xml:space="preserve">
+    <value>파일 옵션</value>
+  </data>
+  <data name="tpg_GeoNames" xml:space="preserve">
+    <value>GeoNames 설정</value>
+  </data>
+  <data name="tpg_ImportExport_Export" xml:space="preserve">
+    <value>트랙 내보내기</value>
+  </data>
+  <data name="tpg_ImportExport_Import" xml:space="preserve">
+    <value>트랙 가져오기</value>
+  </data>
+  <data name="tpg_Location" xml:space="preserve">
+    <value>위치</value>
+  </data>
+  <data name="tpg_Map" xml:space="preserve">
+    <value>지도</value>
+  </data>
+  <data name="tsb_BugReport" xml:space="preserve">
+    <value>버그 보고 (GitHub 계정 필요)</value>
+  </data>
+  <data name="tsb_EditFile" xml:space="preserve">
+    <value>파일 편집</value>
+  </data>
+  <data name="tsb_FeedbackFeatureRequest" xml:space="preserve">
+    <value>기능 요청 (GitHub 계정 필요)</value>
+  </data>
+  <data name="tsb_GetAllFromWeb" xml:space="preserve">
+    <value>선택한 모든 파일의 지명 및 고도 정보 가져오기</value>
+  </data>
+  <data name="tsb_ImportGPX" xml:space="preserve">
+    <value>GPX/JSON 트랙 파일 가져오기</value>
+  </data>
+  <data name="tsb_ExportGPX" xml:space="preserve">
+    <value>트랙 파일 내보내기 (GPX/KML)</value>
+  </data>
+  <data name="tsb_OneFolderUp" xml:space="preserve">
+    <value>상위 폴더</value>
+  </data>
+  <data name="tsb_Refresh_lvwFileList" xml:space="preserve">
+    <value>파일 목록 새로 고침</value>
+  </data>
+  <data name="tsb_RemoveGeoData" xml:space="preserve">
+    <value>모든 위치 데이터 제거</value>
+  </data>
+  <data name="tsb_SaveFiles" xml:space="preserve">
+    <value>파일 저장</value>
+  </data>
+  <data name="tsr_FolderControl" xml:space="preserve">
+    <value>폴더 컨트롤</value>
+  </data>
+  <data name="tsr_MainAppToolStrip" xml:space="preserve">
+    <value>기본</value>
+  </data>
+  <data name="ttp_GPSDataPaste" xml:space="preserve">
+    <value>CTRL+V를 눌러 위도/경도 자리 표시자에 유효한 소수 한 쌍을 붙여넣으십시오. 
+클립보드에는 소수 한 쌍만 있어야 하며, 가급적 "invariant"(영어) 형식(정수.소수,정수.소수, 예: 12.345, 56.897)이어야 합니다.
+그렇기는 하지만 코드는 다른 형식도 이해할 수 있어야 합니다. 클립보드에 위 형식 외의 내용이 있으면 작업이 실패합니다(아무 일도 일어나지 않습니다).</value>
+  </data>
+  <data name="btn_NavigateMapGo" xml:space="preserve">
+    <value>지도에 표시</value>
+  </data>
+  <data name="btn_loctToFile" xml:space="preserve">
+    <value>파일에 저장</value>
+  </data>
+  <data name="btn_loctToFileDestination" xml:space="preserve">
+    <value>대상에 저장</value>
+  </data>
+  <data name="btn_SaveFavourite" xml:space="preserve">
+    <value>사진 저장</value>
+  </data>
+  <data name="btn_LoadFavourite" xml:space="preserve">
+    <value>사진에 적용</value>
+  </data>
+  <data name="btn_ManageFavourites" xml:space="preserve">
+    <value>관리...</value>
+  </data>
+  <data name="ttp_LoadFavourite" xml:space="preserve">
+    <value>즐겨찾기에서 선택한 파일의 메타데이터를 불러옵니다</value>
+  </data>
+  <data name="ttp_loctToFile" xml:space="preserve">
+    <value>현재 좌표를 선택한 파일에 저장합니다</value>
+  </data>
+  <data name="ttp_loctToFileDestination" xml:space="preserve">
+    <value>현재 좌표를 선택한 파일의 대상에 저장합니다</value>
+  </data>
+  <data name="ttp_ManageFavourites" xml:space="preserve">
+    <value>즐겨찾기 관리</value>
+  </data>
+  <data name="ttp_NavigateMapGo" xml:space="preserve">
+    <value>선택한 파일의 좌표를 지도에 표시합니다</value>
+  </data>
+  <data name="ttp_OffsetTime" xml:space="preserve">
+    <value>저장된 값과 관계없이 열 때 시간대는 비워 둡니다. Exif 태그에는 시간대 값이 없고 '+01:00'과 같은 'Offset'만 있습니다. TZ나 DST 표시가 없으므로 '+01:00'이 BST였는지 CET였는지(하나는 DST, 다른 하나는 아님) 확인할 수 없습니다. 수동으로 조정하거나 웹에서 가져오십시오. 좌표와 생성 날짜를 조합하면 프로그램이 실제 시간대 값을 정확히 판단할 수 있습니다. 읽기 전용 텍스트 상자의 값이 파일에 저장됩니다.</value>
+  </data>
+  <data name="ttp_SaveFavourite" xml:space="preserve">
+    <value>선택한 파일의 메타데이터를 즐겨찾기에 저장합니다(또는 덮어씁니다)</value>
+  </data>
+  <data name="ckb_ImportExport_ApplicationSettings" xml:space="preserve">
+    <value>ApplicationSettings</value>
+  </data>
+  <data name="ckb_ImportExport_CustomRulesSettings" xml:space="preserve">
+    <value>CustomRulesSettings</value>
+  </data>
+  <data name="ckb_ImportExport_Favourites" xml:space="preserve">
+    <value>즐겨찾기</value>
+  </data>
+  <data name="ckb_ImportExport_EditTemplates" xml:space="preserve">
+    <value>데이터 편집 템플릿</value>
+  </data>
+  <data name="ckb_ImportExport_FieldHistory" xml:space="preserve">
+    <value>데이터 편집 필드 기록</value>
+  </data>
+  <data name="ckb_ImportExport_BatchRenamePresets" xml:space="preserve">
+    <value>일괄 이름 바꾸기 프리셋</value>
+  </data>
+  <data name="Generic_TimeZoneID" xml:space="preserve">
+    <value>시간대 ID</value>
+  </data>
+  <data name="Generic_Distance" xml:space="preserve">
+    <value>거리</value>
+  </data>
+  <data name="cmi_OpenCoordsInBrowser" xml:space="preserve">
+    <value>브라우저/지도에서 좌표 열기</value>
+  </data>
+  <data name="cmi_OpenCoordsInBrowserBing" xml:space="preserve">
+    <value>Bing</value>
+  </data>
+  <data name="cmi_OpenCoordsInBrowserGeoNamesMaps" xml:space="preserve">
+    <value>GeoNames (지도)</value>
+  </data>
+  <data name="cmi_OpenCoordsInBrowserGoogle" xml:space="preserve">
+    <value>Google 지도</value>
+  </data>
+  <data name="cmi_OpenCoordsInBrowserWeGoHere" xml:space="preserve">
+    <value>WeGo/Here</value>
+  </data>
+  <data name="cmi_OpenCoordsInBrowserOpenStreetMap" xml:space="preserve">
+    <value>OpenStreetMap</value>
+  </data>
+  <data name="tmi_File_ImportFavouritesFromGeoSetter" xml:space="preserve">
+    <value>Geosetter에서 즐겨찾기 가져오기...</value>
+  </data>
+  <data name="ofd_Settings_GetDatabaseFileToImport_SelectDatabaseFile" xml:space="preserve">
+    <value>데이터베이스 파일 선택</value>
+  </data>
+  <data name="ofd_tmi_File_ImportFavouritesFromGeoSetter_SelectFile" xml:space="preserve">
+    <value>GS 즐겨찾기 내보내기 파일 선택</value>
+  </data>
+  <data name="mbx_FrmMainApp_ErrorImportGeoSetterFavourites" xml:space="preserve">
+    <value>GeoSetter 즐겨찾기를 가져오는 중 오류가 발생했습니다.</value>
+  </data>
+  <data name="mbx_FrmMainApp_InfoImportGeoSetterFavouritesDone" xml:space="preserve">
+    <value>GeoSetter 즐겨찾기를 가져왔습니다. 가져온 항목 수: </value>
+  </data>
+  <data name="ckb_ShowThumbnails" xml:space="preserve">
+    <value>그리드 대신 이미지 미리 보기 표시</value>
+  </data>
+  <data name="ttp_ShowThumbnails" xml:space="preserve">
+    <value>성능이 크게 떨어지므로(제가 측정한 바로는 최대 7배) 권장하지 않습니다.</value>
+  </data>
+  <data name="Generic_SaveDefaults" xml:space="preserve">
+    <value>기본값 저장</value>
+  </data>
+  <data name="ttp_FrmImportExport_SaveDefaults" xml:space="preserve">
+    <value>특정 기본값을 저장합니다. 현재: 가져오기 원본 위치, 시간대 및 DST 설정, 최대 보간/외삽 시간.</value>
+  </data>
+  <data name="mbx_FrmImportExportGpx_ExportCompleted" xml:space="preserve">
+    <value>GPX 파일 내보내기 완료</value>
+  </data>
+  <data name="Generic_GPSDOP" xml:space="preserve">
+    <value>정밀도 희석 (DOP)</value>
+  </data>
+  <data name="Generic_GPSHPositioningError" xml:space="preserve">
+    <value>GPS 수평 위치 오차</value>
+  </data>
+  <data name="cmi_PasteGeoData" xml:space="preserve">
+    <value>모든 지오데이터 붙여넣기...</value>
+  </data>
+  <data name="cmi_CopyGeoData" xml:space="preserve">
+    <value>모든 지오데이터 복사</value>
+  </data>
+  <data name="tmi_Edit_SelectAll" xml:space="preserve">
+    <value>모두 선택</value>
+  </data>
+  <data name="cmi_SelectAll" xml:space="preserve">
+    <value>모두 선택</value>
+  </data>
+  <data name="tmi_Edit_SelectNone" xml:space="preserve">
+    <value>선택 해제</value>
+  </data>
+  <data name="cmi_SelectNone" xml:space="preserve">
+    <value>선택 해제</value>
+  </data>
+  <data name="tmi_Edit_InvertSelection" xml:space="preserve">
+    <value>선택 반전</value>
+  </data>
+  <data name="cmi_InvertSelection" xml:space="preserve">
+    <value>선택 반전</value>
+  </data>
+  <data name="tmi_Edit" xml:space="preserve">
+    <value>편집</value>
+  </data>
+  <data name="tmi_Help_Donate" xml:space="preserve">
+    <value>후원</value>
+  </data>
+  <data name="tmi_Help_Donate_PayPal" xml:space="preserve">
+    <value>PayPal...</value>
+  </data>
+  <data name="tmi_Help_Donate_Revolut" xml:space="preserve">
+    <value>Revolut (QR)...</value>
+  </data>
+  <data name="tmi_Help_Donate_BuyMeCoffee" xml:space="preserve">
+    <value>BuyMeACoffee...</value>
+  </data>
+  <data name="tmi_File_SaveSelected" xml:space="preserve">
+    <value>선택 항목 저장</value>
+  </data>
+  <data name="rbt_SetStartup_Folder" xml:space="preserve">
+    <value>시작 폴더 설정</value>
+  </data>
+  <data name="rbt_UseLastUsedFolder" xml:space="preserve">
+    <value>마지막으로 사용한 폴더 사용</value>
+  </data>
+  <data name="tmi_Debug" xml:space="preserve">
+    <value>디버그</value>
+  </data>
+  <data name="tmi_Debug_CustomiseWinformControls" xml:space="preserve">
+    <value>Winform 컨트롤 사용자 지정</value>
+  </data>
+  <data name="frm_FrmCustomiseFormControls" xml:space="preserve">
+    <value>Winform 컨트롤 사용자 지정</value>
+  </data>
+  <data name="ckb_RetainMapZoom" xml:space="preserve">
+    <value>클릭 사이에 지도 확대/축소 수준 유지</value>
+  </data>
+  <data name="mbx_FrmMainApp_ErrorNonHydratedItemsPresent" xml:space="preserve">
+    <value>선택 항목에 분석되지 않은 파일이 있어 편집용으로 불러올 수 없습니다.</value>
+  </data>
+  <data name="Generic_Ready" xml:space="preserve">
+    <value>준비됨</value>
+  </data>
+  <data name="Generic_ReadingMetadataProgress" xml:space="preserve">
+    <value>메타데이터 읽는 중: {0} / {1}</value>
+  </data>
+  <data name="Generic_Total" xml:space="preserve">
+    <value>합계</value>
+  </data>
+  <data name="Generic_GeoData" xml:space="preserve">
+    <value>지오데이터</value>
+  </data>
+  <data name="Generic_Files" xml:space="preserve">
+    <value>파일</value>
+  </data>
+  <data name="mbx_FrmMainApp_WarningDataParseStillInProgress" xml:space="preserve">
+    <value>데이터 분석이 아직 진행 중입니다. 완료될 때까지 이 작업을 진행할 수 없습니다. 잠시 후 다시 시도하십시오.</value>
+  </data>
+  <data name="Generic_IsEmpty" xml:space="preserve">
+    <value>비어 있음</value>
+  </data>
+  <data name="Generic_IsNotEmpty" xml:space="preserve">
+    <value>비어 있지 않음</value>
+  </data>
+  <data name="Generic_Is" xml:space="preserve">
+    <value>같음</value>
+  </data>
+  <data name="Generic_IsNot" xml:space="preserve">
+    <value>같지 않음</value>
+  </data>
+  <data name="Generic_Contains" xml:space="preserve">
+    <value>포함</value>
+  </data>
+  <data name="Generic_DoesntContain" xml:space="preserve">
+    <value>포함하지 않음</value>
+  </data>
+  <data name="Generic_ClearAll" xml:space="preserve">
+    <value>모두 지우기</value>
+  </data>
+  <data name="ckb_AlwaysRecenterMap" xml:space="preserve">
+    <value>지도를 항상 다시 가운데에 맞추시겠습니까?</value>
+  </data>
+  <data name="ckb_DoNotDownloadAltitude" xml:space="preserve">
+    <value>API에서 고도 값을 다운로드하지 않음</value>
+  </data>
+  <data name="ckb_PreserveFileModifiedDate" xml:space="preserve">
+    <value>저장할 때 파일의 수정 날짜를 변경하지 않음</value>
+  </data>
+  <data name="tmi_View" xml:space="preserve">
+    <value>보기</value>
+  </data>
+  <data name="tmi_View_Details" xml:space="preserve">
+    <value>자세히</value>
+  </data>
+  <data name="tmi_View_Thumbnails" xml:space="preserve">
+    <value>미리 보기</value>
+  </data>
+  <data name="tmi_View_ThumbnailSize" xml:space="preserve">
+    <value>미리 보기 크기</value>
+  </data>
+  <data name="tmi_View_ThumbnailSize_Small" xml:space="preserve">
+    <value>작게</value>
+  </data>
+  <data name="tmi_View_ThumbnailSize_Medium" xml:space="preserve">
+    <value>보통</value>
+  </data>
+  <data name="tmi_View_ThumbnailSize_Large" xml:space="preserve">
+    <value>크게</value>
+  </data>
+  <data name="tmi_View_ThumbnailSize_ExtraLarge" xml:space="preserve">
+    <value>매우 크게</value>
+  </data>
+  <data name="tmi_View_ThumbnailSize_Smaller" xml:space="preserve">
+    <value>미리 보기 더 작게</value>
+  </data>
+  <data name="tmi_View_ThumbnailSize_Larger" xml:space="preserve">
+    <value>미리 보기 더 크게</value>
+  </data>
+  <data name="ttp_ThumbnailSize" xml:space="preserve">
+    <value>미리 보기 크기</value>
+  </data>
+  <data name="tmi_View_SortBy" xml:space="preserve">
+    <value>정렬 기준</value>
+  </data>
+  <data name="tmi_View_SortBy_Ascending" xml:space="preserve">
+    <value>오름차순</value>
+  </data>
+  <data name="tmi_View_SortBy_Descending" xml:space="preserve">
+    <value>내림차순</value>
+  </data>
+  <data name="gbx_AllFavourites" xml:space="preserve">
+    <value>모든 즐겨찾기</value>
+  </data>
+  <data name="gbx_FavouriteDetails" xml:space="preserve">
+    <value>자세히</value>
+  </data>
+  <data name="gbx_FavouriteAdditionalInfo" xml:space="preserve">
+    <value>추가 정보</value>
+  </data>
+  <data name="lbl_FavouriteName" xml:space="preserve">
+    <value>이름:</value>
+  </data>
+  <data name="lbl_FavouriteCoordinates" xml:space="preserve">
+    <value>좌표:</value>
+  </data>
+  <data name="lbl_FavouriteRadius" xml:space="preserve">
+    <value>반경 [m]:</value>
+  </data>
+  <data name="ckb_FavouriteAutoAssign" xml:space="preserve">
+    <value>자동 할당</value>
+  </data>
+  <data name="ckb_FavouriteSnap" xml:space="preserve">
+    <value>이미지를 즐겨찾기 위치에 맞추기</value>
+  </data>
+  <data name="lbl_FavouriteTimeZone" xml:space="preserve">
+    <value>시간대:</value>
+  </data>
+  <data name="lbl_FavouriteKeywords" xml:space="preserve">
+    <value>키워드:</value>
+  </data>
+  <data name="btn_FavouriteGetFromWeb" xml:space="preserve">
+    <value>웹에서 가져오기</value>
+  </data>
+  <data name="btn_FavouriteClearAll" xml:space="preserve">
+    <value>모든 값 지우기</value>
+  </data>
+  <data name="btn_FavouriteAccept" xml:space="preserve">
+    <value>승인</value>
+  </data>
+  <data name="btn_FavouriteDiscard" xml:space="preserve">
+    <value>취소</value>
+  </data>
+  <data name="btn_FavouriteAddKeyword" xml:space="preserve">
+    <value>추가</value>
+  </data>
+  <data name="btn_FavouriteRemoveKeyword" xml:space="preserve">
+    <value>제거</value>
+  </data>
+  <data name="lbl_FavouritesCount" xml:space="preserve">
+    <value>{0}개 항목 ({1}개 선택됨)</value>
+  </data>
+  <data name="tsd_GroupBy" xml:space="preserve">
+    <value>그룹화 기준</value>
+  </data>
+  <data name="tmi_GroupByCountryCode" xml:space="preserve">
+    <value>국가 코드</value>
+  </data>
+  <data name="tmi_GroupByCountry" xml:space="preserve">
+    <value>국가</value>
+  </data>
+  <data name="tmi_GroupByState" xml:space="preserve">
+    <value>주/도</value>
+  </data>
+  <data name="tmi_GroupByCity" xml:space="preserve">
+    <value>도시</value>
+  </data>
+  <data name="tmi_GroupByCoordinates" xml:space="preserve">
+    <value>좌표</value>
+  </data>
+  <data name="tmi_GroupByNone" xml:space="preserve">
+    <value>그룹 없음</value>
+  </data>
+  <data name="tmi_GroupByBlank" xml:space="preserve">
+    <value>(없음)</value>
+  </data>
+  <data name="tsb_Duplicate" xml:space="preserve">
+    <value>복제</value>
+  </data>
+  <data name="tsb_Delete" xml:space="preserve">
+    <value>삭제</value>
+  </data>
+  <data name="tsb_AddFromSelection" xml:space="preserve">
+    <value>선택한 사진에서 추가</value>
+  </data>
+  <data name="mbx_FrmManageFavourites_WarningNameTaken" xml:space="preserve">
+    <value>이 이름은 이미 다른 즐겨찾기가 사용하고 있습니다.</value>
+  </data>
+  <data name="mbx_FrmManageFavourites_WarningAltitudeInvalid" xml:space="preserve">
+    <value>고도는 숫자여야 합니다.</value>
+  </data>
+  <data name="mbx_FrmManageFavourites_WarningNoCoordinates" xml:space="preserve">
+    <value>사용할 좌표가 없습니다. 위치 정보가 있는 사진을 선택하십시오.</value>
+  </data>
+  <data name="mbx_FrmManageFavourites_QuestionAcceptChanges" xml:space="preserve">
+    <value>이 즐겨찾기의 변경 사항을 승인하시겠습니까?</value>
+  </data>
+  <data name="mbx_FrmManageFavourites_QuestionDiscardAll" xml:space="preserve">
+    <value>즐겨찾기 변경 사항을 저장하지 않고 닫으시겠습니까?</value>
+  </data>
+  <data name="mbx_FrmManageFavourites_InfoWebNothingFound" xml:space="preserve">
+    <value>웹 서비스에 이 위치에 대한 정보가 없습니다.</value>
+  </data>
+  <data name="tpg_Keywords" xml:space="preserve">
+    <value>범주/키워드</value>
+  </data>
+  <data name="tpg_SourceDescription" xml:space="preserve">
+    <value>출처/설명</value>
+  </data>
+  <data name="tpg_Contact" xml:space="preserve">
+    <value>연락처</value>
+  </data>
+  <data name="lbl_SectionSource" xml:space="preserve">
+    <value>출처</value>
+  </data>
+  <data name="lbl_SectionDescription" xml:space="preserve">
+    <value>설명</value>
+  </data>
+  <data name="lbl_Category" xml:space="preserve">
+    <value>범주</value>
+  </data>
+  <data name="lbl_SupplementalCategories" xml:space="preserve">
+    <value>보조 범주</value>
+  </data>
+  <data name="lbl_IPTCKeywords" xml:space="preserve">
+    <value>키워드</value>
+  </data>
+  <data name="lbl_Artist" xml:space="preserve">
+    <value>작성자</value>
+  </data>
+  <data name="lbl_CaptionWriter" xml:space="preserve">
+    <value>캡션 작성자</value>
+  </data>
+  <data name="lbl_Source" xml:space="preserve">
+    <value>출처</value>
+  </data>
+  <data name="lbl_Credit" xml:space="preserve">
+    <value>크레딧</value>
+  </data>
+  <data name="lbl_SourceURL" xml:space="preserve">
+    <value>URL</value>
+  </data>
+  <data name="lbl_Copyright" xml:space="preserve">
+    <value>저작권</value>
+  </data>
+  <data name="lbl_ObjectName" xml:space="preserve">
+    <value>객체 이름</value>
+  </data>
+  <data name="lbl_Headline" xml:space="preserve">
+    <value>표제</value>
+  </data>
+  <data name="lbl_Caption" xml:space="preserve">
+    <value>캡션</value>
+  </data>
+  <data name="lbl_SpecialInstructions" xml:space="preserve">
+    <value>특별 지침</value>
+  </data>
+  <data name="lbl_Byline" xml:space="preserve">
+    <value>바이라인</value>
+  </data>
+  <data name="lbl_BylineTitle" xml:space="preserve">
+    <value>바이라인 직함</value>
+  </data>
+  <data name="lbl_CreatorAddress" xml:space="preserve">
+    <value>주소</value>
+  </data>
+  <data name="lbl_CreatorCity" xml:space="preserve">
+    <value>도시</value>
+  </data>
+  <data name="lbl_CreatorPostalCode" xml:space="preserve">
+    <value>우편번호</value>
+  </data>
+  <data name="lbl_CreatorRegion" xml:space="preserve">
+    <value>주/도</value>
+  </data>
+  <data name="lbl_CreatorCountry" xml:space="preserve">
+    <value>국가</value>
+  </data>
+  <data name="lbl_CreatorPhone" xml:space="preserve">
+    <value>전화</value>
+  </data>
+  <data name="lbl_CreatorEmail" xml:space="preserve">
+    <value>이메일</value>
+  </data>
+  <data name="lbl_CreatorURL" xml:space="preserve">
+    <value>URL</value>
+  </data>
+  <data name="tmi_FieldMenu_InsertFrom" xml:space="preserve">
+    <value>다음에서 삽입</value>
+  </data>
+  <data name="tmi_FieldMenu_CopyTo" xml:space="preserve">
+    <value>다음으로 복사</value>
+  </data>
+  <data name="tmi_FieldMenu_CopySelectionToCategories" xml:space="preserve">
+    <value>선택 항목을 범주로 복사</value>
+  </data>
+  <data name="tmi_FieldMenu_CopySelectionToKeywords" xml:space="preserve">
+    <value>선택 항목을 키워드로 복사</value>
+  </data>
+  <data name="tmi_FieldMenu_MostRecentlyUsed" xml:space="preserve">
+    <value>최근 사용한 항목</value>
+  </data>
+  <data name="tmi_FieldMenu_ForgetRemembered" xml:space="preserve">
+    <value>기억된 항목 잊기</value>
+  </data>
+  <data name="lbl_ContactPrefix" xml:space="preserve">
+    <value>연락처</value>
+  </data>
+  <data name="btn_LoadFromTemplate" xml:space="preserve">
+    <value>템플릿에서 불러오기...</value>
+  </data>
+  <data name="btn_LoadFromImage" xml:space="preserve">
+    <value>이미지에서 불러오기...</value>
+  </data>
+  <data name="btn_SaveAsTemplate" xml:space="preserve">
+    <value>템플릿으로 저장...</value>
+  </data>
+  <data name="lbl_TemplateName" xml:space="preserve">
+    <value>템플릿:</value>
+  </data>
+  <data name="lbl_TemplateInclude" xml:space="preserve">
+    <value>다음 항목 사용:</value>
+  </data>
+  <data name="btn_TemplateDelete" xml:space="preserve">
+    <value>삭제</value>
+  </data>
+  <data name="chk_TemplateGroup_Country" xml:space="preserve">
+    <value>국가</value>
+  </data>
+  <data name="chk_TemplateGroup_State" xml:space="preserve">
+    <value>주/도</value>
+  </data>
+  <data name="chk_TemplateGroup_City" xml:space="preserve">
+    <value>도시</value>
+  </data>
+  <data name="chk_TemplateGroup_Sublocation" xml:space="preserve">
+    <value>하위 위치</value>
+  </data>
+  <data name="chk_TemplateGroup_Position" xml:space="preserve">
+    <value>GPS 위치</value>
+  </data>
+  <data name="chk_TemplateGroup_Altitude" xml:space="preserve">
+    <value>고도</value>
+  </data>
+  <data name="chk_TemplateGroup_Direction" xml:space="preserve">
+    <value>이미지 방향</value>
+  </data>
+  <data name="chk_TemplateGroup_Destination" xml:space="preserve">
+    <value>대상</value>
+  </data>
+  <data name="chk_TemplateGroup_TakenDate" xml:space="preserve">
+    <value>촬영 날짜</value>
+  </data>
+  <data name="chk_TemplateGroup_CreateDate" xml:space="preserve">
+    <value>생성 날짜</value>
+  </data>
+  <data name="chk_TemplateGroup_OffsetTime" xml:space="preserve">
+    <value>시간대 오프셋</value>
+  </data>
+  <data name="mbx_FrmEditTemplateDialog_QuestionDeleteTemplate" xml:space="preserve">
+    <value>템플릿 '{0}'을(를) 삭제하시겠습니까?</value>
+  </data>
+  <data name="mbx_FrmEditTemplateDialog_QuestionOverwriteTemplate" xml:space="preserve">
+    <value>'{0}'(이)라는 템플릿이 이미 있습니다. 바꾸시겠습니까?</value>
+  </data>
+  <data name="mbx_FrmEditFileData_ErrorTemplateNotSaved" xml:space="preserve">
+    <value>템플릿을 저장할 수 없습니다.</value>
+  </data>
+  <data name="mbx_FrmEditFileData_InfoImageHasNothingToLoad" xml:space="preserve">
+    <value>이 파일에는 이 창에서 불러올 수 있는 내용이 없습니다.</value>
+  </data>
+  <data name="lbl_Sexagesimal" xml:space="preserve">
+    <value>60진법</value>
+  </data>
+  <data name="lbl_ImageDirection" xml:space="preserve">
+    <value>이미지 방향 [°]:</value>
+  </data>
+  <data name="lbl_DestLatitude" xml:space="preserve">
+    <value>목적지 위도:</value>
+  </data>
+  <data name="lbl_DestLongitude" xml:space="preserve">
+    <value>목적지 경도:</value>
+  </data>
+  <data name="btn_GetAltitudeFromWeb" xml:space="preserve">
+    <value>웹에서 가져오기</value>
+  </data>
+  <data name="mbx_FrmEditFileData_InfoCoordinatesNeededForAltitude" xml:space="preserve">
+    <value>먼저 위도와 경도를 입력하십시오.</value>
+  </data>
+  <data name="mbx_FrmEditFileData_WarningNoAltitudeFromWeb" xml:space="preserve">
+    <value>웹 서비스에 이 위치의 고도 정보가 없습니다.</value>
+  </data>
+  <data name="ckb_SyncGeoKeywords" xml:space="preserve">
+    <value>위치(지명 및 geo: 키워드)에 맞춰 키워드를 계속 동기화</value>
+  </data>
+  <data name="ckb_ShowChangelogAfterUpdate" xml:space="preserve">
+    <value>업데이트 후 변경 사항 표시</value>
+  </data>
+  <data name="mbx_Helper_InfoRemoveGeoDataKeywordsRemain" xml:space="preserve">
+    <value>위치 데이터는 제거되었지만 키워드는 변경되지 않았습니다. 키워드에 있는 지명이나 "geo:" 키워드는 그대로 남아 있습니다. 위치 변경에 따라 함께 바뀌도록 하려면 설정에서 "위치에 맞춰 키워드 동기화"를 켜십시오.</value>
+  </data>
+  <data name="tmi_View_FolderTree" xml:space="preserve">
+    <value>폴더 트리</value>
+  </data>
+  <data name="lbl_FolderTree_Title" xml:space="preserve">
+    <value>폴더</value>
+  </data>
+  <data name="tsb_FolderTree_Favourites" xml:space="preserve">
+    <value>즐겨찾는 폴더</value>
+  </data>
+  <data name="tmi_FolderTree_AddCurrent" xml:space="preserve">
+    <value>현재 폴더를 즐겨찾기에 추가</value>
+  </data>
+  <data name="tmi_FolderTree_RemoveCurrent" xml:space="preserve">
+    <value>현재 폴더를 즐겨찾기에서 제거</value>
+  </data>
+  <data name="tmi_FolderTree_NoFavourites" xml:space="preserve">
+    <value>(즐겨찾는 폴더 없음)</value>
+  </data>
+  <data name="tsb_FolderTree_Refresh" xml:space="preserve">
+    <value>폴더 트리 새로 고침</value>
+  </data>
+  <data name="tsb_FolderTree_Hide" xml:space="preserve">
+    <value>폴더 트리 숨기기 (Ctrl+B)</value>
+  </data>
+  <data name="cmi_FolderTree_AddThis" xml:space="preserve">
+    <value>즐겨찾기에 추가</value>
+  </data>
+  <data name="cmi_FolderTree_RemoveThis" xml:space="preserve">
+    <value>즐겨찾기에서 제거</value>
+  </data>
+  <data name="tsb_Donate" xml:space="preserve">
+    <value>BuyMeACoffee (후원, 브라우저에서 열림)</value>
+  </data>
+  <data name="lbl_ParsingFolders" xml:space="preserve">
+    <value>파일 &amp;&amp; 폴더를 분석하는 중입니다. 잠시 기다려 주십시오. </value>
+  </data>
+</root>

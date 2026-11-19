@@ -1,0 +1,2009 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<root>
+  <xsd:schema xmlns="" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:msdata="urn:schemas-microsoft-com:xml-msdata" id="root">
+    <xsd:import namespace="http://www.w3.org/XML/1998/namespace" />
+    <xsd:element name="root" msdata:IsDataSet="true">
+      <xsd:complexType>
+        <xsd:choice maxOccurs="unbounded">
+          <xsd:element name="metadata">
+            <xsd:complexType>
+              <xsd:sequence>
+                <xsd:element name="value" type="xsd:string" minOccurs="0" />
+              </xsd:sequence>
+              <xsd:attribute name="name" use="required" type="xsd:string" />
+              <xsd:attribute name="type" type="xsd:string" />
+              <xsd:attribute name="mimetype" type="xsd:string" />
+              <xsd:attribute ref="xml:space" />
+            </xsd:complexType>
+          </xsd:element>
+          <xsd:element name="assembly">
+            <xsd:complexType>
+              <xsd:attribute name="alias" type="xsd:string" />
+              <xsd:attribute name="name" type="xsd:string" />
+            </xsd:complexType>
+          </xsd:element>
+          <xsd:element name="data">
+            <xsd:complexType>
+              <xsd:sequence>
+                <xsd:element name="value" type="xsd:string" minOccurs="0" msdata:Ordinal="1" />
+                <xsd:element name="comment" type="xsd:string" minOccurs="0" msdata:Ordinal="2" />
+              </xsd:sequence>
+              <xsd:attribute name="name" type="xsd:string" use="required" msdata:Ordinal="1" />
+              <xsd:attribute name="type" type="xsd:string" msdata:Ordinal="3" />
+              <xsd:attribute name="mimetype" type="xsd:string" msdata:Ordinal="4" />
+              <xsd:attribute ref="xml:space" />
+            </xsd:complexType>
+          </xsd:element>
+          <xsd:element name="resheader">
+            <xsd:complexType>
+              <xsd:sequence>
+                <xsd:element name="value" type="xsd:string" minOccurs="0" msdata:Ordinal="1" />
+              </xsd:sequence>
+              <xsd:attribute name="name" type="xsd:string" use="required" />
+            </xsd:complexType>
+          </xsd:element>
+        </xsd:choice>
+      </xsd:complexType>
+    </xsd:element>
+  </xsd:schema>
+  <resheader name="resmimetype">
+    <value>text/microsoft-resx</value>
+  </resheader>
+  <resheader name="version">
+    <value>2.0</value>
+  </resheader>
+  <resheader name="reader">
+    <value>System.Resources.ResXResourceReader, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </resheader>
+  <resheader name="writer">
+    <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </resheader>
+  <data name="btn_ApplyAndNext" xml:space="preserve">
+    <value>Terapkan &amp;&amp; Lanjut ke Berikutnya</value>
+  </data>
+  <data name="btn_InsertFromTakenDate" xml:space="preserve">
+    <value>Gunakan TakenDate</value>
+  </data>
+  <data name="btn_PullMostRecentPasteSettings" xml:space="preserve">
+    <value>Ambil pengaturan Tempel "terbaru"</value>
+  </data>
+  <data name="btn_PullMostRecentTrackSyncShift" xml:space="preserve">
+    <value>Ambil pengaturan pergeseran "terbaru"</value>
+  </data>
+  <data name="btn_RemoveGeoData" xml:space="preserve">
+    <value>Hapus data GPS dan lokasi</value>
+  </data>
+  <data name="btn_ResetToDefaults" xml:space="preserve">
+    <value>Atur ulang ke default</value>
+  </data>
+  <data name="btn_RestartLater" xml:space="preserve">
+    <value>Mulai Ulang Nanti</value>
+  </data>
+  <data name="btn_RestartNow" xml:space="preserve">
+    <value>Mulai Ulang Sekarang</value>
+  </data>
+  <data name="btn_SetCurrentValues" xml:space="preserve">
+    <value>Atur nilai saat ini untuk semua gambar yang dipilih untuk diedit...</value>
+  </data>
+  <data name="ckb_AddXMPSideCar" xml:space="preserve">
+    <value>Tambahkan/Timpa XMP file sidecar</value>
+  </data>
+  <data name="ckb_DeSelectAll" xml:space="preserve">
+    <value>Centang/Hapus Centang Semua</value>
+  </data>
+  <data name="ckb_DoNotQueryAPI" xml:space="preserve">
+    <value>JANGAN lakukan geocoding terbalik (hanya ambil koordinat, bukan Kota/provinsi/dll)</value>
+  </data>
+  <data name="ckb_ExportTrackIncludeAltitude" xml:space="preserve">
+    <value>Sertakan data Ketinggian dalam Ekspor</value>
+  </data>
+  <data name="ckb_ImportExport_CityRulesSettings" xml:space="preserve">
+    <value>CityRulesSettings</value>
+  </data>
+  <data name="ckb_IncludePredeterminedCountries" xml:space="preserve">
+    <value>Sertakan negara "Telah ditentukan"? (lihat tautan di atas + catatan/peringatan)</value>
+  </data>
+  <data name="ckb_LoadTrackOntoMap" xml:space="preserve">
+    <value>Tampilkan file Track di atas Peta</value>
+  </data>
+  <data name="ckb_OffsetTime" xml:space="preserve">
+    <value>Offset zona waktu</value>
+  </data>
+  <data name="ckb_OverlayGPXForSelectedDatesOnly" xml:space="preserve">
+    <value>Hanya untuk tanggal yang berada di antara tanggal pertama &amp; terakhir file yang dipilih</value>
+  </data>
+  <data name="ckb_OverwriteOriginal" xml:space="preserve">
+    <value>JANGAN buat cadangan xxx_original</value>
+  </data>
+  <data name="ckb_PopulatedPlacesOnly" xml:space="preserve">
+    <value>Hanya tampilkan data API yang disaring ke "Tempat berpenduduk" (fcode=PPL) [tidak disarankan]</value>
+  </data>
+  <data name="ckb_ProcessOriginalFile" xml:space="preserve">
+    <value>Proses file gambar itu sendiri</value>
+  </data>
+  <data name="ckb_QuestionStopProcessingRows" xml:space="preserve">
+    <value>Hentikan pemrosesan baris berikutnya?</value>
+  </data>
+  <data name="ckb_RemoveGeoDataRemovesTimeOffset" xml:space="preserve">
+    <value>Fungsi "Hapus Geodata" juga menghapus Offset Zona Waktu</value>
+  </data>
+  <data name="ckb_ReplaceBlankToponyms" xml:space="preserve">
+    <value>Ganti nilai Kota, Provinsi, Sublokasi yang kosong dengan: </value>
+  </data>
+  <data name="ckb_ResetFileDateToCreated" xml:space="preserve">
+    <value>Atur ulang DateTime file gambar ke CreateDate</value>
+  </data>
+  <data name="ckb_ResetMapToZero" xml:space="preserve">
+    <value>Atur Peta ke 0/0 jika tidak ada GeoData</value>
+  </data>
+  <data name="ckb_StopProcessingRules" xml:space="preserve">
+    <value>Hentikan pemrosesan aturan setelah kecocokan Negara+Target pertama</value>
+  </data>
+  <data name="ckb_UpdateCheckPreRelease" xml:space="preserve">
+    <value>Periksa juga pembaruan pra-rilis [beta]?</value>
+  </data>
+  <data name="ckb_UseDarkMode" xml:space="preserve">
+    <value>Gunakan Mode Gelap di antarmuka aplikasi?</value>
+  </data>
+  <data name="ckb_UseImperialNotMetric" xml:space="preserve">
+    <value>Gunakan Imperial (Kaki) untuk Ketinggian (bukan Metrik [Meter])</value>
+  </data>
+  <data name="ckb_UseTimeZone" xml:space="preserve">
+    <value>Gunakan Zona Waktu ini:</value>
+  </data>
+  <data name="clh_BlankOutTargetPoint" xml:space="preserve">
+    <value>Kosongkan?</value>
+  </data>
+  <data name="clh_DataPointConditionType" xml:space="preserve">
+    <value>Jika</value>
+  </data>
+  <data name="clh_DataPointConditionValue" xml:space="preserve">
+    <value>Nilai</value>
+  </data>
+  <data name="clh_DataPointName" xml:space="preserve">
+    <value>Apa</value>
+  </data>
+  <data name="clh_ExifTag" xml:space="preserve">
+    <value>Tag Exif (Internal GTN)</value>
+  </data>
+  <data name="clh_Folder" xml:space="preserve">
+    <value>Folder</value>
+  </data>
+  <data name="clh_ModifiedValue" xml:space="preserve">
+    <value>Nilai yang Diubah (Belum Disimpan)</value>
+  </data>
+  <data name="clh_OriginalValue" xml:space="preserve">
+    <value>Nilai Asli (Tersimpan)</value>
+  </data>
+  <data name="clh_TargetPointName" xml:space="preserve">
+    <value>Maka</value>
+  </data>
+  <data name="clh_TargetPointNameCustomCityLogic" xml:space="preserve">
+    <value>Membaca kota dari</value>
+  </data>
+  <data name="clh_TargetPointOutcome" xml:space="preserve">
+    <value>Menjadi</value>
+  </data>
+  <data name="clh_TargetPointOutcomeCustom" xml:space="preserve">
+    <value>Hasil Kustom</value>
+  </data>
+  <data name="cmi_OpenCoordsInAPI" xml:space="preserve">
+    <value>Buka Koordinat di API</value>
+  </data>
+  <data name="cmi_RemoveCachedData" xml:space="preserve">
+    <value>Hapus Data Cache</value>
+  </data>
+  <data name="cmi_ShowHideCols" xml:space="preserve">
+    <value>Tampilkan atau Sembunyikan Kolom</value>
+  </data>
+  <data name="fbd_StartupFolder" xml:space="preserve">
+    <value>Telusuri Folder Awal</value>
+  </data>
+  <data name="frm_FrmEditFileData" xml:space="preserve">
+    <value>Edit Data</value>
+  </data>
+  <data name="frm_FrmImportExportGpx" xml:space="preserve">
+    <value>Impor Data GPX/JSON</value>
+  </data>
+  <data name="frm_FrmManageFavourites" xml:space="preserve">
+    <value>Kelola Favorit</value>
+  </data>
+  <data name="frm_FrmPasteWhat" xml:space="preserve">
+    <value>Tempel…Apa?</value>
+  </data>
+  <data name="frm_FrmPickDataFromAPIBox" xml:space="preserve">
+    <value>Pilih Nilai Toponimi</value>
+  </data>
+  <data name="frm_FrmPleaseWaitBox" xml:space="preserve">
+    <value>Harap tunggu sementara folder dimuat.</value>
+  </data>
+  <data name="frm_FrmSettings" xml:space="preserve">
+    <value>Pengaturan</value>
+  </data>
+  <data name="gbx_AppSettings" xml:space="preserve">
+    <value>Pengaturan Aplikasi</value>
+  </data>
+  <data name="gbx_CreateDate" xml:space="preserve">
+    <value>Tanggal Dibuat</value>
+  </data>
+  <data name="gbx_Dates" xml:space="preserve">
+    <value>Tanggal</value>
+  </data>
+  <data name="gbx_EditImageList" xml:space="preserve">
+    <value>Gambar yang dipilih untuk diedit</value>
+  </data>
+  <data name="gbx_GeoNamesLanguageSettings" xml:space="preserve">
+    <value>Pengaturan Bahasa GeoNames</value>
+  </data>
+  <data name="gbx_GeoNamesSettings" xml:space="preserve">
+    <value>Pengaturan GeoNames</value>
+  </data>
+  <data name="gbx_GetAltitude" xml:space="preserve">
+    <value>Ambil data Ketinggian</value>
+  </data>
+  <data name="gbx_GetToponomy" xml:space="preserve">
+    <value>Ambil data Toponimi</value>
+  </data>
+  <data name="gbx_GPSData" xml:space="preserve">
+    <value>Data GPS</value>
+  </data>
+  <data name="gbx_ImportExportGpxSource" xml:space="preserve">
+    <value>Sumber</value>
+  </data>
+  <data name="gbx_ImportExportGpxTimeSetting" xml:space="preserve">
+    <value>Pengaturan Waktu</value>
+  </data>
+  <data name="gbx_LocationData" xml:space="preserve">
+    <value>Data Lokasi</value>
+  </data>
+  <data name="gbx_MapColourMode" xml:space="preserve">
+    <value>Mode Warna Peta</value>
+  </data>
+  <data name="gbx_OtherSettings" xml:space="preserve">
+    <value>Pengaturan Lainnya</value>
+  </data>
+  <data name="gbx_SaveTrackTo" xml:space="preserve">
+    <value>Simpan Track (Opsi)</value>
+  </data>
+  <data name="gbx_TakenDate" xml:space="preserve">
+    <value>Tanggal Pengambilan (Gambar)</value>
+  </data>
+  <data name="Generic_All" xml:space="preserve">
+    <value>Semua</value>
+  </data>
+  <data name="Generic_Cancel" xml:space="preserve">
+    <value>Batal</value>
+  </data>
+  <data name="Generic_City" xml:space="preserve">
+    <value>Kota</value>
+  </data>
+  <data name="Generic_Close" xml:space="preserve">
+    <value>Tutup</value>
+  </data>
+  <data name="Generic_Coordinates" xml:space="preserve">
+    <value>Koordinat</value>
+  </data>
+  <data name="Generic_Country" xml:space="preserve">
+    <value>Negara</value>
+  </data>
+  <data name="Generic_CountryCode" xml:space="preserve">
+    <value>Kode Negara</value>
+  </data>
+  <data name="Generic_CreateDate" xml:space="preserve">
+    <value>Tanggal Dibuat</value>
+  </data>
+  <data name="Generic_Days" xml:space="preserve">
+    <value>Hari</value>
+  </data>
+  <data name="Generic_Decimal" xml:space="preserve">
+    <value>Desimal</value>
+  </data>
+  <data name="Generic_Delete" xml:space="preserve">
+    <value>Hapus</value>
+  </data>
+  <data name="Generic_DestCoordinates" xml:space="preserve">
+    <value>Koordinat Tujuan</value>
+  </data>
+  <data name="Generic_Export" xml:space="preserve">
+    <value>Ekspor</value>
+  </data>
+  <data name="Generic_ExportTrackTimeStampType" xml:space="preserve">
+    <value>Nilai TimeStamp</value>
+  </data>
+  <data name="Generic_ExposureTime" xml:space="preserve">
+    <value>Waktu Pajanan</value>
+  </data>
+  <data name="Generic_Favourites" xml:space="preserve">
+    <value>Favorit</value>
+  </data>
+  <data name="Generic_Feet" xml:space="preserve">
+    <value>Kaki</value>
+  </data>
+  <data name="Generic_Feet_Abbr" xml:space="preserve">
+    <value>ft</value>
+  </data>
+  <data name="Generic_FileModifyDate" xml:space="preserve">
+    <value>Tanggal File</value>
+  </data>
+  <data name="Generic_FileName" xml:space="preserve">
+    <value>Nama File</value>
+  </data>
+  <data name="Generic_Fnumber" xml:space="preserve">
+    <value>Bukaan</value>
+  </data>
+  <data name="Generic_FocalLength" xml:space="preserve">
+    <value>Panjang Fokus</value>
+  </data>
+  <data name="Generic_FocalLengthIn35mmFormat" xml:space="preserve">
+    <value>Panjang Fokus (35mm)</value>
+  </data>
+  <data name="Generic_ForAllImages" xml:space="preserve">
+    <value>Untuk Semua Gambar</value>
+  </data>
+  <data name="Generic_ForThisImage" xml:space="preserve">
+    <value>Untuk Gambar Ini</value>
+  </data>
+  <data name="Generic_GPSAltitude" xml:space="preserve">
+    <value>Ketinggian</value>
+  </data>
+  <data name="Generic_GPSAltitudeRef" xml:space="preserve">
+    <value>Referensi Ketinggian</value>
+  </data>
+  <data name="Generic_GPSDateTime" xml:space="preserve">
+    <value>GPS DateTime</value>
+  </data>
+  <data name="Generic_GPSDestLatitude" xml:space="preserve">
+    <value>Lintang Tujuan</value>
+  </data>
+  <data name="Generic_GPSDestLatitudeRef" xml:space="preserve">
+    <value>Ref Lintang Tujuan</value>
+  </data>
+  <data name="Generic_GPSDestLongitude" xml:space="preserve">
+    <value>Bujur Tujuan</value>
+  </data>
+  <data name="Generic_GPSDestLongitudeRef" xml:space="preserve">
+    <value>Ref Bujur Tujuan</value>
+  </data>
+  <data name="Generic_GPSImgDirection" xml:space="preserve">
+    <value>Arah Gambar</value>
+  </data>
+  <data name="Generic_GPSImgDirectionRef" xml:space="preserve">
+    <value>Ref Arah Gambar</value>
+  </data>
+  <data name="Generic_GPSLatitude" xml:space="preserve">
+    <value>Lintang</value>
+  </data>
+  <data name="Generic_GPSLatitudeRef" xml:space="preserve">
+    <value>Ref Lintang</value>
+  </data>
+  <data name="Generic_GPSLongitude" xml:space="preserve">
+    <value>Bujur</value>
+  </data>
+  <data name="Generic_GPSLongitudeRef" xml:space="preserve">
+    <value>Ref Bujur</value>
+  </data>
+  <data name="Generic_GPSSpeed" xml:space="preserve">
+    <value>Kecepatan</value>
+  </data>
+  <data name="Generic_GPSSpeedRef" xml:space="preserve">
+    <value>Ref Kecepatan</value>
+  </data>
+  <data name="Generic_GUID" xml:space="preserve">
+    <value>GUID</value>
+  </data>
+  <data name="Generic_Hours" xml:space="preserve">
+    <value>Jam</value>
+  </data>
+  <data name="Generic_Import" xml:space="preserve">
+    <value>Impor</value>
+  </data>
+  <data name="Generic_Insert" xml:space="preserve">
+    <value>Sisipkan</value>
+  </data>
+  <data name="Generic_IPTCKeywords" xml:space="preserve">
+    <value>Kata Kunci IPTC</value>
+  </data>
+  <data name="Generic_ISO" xml:space="preserve">
+    <value>Kecepatan ISO</value>
+  </data>
+  <data name="Generic_LensSpec" xml:space="preserve">
+    <value>Lensa</value>
+  </data>
+  <data name="Generic_Make" xml:space="preserve">
+    <value>Merek</value>
+  </data>
+  <data name="Generic_Metres" xml:space="preserve">
+    <value>Meter</value>
+  </data>
+  <data name="Generic_Metres_Abbr" xml:space="preserve">
+    <value>m</value>
+  </data>
+  <data name="Generic_Miles" xml:space="preserve">
+    <value>Mil</value>
+  </data>
+  <data name="Generic_Minutes" xml:space="preserve">
+    <value>Menit</value>
+  </data>
+  <data name="Generic_Model" xml:space="preserve">
+    <value>Model</value>
+  </data>
+  <data name="Generic_No" xml:space="preserve">
+    <value>Tidak</value>
+  </data>
+  <data name="Generic_None" xml:space="preserve">
+    <value>Tidak ada</value>
+  </data>
+  <data name="Generic_OffsetTime" xml:space="preserve">
+    <value>Offset zona waktu</value>
+  </data>
+  <data name="Generic_OK" xml:space="preserve">
+    <value>OK</value>
+  </data>
+  <data name="Generic_PleaseWait" xml:space="preserve">
+    <value>Harap tunggu...</value>
+  </data>
+  <data name="Generic_QuestionDontAskAgain" xml:space="preserve">
+    <value>Jangan tanya lagi</value>
+  </data>
+  <data name="Generic_Rating" xml:space="preserve">
+    <value>Peringkat</value>
+  </data>
+  <data name="Generic_Rename" xml:space="preserve">
+    <value>Ganti Nama</value>
+  </data>
+  <data name="Generic_Save" xml:space="preserve">
+    <value>Simpan Perubahan Saat Ini</value>
+  </data>
+  <data name="Generic_Seconds" xml:space="preserve">
+    <value>Detik</value>
+  </data>
+  <data name="Generic_ShowPassword" xml:space="preserve">
+    <value>Tampilkan Kata Sandi</value>
+  </data>
+  <data name="Generic_ShowUserName" xml:space="preserve">
+    <value>Tampilkan Nama Pengguna</value>
+  </data>
+  <data name="Generic_State" xml:space="preserve">
+    <value>Provinsi</value>
+  </data>
+  <data name="Generic_Sublocation" xml:space="preserve">
+    <value>Sublokasi</value>
+  </data>
+  <data name="Generic_TakenDate" xml:space="preserve">
+    <value>Tanggal Pengambilan</value>
+  </data>
+  <data name="Generic_TZTime" xml:space="preserve">
+    <value>Penyesuaian Zona Waktu:</value>
+  </data>
+  <data name="Generic_UseDST" xml:space="preserve">
+    <value>Gunakan DST?</value>
+  </data>
+  <data name="Generic_XMLSubjects" xml:space="preserve">
+    <value>Subjek XML</value>
+  </data>
+  <data name="Generic_Yes" xml:space="preserve">
+    <value>Ya</value>
+  </data>
+  <data name="lbl_ARCGIS_APIKey" xml:space="preserve">
+    <value>Kunci API ARCGIS</value>
+  </data>
+  <data name="lbl_CameraTime" xml:space="preserve">
+    <value>Tanggal/Waktu Kamera</value>
+  </data>
+  <data name="lbl_CameraTimeNote" xml:space="preserve">
+    <value>Catatan: Pergeseran waktu hanya diperlukan jika stempel waktu gambar tidak tersinkron dengan waktu GPS. Biarkan 0 detik kecuali diperlukan.</value>
+  </data>
+  <data name="lbl_CancelPressed" xml:space="preserve">
+    <value>Batal ditekan. Pembacaan folder telah dihentikan, tetapi file yang sudah dikumpulkan akan tetap diproses.</value>
+  </data>
+  <data name="lbl_ChoiceOfferCount" xml:space="preserve">
+    <value>Tampilkan sejumlah opsi toponim ini</value>
+  </data>
+  <data name="lbl_ChoiceRadius" xml:space="preserve">
+    <value>Dalam Radius [km]</value>
+  </data>
+  <data name="lbl_ExportTrackOrderBy" xml:space="preserve">
+    <value>Urutkan TrackPoint berdasarkan</value>
+  </data>
+  <data name="lbl_ExportTrackTimeStampType" xml:space="preserve">
+    <value>Nilai TimeStamp</value>
+  </data>
+  <data name="lbl_ExportTrackTimeStampTypeNote" xml:space="preserve">
+    <value>Jika Anda memilih GPSDateTime dan file Anda tidak memiliki atribut tersebut, ekspor akan gagal. 
+Beberapa file HEIC memilikinya, kebanyakan format lain tidak.</value>
+  </data>
+  <data name="lbl_GeoMaxExtSecs" xml:space="preserve">
+    <value>Ekstrapolasi maks (selisih waktu antara TimeStamp Pengambilan dan TS Trackpoint) dalam detik.</value>
+  </data>
+  <data name="lbl_GeoMaxIntSecs" xml:space="preserve">
+    <value>Interpolasi maks ('penebakan jalur') dalam detik. Atur ke 0 untuk menonaktifkan.</value>
+  </data>
+  <data name="lbl_GeoNames_Pwd" xml:space="preserve">
+    <value>Kata Sandi GeoNames</value>
+  </data>
+  <data name="lbl_GeoNames_UserName" xml:space="preserve">
+    <value>Nama Pengguna GeoNames</value>
+  </data>
+  <data name="lbl_importFromAnotherFolder" xml:space="preserve">
+    <value>&lt;-- Klik di sini untuk mengatur Folder Sumber Impor</value>
+  </data>
+  <data name="lbl_importOneFile" xml:space="preserve">
+    <value>&lt;-- Klik di sini untuk mengatur File Sumber Impor</value>
+  </data>
+  <data name="lbl_ImportTimeAgainst" xml:space="preserve">
+    <value>Bandingkan stempel waktu di File Track dengan:</value>
+  </data>
+  <data name="lbl_Language" xml:space="preserve">
+    <value>Bahasa</value>
+  </data>
+  <data name="lbl_OffsetTime" xml:space="preserve">
+    <value>Zona Waktu</value>
+  </data>
+  <data name="lbl_ParseProgress_Normal" xml:space="preserve">
+    <value>Siap</value>
+  </data>
+  <data name="lbl_ParseProgress_Read" xml:space="preserve">
+    <value>Membaca:</value>
+  </data>
+  <data name="lbl_ParseProgress_Write" xml:space="preserve">
+    <value>Menulis:</value>
+  </data>
+  <data name="lbl_ParsingFolders" xml:space="preserve">
+    <value>Memproses File &amp;&amp; Folder, harap tunggu. </value>
+  </data>
+  <data name="lbl_PleaseWaitBoxActionParsing" xml:space="preserve">
+    <value>Memproses Data:</value>
+  </data>
+  <data name="lbl_PleaseWaitBoxActionPopulatingListView" xml:space="preserve">
+    <value>Mengisi Kisi utama (ListView)</value>
+  </data>
+  <data name="lbl_PleaseWaitBoxActionScanning" xml:space="preserve">
+    <value>Memindai File:</value>
+  </data>
+  <data name="lbl_PressCancelToStop" xml:space="preserve">
+    <value>Tekan Batal untuk berhenti.</value>
+  </data>
+  <data name="lbl_QuestionAddToponomy" xml:space="preserve">
+    <value>Apakah Anda juga ingin menetapkan nilai Ketinggian dan Toponimi?
+Jika Anda memilih Tidak, data lintang/bujur Anda mungkin tidak sinkron dengan data toponimi yang tertanam.
+Jika Anda klik 'berhenti bertanya', jawabannya dianggap Ya dan tidak akan ditanyakan lagi pada sesi ini. Mulai ulang untuk mengatur ulang.</value>
+  </data>
+  <data name="lbl_SaveTrackTo" xml:space="preserve">
+    <value>Simpan Keluaran Ke</value>
+  </data>
+  <data name="lbl_SelectColsTitle" xml:space="preserve">
+    <value>Pilih Kolom</value>
+  </data>
+  <data name="lbl_ShiftTrackTimeBy" xml:space="preserve">
+    <value>Geser waktu File Track sebesar:</value>
+  </data>
+  <data name="gbx_Startup_Folder" xml:space="preserve">
+    <value>Folder Awal</value>
+  </data>
+  <data name="lbl_TZNote" xml:space="preserve">
+    <value>Catatan: Jika tag tanggal/waktu tidak menyertakan zona waktu, satu zona waktu dapat ditambahkan (lihat di bawah); jika tidak, waktu sistem lokal diasumsikan.</value>
+  </data>
+  <data name="lbl_TZTime" xml:space="preserve">
+    <value>Penyesuaian Zona Waktu:</value>
+  </data>
+  <data name="mbc_Error" xml:space="preserve">
+    <value>Galat</value>
+  </data>
+  <data name="mbc_Information" xml:space="preserve">
+    <value>Informasi</value>
+  </data>
+  <data name="mbc_Question" xml:space="preserve">
+    <value>Pertanyaan</value>
+  </data>
+  <data name="mbc_Warning" xml:space="preserve">
+    <value>Peringatan</value>
+  </data>
+  <data name="mbx_DirectoryElementCollection_ErrorParsing" xml:space="preserve">
+    <value>Galat saat memproses folder ke DirectoryElements</value>
+  </data>
+  <data name="mbx_FrmEditFileData_ErrorAPIError" xml:space="preserve">
+    <value>Aplikasi mengalami galat saat berkomunikasi dengan API. Jika Anda mendapat galat Tidak Diotorisasi, harap atur nama pengguna Anda sebagai kata sandi di pengaturan.</value>
+  </data>
+  <data name="mbx_FrmEditFileData_ErrorInvalidSender" xml:space="preserve">
+    <value>Ini kemungkinan bug. Harap laporkan isu di GitHub dan sampaikan bahwa 'pengirim' adalah: </value>
+  </data>
+  <data name="mbx_FrmEditFileData_InfoDataUpdated" xml:space="preserve">
+    <value>Data Diperbarui.</value>
+  </data>
+  <data name="mbx_FrmEditFileData_WarningFileDisappeared" xml:space="preserve">
+    <value>File Anda tampaknya telah hilang.</value>
+  </data>
+  <data name="mbx_FrmEditFileData_WarningLatLongMustBeNumbers" xml:space="preserve">
+    <value>Ini hanya boleh berisi angka. Akan diatur ke nol secara default.</value>
+  </data>
+  <data name="mbx_FrmImportExportGpx_AskUserWantsReport" xml:space="preserve">
+    <value>Apakah Anda ingin melihat laporan proses impor?</value>
+  </data>
+  <data name="mbx_FrmImportExportGpx_FileOrFolderDoesntExist" xml:space="preserve">
+    <value>File atau folder yang Anda pilih tidak valid.</value>
+  </data>
+  <data name="mbx_FrmImportExportGpx_NoFileSelected" xml:space="preserve">
+    <value>Tidak ada file yang dipilih untuk diimpor.</value>
+  </data>
+  <data name="mbx_FrmImportExportGpx_TrackContainsNoData" xml:space="preserve">
+    <value>Gagal mengimpor overlay Track - tidak ditemukan data yang tampak relevan.</value>
+  </data>
+  <data name="mbx_FrmImportNoStoredShiftValues" xml:space="preserve">
+    <value>Tidak ada nilai "pergeseran" yang tersimpan. Data akan tetap 0.</value>
+  </data>
+  <data name="mbx_FrmMainApp_ErrorCantCreateSQLiteDB" xml:space="preserve">
+    <value>Tidak dapat membuat basis data SQLite (Harap laporkan isu di GitHub): </value>
+  </data>
+  <data name="mbx_FrmMainApp_ErrorCantLoadSQLiteDB" xml:space="preserve">
+    <value>Gagal memuat data dari SQL (Harap laporkan isu di GitHub): </value>
+  </data>
+  <data name="mbx_FrmMainApp_ErrorCantLoadWebView2" xml:space="preserve">
+    <value>Galat saat memuat webview2 - Apakah Anda sudah menginstalnya?</value>
+  </data>
+  <data name="mbx_FrmMainApp_ErrorCantReadDefaultSQLiteDB" xml:space="preserve">
+    <value>Gagal membaca nilai default dari SQL (Harap laporkan isu di GitHub): </value>
+  </data>
+  <data name="mbx_FrmMainApp_ErrorCantWriteSQLiteDB" xml:space="preserve">
+    <value>Dibuat tetapi tidak dapat menulis basis data SQLite (Harap laporkan isu di GitHub): </value>
+  </data>
+  <data name="mbx_FrmMainApp_ErrorClearingFileDataQTables" xml:space="preserve">
+    <value>Galat saat menghapus tabel filedata-Q (Harap laporkan isu di GitHub): </value>
+  </data>
+  <data name="mbx_FrmMainApp_ErrorDoubleBuffer" xml:space="preserve">
+    <value>Galat DoubleBuffer (Harap laporkan isu di GitHub): </value>
+  </data>
+  <data name="mbx_FrmMainApp_ErrorFileGoneMissing" xml:space="preserve">
+    <value>File tampaknya sudah tidak ada: </value>
+  </data>
+  <data name="mbx_FrmMainApp_ErrorInitializeComponent" xml:space="preserve">
+    <value>Galat di FrmMainApp.InitializeComponent (Harap laporkan isu di GitHub): </value>
+  </data>
+  <data name="mbx_FrmMainApp_ErrorInitializeWebViewEnsureCoreWebView2Async" xml:space="preserve">
+    <value>Galat di FrmMainApp.InitialiseWebView (await wbv_MapArea.EnsureCoreWebView2Async(c2wv)) (Harap laporkan isu di GitHub): </value>
+  </data>
+  <data name="mbx_FrmMainApp_ErrorInitializeWebViewIsWebMessageEnabled" xml:space="preserve">
+    <value>Galat di FrmMainApp.InitialiseWebView (IsWebMessageEnabled) (Harap laporkan isu di GitHub): </value>
+  </data>
+  <data name="mbx_FrmMainApp_ErrorInitializeWebViewNavigateToStringInHTMLFile" xml:space="preserve">
+    <value>Galat di FrmMainApp.InitialiseWebView (NavigateToString di file HTMLCode) (Harap laporkan isu di GitHub): </value>
+  </data>
+  <data name="mbx_FrmMainApp_ErrorInitializeWebViewParseCoordsFromHTMLFile" xml:space="preserve">
+    <value>Galat di FrmMainApp.InitialiseWebView (memproses koordinat dari file HTMLCode) (Harap laporkan isu di GitHub): </value>
+  </data>
+  <data name="mbx_FrmMainApp_ErrorInitializeWebViewReadHTMLFile" xml:space="preserve">
+    <value>Galat di FrmMainApp.InitialiseWebView (membaca file HTMLCode) (Harap laporkan isu di GitHub): </value>
+  </data>
+  <data name="mbx_FrmMainApp_ErrorInitializeWebViewReplaceStringInHTMLFile" xml:space="preserve">
+    <value>Galat di FrmMainApp.InitialiseWebView (mengganti konstanta di file HTMLCode) (Harap laporkan isu di GitHub): </value>
+  </data>
+  <data name="mbx_FrmMainApp_ErrorInitializeWebViewWebMessageReceived" xml:space="preserve">
+    <value>Galat saat menjalankan  wbv_MapArea_WebMessageReceived (Harap laporkan isu di GitHub): </value>
+  </data>
+  <data name="mbx_FrmMainApp_ErrorInvalidFolder" xml:space="preserve">
+    <value>Folder yang Anda masukkan tampaknya tidak valid. Kembali ke C:\?</value>
+  </data>
+  <data name="mbx_FrmMainApp_ErrorLanguageFileColumnHeaders" xml:space="preserve">
+    <value>Terjadi galat saat membaca file bahasa dan menetapkan judul kolom (Harap laporkan isu di GitHub): </value>
+  </data>
+  <data name="mbx_FrmMainApp_ErrorNavigateMapGoHTMLCode" xml:space="preserve">
+    <value>Galat di FrmMainApp.NavigateMapGo (string HTMLCode) (Harap laporkan isu di GitHub): </value>
+  </data>
+  <data name="mbx_FrmMainApp_ErrorRemoveGeoDataFailed" xml:space="preserve">
+    <value>Proses Hapus GeoData gagal atau mengembalikan galat.</value>
+  </data>
+  <data name="mbx_FrmMainApp_ErrorResizingColumns" xml:space="preserve">
+    <value>Gagal mengubah ukuran kolom (Harap laporkan isu di GitHub): </value>
+  </data>
+  <data name="mbx_FrmMainApp_ErrorSettingStartupFolder" xml:space="preserve">
+    <value>Gagal mengatur folder awal default (Harap laporkan isu di GitHub): </value>
+  </data>
+  <data name="mbx_FrmMainApp_InfoCachedDataNotRemoved" xml:space="preserve">
+    <value>Tidak ada data yang dihapus. Anda mungkin belum memilih item yang valid, atau item yang dipilih tidak memiliki data cache.</value>
+  </data>
+  <data name="mbx_FrmMainApp_InfoCachedDataRemoved" xml:space="preserve">
+    <value>Jika ada, data cache untuk item yang dipilih telah dihapus.</value>
+  </data>
+  <data name="mbx_FrmMainApp_InfoFavouriteNameCannotBeBlank" xml:space="preserve">
+    <value>Nama tidak boleh kosong</value>
+  </data>
+  <data name="mbx_FrmMainApp_InfoFavouriteNotValid" xml:space="preserve">
+    <value>Item tersimpan yang Anda pilih tidak valid</value>
+  </data>
+  <data name="mbx_FrmMainApp_InfoFavouriteSaved" xml:space="preserve">
+    <value>Favorit berhasil disimpan</value>
+  </data>
+  <data name="mbx_FrmMainApp_NoFavouritesDefined" xml:space="preserve">
+    <value>Anda belum memiliki Favorit. Tambahkan satu menggunakan tombol di bawah peta.</value>
+  </data>
+  <data name="mbx_FrmMainApp_QuestionAddDraggedDataPointToFiles" xml:space="preserve">
+    <value>Apakah Anda ingin menetapkan koordinat ke file yang dipilih?</value>
+  </data>
+  <data name="mbx_FrmMainApp_QuestionDisableFlatMode" xml:space="preserve">
+    <value>Mode Datar sedang aktif. Apakah Anda ingin menonaktifkannya?</value>
+  </data>
+  <data name="mbx_FrmMainApp_QuestionNoRowsFromAPI" xml:space="preserve">
+    <value>Kueri API tidak mengembalikan informasi yang valid. Apakah Anda ingin mengosongkan nilai toponimi?</value>
+  </data>
+  <data name="mbx_FrmMainApp_QuestionRunImportExportInFlatMode" xml:space="preserve">
+    <value>Menjalankan Impor/Ekspor Track saat Mode Datar tidak disarankan, karena interaksi track menggunakan logika khusus yang tidak dapat membedakan file dengan nama yang sama di berbagai folder. Yakin ingin menjalankannya?</value>
+  </data>
+  <data name="mbx_FrmMainApp_WarningMultipleImageFilesForXMP" xml:space="preserve">
+    <value>Peringatan: file sidecar berikut memiliki nama yang sama dengan beberapa file gambar - data mungkin terbaca keliru:</value>
+  </data>
+  <data name="mbx_FrmMainApp_WarningNoItemSelected" xml:space="preserve">
+    <value>Tidak ada item yang dipilih.</value>
+  </data>
+  <data name="mbx_FrmMainApp_WarningTooManyFilesSelected" xml:space="preserve">
+    <value>Harus dipilih tepat 1 file.</value>
+  </data>
+  <data name="mbx_FrmPasteWhat_NoDateShiftToPaste" xml:space="preserve">
+    <value>Tidak ada nilai yang ditentukan di Kumpulan Salin untuk Pergeseran DateTime</value>
+  </data>
+  <data name="mbx_FrmSettings_dgv_CustomRules_ColumnCannotBeEmpty" xml:space="preserve">
+    <value>Semua kolom dropdown harus memiliki nilai dan nilai kondisi "jika" tidak boleh kosong.</value>
+  </data>
+  <data name="mbx_FrmSettings_dgv_CustomRules_CustomOutcomeCannotBeEmpty" xml:space="preserve">
+    <value>Jika Anda memilih "Kustom" untuk Hasil, kolom Hasil Kustom tidak boleh kosong. Jika Anda menutup Formulir Pengaturan dan ini tidak diperbaiki, baris Anda akan dihapus.</value>
+  </data>
+  <data name="mbx_FrmSettings_ErrorExportFailed" xml:space="preserve">
+    <value>Ekspor Gagal: </value>
+  </data>
+  <data name="mbx_FrmSettings_ErrorImportFailed" xml:space="preserve">
+    <value>Impor Gagal: </value>
+  </data>
+  <data name="mbx_FrmSettings_PleaseRestartApp" xml:space="preserve">
+    <value>Harap mulai ulang aplikasi agar perubahan berlaku.</value>
+  </data>
+  <data name="mbx_FrmSettings_QuestionWhatToExport" xml:space="preserve">
+    <value>Pilih apa yang akan Diekspor. Perhatikan bahwa fungsi Ekspor mengekspor data yang ada di _dalam_ basis data, atau dengan kata lain yang sudah disimpan. Jika Anda memiliki perubahan yang belum disimpan di Pengaturan, keluar dulu, simpan (klik OK di Formulir Pengaturan), lalu kembali ke sini.</value>
+  </data>
+  <data name="mbx_FrmSettings_QuestionWhatToImport" xml:space="preserve">
+    <value>Pilih apa yang akan Diimpor. Perhatikan bahwa setelah proses Impor berhasil diselesaikan, bagian basis data yang relevan akan ditimpa. Jika terjadi kegagalan, akan ada file cadangan basis data Anda di folder AppData.</value>
+  </data>
+  <data name="Generic_Done" xml:space="preserve">
+    <value>Selesai.</value>
+  </data>
+  <data name="mbx_GenericDoneRestartApp" xml:space="preserve">
+    <value>Selesai - Anda mungkin perlu memulai ulang aplikasi.</value>
+  </data>
+  <data name="mbx_GenericPathLikelyUTF" xml:space="preserve">
+    <value>Path file kemungkinan berisi karakter UTF (non-standar, seperti karakter Asia, Sirilik, dll.) dan ini dapat menyebabkan galat. Pastikan Anda telah mengaktifkan fitur “Use Unicode UTF-8 for worldwide language support” (lihat Masalah Diketahui di Readme untuk ini)</value>
+  </data>
+  <data name="mbx_HelperStaticExifNoAPI" xml:space="preserve">
+    <value>Gagal menjangkau API - apakah Anda sedang luring?</value>
+  </data>
+  <data name="mbx_Helper_ErrorAsyncExifToolExecuteAsyncFailed" xml:space="preserve">
+    <value>asyncExifTool.ExecuteAsync gagal (Harap laporkan isu di GitHub): </value>
+  </data>
+  <data name="mbx_Helper_ErrorCantReadDefaultSQLiteDB" xml:space="preserve">
+    <value>Gagal membaca nilai default dari SQL (Harap laporkan isu di GitHub): </value>
+  </data>
+  <data name="mbx_Helper_QuestionFileQIsNotEmpty" xml:space="preserve">
+    <value>Beberapa data telah diubah - ingin menyimpan? 
+Data akan dibuang jika Anda klik Tidak</value>
+  </data>
+  <data name="mbx_Helper_WarningExifToolVerAPIResponse" xml:space="preserve">
+    <value>API ExifToolVerAPIResponse mengembalikan respons berikut: </value>
+  </data>
+  <data name="mbx_Helper_WarningFileDisappeared" xml:space="preserve">
+    <value>File Anda tampaknya telah hilang.</value>
+  </data>
+  <data name="mbx_Helper_WarningGeoNamesAPIResponse" xml:space="preserve">
+    <value>API GeoNames mengembalikan respons berikut: </value>
+  </data>
+  <data name="mbx_Helper_WarningGTNVerAPIResponse" xml:space="preserve">
+    <value>API GitHub mengembalikan respons berikut: </value>
+  </data>
+  <data name="mbx_Helper_WarningNoARCGISKey" xml:space="preserve">
+    <value>Anda perlu memasukkan Kunci API ArcGIS di Pengaturan agar aplikasi berfungsi dengan baik.</value>
+  </data>
+  <data name="mbx_Helper_WarningNothingInWriteQueue" xml:space="preserve">
+    <value>Tidak ada apa pun dalam antrean tulis Anda.</value>
+  </data>
+  <data name="mbx_Helper_WarningNothingToPaste" xml:space="preserve">
+    <value>Tidak ada yang bisa ditempel.</value>
+  </data>
+  <data name="mbx_Helper_WarningNoWriteSettingEnabled" xml:space="preserve">
+    <value>Anda telah menonaktifkan pemrosesan file asli _dan_ XMP sidecar, sehingga tidak ada yang bisa ditulis.</value>
+  </data>
+  <data name="mbx_Helper_WarningTooManyFilesSelected" xml:space="preserve">
+    <value>Ini hanya berfungsi jika Anda memilih satu dan hanya satu file.</value>
+  </data>
+  <data name="mns_File" xml:space="preserve">
+    <value>File</value>
+  </data>
+  <data name="mns_Help" xml:space="preserve">
+    <value>Bantuan</value>
+  </data>
+  <data name="mns_Settings" xml:space="preserve">
+    <value>Pengaturan</value>
+  </data>
+  <data name="pbx_Browse_Startup_Folder" xml:space="preserve">
+    <value>Telusuri Folder Awal</value>
+  </data>
+  <data name="pbx_imagePreviewCouldNotRetrieve" xml:space="preserve">
+    <value>Tidak dapat mengambil/membuat pratinjau gambar</value>
+  </data>
+  <data name="pbx_imagePreviewEmptyText" xml:space="preserve">
+    <value>Tidak ada gambar untuk ditampilkan</value>
+  </data>
+  <data name="pbx_importFromAnotherFolder" xml:space="preserve">
+    <value>Telusuri Folder Track</value>
+  </data>
+  <data name="pbx_importOneFile" xml:space="preserve">
+    <value>Telusuri File Track</value>
+  </data>
+  <data name="rbt_CreateDateSetToFixedDate" xml:space="preserve">
+    <value>Atur ke Tanggal Tetap</value>
+  </data>
+  <data name="rbt_CreateDateTimeShift" xml:space="preserve">
+    <value>Pergeseran waktu</value>
+  </data>
+  <data name="rbt_importFromAnotherFolder" xml:space="preserve">
+    <value>Impor dari folder lain</value>
+  </data>
+  <data name="rbt_importFromCurrentFolder" xml:space="preserve">
+    <value>Impor dari folder saat ini</value>
+  </data>
+  <data name="rbt_importOneFile" xml:space="preserve">
+    <value>Impor dari file yang dipilih</value>
+  </data>
+  <data name="rbt_MapColourModeDarkInverse" xml:space="preserve">
+    <value>Gelap (Terbalik)</value>
+  </data>
+  <data name="rbt_MapColourModeDarkPale" xml:space="preserve">
+    <value>Gelap (Pudar)</value>
+  </data>
+  <data name="rbt_MapColourModeNormal" xml:space="preserve">
+    <value>Normal</value>
+  </data>
+  <data name="rbt_PasteCreateDateActual" xml:space="preserve">
+    <value>Aktual (nilai tetap)</value>
+  </data>
+  <data name="rbt_PasteCreateDateShift" xml:space="preserve">
+    <value>Pergeseran waktu</value>
+  </data>
+  <data name="rbt_PasteTakenDateActual" xml:space="preserve">
+    <value>Aktual (nilai tetap)</value>
+  </data>
+  <data name="rbt_PasteTakenDateShift" xml:space="preserve">
+    <value>Pergeseran waktu</value>
+  </data>
+  <data name="rbt_TakenDateSetToFixedDate" xml:space="preserve">
+    <value>Atur ke Tanggal Tetap</value>
+  </data>
+  <data name="rbt_TakenDateTimeShift" xml:space="preserve">
+    <value>Pergeseran waktu</value>
+  </data>
+  <data name="rbt_TryUseGeoNamesLanguage" xml:space="preserve">
+    <value>Coba gunakan bahasa ini saat mengambil nama lokasi:</value>
+  </data>
+  <data name="rbt_UseGeoNamesLocalLanguage" xml:space="preserve">
+    <value>Coba gunakan "bahasa lokal" saat mengambil nama lokasi</value>
+  </data>
+  <data name="rbx_CustomCityLogicExplanation" xml:space="preserve">
+    <value>Ini adalah fitur lanjutan. AdminName1-4 &amp; ToponymName merujuk pada keluaran API, jadi jika Anda tidak memahaminya, sebaiknya jangan ubah ini sama sekali. 
+Untuk gambaran umum, lihat: https://github.com/nemethviktor/GeoTagNinja/issues/38#issuecomment-1356844255 .
+Pengaturan ini memungkinkan Anda menambahkan pilihan negara sendiri untuk mendapatkan nilai "Kota" dari salah satu AdminName tertentu.</value>
+  </data>
+  <data name="rbx_CustomCityLogicExplanationBold" xml:space="preserve">
+    <value>Perhatikan bahwa perubahan pada tabel di bawah langsung berlaku dan tombol OK/Batal tidak berpengaruh langsung padanya. Anda juga perlu klik kanan dan pilih Hapus Data Cache untuk file mana pun yang terdampak oleh perubahan Anda jika ingin mengambil data dalam sesi ini (atau cukup mulai ulang aplikasi.)</value>
+  </data>
+  <data name="rbx_CustomRulesExplanation" xml:space="preserve">
+    <value>Ini adalah fitur lanjutan. AdminName1-4 &amp; ToponymName merujuk pada keluaran API, jadi jika Anda tidak memahaminya, sebaiknya jangan ubah ini sama sekali. 
+Mengenai "Negara yang telah ditentukan" (kotak centang di bawah): baca tentangnya di sini: https://github.com/nemethviktor/GeoTagNinja/issues/38#issuecomment-1356844255 + periksa tab lainnya - perhatikan bahwa jika Anda menonaktifkan pengaturan itu, sel CountryCode yang berada di luar kelompok terkait akan dikosongkan, tetapi baris tersebut tidak akan benar-benar dihapus.
+Semua kolom wajib kecuali untuk "Kustom", tetapi jika Anda mengatur Hasil ke "Kustom" dan membiarkan kolom "Kustom" kosong, baris akan diabaikan. Data tidak peka huruf besar/kecil. Untuk setiap titik data (misalnya Kota, Provinsi), baris terakhir menimpa yang sebelumnya. Intinya, bersikaplah masuk akal. Semakin banyak baris yang Anda tambahkan, semakin lambat prosesnya.
+Contoh: data default dari API untuk London, Inggris, kurang baik karena untuk wilayah tersebut adminName2 = "Greater London", dan nilai itu akan dibuang (kota biasanya diambil dari "ToponymName"). -&gt; atur: "Apa" = "adminName2", "Jika" = "adalah", "Nilai" = "Greater London", "Maka" = "City", "Menjadi" = "adminName2". Ulangi seluruhnya di baris ke-2 tetapi "Maka" = "Sub_Loction" dan "Menjadi" = "ToponymName".</value>
+  </data>
+  <data name="rbx_CustomRulesExplanationBold" xml:space="preserve">
+    <value>Perhatikan bahwa perubahan pada tabel di bawah langsung berlaku dan tombol OK/Batal tidak berpengaruh langsung padanya. Anda juga perlu klik kanan dan pilih Hapus Data Cache untuk file mana pun yang terdampak oleh perubahan Anda jika ingin mengambil data dalam sesi ini (atau cukup mulai ulang aplikasi.)</value>
+  </data>
+  <data name="rbx_Register_ArcGIS" xml:space="preserve">
+    <value>Anda memerlukan kunci API ArcGIS untuk menggunakan fungsi pencarian peta. 
+ArcGIS telah mengubah proses pendaftarannya sejak Juni 2024. Daftar [di sini](https://location.arcgis.com/sign-up/)
+Anda sekarang perlu menentukan URL portal. Cukup masukkan apa saja.
+Gulir/Buka `Developer credential creator`
+Lalu `New Item`
+Lalu `Developer Credentials`
+Pilih `API Key` (bukan OAUth)
+Atur tanggal kedaluwarsa sejauh mungkin ke depan (1 tahun)
+Biarkan `Referrers` kosong
+Di halaman berikutnya pilih `Geocoding (not stored)`
+Di halaman berikutnya lewati `Item Access`
+Di halaman berikutnya tambahkan judul apa saja
+Akhirnya klik `Generate the API key and go to item details page. I am ready to copy and save the key.`
+Simpan kunci API saat diminta. Jika tidak melakukannya saat itu, Anda harus membuat yang baru lagi.</value>
+  </data>
+  <data name="rbx_Register_GeoNames" xml:space="preserve">
+    <value>Anda memerlukan akun GeoNames untuk menggunakan fungsi geocoding terbalik/pencarian (lintang/bujur --&gt; negara/kota/...). Buat akun di sini: http://www.geonames.org/login lalu aktifkan akses "Free Web Services" di sini: https://www.geonames.org/manageaccount</value>
+  </data>
+  <data name="tcr_EditData" xml:space="preserve">
+    <value>Edit Data</value>
+  </data>
+  <data name="tmi_File" xml:space="preserve">
+    <value>File</value>
+  </data>
+  <data name="tmi_File_CopyGeoData" xml:space="preserve">
+    <value>Salin Semua Geodata</value>
+  </data>
+  <data name="frm_BatchRename" xml:space="preserve">
+    <value>Ganti Nama Massal</value>
+  </data>
+  <data name="frm_BatchRename_Preview" xml:space="preserve">
+    <value>Ganti Nama Massal - Pratinjau</value>
+  </data>
+  <data name="gbx_BatchRename_Presets" xml:space="preserve">
+    <value>Preset</value>
+  </data>
+  <data name="gbx_BatchRename_Destination" xml:space="preserve">
+    <value>Folder Tujuan</value>
+  </data>
+  <data name="gbx_BatchRename_Names" xml:space="preserve">
+    <value>Nama File Baru</value>
+  </data>
+  <data name="gbx_BatchRename_Options" xml:space="preserve">
+    <value>Opsi</value>
+  </data>
+  <data name="gbx_BatchRename_Preview" xml:space="preserve">
+    <value>Pratinjau</value>
+  </data>
+  <data name="lbl_BatchRename_Preset" xml:space="preserve">
+    <value>Preset</value>
+  </data>
+  <data name="lbl_BatchRename_Modified" xml:space="preserve">
+    <value>(Diubah)</value>
+  </data>
+  <data name="btn_BatchRename_Save" xml:space="preserve">
+    <value>Simpan...</value>
+  </data>
+  <data name="btn_BatchRename_Delete" xml:space="preserve">
+    <value>Hapus</value>
+  </data>
+  <data name="rbt_BatchRename_SameFolder" xml:space="preserve">
+    <value>Ganti Nama di Folder yang Sama</value>
+  </data>
+  <data name="rbt_BatchRename_MoveToFolder" xml:space="preserve">
+    <value>Pindahkan ke Folder Lain</value>
+  </data>
+  <data name="rbt_BatchRename_CopyToFolder" xml:space="preserve">
+    <value>Salin ke Folder Lain</value>
+  </data>
+  <data name="btn_BatchRename_Browse" xml:space="preserve">
+    <value>Telusuri...</value>
+  </data>
+  <data name="lbl_BatchRename_Compatibility" xml:space="preserve">
+    <value>Kompatibilitas</value>
+  </data>
+  <data name="ckb_BatchRename_Windows" xml:space="preserve">
+    <value>Windows</value>
+  </data>
+  <data name="ckb_BatchRename_Mac" xml:space="preserve">
+    <value>Mac</value>
+  </data>
+  <data name="ckb_BatchRename_Unix" xml:space="preserve">
+    <value>Unix</value>
+  </data>
+  <data name="lbl_BatchRename_CurrentFilename" xml:space="preserve">
+    <value>Nama File Saat Ini</value>
+  </data>
+  <data name="lbl_BatchRename_NewFilename" xml:space="preserve">
+    <value>Nama File Baru</value>
+  </data>
+  <data name="lbl_BatchRename_Note" xml:space="preserve">
+    <value>Catatan</value>
+  </data>
+  <data name="lbl_BatchRename_Unchanged" xml:space="preserve">
+    <value>Tidak berubah</value>
+  </data>
+  <data name="btn_BatchRename_Rename" xml:space="preserve">
+    <value>Ganti Nama</value>
+  </data>
+  <data name="btn_BatchRename_PreviewAll" xml:space="preserve">
+    <value>Pratinjau</value>
+  </data>
+  <data name="lbl_BatchRename_Find" xml:space="preserve">
+    <value>Cari</value>
+  </data>
+  <data name="lbl_BatchRename_ReplaceWith" xml:space="preserve">
+    <value>Ganti Dengan</value>
+  </data>
+  <data name="ckb_BatchRename_IgnoreCase" xml:space="preserve">
+    <value>Abaikan Huruf Besar/Kecil</value>
+  </data>
+  <data name="ckb_BatchRename_ReplaceAll" xml:space="preserve">
+    <value>Ganti Semua</value>
+  </data>
+  <data name="ckb_BatchRename_UseRegex" xml:space="preserve">
+    <value>Gunakan Ekspresi Reguler</value>
+  </data>
+  <data name="lbl_BatchRename_Kind_Text" xml:space="preserve">
+    <value>Teks</value>
+  </data>
+  <data name="lbl_BatchRename_Kind_NewExtension" xml:space="preserve">
+    <value>Ekstensi Baru</value>
+  </data>
+  <data name="lbl_BatchRename_Kind_CurrentFilename" xml:space="preserve">
+    <value>Nama File Saat Ini</value>
+  </data>
+  <data name="lbl_BatchRename_Kind_PreservedFilename" xml:space="preserve">
+    <value>Nama File yang Dipertahankan</value>
+  </data>
+  <data name="lbl_BatchRename_Kind_SequenceNumber" xml:space="preserve">
+    <value>Nomor Urut</value>
+  </data>
+  <data name="lbl_BatchRename_Kind_SequenceLetter" xml:space="preserve">
+    <value>Huruf Urut</value>
+  </data>
+  <data name="lbl_BatchRename_Kind_DateTime" xml:space="preserve">
+    <value>Tanggal Waktu</value>
+  </data>
+  <data name="lbl_BatchRename_Kind_Metadata" xml:space="preserve">
+    <value>Metadata</value>
+  </data>
+  <data name="lbl_BatchRename_Kind_FolderName" xml:space="preserve">
+    <value>Nama Folder</value>
+  </data>
+  <data name="lbl_BatchRename_Kind_StringSubstitution" xml:space="preserve">
+    <value>Substitusi String</value>
+  </data>
+  <data name="lbl_BatchRename_Case_Original" xml:space="preserve">
+    <value>Huruf Asli</value>
+  </data>
+  <data name="lbl_BatchRename_Case_Lower" xml:space="preserve">
+    <value>Huruf Kecil</value>
+  </data>
+  <data name="lbl_BatchRename_Case_Upper" xml:space="preserve">
+    <value>Huruf Besar</value>
+  </data>
+  <data name="lbl_BatchRename_Part_NameAndExtension" xml:space="preserve">
+    <value>Nama + Ekstensi</value>
+  </data>
+  <data name="lbl_BatchRename_Part_Name" xml:space="preserve">
+    <value>Nama</value>
+  </data>
+  <data name="lbl_BatchRename_Part_Extension" xml:space="preserve">
+    <value>Ekstensi</value>
+  </data>
+  <data name="lbl_BatchRename_Part_NumberSuffix" xml:space="preserve">
+    <value>Akhiran Nomor</value>
+  </data>
+  <data name="lbl_BatchRename_DateSource_DateTaken" xml:space="preserve">
+    <value>Tanggal Pengambilan</value>
+  </data>
+  <data name="lbl_BatchRename_DateSource_DateCreated" xml:space="preserve">
+    <value>Tanggal Dibuat</value>
+  </data>
+  <data name="lbl_BatchRename_DateSource_FileModified" xml:space="preserve">
+    <value>Tanggal File Diubah</value>
+  </data>
+  <data name="lbl_BatchRename_DateSource_FileCreated" xml:space="preserve">
+    <value>Tanggal File Dibuat</value>
+  </data>
+  <data name="lbl_BatchRename_DateSource_Today" xml:space="preserve">
+    <value>Hari Ini</value>
+  </data>
+  <data name="lbl_BatchRename_DateSource_Yesterday" xml:space="preserve">
+    <value>Kemarin</value>
+  </data>
+  <data name="lbl_BatchRename_Digits_1" xml:space="preserve">
+    <value>Satu Digit</value>
+  </data>
+  <data name="lbl_BatchRename_Digits_2" xml:space="preserve">
+    <value>Dua Digit</value>
+  </data>
+  <data name="lbl_BatchRename_Digits_3" xml:space="preserve">
+    <value>Tiga Digit</value>
+  </data>
+  <data name="lbl_BatchRename_Digits_4" xml:space="preserve">
+    <value>Empat Digit</value>
+  </data>
+  <data name="lbl_BatchRename_Digits_5" xml:space="preserve">
+    <value>Lima Digit</value>
+  </data>
+  <data name="lbl_BatchRename_Digits_6" xml:space="preserve">
+    <value>Enam Digit</value>
+  </data>
+  <data name="lbl_BatchRename_SubstituteSource_OriginalFilename" xml:space="preserve">
+    <value>Nama File Asli</value>
+  </data>
+  <data name="lbl_BatchRename_SubstituteSource_PreservedFilename" xml:space="preserve">
+    <value>Nama File yang Dipertahankan</value>
+  </data>
+  <data name="lbl_BatchRename_Field_Country" xml:space="preserve">
+    <value>Negara</value>
+  </data>
+  <data name="lbl_BatchRename_Field_CountryCode" xml:space="preserve">
+    <value>Kode Negara</value>
+  </data>
+  <data name="lbl_BatchRename_Field_State" xml:space="preserve">
+    <value>Provinsi</value>
+  </data>
+  <data name="lbl_BatchRename_Field_City" xml:space="preserve">
+    <value>Kota</value>
+  </data>
+  <data name="lbl_BatchRename_Field_Sublocation" xml:space="preserve">
+    <value>Sublokasi</value>
+  </data>
+  <data name="lbl_BatchRename_Field_Make" xml:space="preserve">
+    <value>Merek Kamera</value>
+  </data>
+  <data name="lbl_BatchRename_Field_Model" xml:space="preserve">
+    <value>Model Kamera</value>
+  </data>
+  <data name="lbl_BatchRename_Field_LensSpec" xml:space="preserve">
+    <value>Lensa</value>
+  </data>
+  <data name="lbl_BatchRename_Field_Rating" xml:space="preserve">
+    <value>Peringkat</value>
+  </data>
+  <data name="lbl_BatchRename_Field_ExposureTime" xml:space="preserve">
+    <value>Waktu Pajanan</value>
+  </data>
+  <data name="lbl_BatchRename_Field_Fnumber" xml:space="preserve">
+    <value>Bukaan (F-number)</value>
+  </data>
+  <data name="lbl_BatchRename_Field_FocalLength" xml:space="preserve">
+    <value>Panjang Fokus</value>
+  </data>
+  <data name="lbl_BatchRename_Field_ISO" xml:space="preserve">
+    <value>ISO</value>
+  </data>
+  <data name="lbl_BatchRename_Field_Artist" xml:space="preserve">
+    <value>Artis</value>
+  </data>
+  <data name="lbl_BatchRename_Field_Byline" xml:space="preserve">
+    <value>Kreator (Byline)</value>
+  </data>
+  <data name="lbl_BatchRename_Field_Copyright" xml:space="preserve">
+    <value>Hak Cipta</value>
+  </data>
+  <data name="lbl_BatchRename_Field_Credit" xml:space="preserve">
+    <value>Kredit</value>
+  </data>
+  <data name="lbl_BatchRename_Field_Source" xml:space="preserve">
+    <value>Sumber</value>
+  </data>
+  <data name="lbl_BatchRename_Field_ObjectName" xml:space="preserve">
+    <value>Judul (Object Name)</value>
+  </data>
+  <data name="lbl_BatchRename_Field_Headline" xml:space="preserve">
+    <value>Headline</value>
+  </data>
+  <data name="lbl_BatchRename_Field_Category" xml:space="preserve">
+    <value>Kategori</value>
+  </data>
+  <data name="mbx_BatchRename_OneFile" xml:space="preserve">
+    <value>Satu file akan diproses</value>
+  </data>
+  <data name="mbx_BatchRename_ManyFiles" xml:space="preserve">
+    <value>{0} file akan diproses</value>
+  </data>
+  <data name="mbx_BatchRename_SomeBlocked" xml:space="preserve">
+    <value>{0} dari {1} file tidak dapat diganti namanya: lihat Pratinjau</value>
+  </data>
+  <data name="mbx_BatchRename_PresetNamePrompt" xml:space="preserve">
+    <value>Nama preset:</value>
+  </data>
+  <data name="mbx_BatchRename_PresetUnreadable" xml:space="preserve">
+    <value>Preset '{0}' tidak dapat dibaca.</value>
+  </data>
+  <data name="mbx_BatchRename_PresetReplace" xml:space="preserve">
+    <value>Preset bernama '{0}' sudah ada. Ganti?</value>
+  </data>
+  <data name="mbx_BatchRename_PresetSaveFailed" xml:space="preserve">
+    <value>Preset tidak dapat disimpan.</value>
+  </data>
+  <data name="mbx_BatchRename_PresetDelete" xml:space="preserve">
+    <value>Hapus preset '{0}'?</value>
+  </data>
+  <data name="mbx_BatchRename_Preflight" xml:space="preserve">
+    <value>Tidak ada yang diganti namanya. Ini perlu diselesaikan terlebih dahulu:
+
+{0}</value>
+  </data>
+  <data name="mbx_BatchRename_MoreProblems" xml:space="preserve">
+    <value>... dan {0} lainnya (Pratinjau mencantumkan semuanya)</value>
+  </data>
+  <data name="mbx_BatchRename_SelectFiles" xml:space="preserve">
+    <value>Pilih file yang akan diganti namanya terlebih dahulu.</value>
+  </data>
+  <data name="mbx_BatchRename_NothingRenamed" xml:space="preserve">
+    <value>Tidak ada yang diganti namanya (apa pun yang sudah dilakukan telah dikembalikan).
+
+{0}</value>
+  </data>
+  <data name="mbx_BatchRename_StepFailed" xml:space="preserve">
+    <value>{0}
+
+Semua yang sudah dilakukan telah dikembalikan, sehingga tidak ada file yang tersentuh.
+
+Lanjutkan tanpa {1} (dan file apa pun yang akan menggunakan namanya)?
+Ya: ganti nama sisanya.  Tidak: berhenti; semua file tetap seperti semula.</value>
+  </data>
+  <data name="mbx_BatchRename_NothingLeft" xml:space="preserve">
+    <value>Tidak ada lagi yang perlu diganti namanya.</value>
+  </data>
+  <data name="mbx_BatchRename_DoneSkipped" xml:space="preserve">
+    <value>{0} file diproses. Dibiarkan seperti semula:
+{1}</value>
+  </data>
+  <data name="mbx_BatchRename_AndMore" xml:space="preserve">
+    <value>... dan {0} lainnya</value>
+  </data>
+  <data name="mbx_BatchRename_Problem_NoDestination" xml:space="preserve">
+    <value>Belum ada folder tujuan yang dipilih</value>
+  </data>
+  <data name="mbx_BatchRename_Problem_EmptyName" xml:space="preserve">
+    <value>Nama baru kosong</value>
+  </data>
+  <data name="mbx_BatchRename_Problem_Reserved" xml:space="preserve">
+    <value>'{0}' adalah nama yang dicadangkan di Windows</value>
+  </data>
+  <data name="mbx_BatchRename_Problem_NameTooLong" xml:space="preserve">
+    <value>Nama baru terlalu panjang</value>
+  </data>
+  <data name="mbx_BatchRename_Problem_PathTooLong" xml:space="preserve">
+    <value>Path baru terlalu panjang</value>
+  </data>
+  <data name="mbx_BatchRename_Problem_NoDate" xml:space="preserve">
+    <value>Tidak ada {0} yang dapat digunakan</value>
+  </data>
+  <data name="mbx_BatchRename_Problem_BadRegex" xml:space="preserve">
+    <value>Ekspresi reguler tidak valid</value>
+  </data>
+  <data name="mbx_BatchRename_Problem_RegexTimeout" xml:space="preserve">
+    <value>Ekspresi reguler membutuhkan waktu terlalu lama</value>
+  </data>
+  <data name="mbx_BatchRename_Problem_NameClaimed" xml:space="preserve">
+    <value>File lain mendapatkan (atau sudah memiliki) nama ini</value>
+  </data>
+  <data name="mbx_BatchRename_Problem_FileExists" xml:space="preserve">
+    <value>File dengan nama ini sudah ada</value>
+  </data>
+  <data name="mbx_BatchRename_Problem_SidecarExists" xml:space="preserve">
+    <value>File sidecar XMP dengan nama ini sudah ada</value>
+  </data>
+  <data name="mbx_BatchRename_Problem_Gone" xml:space="preserve">
+    <value>File tersebut sudah tidak ada</value>
+  </data>
+  <data name="mbx_BatchRename_Problem_BeingSaved" xml:space="preserve">
+    <value>File sedang disimpan oleh GeoTagNinja</value>
+  </data>
+  <data name="mbx_BatchRename_Problem_InUse" xml:space="preserve">
+    <value>File sedang digunakan oleh program lain</value>
+  </data>
+  <data name="mbx_BatchRename_Problem_FolderNotWritable" xml:space="preserve">
+    <value>Tidak dapat menulis ke folder '{0}'</value>
+  </data>
+  <data name="mbx_BatchRename_Problem_NoSpace" xml:space="preserve">
+    <value>Ruang di {0} tidak cukup: dibutuhkan {1} MB, tersedia {2} MB</value>
+  </data>
+  <data name="mbx_BatchRename_Problem_Unfixed" xml:space="preserve">
+    <value>Batch ini memiliki masalah yang perlu diperbaiki terlebih dahulu.</value>
+  </data>
+  <data name="tmi_File_BatchRename" xml:space="preserve">
+    <value>Ganti Nama Massal...</value>
+  </data>
+  <data name="cmi_BatchRename" xml:space="preserve">
+    <value>Ganti Nama Massal...</value>
+  </data>
+  <data name="tmi_File_EditFiles" xml:space="preserve">
+    <value>Edit File...</value>
+  </data>
+  <data name="tmi_File_FlatMode" xml:space="preserve">
+    <value>Mode Datar (proses Subfolder)</value>
+  </data>
+  <data name="tmi_File_ImportExportGPX" xml:space="preserve">
+    <value>Impor/Ekspor File Track GPX/JSON...</value>
+  </data>
+  <data name="tmi_File_PasteGeoData" xml:space="preserve">
+    <value>Tempel Semua Geodata...</value>
+  </data>
+  <data name="tmi_File_Quit" xml:space="preserve">
+    <value>Keluar</value>
+  </data>
+  <data name="tmi_File_SaveAll" xml:space="preserve">
+    <value>Simpan Semua</value>
+  </data>
+  <data name="tmi_Help" xml:space="preserve">
+    <value>Bantuan</value>
+  </data>
+  <data name="tmi_Help_About" xml:space="preserve">
+    <value>Tentang...</value>
+  </data>
+  <data name="tmi_Help_Help" xml:space="preserve">
+    <value>Bantuan</value>
+  </data>
+  <data name="tmi_Help_BugReport" xml:space="preserve">
+    <value>Laporkan bug (GitHub)</value>
+  </data>
+  <data name="tmi_Help_FeedbackFeatureRequest" xml:space="preserve">
+    <value>Ajukan permintaan fitur (GitHub)</value>
+  </data>
+  <data name="tmi_Settings" xml:space="preserve">
+    <value>Pengaturan</value>
+  </data>
+  <data name="tmi_Settings_Favourites" xml:space="preserve">
+    <value>Kelola Favorit</value>
+  </data>
+  <data name="tmi_Settings_Settings" xml:space="preserve">
+    <value>Pengaturan</value>
+  </data>
+  <data name="tpg_Application" xml:space="preserve">
+    <value>Aplikasi</value>
+  </data>
+  <data name="tpg_CustomCityLogic" xml:space="preserve">
+    <value>Logika Penetapan Kota Kustom</value>
+  </data>
+  <data name="tpg_CustomRules" xml:space="preserve">
+    <value>Aturan Kustom</value>
+  </data>
+  <data name="tpg_DateTime" xml:space="preserve">
+    <value>Tanggal &amp; Waktu</value>
+  </data>
+  <data name="tpg_Exif" xml:space="preserve">
+    <value>Exif</value>
+  </data>
+  <data name="tpg_FileOptions" xml:space="preserve">
+    <value>Opsi File</value>
+  </data>
+  <data name="tpg_GeoNames" xml:space="preserve">
+    <value>Pengaturan GeoNames</value>
+  </data>
+  <data name="tpg_ImportExport_Export" xml:space="preserve">
+    <value>Ekspor Track</value>
+  </data>
+  <data name="tpg_ImportExport_Import" xml:space="preserve">
+    <value>Impor Track</value>
+  </data>
+  <data name="tpg_Location" xml:space="preserve">
+    <value>Lokasi</value>
+  </data>
+  <data name="tpg_Map" xml:space="preserve">
+    <value>Peta</value>
+  </data>
+  <data name="tsb_BugReport" xml:space="preserve">
+    <value>Laporkan bug (memerlukan akun GitHub)</value>
+  </data>
+  <data name="tsb_EditFile" xml:space="preserve">
+    <value>Edit File</value>
+  </data>
+  <data name="tsb_FeedbackFeatureRequest" xml:space="preserve">
+    <value>Ajukan permintaan fitur (memerlukan akun GitHub)</value>
+  </data>
+  <data name="tsb_GetAllFromWeb" xml:space="preserve">
+    <value>Ambil info Toponimi &amp; Ketinggian untuk semua file yang dipilih</value>
+  </data>
+  <data name="tsb_ImportGPX" xml:space="preserve">
+    <value>Impor File Track GPX/JSON</value>
+  </data>
+  <data name="tsb_ExportGPX" xml:space="preserve">
+    <value>Ekspor File Track (GPX/KML)</value>
+  </data>
+  <data name="tsb_OneFolderUp" xml:space="preserve">
+    <value>Folder Induk</value>
+  </data>
+  <data name="tsb_Refresh_lvwFileList" xml:space="preserve">
+    <value>Segarkan Daftar File</value>
+  </data>
+  <data name="tsb_RemoveGeoData" xml:space="preserve">
+    <value>Hapus Semua Data Lokasi</value>
+  </data>
+  <data name="tsb_SaveFiles" xml:space="preserve">
+    <value>Simpan File</value>
+  </data>
+  <data name="tsr_FolderControl" xml:space="preserve">
+    <value>Kontrol Folder</value>
+  </data>
+  <data name="tsr_MainAppToolStrip" xml:space="preserve">
+    <value>Utama</value>
+  </data>
+  <data name="ttp_GPSDataPaste" xml:space="preserve">
+    <value>Tekan CTRL+V untuk menempelkan sepasang desimal yang valid ke placeholder lintang/bujur. 
+Papan klip hanya boleh berisi sepasang desimal, sebaiknya dalam format "invariant" (Inggris), yaitu bilangan-bulat-titik-desimal-koma-bilangan-bulat-titik-desimal, misalnya 12.345, 56.897
+Meski demikian, kode ini _seharusnya_ dapat memahami format lain. Perhatikan bahwa jika papan klip berisi selain di atas, operasi akan gagal (tidak terjadi apa-apa.)</value>
+  </data>
+  <data name="btn_NavigateMapGo" xml:space="preserve">
+    <value>Tampilkan di Peta</value>
+  </data>
+  <data name="btn_loctToFile" xml:space="preserve">
+    <value>Simpan ke File</value>
+  </data>
+  <data name="btn_loctToFileDestination" xml:space="preserve">
+    <value>Simpan ke Tujuan</value>
+  </data>
+  <data name="btn_SaveFavourite" xml:space="preserve">
+    <value>Simpan Foto</value>
+  </data>
+  <data name="btn_LoadFavourite" xml:space="preserve">
+    <value>Terapkan ke Foto</value>
+  </data>
+  <data name="btn_ManageFavourites" xml:space="preserve">
+    <value>Kelola...</value>
+  </data>
+  <data name="ttp_LoadFavourite" xml:space="preserve">
+    <value>Muat metadata untuk file yang dipilih dari Favorit Anda</value>
+  </data>
+  <data name="ttp_loctToFile" xml:space="preserve">
+    <value>Simpan Koordinat Saat Ini ke File yang Dipilih</value>
+  </data>
+  <data name="ttp_loctToFileDestination" xml:space="preserve">
+    <value>Simpan Koordinat Saat Ini ke Tujuan File yang Dipilih</value>
+  </data>
+  <data name="ttp_ManageFavourites" xml:space="preserve">
+    <value>Kelola Favorit</value>
+  </data>
+  <data name="ttp_NavigateMapGo" xml:space="preserve">
+    <value>Tampilkan Koordinat File yang Dipilih di Peta</value>
+  </data>
+  <data name="ttp_OffsetTime" xml:space="preserve">
+    <value>Zona waktu dibiarkan kosong saat dibuka, terlepas dari nilai yang tersimpan. Tidak ada Tag Exif untuk TZ, hanya 'Offset', yang berbentuk seperti '+01:00'. Karena tidak ada indikasi untuk TZ maupun DST, tidak dapat dipastikan bahwa '+01:00' sebenarnya BST atau CET, yang satu DST dan yang lain bukan. Atur secara manual atau ambil dari web - kombinasi koordinat + createDate akan memberi tahu program nilai TZ yang sebenarnya. Nilai di kotak teks hanya-baca akan disimpan ke dalam file.</value>
+  </data>
+  <data name="ttp_SaveFavourite" xml:space="preserve">
+    <value>Simpan (atau timpa) metadata file yang sedang dipilih ke Favorit Anda</value>
+  </data>
+  <data name="ckb_ImportExport_ApplicationSettings" xml:space="preserve">
+    <value>ApplicationSettings</value>
+  </data>
+  <data name="ckb_ImportExport_CustomRulesSettings" xml:space="preserve">
+    <value>CustomRulesSettings</value>
+  </data>
+  <data name="ckb_ImportExport_Favourites" xml:space="preserve">
+    <value>Favorit</value>
+  </data>
+  <data name="ckb_ImportExport_EditTemplates" xml:space="preserve">
+    <value>Edit templat Data</value>
+  </data>
+  <data name="ckb_ImportExport_FieldHistory" xml:space="preserve">
+    <value>Riwayat kolom Edit Data</value>
+  </data>
+  <data name="ckb_ImportExport_BatchRenamePresets" xml:space="preserve">
+    <value>Preset Ganti Nama Massal</value>
+  </data>
+  <data name="Generic_TimeZoneID" xml:space="preserve">
+    <value>ID Zona Waktu</value>
+  </data>
+  <data name="Generic_Distance" xml:space="preserve">
+    <value>Jarak</value>
+  </data>
+  <data name="cmi_OpenCoordsInBrowser" xml:space="preserve">
+    <value>Buka Koordinat di Browser/Peta</value>
+  </data>
+  <data name="cmi_OpenCoordsInBrowserBing" xml:space="preserve">
+    <value>Bing</value>
+  </data>
+  <data name="cmi_OpenCoordsInBrowserGeoNamesMaps" xml:space="preserve">
+    <value>GeoNames (Peta)</value>
+  </data>
+  <data name="cmi_OpenCoordsInBrowserGoogle" xml:space="preserve">
+    <value>Google Maps</value>
+  </data>
+  <data name="cmi_OpenCoordsInBrowserWeGoHere" xml:space="preserve">
+    <value>WeGo/Here</value>
+  </data>
+  <data name="cmi_OpenCoordsInBrowserOpenStreetMap" xml:space="preserve">
+    <value>OpenStreetMap</value>
+  </data>
+  <data name="tmi_File_ImportFavouritesFromGeoSetter" xml:space="preserve">
+    <value>Impor Favorit dari Geosetter...</value>
+  </data>
+  <data name="ofd_Settings_GetDatabaseFileToImport_SelectDatabaseFile" xml:space="preserve">
+    <value>Pilih file basis data</value>
+  </data>
+  <data name="ofd_tmi_File_ImportFavouritesFromGeoSetter_SelectFile" xml:space="preserve">
+    <value>Pilih file ekspor Favorit GS</value>
+  </data>
+  <data name="mbx_FrmMainApp_ErrorImportGeoSetterFavourites" xml:space="preserve">
+    <value>Galat saat mengimpor Favorit GeoSetter.</value>
+  </data>
+  <data name="mbx_FrmMainApp_InfoImportGeoSetterFavouritesDone" xml:space="preserve">
+    <value>Favorit GeoSetter diimpor. Item yang diimpor: </value>
+  </data>
+  <data name="ckb_ShowThumbnails" xml:space="preserve">
+    <value>Tampilkan miniatur gambar, bukan kisi</value>
+  </data>
+  <data name="ttp_ShowThumbnails" xml:space="preserve">
+    <value>Ini sangat memengaruhi performa (hingga 7x menurut pengukuran saya) sehingga tidak disarankan.</value>
+  </data>
+  <data name="Generic_SaveDefaults" xml:space="preserve">
+    <value>Simpan Default</value>
+  </data>
+  <data name="ttp_FrmImportExport_SaveDefaults" xml:space="preserve">
+    <value>Menyimpan default tertentu. Saat ini: lokasi sumber impor, pengaturan TZ &amp; DST, interpolasi/ekstrapolasi maks.</value>
+  </data>
+  <data name="mbx_FrmImportExportGpx_ExportCompleted" xml:space="preserve">
+    <value>Ekspor File GPX Selesai</value>
+  </data>
+  <data name="Generic_GPSDOP" xml:space="preserve">
+    <value>Dilution of precision (DOP)</value>
+  </data>
+  <data name="Generic_GPSHPositioningError" xml:space="preserve">
+    <value>Galat Posisi Horizontal GPS</value>
+  </data>
+  <data name="cmi_PasteGeoData" xml:space="preserve">
+    <value>Tempel Semua Geodata...</value>
+  </data>
+  <data name="cmi_CopyGeoData" xml:space="preserve">
+    <value>Salin Semua Geodata</value>
+  </data>
+  <data name="tmi_Edit_SelectAll" xml:space="preserve">
+    <value>Pilih Semua</value>
+  </data>
+  <data name="cmi_SelectAll" xml:space="preserve">
+    <value>Pilih Semua</value>
+  </data>
+  <data name="tmi_Edit_SelectNone" xml:space="preserve">
+    <value>Hapus Pilihan</value>
+  </data>
+  <data name="cmi_SelectNone" xml:space="preserve">
+    <value>Hapus Pilihan</value>
+  </data>
+  <data name="tmi_Edit_InvertSelection" xml:space="preserve">
+    <value>Balikkan Pilihan</value>
+  </data>
+  <data name="cmi_InvertSelection" xml:space="preserve">
+    <value>Balikkan Pilihan</value>
+  </data>
+  <data name="tmi_Edit" xml:space="preserve">
+    <value>Edit</value>
+  </data>
+  <data name="tmi_Help_Donate" xml:space="preserve">
+    <value>Donasi</value>
+  </data>
+  <data name="tmi_Help_Donate_PayPal" xml:space="preserve">
+    <value>PayPal...</value>
+  </data>
+  <data name="tmi_Help_Donate_Revolut" xml:space="preserve">
+    <value>Revolut (QR)...</value>
+  </data>
+  <data name="tmi_Help_Donate_BuyMeCoffee" xml:space="preserve">
+    <value>BuyMeACoffee...</value>
+  </data>
+  <data name="tmi_File_SaveSelected" xml:space="preserve">
+    <value>Simpan yang Dipilih</value>
+  </data>
+  <data name="rbt_SetStartup_Folder" xml:space="preserve">
+    <value>Atur Folder Awal</value>
+  </data>
+  <data name="rbt_UseLastUsedFolder" xml:space="preserve">
+    <value>Gunakan Folder Terakhir Digunakan</value>
+  </data>
+  <data name="tmi_Debug" xml:space="preserve">
+    <value>Debug</value>
+  </data>
+  <data name="tmi_Debug_CustomiseWinformControls" xml:space="preserve">
+    <value>Sesuaikan Kontrol Winform</value>
+  </data>
+  <data name="frm_FrmCustomiseFormControls" xml:space="preserve">
+    <value>Sesuaikan Kontrol Winform</value>
+  </data>
+  <data name="ckb_RetainMapZoom" xml:space="preserve">
+    <value>Pertahankan tingkat zoom peta di antara klik</value>
+  </data>
+  <data name="mbx_FrmMainApp_ErrorNonHydratedItemsPresent" xml:space="preserve">
+    <value>Pilihan Anda berisi file yang belum diproses dan tidak akan dimuat untuk diedit.</value>
+  </data>
+  <data name="Generic_Ready" xml:space="preserve">
+    <value>Siap</value>
+  </data>
+  <data name="Generic_ReadingMetadataProgress" xml:space="preserve">
+    <value>Membaca metadata: {0} dari {1}</value>
+  </data>
+  <data name="Generic_Total" xml:space="preserve">
+    <value>Total</value>
+  </data>
+  <data name="Generic_GeoData" xml:space="preserve">
+    <value>GeoData</value>
+  </data>
+  <data name="Generic_Files" xml:space="preserve">
+    <value>File</value>
+  </data>
+  <data name="mbx_FrmMainApp_WarningDataParseStillInProgress" xml:space="preserve">
+    <value>Pemrosesan data masih berlangsung - sampai selesai, tindakan ini tidak dapat dilanjutkan. Coba lagi sebentar lagi.</value>
+  </data>
+  <data name="Generic_IsEmpty" xml:space="preserve">
+    <value>Kosong</value>
+  </data>
+  <data name="Generic_IsNotEmpty" xml:space="preserve">
+    <value>Tidak kosong</value>
+  </data>
+  <data name="Generic_Is" xml:space="preserve">
+    <value>Adalah</value>
+  </data>
+  <data name="Generic_IsNot" xml:space="preserve">
+    <value>Bukan</value>
+  </data>
+  <data name="Generic_Contains" xml:space="preserve">
+    <value>Mengandung</value>
+  </data>
+  <data name="Generic_DoesntContain" xml:space="preserve">
+    <value>Tidak mengandung</value>
+  </data>
+  <data name="Generic_ClearAll" xml:space="preserve">
+    <value>Hapus Semua</value>
+  </data>
+  <data name="ckb_AlwaysRecenterMap" xml:space="preserve">
+    <value>Selalu pusatkan ulang peta?</value>
+  </data>
+  <data name="ckb_DoNotDownloadAltitude" xml:space="preserve">
+    <value>JANGAN unduh nilai Ketinggian dari API</value>
+  </data>
+  <data name="ckb_PreserveFileModifiedDate" xml:space="preserve">
+    <value>JANGAN ubah Tanggal Diubah file saat menyimpan</value>
+  </data>
+  <data name="tmi_View" xml:space="preserve">
+    <value>Tampilan</value>
+  </data>
+  <data name="tmi_View_Details" xml:space="preserve">
+    <value>Rincian</value>
+  </data>
+  <data name="tmi_View_Thumbnails" xml:space="preserve">
+    <value>Miniatur</value>
+  </data>
+  <data name="tmi_View_ThumbnailSize" xml:space="preserve">
+    <value>Ukuran Miniatur</value>
+  </data>
+  <data name="tmi_View_ThumbnailSize_Small" xml:space="preserve">
+    <value>Kecil</value>
+  </data>
+  <data name="tmi_View_ThumbnailSize_Medium" xml:space="preserve">
+    <value>Sedang</value>
+  </data>
+  <data name="tmi_View_ThumbnailSize_Large" xml:space="preserve">
+    <value>Besar</value>
+  </data>
+  <data name="tmi_View_ThumbnailSize_ExtraLarge" xml:space="preserve">
+    <value>Sangat Besar</value>
+  </data>
+  <data name="tmi_View_ThumbnailSize_Smaller" xml:space="preserve">
+    <value>Miniatur Lebih Kecil</value>
+  </data>
+  <data name="tmi_View_ThumbnailSize_Larger" xml:space="preserve">
+    <value>Miniatur Lebih Besar</value>
+  </data>
+  <data name="ttp_ThumbnailSize" xml:space="preserve">
+    <value>Ukuran miniatur</value>
+  </data>
+  <data name="tmi_View_SortBy" xml:space="preserve">
+    <value>Urutkan Berdasarkan</value>
+  </data>
+  <data name="tmi_View_SortBy_Ascending" xml:space="preserve">
+    <value>Menaik</value>
+  </data>
+  <data name="tmi_View_SortBy_Descending" xml:space="preserve">
+    <value>Menurun</value>
+  </data>
+  <data name="gbx_AllFavourites" xml:space="preserve">
+    <value>Semua favorit</value>
+  </data>
+  <data name="gbx_FavouriteDetails" xml:space="preserve">
+    <value>Rincian</value>
+  </data>
+  <data name="gbx_FavouriteAdditionalInfo" xml:space="preserve">
+    <value>Info tambahan</value>
+  </data>
+  <data name="lbl_FavouriteName" xml:space="preserve">
+    <value>Nama:</value>
+  </data>
+  <data name="lbl_FavouriteCoordinates" xml:space="preserve">
+    <value>Koordinat:</value>
+  </data>
+  <data name="lbl_FavouriteRadius" xml:space="preserve">
+    <value>Radius [m]:</value>
+  </data>
+  <data name="ckb_FavouriteAutoAssign" xml:space="preserve">
+    <value>Tetapkan otomatis</value>
+  </data>
+  <data name="ckb_FavouriteSnap" xml:space="preserve">
+    <value>Tempelkan gambar ke posisi favorit</value>
+  </data>
+  <data name="lbl_FavouriteTimeZone" xml:space="preserve">
+    <value>Zona waktu:</value>
+  </data>
+  <data name="lbl_FavouriteKeywords" xml:space="preserve">
+    <value>Kata kunci:</value>
+  </data>
+  <data name="btn_FavouriteGetFromWeb" xml:space="preserve">
+    <value>Ambil dari web</value>
+  </data>
+  <data name="btn_FavouriteClearAll" xml:space="preserve">
+    <value>Hapus semua nilai</value>
+  </data>
+  <data name="btn_FavouriteAccept" xml:space="preserve">
+    <value>Terima</value>
+  </data>
+  <data name="btn_FavouriteDiscard" xml:space="preserve">
+    <value>Buang</value>
+  </data>
+  <data name="btn_FavouriteAddKeyword" xml:space="preserve">
+    <value>Tambah</value>
+  </data>
+  <data name="btn_FavouriteRemoveKeyword" xml:space="preserve">
+    <value>Hapus</value>
+  </data>
+  <data name="lbl_FavouritesCount" xml:space="preserve">
+    <value>{0} item ({1} dipilih)</value>
+  </data>
+  <data name="tsd_GroupBy" xml:space="preserve">
+    <value>Kelompokkan berdasarkan</value>
+  </data>
+  <data name="tmi_GroupByCountryCode" xml:space="preserve">
+    <value>Kode negara</value>
+  </data>
+  <data name="tmi_GroupByCountry" xml:space="preserve">
+    <value>Negara</value>
+  </data>
+  <data name="tmi_GroupByState" xml:space="preserve">
+    <value>Provinsi</value>
+  </data>
+  <data name="tmi_GroupByCity" xml:space="preserve">
+    <value>Kota</value>
+  </data>
+  <data name="tmi_GroupByCoordinates" xml:space="preserve">
+    <value>Koordinat</value>
+  </data>
+  <data name="tmi_GroupByNone" xml:space="preserve">
+    <value>Tanpa pengelompokan</value>
+  </data>
+  <data name="tmi_GroupByBlank" xml:space="preserve">
+    <value>(tidak ada)</value>
+  </data>
+  <data name="tsb_Duplicate" xml:space="preserve">
+    <value>Duplikat</value>
+  </data>
+  <data name="tsb_Delete" xml:space="preserve">
+    <value>Hapus</value>
+  </data>
+  <data name="tsb_AddFromSelection" xml:space="preserve">
+    <value>Tambah dari foto yang dipilih</value>
+  </data>
+  <data name="mbx_FrmManageFavourites_WarningNameTaken" xml:space="preserve">
+    <value>Favorit lain sudah memiliki nama ini.</value>
+  </data>
+  <data name="mbx_FrmManageFavourites_WarningAltitudeInvalid" xml:space="preserve">
+    <value>Ketinggian harus berupa angka.</value>
+  </data>
+  <data name="mbx_FrmManageFavourites_WarningNoCoordinates" xml:space="preserve">
+    <value>Tidak ada koordinat yang dapat digunakan. Pilih foto yang memiliki posisi.</value>
+  </data>
+  <data name="mbx_FrmManageFavourites_QuestionAcceptChanges" xml:space="preserve">
+    <value>Terima perubahan pada favorit ini?</value>
+  </data>
+  <data name="mbx_FrmManageFavourites_QuestionDiscardAll" xml:space="preserve">
+    <value>Tutup tanpa menyimpan perubahan pada favorit?</value>
+  </data>
+  <data name="mbx_FrmManageFavourites_InfoWebNothingFound" xml:space="preserve">
+    <value>Layanan web tidak memiliki data untuk posisi ini.</value>
+  </data>
+  <data name="tpg_Keywords" xml:space="preserve">
+    <value>Kategori/Kata Kunci</value>
+  </data>
+  <data name="tpg_SourceDescription" xml:space="preserve">
+    <value>Sumber/Deskripsi</value>
+  </data>
+  <data name="tpg_Contact" xml:space="preserve">
+    <value>Kontak</value>
+  </data>
+  <data name="lbl_SectionSource" xml:space="preserve">
+    <value>Sumber</value>
+  </data>
+  <data name="lbl_SectionDescription" xml:space="preserve">
+    <value>Deskripsi</value>
+  </data>
+  <data name="lbl_Category" xml:space="preserve">
+    <value>Kategori</value>
+  </data>
+  <data name="lbl_SupplementalCategories" xml:space="preserve">
+    <value>Kategori Tambahan</value>
+  </data>
+  <data name="lbl_IPTCKeywords" xml:space="preserve">
+    <value>Kata Kunci</value>
+  </data>
+  <data name="lbl_Artist" xml:space="preserve">
+    <value>Artis</value>
+  </data>
+  <data name="lbl_CaptionWriter" xml:space="preserve">
+    <value>Penulis Keterangan</value>
+  </data>
+  <data name="lbl_Source" xml:space="preserve">
+    <value>Sumber</value>
+  </data>
+  <data name="lbl_Credit" xml:space="preserve">
+    <value>Kredit</value>
+  </data>
+  <data name="lbl_SourceURL" xml:space="preserve">
+    <value>URL</value>
+  </data>
+  <data name="lbl_Copyright" xml:space="preserve">
+    <value>Hak Cipta</value>
+  </data>
+  <data name="lbl_ObjectName" xml:space="preserve">
+    <value>Nama Objek</value>
+  </data>
+  <data name="lbl_Headline" xml:space="preserve">
+    <value>Headline</value>
+  </data>
+  <data name="lbl_Caption" xml:space="preserve">
+    <value>Keterangan</value>
+  </data>
+  <data name="lbl_SpecialInstructions" xml:space="preserve">
+    <value>Instruksi Khusus</value>
+  </data>
+  <data name="lbl_Byline" xml:space="preserve">
+    <value>Byline</value>
+  </data>
+  <data name="lbl_BylineTitle" xml:space="preserve">
+    <value>Judul Byline</value>
+  </data>
+  <data name="lbl_CreatorAddress" xml:space="preserve">
+    <value>Alamat</value>
+  </data>
+  <data name="lbl_CreatorCity" xml:space="preserve">
+    <value>Kota</value>
+  </data>
+  <data name="lbl_CreatorPostalCode" xml:space="preserve">
+    <value>Kode Pos</value>
+  </data>
+  <data name="lbl_CreatorRegion" xml:space="preserve">
+    <value>Provinsi</value>
+  </data>
+  <data name="lbl_CreatorCountry" xml:space="preserve">
+    <value>Negara</value>
+  </data>
+  <data name="lbl_CreatorPhone" xml:space="preserve">
+    <value>Telepon</value>
+  </data>
+  <data name="lbl_CreatorEmail" xml:space="preserve">
+    <value>E-Mail</value>
+  </data>
+  <data name="lbl_CreatorURL" xml:space="preserve">
+    <value>URL</value>
+  </data>
+  <data name="tmi_FieldMenu_InsertFrom" xml:space="preserve">
+    <value>Sisipkan dari</value>
+  </data>
+  <data name="tmi_FieldMenu_CopyTo" xml:space="preserve">
+    <value>Salin ke</value>
+  </data>
+  <data name="tmi_FieldMenu_CopySelectionToCategories" xml:space="preserve">
+    <value>Salin Pilihan ke Kategori</value>
+  </data>
+  <data name="tmi_FieldMenu_CopySelectionToKeywords" xml:space="preserve">
+    <value>Salin Pilihan ke Kata Kunci</value>
+  </data>
+  <data name="tmi_FieldMenu_MostRecentlyUsed" xml:space="preserve">
+    <value>Item Terakhir Digunakan</value>
+  </data>
+  <data name="tmi_FieldMenu_ForgetRemembered" xml:space="preserve">
+    <value>Lupakan Item yang Tersimpan</value>
+  </data>
+  <data name="lbl_ContactPrefix" xml:space="preserve">
+    <value>Kontak</value>
+  </data>
+  <data name="btn_LoadFromTemplate" xml:space="preserve">
+    <value>Muat dari Templat...</value>
+  </data>
+  <data name="btn_LoadFromImage" xml:space="preserve">
+    <value>Muat dari Gambar...</value>
+  </data>
+  <data name="btn_SaveAsTemplate" xml:space="preserve">
+    <value>Simpan sebagai Templat...</value>
+  </data>
+  <data name="lbl_TemplateName" xml:space="preserve">
+    <value>Templat:</value>
+  </data>
+  <data name="lbl_TemplateInclude" xml:space="preserve">
+    <value>Gunakan ini:</value>
+  </data>
+  <data name="btn_TemplateDelete" xml:space="preserve">
+    <value>Hapus</value>
+  </data>
+  <data name="chk_TemplateGroup_Country" xml:space="preserve">
+    <value>Negara</value>
+  </data>
+  <data name="chk_TemplateGroup_State" xml:space="preserve">
+    <value>Provinsi</value>
+  </data>
+  <data name="chk_TemplateGroup_City" xml:space="preserve">
+    <value>Kota</value>
+  </data>
+  <data name="chk_TemplateGroup_Sublocation" xml:space="preserve">
+    <value>Sublokasi</value>
+  </data>
+  <data name="chk_TemplateGroup_Position" xml:space="preserve">
+    <value>Posisi GPS</value>
+  </data>
+  <data name="chk_TemplateGroup_Altitude" xml:space="preserve">
+    <value>Ketinggian</value>
+  </data>
+  <data name="chk_TemplateGroup_Direction" xml:space="preserve">
+    <value>Arah gambar</value>
+  </data>
+  <data name="chk_TemplateGroup_Destination" xml:space="preserve">
+    <value>Tujuan</value>
+  </data>
+  <data name="chk_TemplateGroup_TakenDate" xml:space="preserve">
+    <value>Tanggal pengambilan</value>
+  </data>
+  <data name="chk_TemplateGroup_CreateDate" xml:space="preserve">
+    <value>Tanggal dibuat</value>
+  </data>
+  <data name="chk_TemplateGroup_OffsetTime" xml:space="preserve">
+    <value>Offset zona waktu</value>
+  </data>
+  <data name="mbx_FrmEditTemplateDialog_QuestionDeleteTemplate" xml:space="preserve">
+    <value>Hapus templat '{0}'?</value>
+  </data>
+  <data name="mbx_FrmEditTemplateDialog_QuestionOverwriteTemplate" xml:space="preserve">
+    <value>Templat bernama '{0}' sudah ada. Ganti?</value>
+  </data>
+  <data name="mbx_FrmEditFileData_ErrorTemplateNotSaved" xml:space="preserve">
+    <value>Templat tidak dapat disimpan.</value>
+  </data>
+  <data name="mbx_FrmEditFileData_InfoImageHasNothingToLoad" xml:space="preserve">
+    <value>File itu tidak memiliki apa pun yang dapat dimuat formulir ini.</value>
+  </data>
+  <data name="lbl_Sexagesimal" xml:space="preserve">
+    <value>Sexagesimal</value>
+  </data>
+  <data name="lbl_ImageDirection" xml:space="preserve">
+    <value>Arah Gambar [°]:</value>
+  </data>
+  <data name="lbl_DestLatitude" xml:space="preserve">
+    <value>Lintang Tujuan:</value>
+  </data>
+  <data name="lbl_DestLongitude" xml:space="preserve">
+    <value>Bujur Tujuan:</value>
+  </data>
+  <data name="btn_GetAltitudeFromWeb" xml:space="preserve">
+    <value>Ambil dari Web</value>
+  </data>
+  <data name="mbx_FrmEditFileData_InfoCoordinatesNeededForAltitude" xml:space="preserve">
+    <value>Masukkan lintang dan bujur terlebih dahulu.</value>
+  </data>
+  <data name="mbx_FrmEditFileData_WarningNoAltitudeFromWeb" xml:space="preserve">
+    <value>Layanan web tidak memiliki ketinggian untuk posisi ini.</value>
+  </data>
+  <data name="ckb_SyncGeoKeywords" xml:space="preserve">
+    <value>Jaga kata kunci tetap selaras dengan lokasi (nama tempat dan kata kunci geo:)</value>
+  </data>
+  <data name="ckb_ShowChangelogAfterUpdate" xml:space="preserve">
+    <value>Setelah pembaruan, tampilkan apa yang berubah</value>
+  </data>
+  <data name="mbx_Helper_InfoRemoveGeoDataKeywordsRemain" xml:space="preserve">
+    <value>Data lokasi telah dihapus, tetapi kata kunci Anda tidak diubah: nama tempat atau kata kunci "geo:" di dalamnya tetap seperti semula. Agar mengikuti perubahan lokasi, aktifkan "Jaga kata kunci tetap selaras dengan lokasi" di Pengaturan.</value>
+  </data>
+  <data name="tmi_View_FolderTree" xml:space="preserve">
+    <value>Pohon folder</value>
+  </data>
+  <data name="lbl_FolderTree_Title" xml:space="preserve">
+    <value>Folder</value>
+  </data>
+  <data name="tsb_FolderTree_Favourites" xml:space="preserve">
+    <value>Folder favorit</value>
+  </data>
+  <data name="tmi_FolderTree_AddCurrent" xml:space="preserve">
+    <value>Tambahkan folder saat ini ke favorit</value>
+  </data>
+  <data name="tmi_FolderTree_RemoveCurrent" xml:space="preserve">
+    <value>Hapus folder saat ini dari favorit</value>
+  </data>
+  <data name="tmi_FolderTree_NoFavourites" xml:space="preserve">
+    <value>(belum ada folder favorit)</value>
+  </data>
+  <data name="tsb_FolderTree_Refresh" xml:space="preserve">
+    <value>Segarkan pohon folder</value>
+  </data>
+  <data name="tsb_FolderTree_Hide" xml:space="preserve">
+    <value>Sembunyikan pohon folder (Ctrl+B)</value>
+  </data>
+  <data name="cmi_FolderTree_AddThis" xml:space="preserve">
+    <value>Tambahkan ke favorit</value>
+  </data>
+  <data name="cmi_FolderTree_RemoveThis" xml:space="preserve">
+    <value>Hapus dari favorit</value>
+  </data>
+  <data name="tsb_Donate" xml:space="preserve">
+    <value>BuyMeACoffee (donasi, dibuka di browser)</value>
+  </data>
+</root>

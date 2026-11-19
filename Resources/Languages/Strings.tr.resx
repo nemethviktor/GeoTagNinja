@@ -1,0 +1,2009 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<root>
+  <xsd:schema xmlns="" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:msdata="urn:schemas-microsoft-com:xml-msdata" id="root">
+    <xsd:import namespace="http://www.w3.org/XML/1998/namespace" />
+    <xsd:element name="root" msdata:IsDataSet="true">
+      <xsd:complexType>
+        <xsd:choice maxOccurs="unbounded">
+          <xsd:element name="metadata">
+            <xsd:complexType>
+              <xsd:sequence>
+                <xsd:element name="value" type="xsd:string" minOccurs="0" />
+              </xsd:sequence>
+              <xsd:attribute name="name" use="required" type="xsd:string" />
+              <xsd:attribute name="type" type="xsd:string" />
+              <xsd:attribute name="mimetype" type="xsd:string" />
+              <xsd:attribute ref="xml:space" />
+            </xsd:complexType>
+          </xsd:element>
+          <xsd:element name="assembly">
+            <xsd:complexType>
+              <xsd:attribute name="alias" type="xsd:string" />
+              <xsd:attribute name="name" type="xsd:string" />
+            </xsd:complexType>
+          </xsd:element>
+          <xsd:element name="data">
+            <xsd:complexType>
+              <xsd:sequence>
+                <xsd:element name="value" type="xsd:string" minOccurs="0" msdata:Ordinal="1" />
+                <xsd:element name="comment" type="xsd:string" minOccurs="0" msdata:Ordinal="2" />
+              </xsd:sequence>
+              <xsd:attribute name="name" type="xsd:string" use="required" msdata:Ordinal="1" />
+              <xsd:attribute name="type" type="xsd:string" msdata:Ordinal="3" />
+              <xsd:attribute name="mimetype" type="xsd:string" msdata:Ordinal="4" />
+              <xsd:attribute ref="xml:space" />
+            </xsd:complexType>
+          </xsd:element>
+          <xsd:element name="resheader">
+            <xsd:complexType>
+              <xsd:sequence>
+                <xsd:element name="value" type="xsd:string" minOccurs="0" msdata:Ordinal="1" />
+              </xsd:sequence>
+              <xsd:attribute name="name" type="xsd:string" use="required" />
+            </xsd:complexType>
+          </xsd:element>
+        </xsd:choice>
+      </xsd:complexType>
+    </xsd:element>
+  </xsd:schema>
+  <resheader name="resmimetype">
+    <value>text/microsoft-resx</value>
+  </resheader>
+  <resheader name="version">
+    <value>2.0</value>
+  </resheader>
+  <resheader name="reader">
+    <value>System.Resources.ResXResourceReader, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </resheader>
+  <resheader name="writer">
+    <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </resheader>
+  <data name="btn_ApplyAndNext" xml:space="preserve">
+    <value>Uygula &amp;&amp; Sonrakine Geç</value>
+  </data>
+  <data name="btn_InsertFromTakenDate" xml:space="preserve">
+    <value>Çekim tarihini kullan</value>
+  </data>
+  <data name="btn_PullMostRecentPasteSettings" xml:space="preserve">
+    <value>"Son" yapıştırma ayarlarını al</value>
+  </data>
+  <data name="btn_PullMostRecentTrackSyncShift" xml:space="preserve">
+    <value>"Son" kaydırma ayarlarını al</value>
+  </data>
+  <data name="btn_RemoveGeoData" xml:space="preserve">
+    <value>GPS ve konum verilerini kaldır</value>
+  </data>
+  <data name="btn_ResetToDefaults" xml:space="preserve">
+    <value>Varsayılanlara sıfırla</value>
+  </data>
+  <data name="btn_RestartLater" xml:space="preserve">
+    <value>Daha sonra yeniden başlat</value>
+  </data>
+  <data name="btn_RestartNow" xml:space="preserve">
+    <value>Şimdi yeniden başlat</value>
+  </data>
+  <data name="btn_SetCurrentValues" xml:space="preserve">
+    <value>Düzenlenmek üzere seçili tüm görüntüler için geçerli değerleri ayarla...</value>
+  </data>
+  <data name="ckb_AddXMPSideCar" xml:space="preserve">
+    <value>XMP yan dosyasını ekle/üzerine yaz</value>
+  </data>
+  <data name="ckb_DeSelectAll" xml:space="preserve">
+    <value>Tümünü işaretle/kaldır</value>
+  </data>
+  <data name="ckb_DoNotQueryAPI" xml:space="preserve">
+    <value>Ters coğrafi kodlama YAPMA (yalnızca koordinatları al, Şehir/Eyalet vb. alma)</value>
+  </data>
+  <data name="ckb_ExportTrackIncludeAltitude" xml:space="preserve">
+    <value>Dışa aktarmaya yükseklik verilerini dahil et</value>
+  </data>
+  <data name="ckb_ImportExport_CityRulesSettings" xml:space="preserve">
+    <value>CityRulesSettings</value>
+  </data>
+  <data name="ckb_IncludePredeterminedCountries" xml:space="preserve">
+    <value>"Önceden belirlenmiş" ülkeler dahil edilsin mi? (yukarıdaki bağlantıya ve uyarıya bakın)</value>
+  </data>
+  <data name="ckb_LoadTrackOntoMap" xml:space="preserve">
+    <value>Rota dosyasını haritaya bindir</value>
+  </data>
+  <data name="ckb_OffsetTime" xml:space="preserve">
+    <value>Saat dilimi farkı</value>
+  </data>
+  <data name="ckb_OverlayGPXForSelectedDatesOnly" xml:space="preserve">
+    <value>Yalnızca seçili dosyaların ilk ve son tarihi arasına düşen tarihler için</value>
+  </data>
+  <data name="ckb_OverwriteOriginal" xml:space="preserve">
+    <value>xxx_original yedeğini OLUŞTURMA</value>
+  </data>
+  <data name="ckb_PopulatedPlacesOnly" xml:space="preserve">
+    <value>API verilerini yalnızca "Yerleşim yerleri" (fcode=PPL) ile sınırlı göster [önerilmez]</value>
+  </data>
+  <data name="ckb_ProcessOriginalFile" xml:space="preserve">
+    <value>Görüntü dosyasının kendisini işle</value>
+  </data>
+  <data name="ckb_QuestionStopProcessingRows" xml:space="preserve">
+    <value>Diğer satırların işlenmesi durdurulsun mu?</value>
+  </data>
+  <data name="ckb_RemoveGeoDataRemovesTimeOffset" xml:space="preserve">
+    <value>"Konum verilerini kaldır" işlevi saat dilimi farkını da kaldırır</value>
+  </data>
+  <data name="ckb_ReplaceBlankToponyms" xml:space="preserve">
+    <value>Boş Şehir, Eyalet ve Alt konum değerlerini şununla değiştir: </value>
+  </data>
+  <data name="ckb_ResetFileDateToCreated" xml:space="preserve">
+    <value>Görüntü dosyası tarihini oluşturma tarihine sıfırla</value>
+  </data>
+  <data name="ckb_ResetMapToZero" xml:space="preserve">
+    <value>Konum verisi yoksa haritayı 0/0'a ayarla</value>
+  </data>
+  <data name="ckb_StopProcessingRules" xml:space="preserve">
+    <value>İlk Ülke+Hedef eşleşmesinden sonra kuralların işlenmesini durdur</value>
+  </data>
+  <data name="ckb_UpdateCheckPreRelease" xml:space="preserve">
+    <value>Ön sürüm [beta] güncellemeleri de denetlensin mi?</value>
+  </data>
+  <data name="ckb_UseDarkMode" xml:space="preserve">
+    <value>Uygulama arayüzünde koyu tema kullanılsın mı?</value>
+  </data>
+  <data name="ckb_UseImperialNotMetric" xml:space="preserve">
+    <value>Yükseklik için metrik [metre] yerine Emperyal (feet) kullan</value>
+  </data>
+  <data name="ckb_UseTimeZone" xml:space="preserve">
+    <value>Bu saat dilimini kullan:</value>
+  </data>
+  <data name="clh_BlankOutTargetPoint" xml:space="preserve">
+    <value>Boşaltılsın mı?</value>
+  </data>
+  <data name="clh_DataPointConditionType" xml:space="preserve">
+    <value>Eğer</value>
+  </data>
+  <data name="clh_DataPointConditionValue" xml:space="preserve">
+    <value>Değer</value>
+  </data>
+  <data name="clh_DataPointName" xml:space="preserve">
+    <value>Ne</value>
+  </data>
+  <data name="clh_ExifTag" xml:space="preserve">
+    <value>Exif (GTN iç) etiketi</value>
+  </data>
+  <data name="clh_Folder" xml:space="preserve">
+    <value>Klasör</value>
+  </data>
+  <data name="clh_ModifiedValue" xml:space="preserve">
+    <value>Değiştirilmiş (kaydedilmemiş) değer</value>
+  </data>
+  <data name="clh_OriginalValue" xml:space="preserve">
+    <value>Özgün (kaydedilmiş) değer</value>
+  </data>
+  <data name="clh_TargetPointName" xml:space="preserve">
+    <value>O zaman</value>
+  </data>
+  <data name="clh_TargetPointNameCustomCityLogic" xml:space="preserve">
+    <value>Şehri şuradan oku</value>
+  </data>
+  <data name="clh_TargetPointOutcome" xml:space="preserve">
+    <value>Olur</value>
+  </data>
+  <data name="clh_TargetPointOutcomeCustom" xml:space="preserve">
+    <value>Özel sonuç</value>
+  </data>
+  <data name="cmi_OpenCoordsInAPI" xml:space="preserve">
+    <value>Koordinatları API'de aç</value>
+  </data>
+  <data name="cmi_RemoveCachedData" xml:space="preserve">
+    <value>Önbelleğe alınmış verileri kaldır</value>
+  </data>
+  <data name="cmi_ShowHideCols" xml:space="preserve">
+    <value>Sütunları göster veya gizle</value>
+  </data>
+  <data name="fbd_StartupFolder" xml:space="preserve">
+    <value>Başlangıç klasörünü seçin</value>
+  </data>
+  <data name="frm_FrmEditFileData" xml:space="preserve">
+    <value>Verileri düzenle</value>
+  </data>
+  <data name="frm_FrmImportExportGpx" xml:space="preserve">
+    <value>GPX/JSON verilerini içe/dışa aktar</value>
+  </data>
+  <data name="frm_FrmManageFavourites" xml:space="preserve">
+    <value>Favorileri yönet</value>
+  </data>
+  <data name="frm_FrmPasteWhat" xml:space="preserve">
+    <value>Yapıştır…Ne?</value>
+  </data>
+  <data name="frm_FrmPickDataFromAPIBox" xml:space="preserve">
+    <value>Yer adı değerlerini seçin</value>
+  </data>
+  <data name="frm_FrmPleaseWaitBox" xml:space="preserve">
+    <value>Klasör yüklenirken lütfen bekleyin.</value>
+  </data>
+  <data name="frm_FrmSettings" xml:space="preserve">
+    <value>Ayarlar</value>
+  </data>
+  <data name="gbx_AppSettings" xml:space="preserve">
+    <value>Uygulama ayarları</value>
+  </data>
+  <data name="gbx_CreateDate" xml:space="preserve">
+    <value>Oluşturulma tarihi</value>
+  </data>
+  <data name="gbx_Dates" xml:space="preserve">
+    <value>Tarihler</value>
+  </data>
+  <data name="gbx_EditImageList" xml:space="preserve">
+    <value>Düzenlenmek üzere seçili görüntüler</value>
+  </data>
+  <data name="gbx_GeoNamesLanguageSettings" xml:space="preserve">
+    <value>GeoNames dil ayarları</value>
+  </data>
+  <data name="gbx_GeoNamesSettings" xml:space="preserve">
+    <value>GeoNames ayarları</value>
+  </data>
+  <data name="gbx_GetAltitude" xml:space="preserve">
+    <value>Yükseklik verilerini al</value>
+  </data>
+  <data name="gbx_GetToponomy" xml:space="preserve">
+    <value>Yer adı verilerini al</value>
+  </data>
+  <data name="gbx_GPSData" xml:space="preserve">
+    <value>GPS verileri</value>
+  </data>
+  <data name="gbx_ImportExportGpxSource" xml:space="preserve">
+    <value>Kaynak</value>
+  </data>
+  <data name="gbx_ImportExportGpxTimeSetting" xml:space="preserve">
+    <value>Zaman ayarı</value>
+  </data>
+  <data name="gbx_LocationData" xml:space="preserve">
+    <value>Konum verileri</value>
+  </data>
+  <data name="gbx_MapColourMode" xml:space="preserve">
+    <value>Harita renk modu</value>
+  </data>
+  <data name="gbx_OtherSettings" xml:space="preserve">
+    <value>Diğer ayarlar</value>
+  </data>
+  <data name="gbx_SaveTrackTo" xml:space="preserve">
+    <value>Rotayı kaydet (seçenekler)</value>
+  </data>
+  <data name="gbx_TakenDate" xml:space="preserve">
+    <value>Görüntünün çekim tarihi</value>
+  </data>
+  <data name="Generic_All" xml:space="preserve">
+    <value>Tümü</value>
+  </data>
+  <data name="Generic_Cancel" xml:space="preserve">
+    <value>İptal</value>
+  </data>
+  <data name="Generic_City" xml:space="preserve">
+    <value>Şehir</value>
+  </data>
+  <data name="Generic_Close" xml:space="preserve">
+    <value>Kapat</value>
+  </data>
+  <data name="Generic_Coordinates" xml:space="preserve">
+    <value>Koordinatlar</value>
+  </data>
+  <data name="Generic_Country" xml:space="preserve">
+    <value>Ülke</value>
+  </data>
+  <data name="Generic_CountryCode" xml:space="preserve">
+    <value>Ülke kodu</value>
+  </data>
+  <data name="Generic_CreateDate" xml:space="preserve">
+    <value>Oluşturulma tarihi</value>
+  </data>
+  <data name="Generic_Days" xml:space="preserve">
+    <value>Gün</value>
+  </data>
+  <data name="Generic_Decimal" xml:space="preserve">
+    <value>Ondalık</value>
+  </data>
+  <data name="Generic_Delete" xml:space="preserve">
+    <value>Sil</value>
+  </data>
+  <data name="Generic_DestCoordinates" xml:space="preserve">
+    <value>Hedef koordinatları</value>
+  </data>
+  <data name="Generic_Export" xml:space="preserve">
+    <value>Dışa aktar</value>
+  </data>
+  <data name="Generic_ExportTrackTimeStampType" xml:space="preserve">
+    <value>Zaman damgası değeri</value>
+  </data>
+  <data name="Generic_ExposureTime" xml:space="preserve">
+    <value>Pozlama süresi</value>
+  </data>
+  <data name="Generic_Favourites" xml:space="preserve">
+    <value>Favoriler</value>
+  </data>
+  <data name="Generic_Feet" xml:space="preserve">
+    <value>Feet</value>
+  </data>
+  <data name="Generic_Feet_Abbr" xml:space="preserve">
+    <value>ft</value>
+  </data>
+  <data name="Generic_FileModifyDate" xml:space="preserve">
+    <value>Dosya tarihi</value>
+  </data>
+  <data name="Generic_FileName" xml:space="preserve">
+    <value>Dosya adı</value>
+  </data>
+  <data name="Generic_Fnumber" xml:space="preserve">
+    <value>Diyafram</value>
+  </data>
+  <data name="Generic_FocalLength" xml:space="preserve">
+    <value>Odak uzaklığı</value>
+  </data>
+  <data name="Generic_FocalLengthIn35mmFormat" xml:space="preserve">
+    <value>Odak uzaklığı (35 mm)</value>
+  </data>
+  <data name="Generic_ForAllImages" xml:space="preserve">
+    <value>Tüm görüntüler için</value>
+  </data>
+  <data name="Generic_ForThisImage" xml:space="preserve">
+    <value>Bu görüntü için</value>
+  </data>
+  <data name="Generic_GPSAltitude" xml:space="preserve">
+    <value>Yükseklik</value>
+  </data>
+  <data name="Generic_GPSAltitudeRef" xml:space="preserve">
+    <value>Yükseklik referansı</value>
+  </data>
+  <data name="Generic_GPSDateTime" xml:space="preserve">
+    <value>GPS tarih/saat</value>
+  </data>
+  <data name="Generic_GPSDestLatitude" xml:space="preserve">
+    <value>Hedef enlemi</value>
+  </data>
+  <data name="Generic_GPSDestLatitudeRef" xml:space="preserve">
+    <value>Hedef enlem referansı</value>
+  </data>
+  <data name="Generic_GPSDestLongitude" xml:space="preserve">
+    <value>Hedef boylamı</value>
+  </data>
+  <data name="Generic_GPSDestLongitudeRef" xml:space="preserve">
+    <value>Hedef boylam referansı</value>
+  </data>
+  <data name="Generic_GPSImgDirection" xml:space="preserve">
+    <value>Görüntü yönü</value>
+  </data>
+  <data name="Generic_GPSImgDirectionRef" xml:space="preserve">
+    <value>Görüntü yönü referansı</value>
+  </data>
+  <data name="Generic_GPSLatitude" xml:space="preserve">
+    <value>Enlem</value>
+  </data>
+  <data name="Generic_GPSLatitudeRef" xml:space="preserve">
+    <value>Enlem referansı</value>
+  </data>
+  <data name="Generic_GPSLongitude" xml:space="preserve">
+    <value>Boylam</value>
+  </data>
+  <data name="Generic_GPSLongitudeRef" xml:space="preserve">
+    <value>Boylam referansı</value>
+  </data>
+  <data name="Generic_GPSSpeed" xml:space="preserve">
+    <value>Hız</value>
+  </data>
+  <data name="Generic_GPSSpeedRef" xml:space="preserve">
+    <value>Hız referansı</value>
+  </data>
+  <data name="Generic_GUID" xml:space="preserve">
+    <value>GUID</value>
+  </data>
+  <data name="Generic_Hours" xml:space="preserve">
+    <value>Saat</value>
+  </data>
+  <data name="Generic_Import" xml:space="preserve">
+    <value>İçe aktar</value>
+  </data>
+  <data name="Generic_Insert" xml:space="preserve">
+    <value>Ekle</value>
+  </data>
+  <data name="Generic_IPTCKeywords" xml:space="preserve">
+    <value>IPTC anahtar kelimeleri</value>
+  </data>
+  <data name="Generic_ISO" xml:space="preserve">
+    <value>ISO hızı</value>
+  </data>
+  <data name="Generic_LensSpec" xml:space="preserve">
+    <value>Objektif</value>
+  </data>
+  <data name="Generic_Make" xml:space="preserve">
+    <value>Marka</value>
+  </data>
+  <data name="Generic_Metres" xml:space="preserve">
+    <value>Metre</value>
+  </data>
+  <data name="Generic_Metres_Abbr" xml:space="preserve">
+    <value>m</value>
+  </data>
+  <data name="Generic_Miles" xml:space="preserve">
+    <value>Mil</value>
+  </data>
+  <data name="Generic_Minutes" xml:space="preserve">
+    <value>Dakika</value>
+  </data>
+  <data name="Generic_Model" xml:space="preserve">
+    <value>Model</value>
+  </data>
+  <data name="Generic_No" xml:space="preserve">
+    <value>Hayır</value>
+  </data>
+  <data name="Generic_None" xml:space="preserve">
+    <value>Yok</value>
+  </data>
+  <data name="Generic_OffsetTime" xml:space="preserve">
+    <value>Saat dilimi farkı</value>
+  </data>
+  <data name="Generic_OK" xml:space="preserve">
+    <value>Tamam</value>
+  </data>
+  <data name="Generic_PleaseWait" xml:space="preserve">
+    <value>Lütfen bekleyin...</value>
+  </data>
+  <data name="Generic_QuestionDontAskAgain" xml:space="preserve">
+    <value>Bir daha sorma</value>
+  </data>
+  <data name="Generic_Rating" xml:space="preserve">
+    <value>Derecelendirme</value>
+  </data>
+  <data name="Generic_Rename" xml:space="preserve">
+    <value>Yeniden adlandır</value>
+  </data>
+  <data name="Generic_Save" xml:space="preserve">
+    <value>Geçerli değişiklikleri kaydet</value>
+  </data>
+  <data name="Generic_Seconds" xml:space="preserve">
+    <value>Sn</value>
+  </data>
+  <data name="Generic_ShowPassword" xml:space="preserve">
+    <value>Parolayı göster</value>
+  </data>
+  <data name="Generic_ShowUserName" xml:space="preserve">
+    <value>Kullanıcı adını göster</value>
+  </data>
+  <data name="Generic_State" xml:space="preserve">
+    <value>Eyalet/İl</value>
+  </data>
+  <data name="Generic_Sublocation" xml:space="preserve">
+    <value>Alt konum</value>
+  </data>
+  <data name="Generic_TakenDate" xml:space="preserve">
+    <value>Çekim tarihi</value>
+  </data>
+  <data name="Generic_TZTime" xml:space="preserve">
+    <value>Saat dilimi ayarlaması:</value>
+  </data>
+  <data name="Generic_UseDST" xml:space="preserve">
+    <value>Yaz saati uygulaması kullanılsın mı?</value>
+  </data>
+  <data name="Generic_XMLSubjects" xml:space="preserve">
+    <value>XML konuları</value>
+  </data>
+  <data name="Generic_Yes" xml:space="preserve">
+    <value>Evet</value>
+  </data>
+  <data name="lbl_ARCGIS_APIKey" xml:space="preserve">
+    <value>ARCGIS API anahtarı</value>
+  </data>
+  <data name="lbl_CameraTime" xml:space="preserve">
+    <value>Kamera tarihi/saati</value>
+  </data>
+  <data name="lbl_CameraTimeNote" xml:space="preserve">
+    <value>Not: Zaman kaydırma yalnızca görüntü zaman damgaları GPS zamanıyla düzgün eşleşmediğinde gereklidir. Gerekmedikçe 0 sn olarak bırakın.</value>
+  </data>
+  <data name="lbl_CancelPressed" xml:space="preserve">
+    <value>İptal'e basıldı. Klasör ayrıştırma durduruldu, ancak şimdiye kadar toplanan dosyalar ayrıştırılacak.</value>
+  </data>
+  <data name="lbl_ChoiceOfferCount" xml:space="preserve">
+    <value>Şu kadar yer adı seçeneği göster</value>
+  </data>
+  <data name="lbl_ChoiceRadius" xml:space="preserve">
+    <value>Yarıçap içinde [km]</value>
+  </data>
+  <data name="lbl_ExportTrackOrderBy" xml:space="preserve">
+    <value>Rota noktalarını şuna göre sırala</value>
+  </data>
+  <data name="lbl_ExportTrackTimeStampType" xml:space="preserve">
+    <value>Zaman damgası değeri</value>
+  </data>
+  <data name="lbl_ExportTrackTimeStampTypeNote" xml:space="preserve">
+    <value>GPSDateTime seçerseniz ve dosyanızda böyle bir öznitelik yoksa dışa aktarma başarısız olur.
+Bazı HEIC dosyalarında bu öznitelik bulunur, çoğu diğer biçimde bulunmaz.</value>
+  </data>
+  <data name="lbl_GeoMaxExtSecs" xml:space="preserve">
+    <value>Saniye cinsinden en fazla ekstrapolasyon süresi (Çekim zaman damgası ile rota noktası zaman damgası arasındaki fark).</value>
+  </data>
+  <data name="lbl_GeoMaxIntSecs" xml:space="preserve">
+    <value>Saniye cinsinden en fazla enterpolasyon süresi ('yol tahmini'). Devre dışı bırakmak için 0 olarak ayarlayın.</value>
+  </data>
+  <data name="lbl_GeoNames_Pwd" xml:space="preserve">
+    <value>GeoNames parolası</value>
+  </data>
+  <data name="lbl_GeoNames_UserName" xml:space="preserve">
+    <value>GeoNames kullanıcı adı</value>
+  </data>
+  <data name="lbl_importFromAnotherFolder" xml:space="preserve">
+    <value>&lt;-- İçe aktarma kaynak klasörünü ayarlamak için buraya tıklayın</value>
+  </data>
+  <data name="lbl_importOneFile" xml:space="preserve">
+    <value>&lt;-- İçe aktarma kaynak dosyasını ayarlamak için buraya tıklayın</value>
+  </data>
+  <data name="lbl_ImportTimeAgainst" xml:space="preserve">
+    <value>Rota dosyalarındaki zaman damgasını şununla karşılaştır:</value>
+  </data>
+  <data name="lbl_Language" xml:space="preserve">
+    <value>Dil</value>
+  </data>
+  <data name="lbl_OffsetTime" xml:space="preserve">
+    <value>Saat dilimi</value>
+  </data>
+  <data name="lbl_ParseProgress_Normal" xml:space="preserve">
+    <value>Hazır</value>
+  </data>
+  <data name="lbl_ParseProgress_Read" xml:space="preserve">
+    <value>Okunuyor:</value>
+  </data>
+  <data name="lbl_ParseProgress_Write" xml:space="preserve">
+    <value>Yazılıyor:</value>
+  </data>
+  <data name="lbl_ParsingFolders" xml:space="preserve">
+    <value>Dosyalar &amp;&amp; klasörler ayrıştırılıyor, lütfen bekleyin. </value>
+  </data>
+  <data name="lbl_PleaseWaitBoxActionParsing" xml:space="preserve">
+    <value>Veriler ayrıştırılıyor:</value>
+  </data>
+  <data name="lbl_PleaseWaitBoxActionPopulatingListView" xml:space="preserve">
+    <value>Ana tablo (ListView) dolduruluyor</value>
+  </data>
+  <data name="lbl_PleaseWaitBoxActionScanning" xml:space="preserve">
+    <value>Dosya taranıyor:</value>
+  </data>
+  <data name="lbl_PressCancelToStop" xml:space="preserve">
+    <value>Durdurmak için İptal'e basın.</value>
+  </data>
+  <data name="lbl_QuestionAddToponomy" xml:space="preserve">
+    <value>Seçili dosyalara yükseklik ve yer adı değerleri de atansın mı?
+Hayır'ı seçerseniz enlem/boylam verileriniz gömülü yer adı verileriyle eşitlenmemiş hâle gelebilir.
+'Bir daha sorma'ya tıklarsanız cevap Evet olarak alınır ve bu oturum boyunca bir daha sorulmaz. Sıfırlamak için yeniden başlatın.</value>
+  </data>
+  <data name="lbl_SaveTrackTo" xml:space="preserve">
+    <value>Çıktıyı şuraya kaydet</value>
+  </data>
+  <data name="lbl_SelectColsTitle" xml:space="preserve">
+    <value>Sütunları seçin</value>
+  </data>
+  <data name="lbl_ShiftTrackTimeBy" xml:space="preserve">
+    <value>Rota dosyası zamanını şu kadar kaydır:</value>
+  </data>
+  <data name="gbx_Startup_Folder" xml:space="preserve">
+    <value>Başlangıç klasörü</value>
+  </data>
+  <data name="lbl_TZNote" xml:space="preserve">
+    <value>Not: Tarih/saat etiketi bir saat dilimi içermiyorsa bir tane eklenebilir (aşağıya bakın); aksi halde yerel sistem saati varsayılır.</value>
+  </data>
+  <data name="lbl_TZTime" xml:space="preserve">
+    <value>Saat dilimi ayarlaması:</value>
+  </data>
+  <data name="mbc_Error" xml:space="preserve">
+    <value>Hata</value>
+  </data>
+  <data name="mbc_Information" xml:space="preserve">
+    <value>Bilgi</value>
+  </data>
+  <data name="mbc_Question" xml:space="preserve">
+    <value>Soru</value>
+  </data>
+  <data name="mbc_Warning" xml:space="preserve">
+    <value>Uyarı</value>
+  </data>
+  <data name="mbx_DirectoryElementCollection_ErrorParsing" xml:space="preserve">
+    <value>Klasör, DirectoryElement öğelerine ayrıştırılırken hata oluştu</value>
+  </data>
+  <data name="mbx_FrmEditFileData_ErrorAPIError" xml:space="preserve">
+    <value>Uygulama API ile iletişim kurarken hatalarla karşılaştı. Yetkisiz hatası aldıysanız lütfen ayarlarda kullanıcı adınızı parola olarak girin.</value>
+  </data>
+  <data name="mbx_FrmEditFileData_ErrorInvalidSender" xml:space="preserve">
+    <value>Bu bir hata olacaktır. Lütfen GitHub'da bir sorun bildirin; 'gönderen' şuydu: </value>
+  </data>
+  <data name="mbx_FrmEditFileData_InfoDataUpdated" xml:space="preserve">
+    <value>Veriler güncellendi.</value>
+  </data>
+  <data name="mbx_FrmEditFileData_WarningFileDisappeared" xml:space="preserve">
+    <value>Dosyalarınız kaybolmuş görünüyor.</value>
+  </data>
+  <data name="mbx_FrmEditFileData_WarningLatLongMustBeNumbers" xml:space="preserve">
+    <value>Bu alan yalnızca sayı içermelidir. Varsayılan olarak sıfır olacaktır.</value>
+  </data>
+  <data name="mbx_FrmImportExportGpx_AskUserWantsReport" xml:space="preserve">
+    <value>İçe aktarma işlemine ilişkin raporu görmek ister misiniz?</value>
+  </data>
+  <data name="mbx_FrmImportExportGpx_FileOrFolderDoesntExist" xml:space="preserve">
+    <value>Seçtiğiniz dosya veya klasör geçersiz.</value>
+  </data>
+  <data name="mbx_FrmImportExportGpx_NoFileSelected" xml:space="preserve">
+    <value>İçe aktarılacak dosya seçilmedi.</value>
+  </data>
+  <data name="mbx_FrmImportExportGpx_TrackContainsNoData" xml:space="preserve">
+    <value>Rota katmanı içe aktarılamadı - ilgili görünen veri bulunamadı.</value>
+  </data>
+  <data name="mbx_FrmImportNoStoredShiftValues" xml:space="preserve">
+    <value>Kayıtlı "kaydırma" değeri yok. Veriler 0 olarak kalacak.</value>
+  </data>
+  <data name="mbx_FrmMainApp_ErrorCantCreateSQLiteDB" xml:space="preserve">
+    <value>SQLite veritabanı oluşturulamıyor (Lütfen GitHub'da bir sorun bildirin): </value>
+  </data>
+  <data name="mbx_FrmMainApp_ErrorCantLoadSQLiteDB" xml:space="preserve">
+    <value>SQL'den veriler yüklenemedi (Lütfen GitHub'da bir sorun bildirin): </value>
+  </data>
+  <data name="mbx_FrmMainApp_ErrorCantLoadWebView2" xml:space="preserve">
+    <value>WebView2 yüklenirken hata oluştu - yüklediniz mi?</value>
+  </data>
+  <data name="mbx_FrmMainApp_ErrorCantReadDefaultSQLiteDB" xml:space="preserve">
+    <value>SQL'den varsayılan değerler okunamadı (Lütfen GitHub'da bir sorun bildirin): </value>
+  </data>
+  <data name="mbx_FrmMainApp_ErrorCantWriteSQLiteDB" xml:space="preserve">
+    <value>Oluşturuldu ancak SQLite veritabanına yazılamıyor (Lütfen GitHub'da bir sorun bildirin): </value>
+  </data>
+  <data name="mbx_FrmMainApp_ErrorClearingFileDataQTables" xml:space="preserve">
+    <value>Dosya verisi-Q tabloları temizlenirken hata oluştu (Lütfen GitHub'da bir sorun bildirin): </value>
+  </data>
+  <data name="mbx_FrmMainApp_ErrorDoubleBuffer" xml:space="preserve">
+    <value>DoubleBuffer hatası (Lütfen GitHub'da bir sorun bildirin): </value>
+  </data>
+  <data name="mbx_FrmMainApp_ErrorFileGoneMissing" xml:space="preserve">
+    <value>Dosya artık mevcut görünmüyor: </value>
+  </data>
+  <data name="mbx_FrmMainApp_ErrorInitializeComponent" xml:space="preserve">
+    <value>FrmMainApp.InitializeComponent içinde hata (Lütfen GitHub'da bir sorun bildirin): </value>
+  </data>
+  <data name="mbx_FrmMainApp_ErrorInitializeWebViewEnsureCoreWebView2Async" xml:space="preserve">
+    <value>FrmMainApp.InitialiseWebView içinde hata (await wbv_MapArea.EnsureCoreWebView2Async(c2wv)) (Lütfen GitHub'da bir sorun bildirin): </value>
+  </data>
+  <data name="mbx_FrmMainApp_ErrorInitializeWebViewIsWebMessageEnabled" xml:space="preserve">
+    <value>FrmMainApp.InitialiseWebView içinde hata (IsWebMessageEnabled) (Lütfen GitHub'da bir sorun bildirin): </value>
+  </data>
+  <data name="mbx_FrmMainApp_ErrorInitializeWebViewNavigateToStringInHTMLFile" xml:space="preserve">
+    <value>FrmMainApp.InitialiseWebView içinde hata (HTML dosyasında NavigateToString) (Lütfen GitHub'da bir sorun bildirin): </value>
+  </data>
+  <data name="mbx_FrmMainApp_ErrorInitializeWebViewParseCoordsFromHTMLFile" xml:space="preserve">
+    <value>FrmMainApp.InitialiseWebView içinde hata (HTML dosyasından koordinatları ayrıştırma) (Lütfen GitHub'da bir sorun bildirin): </value>
+  </data>
+  <data name="mbx_FrmMainApp_ErrorInitializeWebViewReadHTMLFile" xml:space="preserve">
+    <value>FrmMainApp.InitialiseWebView içinde hata (HTML dosyasını okuma) (Lütfen GitHub'da bir sorun bildirin): </value>
+  </data>
+  <data name="mbx_FrmMainApp_ErrorInitializeWebViewReplaceStringInHTMLFile" xml:space="preserve">
+    <value>FrmMainApp.InitialiseWebView içinde hata (HTML dosyasındaki sabitleri değiştirme) (Lütfen GitHub'da bir sorun bildirin): </value>
+  </data>
+  <data name="mbx_FrmMainApp_ErrorInitializeWebViewWebMessageReceived" xml:space="preserve">
+    <value>wbv_MapArea_WebMessageReceived çalıştırılırken hata oluştu (Lütfen GitHub'da bir sorun bildirin): </value>
+  </data>
+  <data name="mbx_FrmMainApp_ErrorInvalidFolder" xml:space="preserve">
+    <value>Girdiğiniz klasör geçerli görünmüyor. C:\'ye dönülsün mü?</value>
+  </data>
+  <data name="mbx_FrmMainApp_ErrorLanguageFileColumnHeaders" xml:space="preserve">
+    <value>Dil dosyası okunurken ve sütun başlıkları atanırken hata oluştu (Lütfen GitHub'da bir sorun bildirin): </value>
+  </data>
+  <data name="mbx_FrmMainApp_ErrorNavigateMapGoHTMLCode" xml:space="preserve">
+    <value>FrmMainApp.NavigateMapGo içinde hata (string HTMLCode) (Lütfen GitHub'da bir sorun bildirin): </value>
+  </data>
+  <data name="mbx_FrmMainApp_ErrorRemoveGeoDataFailed" xml:space="preserve">
+    <value>Konum verisi kaldırma işlemi başarısız oldu veya bir hata döndürdü.</value>
+  </data>
+  <data name="mbx_FrmMainApp_ErrorResizingColumns" xml:space="preserve">
+    <value>Sütun boyutlandırma başarısız oldu (Lütfen GitHub'da bir sorun bildirin): </value>
+  </data>
+  <data name="mbx_FrmMainApp_ErrorSettingStartupFolder" xml:space="preserve">
+    <value>Varsayılan başlangıç klasörü ayarlanamadı (Lütfen GitHub'da bir sorun bildirin): </value>
+  </data>
+  <data name="mbx_FrmMainApp_InfoCachedDataNotRemoved" xml:space="preserve">
+    <value>Hiçbir veri kaldırılmadı. Ya geçerli öğeleri seçmediniz ya da seçtiğiniz öğelerde önbelleğe alınmış veri yoktu.</value>
+  </data>
+  <data name="mbx_FrmMainApp_InfoCachedDataRemoved" xml:space="preserve">
+    <value>Varsa, seçili öğelerin önbelleğe alınmış verileri kaldırıldı.</value>
+  </data>
+  <data name="mbx_FrmMainApp_InfoFavouriteNameCannotBeBlank" xml:space="preserve">
+    <value>Ad boş olamaz</value>
+  </data>
+  <data name="mbx_FrmMainApp_InfoFavouriteNotValid" xml:space="preserve">
+    <value>Seçtiğiniz kayıtlı öğe geçerli değil</value>
+  </data>
+  <data name="mbx_FrmMainApp_InfoFavouriteSaved" xml:space="preserve">
+    <value>Favori kaydedildi</value>
+  </data>
+  <data name="mbx_FrmMainApp_NoFavouritesDefined" xml:space="preserve">
+    <value>Tanımlı favoriniz yok. Haritanın altındaki düğmeleri kullanarak bir tane ekleyin.</value>
+  </data>
+  <data name="mbx_FrmMainApp_QuestionAddDraggedDataPointToFiles" xml:space="preserve">
+    <value>Koordinatları seçili dosyalara atamak ister misiniz?</value>
+  </data>
+  <data name="mbx_FrmMainApp_QuestionDisableFlatMode" xml:space="preserve">
+    <value>Düz mod açık. Kapatmak ister misiniz?</value>
+  </data>
+  <data name="mbx_FrmMainApp_QuestionNoRowsFromAPI" xml:space="preserve">
+    <value>API sorgusu geçerli bilgi döndürmedi. Yer adı değerlerini boşaltmak ister misiniz?</value>
+  </data>
+  <data name="mbx_FrmMainApp_QuestionRunImportExportInFlatMode" xml:space="preserve">
+    <value>Düz mod açıkken rota içe/dışa aktarma çalıştırmak iyi bir fikir değildir, çünkü rota işlemleri, farklı klasörlerdeki aynı adlı dosyaları ayırt edemeyen özel bir mantık kullanır. Bunu çalıştırmak istediğinizden emin misiniz?</value>
+  </data>
+  <data name="mbx_FrmMainApp_WarningMultipleImageFilesForXMP" xml:space="preserve">
+    <value>Uyarı: Aşağıdaki yan dosyaların adları birden çok görüntü dosyasıyla aynı - veriler yanlış okunmuş olabilir:</value>
+  </data>
+  <data name="mbx_FrmMainApp_WarningNoItemSelected" xml:space="preserve">
+    <value>Hiçbir öğe seçilmedi.</value>
+  </data>
+  <data name="mbx_FrmMainApp_WarningTooManyFilesSelected" xml:space="preserve">
+    <value>Tam olarak 1 dosya seçilmelidir.</value>
+  </data>
+  <data name="mbx_FrmPasteWhat_NoDateShiftToPaste" xml:space="preserve">
+    <value>Kopyalama havuzunda tarih/saat kaydırması için değer belirtilmedi</value>
+  </data>
+  <data name="mbx_FrmSettings_dgv_CustomRules_ColumnCannotBeEmpty" xml:space="preserve">
+    <value>Tüm açılır liste sütunları boş olmayan bir değere sahip olmalı ve "eğer" koşul değeri de boş olmamalıdır.</value>
+  </data>
+  <data name="mbx_FrmSettings_dgv_CustomRules_CustomOutcomeCannotBeEmpty" xml:space="preserve">
+    <value>Sonuç olarak "Özel" seçerseniz Özel sonuç sütunu boş olmamalıdır. Bu düzeltilmeden Ayarlar formunu kapatırsanız satırınız silinir.</value>
+  </data>
+  <data name="mbx_FrmSettings_ErrorExportFailed" xml:space="preserve">
+    <value>Dışa aktarma başarısız: </value>
+  </data>
+  <data name="mbx_FrmSettings_ErrorImportFailed" xml:space="preserve">
+    <value>İçe aktarma başarısız: </value>
+  </data>
+  <data name="mbx_FrmSettings_PleaseRestartApp" xml:space="preserve">
+    <value>Değişikliğin uygulanması için lütfen uygulamayı yeniden başlatın.</value>
+  </data>
+  <data name="mbx_FrmSettings_QuestionWhatToExport" xml:space="preserve">
+    <value>Ne dışa aktarılacağını seçin. Dışa aktarma işlevinin veritabanında _kayıtlı_ olan verileri, yani kaydedilmiş verileri dışa aktardığını unutmayın. Ayarlarda kaydedilmemiş değişiklikleriniz varsa geri dönüp kaydedin (Ayarlar formunda Tamam'a tıklayın), sonra buraya gelin.</value>
+  </data>
+  <data name="mbx_FrmSettings_QuestionWhatToImport" xml:space="preserve">
+    <value>Ne içe aktarılacağını seçin. İçe aktarma işlemi başarıyla tamamlandığında veritabanının ilgili bölümlerinin üzerine yazılacağını unutmayın. Bir şey başarısız olursa AppData klasörünüzde veritabanınızın bir yedek dosyası bulunacaktır.</value>
+  </data>
+  <data name="Generic_Done" xml:space="preserve">
+    <value>Tamamlandı.</value>
+  </data>
+  <data name="mbx_GenericDoneRestartApp" xml:space="preserve">
+    <value>Tamamlandı - muhtemelen uygulamayı yeniden başlatmak istersiniz.</value>
+  </data>
+  <data name="mbx_GenericPathLikelyUTF" xml:space="preserve">
+    <value>Dosya yolu muhtemelen UTF (standart dışı, ör. Asya, Kiril vb.) karakterleri içeriyor ve hataya neden olabilir. Lütfen “Dünya çapında dil desteği için Unicode UTF-8 kullan” özelliğinin etkin olduğundan emin olun. (Bununla ilgili Readme'deki Bilinen Sorunlar bölümüne bakın)</value>
+  </data>
+  <data name="mbx_HelperStaticExifNoAPI" xml:space="preserve">
+    <value>API'ye ulaşılamadı - belki de çevrimdışısınız?</value>
+  </data>
+  <data name="mbx_Helper_ErrorAsyncExifToolExecuteAsyncFailed" xml:space="preserve">
+    <value>asyncExifTool.ExecuteAsync başarısız oldu (Lütfen GitHub'da bir sorun bildirin): </value>
+  </data>
+  <data name="mbx_Helper_ErrorCantReadDefaultSQLiteDB" xml:space="preserve">
+    <value>SQL'den varsayılan değerler okunamadı (Lütfen GitHub'da bir sorun bildirin): </value>
+  </data>
+  <data name="mbx_Helper_QuestionFileQIsNotEmpty" xml:space="preserve">
+    <value>Bazı veriler değiştirildi - kaydetmek ister misiniz?
+Hayır'a tıklarsanız veriler atılacaktır</value>
+  </data>
+  <data name="mbx_Helper_WarningExifToolVerAPIResponse" xml:space="preserve">
+    <value>ExifToolVerAPIResponse API şu yanıtı döndürdü: </value>
+  </data>
+  <data name="mbx_Helper_WarningFileDisappeared" xml:space="preserve">
+    <value>Dosyalarınız kaybolmuş görünüyor.</value>
+  </data>
+  <data name="mbx_Helper_WarningGeoNamesAPIResponse" xml:space="preserve">
+    <value>GeoNames API şu yanıtı döndürdü: </value>
+  </data>
+  <data name="mbx_Helper_WarningGTNVerAPIResponse" xml:space="preserve">
+    <value>GitHub API şu yanıtı döndürdü: </value>
+  </data>
+  <data name="mbx_Helper_WarningNoARCGISKey" xml:space="preserve">
+    <value>Uygulamanın düzgün çalışması için Ayarlarda bir ArcGIS API anahtarı girmeniz gerekir.</value>
+  </data>
+  <data name="mbx_Helper_WarningNothingInWriteQueue" xml:space="preserve">
+    <value>Yazma kuyruğunuzda hiçbir şey yok.</value>
+  </data>
+  <data name="mbx_Helper_WarningNothingToPaste" xml:space="preserve">
+    <value>Yapıştırılacak bir şey yok.</value>
+  </data>
+  <data name="mbx_Helper_WarningNoWriteSettingEnabled" xml:space="preserve">
+    <value>Hem özgün dosyanın hem de XMP yan dosyasının işlenmesini devre dışı bıraktınız, bu yüzden yazılacak bir şey yok.</value>
+  </data>
+  <data name="mbx_Helper_WarningTooManyFilesSelected" xml:space="preserve">
+    <value>Bu işlem yalnızca tek bir dosya seçiliyken çalışır.</value>
+  </data>
+  <data name="mns_File" xml:space="preserve">
+    <value>Dosya</value>
+  </data>
+  <data name="mns_Help" xml:space="preserve">
+    <value>Yardım</value>
+  </data>
+  <data name="mns_Settings" xml:space="preserve">
+    <value>Ayarlar</value>
+  </data>
+  <data name="pbx_Browse_Startup_Folder" xml:space="preserve">
+    <value>Başlangıç klasörünü seçin</value>
+  </data>
+  <data name="pbx_imagePreviewCouldNotRetrieve" xml:space="preserve">
+    <value>Görüntü önizlemesi alınamadı/oluşturulamadı</value>
+  </data>
+  <data name="pbx_imagePreviewEmptyText" xml:space="preserve">
+    <value>Gösterilecek görüntü yok</value>
+  </data>
+  <data name="pbx_importFromAnotherFolder" xml:space="preserve">
+    <value>Rota klasörünü seçin</value>
+  </data>
+  <data name="pbx_importOneFile" xml:space="preserve">
+    <value>Rota dosyasını seçin</value>
+  </data>
+  <data name="rbt_CreateDateSetToFixedDate" xml:space="preserve">
+    <value>Sabit tarihe ayarla</value>
+  </data>
+  <data name="rbt_CreateDateTimeShift" xml:space="preserve">
+    <value>Zaman kaydırma</value>
+  </data>
+  <data name="rbt_importFromAnotherFolder" xml:space="preserve">
+    <value>Başka bir klasörden içe aktar</value>
+  </data>
+  <data name="rbt_importFromCurrentFolder" xml:space="preserve">
+    <value>Geçerli klasörden içe aktar</value>
+  </data>
+  <data name="rbt_importOneFile" xml:space="preserve">
+    <value>Seçilen bir dosyadan içe aktar</value>
+  </data>
+  <data name="rbt_MapColourModeDarkInverse" xml:space="preserve">
+    <value>Koyu (ters)</value>
+  </data>
+  <data name="rbt_MapColourModeDarkPale" xml:space="preserve">
+    <value>Koyu (soluk)</value>
+  </data>
+  <data name="rbt_MapColourModeNormal" xml:space="preserve">
+    <value>Normal</value>
+  </data>
+  <data name="rbt_PasteCreateDateActual" xml:space="preserve">
+    <value>Gerçek (sabit değerler)</value>
+  </data>
+  <data name="rbt_PasteCreateDateShift" xml:space="preserve">
+    <value>Zaman kaydırma</value>
+  </data>
+  <data name="rbt_PasteTakenDateActual" xml:space="preserve">
+    <value>Gerçek (sabit değerler)</value>
+  </data>
+  <data name="rbt_PasteTakenDateShift" xml:space="preserve">
+    <value>Zaman kaydırma</value>
+  </data>
+  <data name="rbt_TakenDateSetToFixedDate" xml:space="preserve">
+    <value>Sabit tarihe ayarla</value>
+  </data>
+  <data name="rbt_TakenDateTimeShift" xml:space="preserve">
+    <value>Zaman kaydırma</value>
+  </data>
+  <data name="rbt_TryUseGeoNamesLanguage" xml:space="preserve">
+    <value>Yer adları alınırken bu dili kullanmayı dene:</value>
+  </data>
+  <data name="rbt_UseGeoNamesLocalLanguage" xml:space="preserve">
+    <value>Yer adları alınırken "yerel dil"i kullanmayı dene</value>
+  </data>
+  <data name="rbx_CustomCityLogicExplanation" xml:space="preserve">
+    <value>Bu gelişmiş bir özelliktir. AdminName1-4 ve ToponymName API çıktılarına atıfta bulunur; bunu anlamıyorsanız muhtemelen buna hiç dokunmayın.
+Genel bir özet için şuraya bakın: https://github.com/nemethviktor/GeoTagNinja/issues/38#issuecomment-1356844255 .
+Bu ayar sayesinde, "Şehir" değerini belirli bir AdminName'den almak üzere kendi ülke seçimlerinizi ekleyebilirsiniz.</value>
+  </data>
+  <data name="rbx_CustomCityLogicExplanationBold" xml:space="preserve">
+    <value>Aşağıdaki tablodaki değişikliklerin hemen geçerli olduğunu ve Tamam/İptal düğmesinin bunlar üzerinde doğrudan bir etkisi olmadığını unutmayın. Bu oturumda veri çekmek istiyorsanız etkilenebilecek dosyaların üzerinde sağ tıklayıp Önbelleğe alınmış verileri kaldır'a tıklamanız gerekir (ya da uygulamayı yeniden başlatın).</value>
+  </data>
+  <data name="rbx_CustomRulesExplanation" xml:space="preserve">
+    <value>Bu gelişmiş bir özelliktir. AdminName1-4 ve ToponymName API çıktılarına atıfta bulunur; bunu anlamıyorsanız muhtemelen buna hiç dokunmayın.
+"Önceden belirlenmiş ülkeler" hakkında (aşağıdaki onay kutusu): Bunlar hakkında şuradan bilgi edinebilirsiniz: https://github.com/nemethviktor/GeoTagNinja/issues/38#issuecomment-1356844255 + diğer sekmeye bakın. Bu ayarı devre dışı bırakırsanız, ilgili gruplamanın dışında kalan CountryCode hücrelerini boşaltır ancak bu satırları gerçekten silmez.
+"Özel" dışındaki tüm sütunlar zorunludur; ancak Sonucu "Özel" olarak ayarlayıp "Özel" sütununu boş bırakırsanız satır yok sayılır. Veriler büyük/küçük harfe duyarlı değildir. Her veri noktası (ör. Şehir, Eyalet) için son satır önceki satırların üzerine yazar. Kısacası, mantıklı olun. Ne kadar çok satır eklerseniz işlem o kadar yavaşlar.
+Örnek: Birleşik Krallık'taki Londra için API'nin döndürdüğü varsayılan veri zayıftır, çünkü o bölge için adminName2 = "Greater London" olur ve bu değer atılır (şehirler genellikle "ToponymName" alanından alınır). -&gt; şunu ayarlayın: "ne" = "adminName2", "eğer" = "eşittir", "Koşul değeri" = "Greater London", "o zaman" = "Şehir", "olur" = "adminName2". Aynı işlemi 2. satırda tekrarlayın, ancak "o zaman" = "Sub_Loction" ve "olur" = "ToponymName" yapın.</value>
+  </data>
+  <data name="rbx_CustomRulesExplanationBold" xml:space="preserve">
+    <value>Aşağıdaki tablodaki değişikliklerin hemen geçerli olduğunu ve Tamam/İptal düğmesinin bunlar üzerinde doğrudan bir etkisi olmadığını unutmayın. Bu oturumda veri çekmek istiyorsanız etkilenebilecek dosyaların üzerinde sağ tıklayıp Önbelleğe alınmış verileri kaldır'a tıklamanız gerekir (ya da uygulamayı yeniden başlatın).</value>
+  </data>
+  <data name="rbx_Register_ArcGIS" xml:space="preserve">
+    <value>Harita arama işlevini kullanmak için bir ArcGIS API anahtarına ihtiyacınız olacak.
+ArcGIS, kayıt sürecini Haziran 2024 itibarıyla değiştirdi. [Buradan](https://location.arcgis.com/sign-up/) kaydolun.
+Artık bir portal URL'si belirtmeniz gerekiyor. İstediğiniz herhangi bir şeyi girebilirsiniz.
+`Developer credential creator` bölümüne kaydırın/gidin
+Sonra `New Item`
+Sonra `Developer Credentials`
+`API Key` seçin (OAuth değil)
+Son kullanma tarihini mümkün olduğunca ileriye ayarlayın (1 yıl)
+`Referrers` alanını boş bırakın
+Bir sonraki sayfada `Geocoding (not stored)` seçin
+Bir sonraki sayfada `Item Access` adımını atlayın
+Bir sonraki sayfada istediğiniz bir başlık ekleyin
+Sonunda `Generate the API key and go to item details page. I am ready to copy and save the key.` seçeneğine tıklayın
+İstendiğinde API anahtarını kaydedin. Bunu o anda yapmazsanız başka bir tane oluşturmanız gerekir.</value>
+  </data>
+  <data name="rbx_Register_GeoNames" xml:space="preserve">
+    <value>Ters coğrafi kodlama/arama işlevini (enlem/boylam --&gt; ülke/şehir/...) kullanmak için bir GeoNames hesabına ihtiyacınız olacak. Buradan bir tane edinin: http://www.geonames.org/login ve ardından buradan "Free Web Services" erişimini etkinleştirin: https://www.geonames.org/manageaccount</value>
+  </data>
+  <data name="tcr_EditData" xml:space="preserve">
+    <value>Verileri düzenle</value>
+  </data>
+  <data name="tmi_File" xml:space="preserve">
+    <value>Dosya</value>
+  </data>
+  <data name="tmi_File_CopyGeoData" xml:space="preserve">
+    <value>Tüm konum verilerini kopyala</value>
+  </data>
+  <data name="frm_BatchRename" xml:space="preserve">
+    <value>Toplu yeniden adlandırma</value>
+  </data>
+  <data name="frm_BatchRename_Preview" xml:space="preserve">
+    <value>Toplu yeniden adlandırma - Önizleme</value>
+  </data>
+  <data name="gbx_BatchRename_Presets" xml:space="preserve">
+    <value>Hazır ayarlar</value>
+  </data>
+  <data name="gbx_BatchRename_Destination" xml:space="preserve">
+    <value>Hedef klasör</value>
+  </data>
+  <data name="gbx_BatchRename_Names" xml:space="preserve">
+    <value>Yeni dosya adları</value>
+  </data>
+  <data name="gbx_BatchRename_Options" xml:space="preserve">
+    <value>Seçenekler</value>
+  </data>
+  <data name="gbx_BatchRename_Preview" xml:space="preserve">
+    <value>Önizleme</value>
+  </data>
+  <data name="lbl_BatchRename_Preset" xml:space="preserve">
+    <value>Hazır ayar</value>
+  </data>
+  <data name="lbl_BatchRename_Modified" xml:space="preserve">
+    <value>(Değiştirildi)</value>
+  </data>
+  <data name="btn_BatchRename_Save" xml:space="preserve">
+    <value>Kaydet...</value>
+  </data>
+  <data name="btn_BatchRename_Delete" xml:space="preserve">
+    <value>Sil</value>
+  </data>
+  <data name="rbt_BatchRename_SameFolder" xml:space="preserve">
+    <value>Aynı klasörde yeniden adlandır</value>
+  </data>
+  <data name="rbt_BatchRename_MoveToFolder" xml:space="preserve">
+    <value>Başka bir klasöre taşı</value>
+  </data>
+  <data name="rbt_BatchRename_CopyToFolder" xml:space="preserve">
+    <value>Başka bir klasöre kopyala</value>
+  </data>
+  <data name="btn_BatchRename_Browse" xml:space="preserve">
+    <value>Gözat...</value>
+  </data>
+  <data name="lbl_BatchRename_Compatibility" xml:space="preserve">
+    <value>Uyumluluk</value>
+  </data>
+  <data name="ckb_BatchRename_Windows" xml:space="preserve">
+    <value>Windows</value>
+  </data>
+  <data name="ckb_BatchRename_Mac" xml:space="preserve">
+    <value>Mac</value>
+  </data>
+  <data name="ckb_BatchRename_Unix" xml:space="preserve">
+    <value>Unix</value>
+  </data>
+  <data name="lbl_BatchRename_CurrentFilename" xml:space="preserve">
+    <value>Geçerli dosya adı</value>
+  </data>
+  <data name="lbl_BatchRename_NewFilename" xml:space="preserve">
+    <value>Yeni dosya adı</value>
+  </data>
+  <data name="lbl_BatchRename_Note" xml:space="preserve">
+    <value>Not</value>
+  </data>
+  <data name="lbl_BatchRename_Unchanged" xml:space="preserve">
+    <value>Değişmedi</value>
+  </data>
+  <data name="btn_BatchRename_Rename" xml:space="preserve">
+    <value>Yeniden adlandır</value>
+  </data>
+  <data name="btn_BatchRename_PreviewAll" xml:space="preserve">
+    <value>Önizleme</value>
+  </data>
+  <data name="lbl_BatchRename_Find" xml:space="preserve">
+    <value>Bul</value>
+  </data>
+  <data name="lbl_BatchRename_ReplaceWith" xml:space="preserve">
+    <value>Şununla değiştir</value>
+  </data>
+  <data name="ckb_BatchRename_IgnoreCase" xml:space="preserve">
+    <value>Büyük/küçük harfi yoksay</value>
+  </data>
+  <data name="ckb_BatchRename_ReplaceAll" xml:space="preserve">
+    <value>Tümünü değiştir</value>
+  </data>
+  <data name="ckb_BatchRename_UseRegex" xml:space="preserve">
+    <value>Düzenli ifade kullan</value>
+  </data>
+  <data name="lbl_BatchRename_Kind_Text" xml:space="preserve">
+    <value>Metin</value>
+  </data>
+  <data name="lbl_BatchRename_Kind_NewExtension" xml:space="preserve">
+    <value>Yeni uzantı</value>
+  </data>
+  <data name="lbl_BatchRename_Kind_CurrentFilename" xml:space="preserve">
+    <value>Geçerli dosya adı</value>
+  </data>
+  <data name="lbl_BatchRename_Kind_PreservedFilename" xml:space="preserve">
+    <value>Korunan dosya adı</value>
+  </data>
+  <data name="lbl_BatchRename_Kind_SequenceNumber" xml:space="preserve">
+    <value>Sıra numarası</value>
+  </data>
+  <data name="lbl_BatchRename_Kind_SequenceLetter" xml:space="preserve">
+    <value>Sıra harfi</value>
+  </data>
+  <data name="lbl_BatchRename_Kind_DateTime" xml:space="preserve">
+    <value>Tarih ve saat</value>
+  </data>
+  <data name="lbl_BatchRename_Kind_Metadata" xml:space="preserve">
+    <value>Üst veri</value>
+  </data>
+  <data name="lbl_BatchRename_Kind_FolderName" xml:space="preserve">
+    <value>Klasör adı</value>
+  </data>
+  <data name="lbl_BatchRename_Kind_StringSubstitution" xml:space="preserve">
+    <value>Metin değiştirme</value>
+  </data>
+  <data name="lbl_BatchRename_Case_Original" xml:space="preserve">
+    <value>Özgün büyük/küçük harf</value>
+  </data>
+  <data name="lbl_BatchRename_Case_Lower" xml:space="preserve">
+    <value>Küçük harf</value>
+  </data>
+  <data name="lbl_BatchRename_Case_Upper" xml:space="preserve">
+    <value>Büyük harf</value>
+  </data>
+  <data name="lbl_BatchRename_Part_NameAndExtension" xml:space="preserve">
+    <value>Ad + uzantı</value>
+  </data>
+  <data name="lbl_BatchRename_Part_Name" xml:space="preserve">
+    <value>Ad</value>
+  </data>
+  <data name="lbl_BatchRename_Part_Extension" xml:space="preserve">
+    <value>Uzantı</value>
+  </data>
+  <data name="lbl_BatchRename_Part_NumberSuffix" xml:space="preserve">
+    <value>Numara eki</value>
+  </data>
+  <data name="lbl_BatchRename_DateSource_DateTaken" xml:space="preserve">
+    <value>Çekim tarihi</value>
+  </data>
+  <data name="lbl_BatchRename_DateSource_DateCreated" xml:space="preserve">
+    <value>Oluşturulma tarihi</value>
+  </data>
+  <data name="lbl_BatchRename_DateSource_FileModified" xml:space="preserve">
+    <value>Dosyanın değiştirilme tarihi</value>
+  </data>
+  <data name="lbl_BatchRename_DateSource_FileCreated" xml:space="preserve">
+    <value>Dosyanın oluşturulma tarihi</value>
+  </data>
+  <data name="lbl_BatchRename_DateSource_Today" xml:space="preserve">
+    <value>Bugün</value>
+  </data>
+  <data name="lbl_BatchRename_DateSource_Yesterday" xml:space="preserve">
+    <value>Dün</value>
+  </data>
+  <data name="lbl_BatchRename_Digits_1" xml:space="preserve">
+    <value>Bir basamak</value>
+  </data>
+  <data name="lbl_BatchRename_Digits_2" xml:space="preserve">
+    <value>İki basamak</value>
+  </data>
+  <data name="lbl_BatchRename_Digits_3" xml:space="preserve">
+    <value>Üç basamak</value>
+  </data>
+  <data name="lbl_BatchRename_Digits_4" xml:space="preserve">
+    <value>Dört basamak</value>
+  </data>
+  <data name="lbl_BatchRename_Digits_5" xml:space="preserve">
+    <value>Beş basamak</value>
+  </data>
+  <data name="lbl_BatchRename_Digits_6" xml:space="preserve">
+    <value>Altı basamak</value>
+  </data>
+  <data name="lbl_BatchRename_SubstituteSource_OriginalFilename" xml:space="preserve">
+    <value>Özgün dosya adı</value>
+  </data>
+  <data name="lbl_BatchRename_SubstituteSource_PreservedFilename" xml:space="preserve">
+    <value>Korunan dosya adı</value>
+  </data>
+  <data name="lbl_BatchRename_Field_Country" xml:space="preserve">
+    <value>Ülke</value>
+  </data>
+  <data name="lbl_BatchRename_Field_CountryCode" xml:space="preserve">
+    <value>Ülke kodu</value>
+  </data>
+  <data name="lbl_BatchRename_Field_State" xml:space="preserve">
+    <value>Eyalet/İl</value>
+  </data>
+  <data name="lbl_BatchRename_Field_City" xml:space="preserve">
+    <value>Şehir</value>
+  </data>
+  <data name="lbl_BatchRename_Field_Sublocation" xml:space="preserve">
+    <value>Alt konum</value>
+  </data>
+  <data name="lbl_BatchRename_Field_Make" xml:space="preserve">
+    <value>Kamera markası</value>
+  </data>
+  <data name="lbl_BatchRename_Field_Model" xml:space="preserve">
+    <value>Kamera modeli</value>
+  </data>
+  <data name="lbl_BatchRename_Field_LensSpec" xml:space="preserve">
+    <value>Objektif</value>
+  </data>
+  <data name="lbl_BatchRename_Field_Rating" xml:space="preserve">
+    <value>Derecelendirme</value>
+  </data>
+  <data name="lbl_BatchRename_Field_ExposureTime" xml:space="preserve">
+    <value>Pozlama süresi</value>
+  </data>
+  <data name="lbl_BatchRename_Field_Fnumber" xml:space="preserve">
+    <value>Diyafram (F sayısı)</value>
+  </data>
+  <data name="lbl_BatchRename_Field_FocalLength" xml:space="preserve">
+    <value>Odak uzaklığı</value>
+  </data>
+  <data name="lbl_BatchRename_Field_ISO" xml:space="preserve">
+    <value>ISO</value>
+  </data>
+  <data name="lbl_BatchRename_Field_Artist" xml:space="preserve">
+    <value>Sanatçı</value>
+  </data>
+  <data name="lbl_BatchRename_Field_Byline" xml:space="preserve">
+    <value>Oluşturan (imza)</value>
+  </data>
+  <data name="lbl_BatchRename_Field_Copyright" xml:space="preserve">
+    <value>Telif hakkı</value>
+  </data>
+  <data name="lbl_BatchRename_Field_Credit" xml:space="preserve">
+    <value>Katkı</value>
+  </data>
+  <data name="lbl_BatchRename_Field_Source" xml:space="preserve">
+    <value>Kaynak</value>
+  </data>
+  <data name="lbl_BatchRename_Field_ObjectName" xml:space="preserve">
+    <value>Başlık (nesne adı)</value>
+  </data>
+  <data name="lbl_BatchRename_Field_Headline" xml:space="preserve">
+    <value>Manşet</value>
+  </data>
+  <data name="lbl_BatchRename_Field_Category" xml:space="preserve">
+    <value>Kategori</value>
+  </data>
+  <data name="mbx_BatchRename_OneFile" xml:space="preserve">
+    <value>Bir dosya işlenecek</value>
+  </data>
+  <data name="mbx_BatchRename_ManyFiles" xml:space="preserve">
+    <value>{0} dosya işlenecek</value>
+  </data>
+  <data name="mbx_BatchRename_SomeBlocked" xml:space="preserve">
+    <value>{1} dosyadan {0} tanesi yeniden adlandırılamıyor: Önizlemeye bakın</value>
+  </data>
+  <data name="mbx_BatchRename_PresetNamePrompt" xml:space="preserve">
+    <value>Hazır ayarın adı:</value>
+  </data>
+  <data name="mbx_BatchRename_PresetUnreadable" xml:space="preserve">
+    <value>'{0}' hazır ayarı okunamadı.</value>
+  </data>
+  <data name="mbx_BatchRename_PresetReplace" xml:space="preserve">
+    <value>'{0}' adlı bir hazır ayar zaten var. Üzerine yazılsın mı?</value>
+  </data>
+  <data name="mbx_BatchRename_PresetSaveFailed" xml:space="preserve">
+    <value>Hazır ayar kaydedilemedi.</value>
+  </data>
+  <data name="mbx_BatchRename_PresetDelete" xml:space="preserve">
+    <value>'{0}' hazır ayarı silinsin mi?</value>
+  </data>
+  <data name="mbx_BatchRename_Preflight" xml:space="preserve">
+    <value>Hiçbir şey yeniden adlandırılmadı. Önce bunların düzeltilmesi gerekiyor:
+
+{0}</value>
+  </data>
+  <data name="mbx_BatchRename_MoreProblems" xml:space="preserve">
+    <value>... ve {0} tane daha (Tümünü Önizleme listeler)</value>
+  </data>
+  <data name="mbx_BatchRename_SelectFiles" xml:space="preserve">
+    <value>Önce yeniden adlandırılacak dosyaları seçin.</value>
+  </data>
+  <data name="mbx_BatchRename_NothingRenamed" xml:space="preserve">
+    <value>Hiçbir şey yeniden adlandırılmadı (önceden yapılan işlemler geri alındı).
+
+{0}</value>
+  </data>
+  <data name="mbx_BatchRename_StepFailed" xml:space="preserve">
+    <value>{0}
+
+Şimdiye kadar yapılan her şey geri alındı, bu yüzden hiçbir dosyaya dokunulmadı.
+
+{1} olmadan devam edilsin mi (adını alacak olan dosya dahil)?
+Evet: Kalanları yeniden adlandır.  Hayır: Dur; tüm dosyalar eski hâlinde kalır.</value>
+  </data>
+  <data name="mbx_BatchRename_NothingLeft" xml:space="preserve">
+    <value>Yeniden adlandırılacak başka bir şey kalmadı.</value>
+  </data>
+  <data name="mbx_BatchRename_DoneSkipped" xml:space="preserve">
+    <value>{0} dosya işlendi. Olduğu gibi bırakılanlar:
+{1}</value>
+  </data>
+  <data name="mbx_BatchRename_AndMore" xml:space="preserve">
+    <value>... ve {0} tane daha</value>
+  </data>
+  <data name="mbx_BatchRename_Problem_NoDestination" xml:space="preserve">
+    <value>Hedef klasör seçilmedi</value>
+  </data>
+  <data name="mbx_BatchRename_Problem_EmptyName" xml:space="preserve">
+    <value>Yeni ad boş</value>
+  </data>
+  <data name="mbx_BatchRename_Problem_Reserved" xml:space="preserve">
+    <value>'{0}', Windows'ta ayrılmış bir addır</value>
+  </data>
+  <data name="mbx_BatchRename_Problem_NameTooLong" xml:space="preserve">
+    <value>Yeni ad çok uzun</value>
+  </data>
+  <data name="mbx_BatchRename_Problem_PathTooLong" xml:space="preserve">
+    <value>Yeni yol çok uzun</value>
+  </data>
+  <data name="mbx_BatchRename_Problem_NoDate" xml:space="preserve">
+    <value>Kullanılacak {0} yok</value>
+  </data>
+  <data name="mbx_BatchRename_Problem_BadRegex" xml:space="preserve">
+    <value>Düzenli ifade geçerli değil</value>
+  </data>
+  <data name="mbx_BatchRename_Problem_RegexTimeout" xml:space="preserve">
+    <value>Düzenli ifade çok uzun sürüyor</value>
+  </data>
+  <data name="mbx_BatchRename_Problem_NameClaimed" xml:space="preserve">
+    <value>Başka bir dosya bu adı alıyor (veya zaten bu ada sahip)</value>
+  </data>
+  <data name="mbx_BatchRename_Problem_FileExists" xml:space="preserve">
+    <value>Bu adda bir dosya zaten var</value>
+  </data>
+  <data name="mbx_BatchRename_Problem_SidecarExists" xml:space="preserve">
+    <value>Bu adda bir XMP yan dosyası zaten var</value>
+  </data>
+  <data name="mbx_BatchRename_Problem_Gone" xml:space="preserve">
+    <value>Dosya artık orada değil</value>
+  </data>
+  <data name="mbx_BatchRename_Problem_BeingSaved" xml:space="preserve">
+    <value>Dosya GeoTagNinja tarafından kaydediliyor</value>
+  </data>
+  <data name="mbx_BatchRename_Problem_InUse" xml:space="preserve">
+    <value>Dosya başka bir program tarafından kullanılıyor</value>
+  </data>
+  <data name="mbx_BatchRename_Problem_FolderNotWritable" xml:space="preserve">
+    <value>'{0}' klasörüne yazılamıyor</value>
+  </data>
+  <data name="mbx_BatchRename_Problem_NoSpace" xml:space="preserve">
+    <value>{0} üzerinde yeterli alan yok: {1} MB gerekli, {2} MB boş</value>
+  </data>
+  <data name="mbx_BatchRename_Problem_Unfixed" xml:space="preserve">
+    <value>Toplu işlemde önce düzeltilmesi gereken sorunlar var.</value>
+  </data>
+  <data name="tmi_File_BatchRename" xml:space="preserve">
+    <value>Toplu yeniden adlandırma...</value>
+  </data>
+  <data name="cmi_BatchRename" xml:space="preserve">
+    <value>Toplu yeniden adlandırma...</value>
+  </data>
+  <data name="tmi_File_EditFiles" xml:space="preserve">
+    <value>Dosyaları düzenle...</value>
+  </data>
+  <data name="tmi_File_FlatMode" xml:space="preserve">
+    <value>Düz mod (alt klasörleri ayrıştır)</value>
+  </data>
+  <data name="tmi_File_ImportExportGPX" xml:space="preserve">
+    <value>GPX/JSON rota dosyalarını içe/dışa aktar...</value>
+  </data>
+  <data name="tmi_File_PasteGeoData" xml:space="preserve">
+    <value>Tüm konum verilerini yapıştır...</value>
+  </data>
+  <data name="tmi_File_Quit" xml:space="preserve">
+    <value>Çıkış</value>
+  </data>
+  <data name="tmi_File_SaveAll" xml:space="preserve">
+    <value>Tümünü kaydet</value>
+  </data>
+  <data name="tmi_Help" xml:space="preserve">
+    <value>Yardım</value>
+  </data>
+  <data name="tmi_Help_About" xml:space="preserve">
+    <value>Hakkında...</value>
+  </data>
+  <data name="tmi_Help_Help" xml:space="preserve">
+    <value>Yardım</value>
+  </data>
+  <data name="tmi_Help_BugReport" xml:space="preserve">
+    <value>Hata bildir (GitHub)</value>
+  </data>
+  <data name="tmi_Help_FeedbackFeatureRequest" xml:space="preserve">
+    <value>Özellik isteği gönder (GitHub)</value>
+  </data>
+  <data name="tmi_Settings" xml:space="preserve">
+    <value>Ayarlar</value>
+  </data>
+  <data name="tmi_Settings_Favourites" xml:space="preserve">
+    <value>Favorileri yönet</value>
+  </data>
+  <data name="tmi_Settings_Settings" xml:space="preserve">
+    <value>Ayarlar</value>
+  </data>
+  <data name="tpg_Application" xml:space="preserve">
+    <value>Uygulama</value>
+  </data>
+  <data name="tpg_CustomCityLogic" xml:space="preserve">
+    <value>Özel şehir atama mantığı</value>
+  </data>
+  <data name="tpg_CustomRules" xml:space="preserve">
+    <value>Özel kurallar</value>
+  </data>
+  <data name="tpg_DateTime" xml:space="preserve">
+    <value>Tarih ve saat</value>
+  </data>
+  <data name="tpg_Exif" xml:space="preserve">
+    <value>Exif</value>
+  </data>
+  <data name="tpg_FileOptions" xml:space="preserve">
+    <value>Dosya seçenekleri</value>
+  </data>
+  <data name="tpg_GeoNames" xml:space="preserve">
+    <value>GeoNames ayarları</value>
+  </data>
+  <data name="tpg_ImportExport_Export" xml:space="preserve">
+    <value>Rotaları dışa aktar</value>
+  </data>
+  <data name="tpg_ImportExport_Import" xml:space="preserve">
+    <value>Rotaları içe aktar</value>
+  </data>
+  <data name="tpg_Location" xml:space="preserve">
+    <value>Konum</value>
+  </data>
+  <data name="tpg_Map" xml:space="preserve">
+    <value>Harita</value>
+  </data>
+  <data name="tsb_BugReport" xml:space="preserve">
+    <value>Hata bildir (GitHub hesabı gerekir)</value>
+  </data>
+  <data name="tsb_EditFile" xml:space="preserve">
+    <value>Dosyayı düzenle</value>
+  </data>
+  <data name="tsb_FeedbackFeatureRequest" xml:space="preserve">
+    <value>Özellik isteği gönder (GitHub hesabı gerekir)</value>
+  </data>
+  <data name="tsb_GetAllFromWeb" xml:space="preserve">
+    <value>Seçili tüm dosyalar için yer adı ve yükseklik bilgisi al</value>
+  </data>
+  <data name="tsb_ImportGPX" xml:space="preserve">
+    <value>GPX/JSON rota dosyalarını içe aktar</value>
+  </data>
+  <data name="tsb_ExportGPX" xml:space="preserve">
+    <value>Rota dosyasını dışa aktar (GPX/KML)</value>
+  </data>
+  <data name="tsb_OneFolderUp" xml:space="preserve">
+    <value>Üst klasör</value>
+  </data>
+  <data name="tsb_Refresh_lvwFileList" xml:space="preserve">
+    <value>Dosya listesini yenile</value>
+  </data>
+  <data name="tsb_RemoveGeoData" xml:space="preserve">
+    <value>Tüm konum verilerini kaldır</value>
+  </data>
+  <data name="tsb_SaveFiles" xml:space="preserve">
+    <value>Dosyaları kaydet</value>
+  </data>
+  <data name="tsr_FolderControl" xml:space="preserve">
+    <value>Klasör denetimi</value>
+  </data>
+  <data name="tsr_MainAppToolStrip" xml:space="preserve">
+    <value>Ana</value>
+  </data>
+  <data name="ttp_GPSDataPaste" xml:space="preserve">
+    <value>Enlem/boylam yer tutucularına geçerli bir ondalık çifti yapıştırmak için CTRL+V'ye basın.
+Pano yalnızca bir ondalık çifti içermelidir, tercihen "değişmez" (İngilizce) ayarda, yani tam sayı-nokta-ondalık-virgül-tam sayı-nokta-ondalık biçiminde, örneğin 12.345, 56.897
+Bununla birlikte kod diğer düzenleri de anlayabilmelidir. Panoda yukarıdakilerden başka bir şey varsa işlemin başarısız olacağını (hiçbir şey olmayacağını) unutmayın.</value>
+  </data>
+  <data name="btn_NavigateMapGo" xml:space="preserve">
+    <value>Haritada göster</value>
+  </data>
+  <data name="btn_loctToFile" xml:space="preserve">
+    <value>Dosya(lar)a kaydet</value>
+  </data>
+  <data name="btn_loctToFileDestination" xml:space="preserve">
+    <value>Hedefe kaydet</value>
+  </data>
+  <data name="btn_SaveFavourite" xml:space="preserve">
+    <value>Fotoğrafı kaydet</value>
+  </data>
+  <data name="btn_LoadFavourite" xml:space="preserve">
+    <value>Fotoğraflara uygula</value>
+  </data>
+  <data name="btn_ManageFavourites" xml:space="preserve">
+    <value>Yönet...</value>
+  </data>
+  <data name="ttp_LoadFavourite" xml:space="preserve">
+    <value>Seçili dosya(lar) için favorilerinizden üst verileri yükleyin</value>
+  </data>
+  <data name="ttp_loctToFile" xml:space="preserve">
+    <value>Geçerli koordinatı seçili dosya(lar)a kaydedin</value>
+  </data>
+  <data name="ttp_loctToFileDestination" xml:space="preserve">
+    <value>Geçerli koordinatı seçili dosyaların hedefine kaydedin</value>
+  </data>
+  <data name="ttp_ManageFavourites" xml:space="preserve">
+    <value>Favorileri yönet</value>
+  </data>
+  <data name="ttp_NavigateMapGo" xml:space="preserve">
+    <value>Seçili dosyaların koordinatlarını haritaya koyun</value>
+  </data>
+  <data name="ttp_OffsetTime" xml:space="preserve">
+    <value>Saat dilimleri, saklanan değer ne olursa olsun açılışta boş bırakılır. Saat dilimi için bir Exif etiketi yoktur, yalnızca '+01:00' gibi bir 'Offset' (fark) vardır. Ne saat dilimi ne de yaz saati uygulaması için bir gösterge olmadığından, '+01:00'ın BST mi yoksa CET mi olduğunu kesin olarak belirleyemem; biri yaz saati uygulamasıdır, diğeri değildir. Ya elle ayarlayın ya da web'den alın; koordinatlar ile oluşturulma tarihinin birlikte kullanılması programa gerçek saat dilimi değerini kesin olarak bildirir. Salt okunur metin kutusundaki değer dosyaya kaydedilecektir.</value>
+  </data>
+  <data name="ttp_SaveFavourite" xml:space="preserve">
+    <value>Seçili dosyanın üst verilerini favorilerinize kaydedin (veya üzerine yazın)</value>
+  </data>
+  <data name="ckb_ImportExport_ApplicationSettings" xml:space="preserve">
+    <value>ApplicationSettings</value>
+  </data>
+  <data name="ckb_ImportExport_CustomRulesSettings" xml:space="preserve">
+    <value>CustomRulesSettings</value>
+  </data>
+  <data name="ckb_ImportExport_Favourites" xml:space="preserve">
+    <value>Favoriler</value>
+  </data>
+  <data name="ckb_ImportExport_EditTemplates" xml:space="preserve">
+    <value>Veri şablonlarını düzenle</value>
+  </data>
+  <data name="ckb_ImportExport_FieldHistory" xml:space="preserve">
+    <value>Veri düzenleme alanı geçmişi</value>
+  </data>
+  <data name="ckb_ImportExport_BatchRenamePresets" xml:space="preserve">
+    <value>Toplu yeniden adlandırma hazır ayarları</value>
+  </data>
+  <data name="Generic_TimeZoneID" xml:space="preserve">
+    <value>Saat dilimi kimliği</value>
+  </data>
+  <data name="Generic_Distance" xml:space="preserve">
+    <value>Mesafe</value>
+  </data>
+  <data name="cmi_OpenCoordsInBrowser" xml:space="preserve">
+    <value>Koordinatları tarayıcıda/haritalarda aç</value>
+  </data>
+  <data name="cmi_OpenCoordsInBrowserBing" xml:space="preserve">
+    <value>Bing</value>
+  </data>
+  <data name="cmi_OpenCoordsInBrowserGeoNamesMaps" xml:space="preserve">
+    <value>GeoNames (Haritalar)</value>
+  </data>
+  <data name="cmi_OpenCoordsInBrowserGoogle" xml:space="preserve">
+    <value>Google Maps</value>
+  </data>
+  <data name="cmi_OpenCoordsInBrowserWeGoHere" xml:space="preserve">
+    <value>WeGo/Here</value>
+  </data>
+  <data name="cmi_OpenCoordsInBrowserOpenStreetMap" xml:space="preserve">
+    <value>OpenStreetMap</value>
+  </data>
+  <data name="tmi_File_ImportFavouritesFromGeoSetter" xml:space="preserve">
+    <value>Favorileri GeoSetter'dan içe aktar...</value>
+  </data>
+  <data name="ofd_Settings_GetDatabaseFileToImport_SelectDatabaseFile" xml:space="preserve">
+    <value>Bir veritabanı dosyası seçin</value>
+  </data>
+  <data name="ofd_tmi_File_ImportFavouritesFromGeoSetter_SelectFile" xml:space="preserve">
+    <value>GS favori dışa aktarma dosyasını seçin</value>
+  </data>
+  <data name="mbx_FrmMainApp_ErrorImportGeoSetterFavourites" xml:space="preserve">
+    <value>GeoSetter favorileri içe aktarılırken hata oluştu.</value>
+  </data>
+  <data name="mbx_FrmMainApp_InfoImportGeoSetterFavouritesDone" xml:space="preserve">
+    <value>GeoSetter favorileri içe aktarıldı. İçe aktarılan öğe sayısı: </value>
+  </data>
+  <data name="ckb_ShowThumbnails" xml:space="preserve">
+    <value>Izgara yerine görüntü küçük resimlerini göster</value>
+  </data>
+  <data name="ttp_ShowThumbnails" xml:space="preserve">
+    <value>Bu, performansta çok büyük bir düşüşe neden olur (ölçümlerime göre 7 kata kadar), bu yüzden önerilmez.</value>
+  </data>
+  <data name="Generic_SaveDefaults" xml:space="preserve">
+    <value>Varsayılanları kaydet</value>
+  </data>
+  <data name="ttp_FrmImportExport_SaveDefaults" xml:space="preserve">
+    <value>Bazı varsayılanları kaydeder. Şu an için: içe aktarma kaynak konumu, saat dilimi ve yaz saati ayarları, en fazla enterpolasyon/ekstrapolasyon süresi.</value>
+  </data>
+  <data name="mbx_FrmImportExportGpx_ExportCompleted" xml:space="preserve">
+    <value>GPX dosyası dışa aktarma tamamlandı</value>
+  </data>
+  <data name="Generic_GPSDOP" xml:space="preserve">
+    <value>Hassasiyet seyrelmesi (DOP)</value>
+  </data>
+  <data name="Generic_GPSHPositioningError" xml:space="preserve">
+    <value>GPS yatay konum hatası</value>
+  </data>
+  <data name="cmi_PasteGeoData" xml:space="preserve">
+    <value>Tüm konum verilerini yapıştır...</value>
+  </data>
+  <data name="cmi_CopyGeoData" xml:space="preserve">
+    <value>Tüm konum verilerini kopyala</value>
+  </data>
+  <data name="tmi_Edit_SelectAll" xml:space="preserve">
+    <value>Tümünü seç</value>
+  </data>
+  <data name="cmi_SelectAll" xml:space="preserve">
+    <value>Tümünü seç</value>
+  </data>
+  <data name="tmi_Edit_SelectNone" xml:space="preserve">
+    <value>Hiçbirini seçme</value>
+  </data>
+  <data name="cmi_SelectNone" xml:space="preserve">
+    <value>Hiçbirini seçme</value>
+  </data>
+  <data name="tmi_Edit_InvertSelection" xml:space="preserve">
+    <value>Seçimi ters çevir</value>
+  </data>
+  <data name="cmi_InvertSelection" xml:space="preserve">
+    <value>Seçimi ters çevir</value>
+  </data>
+  <data name="tmi_Edit" xml:space="preserve">
+    <value>Düzen</value>
+  </data>
+  <data name="tmi_Help_Donate" xml:space="preserve">
+    <value>Bağış yap</value>
+  </data>
+  <data name="tmi_Help_Donate_PayPal" xml:space="preserve">
+    <value>PayPal...</value>
+  </data>
+  <data name="tmi_Help_Donate_Revolut" xml:space="preserve">
+    <value>Revolut (QR)...</value>
+  </data>
+  <data name="tmi_Help_Donate_BuyMeCoffee" xml:space="preserve">
+    <value>BuyMeACoffee...</value>
+  </data>
+  <data name="tmi_File_SaveSelected" xml:space="preserve">
+    <value>Seçileni kaydet</value>
+  </data>
+  <data name="rbt_SetStartup_Folder" xml:space="preserve">
+    <value>Başlangıç klasörünü ayarla</value>
+  </data>
+  <data name="rbt_UseLastUsedFolder" xml:space="preserve">
+    <value>Son kullanılan klasörü kullan</value>
+  </data>
+  <data name="tmi_Debug" xml:space="preserve">
+    <value>Hata ayıklama</value>
+  </data>
+  <data name="tmi_Debug_CustomiseWinformControls" xml:space="preserve">
+    <value>Winform denetimlerini özelleştir</value>
+  </data>
+  <data name="frm_FrmCustomiseFormControls" xml:space="preserve">
+    <value>Winform denetimlerini özelleştir</value>
+  </data>
+  <data name="ckb_RetainMapZoom" xml:space="preserve">
+    <value>Tıklamalar arasında harita yakınlaştırma düzeyini koru</value>
+  </data>
+  <data name="mbx_FrmMainApp_ErrorNonHydratedItemsPresent" xml:space="preserve">
+    <value>Seçiminiz, ayrıştırılmamış ve düzenleme için yüklenmeyecek dosyalar içeriyor.</value>
+  </data>
+  <data name="Generic_Ready" xml:space="preserve">
+    <value>Hazır</value>
+  </data>
+  <data name="Generic_ReadingMetadataProgress" xml:space="preserve">
+    <value>Üst veri okunuyor: {0} / {1}</value>
+  </data>
+  <data name="Generic_Total" xml:space="preserve">
+    <value>Toplam</value>
+  </data>
+  <data name="Generic_GeoData" xml:space="preserve">
+    <value>Konum verisi</value>
+  </data>
+  <data name="Generic_Files" xml:space="preserve">
+    <value>Dosyalar</value>
+  </data>
+  <data name="mbx_FrmMainApp_WarningDataParseStillInProgress" xml:space="preserve">
+    <value>Veri ayrıştırma hâlâ sürüyor; bu bitene kadar işlem devam edemez. Biraz sonra tekrar deneyin.</value>
+  </data>
+  <data name="Generic_IsEmpty" xml:space="preserve">
+    <value>Boş</value>
+  </data>
+  <data name="Generic_IsNotEmpty" xml:space="preserve">
+    <value>Boş değil</value>
+  </data>
+  <data name="Generic_Is" xml:space="preserve">
+    <value>Eşittir</value>
+  </data>
+  <data name="Generic_IsNot" xml:space="preserve">
+    <value>Eşit değil</value>
+  </data>
+  <data name="Generic_Contains" xml:space="preserve">
+    <value>İçerir</value>
+  </data>
+  <data name="Generic_DoesntContain" xml:space="preserve">
+    <value>İçermez</value>
+  </data>
+  <data name="Generic_ClearAll" xml:space="preserve">
+    <value>Tümünü temizle</value>
+  </data>
+  <data name="ckb_AlwaysRecenterMap" xml:space="preserve">
+    <value>Harita her zaman yeniden ortalansın mı?</value>
+  </data>
+  <data name="ckb_DoNotDownloadAltitude" xml:space="preserve">
+    <value>API'den yükseklik değerlerini indirme</value>
+  </data>
+  <data name="ckb_PreserveFileModifiedDate" xml:space="preserve">
+    <value>Kaydederken dosyanın değiştirilme tarihini değiştirme</value>
+  </data>
+  <data name="tmi_View" xml:space="preserve">
+    <value>Görünüm</value>
+  </data>
+  <data name="tmi_View_Details" xml:space="preserve">
+    <value>Ayrıntılar</value>
+  </data>
+  <data name="tmi_View_Thumbnails" xml:space="preserve">
+    <value>Küçük resimler</value>
+  </data>
+  <data name="tmi_View_ThumbnailSize" xml:space="preserve">
+    <value>Küçük resim boyutu</value>
+  </data>
+  <data name="tmi_View_ThumbnailSize_Small" xml:space="preserve">
+    <value>Küçük</value>
+  </data>
+  <data name="tmi_View_ThumbnailSize_Medium" xml:space="preserve">
+    <value>Orta</value>
+  </data>
+  <data name="tmi_View_ThumbnailSize_Large" xml:space="preserve">
+    <value>Büyük</value>
+  </data>
+  <data name="tmi_View_ThumbnailSize_ExtraLarge" xml:space="preserve">
+    <value>Çok büyük</value>
+  </data>
+  <data name="tmi_View_ThumbnailSize_Smaller" xml:space="preserve">
+    <value>Daha küçük küçük resimler</value>
+  </data>
+  <data name="tmi_View_ThumbnailSize_Larger" xml:space="preserve">
+    <value>Daha büyük küçük resimler</value>
+  </data>
+  <data name="ttp_ThumbnailSize" xml:space="preserve">
+    <value>Küçük resim boyutu</value>
+  </data>
+  <data name="tmi_View_SortBy" xml:space="preserve">
+    <value>Sırala</value>
+  </data>
+  <data name="tmi_View_SortBy_Ascending" xml:space="preserve">
+    <value>Artan</value>
+  </data>
+  <data name="tmi_View_SortBy_Descending" xml:space="preserve">
+    <value>Azalan</value>
+  </data>
+  <data name="gbx_AllFavourites" xml:space="preserve">
+    <value>Tüm favoriler</value>
+  </data>
+  <data name="gbx_FavouriteDetails" xml:space="preserve">
+    <value>Ayrıntılar</value>
+  </data>
+  <data name="gbx_FavouriteAdditionalInfo" xml:space="preserve">
+    <value>Ek bilgi</value>
+  </data>
+  <data name="lbl_FavouriteName" xml:space="preserve">
+    <value>Ad:</value>
+  </data>
+  <data name="lbl_FavouriteCoordinates" xml:space="preserve">
+    <value>Koordinatlar:</value>
+  </data>
+  <data name="lbl_FavouriteRadius" xml:space="preserve">
+    <value>Yarıçap [m]:</value>
+  </data>
+  <data name="ckb_FavouriteAutoAssign" xml:space="preserve">
+    <value>Otomatik ata</value>
+  </data>
+  <data name="ckb_FavouriteSnap" xml:space="preserve">
+    <value>Görüntüleri favori konumuna yapıştır</value>
+  </data>
+  <data name="lbl_FavouriteTimeZone" xml:space="preserve">
+    <value>Saat dilimi:</value>
+  </data>
+  <data name="lbl_FavouriteKeywords" xml:space="preserve">
+    <value>Anahtar kelimeler:</value>
+  </data>
+  <data name="btn_FavouriteGetFromWeb" xml:space="preserve">
+    <value>Web'den al</value>
+  </data>
+  <data name="btn_FavouriteClearAll" xml:space="preserve">
+    <value>Tüm değerleri temizle</value>
+  </data>
+  <data name="btn_FavouriteAccept" xml:space="preserve">
+    <value>Kabul et</value>
+  </data>
+  <data name="btn_FavouriteDiscard" xml:space="preserve">
+    <value>Vazgeç</value>
+  </data>
+  <data name="btn_FavouriteAddKeyword" xml:space="preserve">
+    <value>Ekle</value>
+  </data>
+  <data name="btn_FavouriteRemoveKeyword" xml:space="preserve">
+    <value>Kaldır</value>
+  </data>
+  <data name="lbl_FavouritesCount" xml:space="preserve">
+    <value>{0} öğe ({1} seçili)</value>
+  </data>
+  <data name="tsd_GroupBy" xml:space="preserve">
+    <value>Şuna göre grupla</value>
+  </data>
+  <data name="tmi_GroupByCountryCode" xml:space="preserve">
+    <value>Ülke kodu</value>
+  </data>
+  <data name="tmi_GroupByCountry" xml:space="preserve">
+    <value>Ülke</value>
+  </data>
+  <data name="tmi_GroupByState" xml:space="preserve">
+    <value>Eyalet/İl</value>
+  </data>
+  <data name="tmi_GroupByCity" xml:space="preserve">
+    <value>Şehir</value>
+  </data>
+  <data name="tmi_GroupByCoordinates" xml:space="preserve">
+    <value>Koordinatlar</value>
+  </data>
+  <data name="tmi_GroupByNone" xml:space="preserve">
+    <value>Gruplama yok</value>
+  </data>
+  <data name="tmi_GroupByBlank" xml:space="preserve">
+    <value>(yok)</value>
+  </data>
+  <data name="tsb_Duplicate" xml:space="preserve">
+    <value>Çoğalt</value>
+  </data>
+  <data name="tsb_Delete" xml:space="preserve">
+    <value>Sil</value>
+  </data>
+  <data name="tsb_AddFromSelection" xml:space="preserve">
+    <value>Seçili fotoğraftan ekle</value>
+  </data>
+  <data name="mbx_FrmManageFavourites_WarningNameTaken" xml:space="preserve">
+    <value>Başka bir favorinin zaten bu adı var.</value>
+  </data>
+  <data name="mbx_FrmManageFavourites_WarningAltitudeInvalid" xml:space="preserve">
+    <value>Yükseklik bir sayı olmalıdır.</value>
+  </data>
+  <data name="mbx_FrmManageFavourites_WarningNoCoordinates" xml:space="preserve">
+    <value>Kullanılacak koordinat yok. Konumu olan bir fotoğraf seçin.</value>
+  </data>
+  <data name="mbx_FrmManageFavourites_QuestionAcceptChanges" xml:space="preserve">
+    <value>Bu favorideki değişiklikler kabul edilsin mi?</value>
+  </data>
+  <data name="mbx_FrmManageFavourites_QuestionDiscardAll" xml:space="preserve">
+    <value>Favorilerdeki değişiklikleriniz kaydedilmeden kapatılsın mı?</value>
+  </data>
+  <data name="mbx_FrmManageFavourites_InfoWebNothingFound" xml:space="preserve">
+    <value>Web servisinde bu konum için bir şey yok.</value>
+  </data>
+  <data name="tpg_Keywords" xml:space="preserve">
+    <value>Kategoriler/Anahtar kelimeler</value>
+  </data>
+  <data name="tpg_SourceDescription" xml:space="preserve">
+    <value>Kaynak/Açıklama</value>
+  </data>
+  <data name="tpg_Contact" xml:space="preserve">
+    <value>İletişim</value>
+  </data>
+  <data name="lbl_SectionSource" xml:space="preserve">
+    <value>Kaynak</value>
+  </data>
+  <data name="lbl_SectionDescription" xml:space="preserve">
+    <value>Açıklama</value>
+  </data>
+  <data name="lbl_Category" xml:space="preserve">
+    <value>Kategori</value>
+  </data>
+  <data name="lbl_SupplementalCategories" xml:space="preserve">
+    <value>Ek kategoriler</value>
+  </data>
+  <data name="lbl_IPTCKeywords" xml:space="preserve">
+    <value>Anahtar kelimeler</value>
+  </data>
+  <data name="lbl_Artist" xml:space="preserve">
+    <value>Sanatçı</value>
+  </data>
+  <data name="lbl_CaptionWriter" xml:space="preserve">
+    <value>Altyazı yazarı</value>
+  </data>
+  <data name="lbl_Source" xml:space="preserve">
+    <value>Kaynak</value>
+  </data>
+  <data name="lbl_Credit" xml:space="preserve">
+    <value>Katkı</value>
+  </data>
+  <data name="lbl_SourceURL" xml:space="preserve">
+    <value>URL</value>
+  </data>
+  <data name="lbl_Copyright" xml:space="preserve">
+    <value>Telif hakkı</value>
+  </data>
+  <data name="lbl_ObjectName" xml:space="preserve">
+    <value>Nesne adı</value>
+  </data>
+  <data name="lbl_Headline" xml:space="preserve">
+    <value>Manşet</value>
+  </data>
+  <data name="lbl_Caption" xml:space="preserve">
+    <value>Altyazı</value>
+  </data>
+  <data name="lbl_SpecialInstructions" xml:space="preserve">
+    <value>Özel talimatlar</value>
+  </data>
+  <data name="lbl_Byline" xml:space="preserve">
+    <value>İmza</value>
+  </data>
+  <data name="lbl_BylineTitle" xml:space="preserve">
+    <value>İmza unvanı</value>
+  </data>
+  <data name="lbl_CreatorAddress" xml:space="preserve">
+    <value>Adres</value>
+  </data>
+  <data name="lbl_CreatorCity" xml:space="preserve">
+    <value>Şehir</value>
+  </data>
+  <data name="lbl_CreatorPostalCode" xml:space="preserve">
+    <value>Posta kodu</value>
+  </data>
+  <data name="lbl_CreatorRegion" xml:space="preserve">
+    <value>Eyalet/İl</value>
+  </data>
+  <data name="lbl_CreatorCountry" xml:space="preserve">
+    <value>Ülke</value>
+  </data>
+  <data name="lbl_CreatorPhone" xml:space="preserve">
+    <value>Telefon</value>
+  </data>
+  <data name="lbl_CreatorEmail" xml:space="preserve">
+    <value>E-posta</value>
+  </data>
+  <data name="lbl_CreatorURL" xml:space="preserve">
+    <value>URL</value>
+  </data>
+  <data name="tmi_FieldMenu_InsertFrom" xml:space="preserve">
+    <value>Şuradan ekle</value>
+  </data>
+  <data name="tmi_FieldMenu_CopyTo" xml:space="preserve">
+    <value>Şuraya kopyala</value>
+  </data>
+  <data name="tmi_FieldMenu_CopySelectionToCategories" xml:space="preserve">
+    <value>Seçimi kategorilere kopyala</value>
+  </data>
+  <data name="tmi_FieldMenu_CopySelectionToKeywords" xml:space="preserve">
+    <value>Seçimi anahtar kelimelere kopyala</value>
+  </data>
+  <data name="tmi_FieldMenu_MostRecentlyUsed" xml:space="preserve">
+    <value>Son kullanılan öğeler</value>
+  </data>
+  <data name="tmi_FieldMenu_ForgetRemembered" xml:space="preserve">
+    <value>Hatırlanan bir öğeyi unut</value>
+  </data>
+  <data name="lbl_ContactPrefix" xml:space="preserve">
+    <value>İletişim</value>
+  </data>
+  <data name="btn_LoadFromTemplate" xml:space="preserve">
+    <value>Şablondan yükle...</value>
+  </data>
+  <data name="btn_LoadFromImage" xml:space="preserve">
+    <value>Görüntüden yükle...</value>
+  </data>
+  <data name="btn_SaveAsTemplate" xml:space="preserve">
+    <value>Şablon olarak kaydet...</value>
+  </data>
+  <data name="lbl_TemplateName" xml:space="preserve">
+    <value>Şablon:</value>
+  </data>
+  <data name="lbl_TemplateInclude" xml:space="preserve">
+    <value>Bunları kullan:</value>
+  </data>
+  <data name="btn_TemplateDelete" xml:space="preserve">
+    <value>Sil</value>
+  </data>
+  <data name="chk_TemplateGroup_Country" xml:space="preserve">
+    <value>Ülke</value>
+  </data>
+  <data name="chk_TemplateGroup_State" xml:space="preserve">
+    <value>Eyalet/İl</value>
+  </data>
+  <data name="chk_TemplateGroup_City" xml:space="preserve">
+    <value>Şehir</value>
+  </data>
+  <data name="chk_TemplateGroup_Sublocation" xml:space="preserve">
+    <value>Alt konum</value>
+  </data>
+  <data name="chk_TemplateGroup_Position" xml:space="preserve">
+    <value>GPS konumu</value>
+  </data>
+  <data name="chk_TemplateGroup_Altitude" xml:space="preserve">
+    <value>Yükseklik</value>
+  </data>
+  <data name="chk_TemplateGroup_Direction" xml:space="preserve">
+    <value>Görüntü yönü</value>
+  </data>
+  <data name="chk_TemplateGroup_Destination" xml:space="preserve">
+    <value>Hedef</value>
+  </data>
+  <data name="chk_TemplateGroup_TakenDate" xml:space="preserve">
+    <value>Çekim tarihi</value>
+  </data>
+  <data name="chk_TemplateGroup_CreateDate" xml:space="preserve">
+    <value>Oluşturulma tarihi</value>
+  </data>
+  <data name="chk_TemplateGroup_OffsetTime" xml:space="preserve">
+    <value>Saat dilimi farkı</value>
+  </data>
+  <data name="mbx_FrmEditTemplateDialog_QuestionDeleteTemplate" xml:space="preserve">
+    <value>'{0}' şablonu silinsin mi?</value>
+  </data>
+  <data name="mbx_FrmEditTemplateDialog_QuestionOverwriteTemplate" xml:space="preserve">
+    <value>'{0}' adlı bir şablon zaten var. Değiştirilsin mi?</value>
+  </data>
+  <data name="mbx_FrmEditFileData_ErrorTemplateNotSaved" xml:space="preserve">
+    <value>Şablon kaydedilemedi.</value>
+  </data>
+  <data name="mbx_FrmEditFileData_InfoImageHasNothingToLoad" xml:space="preserve">
+    <value>Bu dosyada bu formun yükleyebileceği bir şey yok.</value>
+  </data>
+  <data name="lbl_Sexagesimal" xml:space="preserve">
+    <value>Altmışlık</value>
+  </data>
+  <data name="lbl_ImageDirection" xml:space="preserve">
+    <value>Görüntü yönü [°]:</value>
+  </data>
+  <data name="lbl_DestLatitude" xml:space="preserve">
+    <value>Hedef enlemi:</value>
+  </data>
+  <data name="lbl_DestLongitude" xml:space="preserve">
+    <value>Hedef boylamı:</value>
+  </data>
+  <data name="btn_GetAltitudeFromWeb" xml:space="preserve">
+    <value>Web'den al</value>
+  </data>
+  <data name="mbx_FrmEditFileData_InfoCoordinatesNeededForAltitude" xml:space="preserve">
+    <value>Önce bir enlem ve boylam girin.</value>
+  </data>
+  <data name="mbx_FrmEditFileData_WarningNoAltitudeFromWeb" xml:space="preserve">
+    <value>Web servisinde bu konum için yükseklik yok.</value>
+  </data>
+  <data name="ckb_SyncGeoKeywords" xml:space="preserve">
+    <value>Anahtar kelimeleri konumla uyumlu tutun (yer adları ve geo: anahtar kelimeleri)</value>
+  </data>
+  <data name="ckb_ShowChangelogAfterUpdate" xml:space="preserve">
+    <value>Güncellemeden sonra neyin değiştiğini göster</value>
+  </data>
+  <data name="mbx_Helper_InfoRemoveGeoDataKeywordsRemain" xml:space="preserve">
+    <value>Konum verileri kaldırıldı, ancak anahtar kelimelerinize dokunulmadı: içlerindeki yer adları veya "geo:" anahtar kelimeleri olduğu gibi kalır. Bunların konum değişikliklerini izlemesi için Ayarlarda "Anahtar kelimeleri konumla uyumlu tut" seçeneğini açın.</value>
+  </data>
+  <data name="tmi_View_FolderTree" xml:space="preserve">
+    <value>Klasör ağacı</value>
+  </data>
+  <data name="lbl_FolderTree_Title" xml:space="preserve">
+    <value>Klasörler</value>
+  </data>
+  <data name="tsb_FolderTree_Favourites" xml:space="preserve">
+    <value>Favori klasörler</value>
+  </data>
+  <data name="tmi_FolderTree_AddCurrent" xml:space="preserve">
+    <value>Geçerli klasörü favorilere ekle</value>
+  </data>
+  <data name="tmi_FolderTree_RemoveCurrent" xml:space="preserve">
+    <value>Geçerli klasörü favorilerden kaldır</value>
+  </data>
+  <data name="tmi_FolderTree_NoFavourites" xml:space="preserve">
+    <value>(henüz favori klasör yok)</value>
+  </data>
+  <data name="tsb_FolderTree_Refresh" xml:space="preserve">
+    <value>Klasör ağacını yenile</value>
+  </data>
+  <data name="tsb_FolderTree_Hide" xml:space="preserve">
+    <value>Klasör ağacını gizle (Ctrl+B)</value>
+  </data>
+  <data name="cmi_FolderTree_AddThis" xml:space="preserve">
+    <value>Favorilere ekle</value>
+  </data>
+  <data name="cmi_FolderTree_RemoveThis" xml:space="preserve">
+    <value>Favorilerden kaldır</value>
+  </data>
+  <data name="tsb_Donate" xml:space="preserve">
+    <value>BuyMeACoffee (bağış yap, tarayıcıda açılır)</value>
+  </data>
+</root>

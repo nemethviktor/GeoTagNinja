@@ -1,0 +1,2009 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<root>
+  <xsd:schema xmlns="" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:msdata="urn:schemas-microsoft-com:xml-msdata" id="root">
+    <xsd:import namespace="http://www.w3.org/XML/1998/namespace" />
+    <xsd:element name="root" msdata:IsDataSet="true">
+      <xsd:complexType>
+        <xsd:choice maxOccurs="unbounded">
+          <xsd:element name="metadata">
+            <xsd:complexType>
+              <xsd:sequence>
+                <xsd:element name="value" type="xsd:string" minOccurs="0" />
+              </xsd:sequence>
+              <xsd:attribute name="name" use="required" type="xsd:string" />
+              <xsd:attribute name="type" type="xsd:string" />
+              <xsd:attribute name="mimetype" type="xsd:string" />
+              <xsd:attribute ref="xml:space" />
+            </xsd:complexType>
+          </xsd:element>
+          <xsd:element name="assembly">
+            <xsd:complexType>
+              <xsd:attribute name="alias" type="xsd:string" />
+              <xsd:attribute name="name" type="xsd:string" />
+            </xsd:complexType>
+          </xsd:element>
+          <xsd:element name="data">
+            <xsd:complexType>
+              <xsd:sequence>
+                <xsd:element name="value" type="xsd:string" minOccurs="0" msdata:Ordinal="1" />
+                <xsd:element name="comment" type="xsd:string" minOccurs="0" msdata:Ordinal="2" />
+              </xsd:sequence>
+              <xsd:attribute name="name" type="xsd:string" use="required" msdata:Ordinal="1" />
+              <xsd:attribute name="type" type="xsd:string" msdata:Ordinal="3" />
+              <xsd:attribute name="mimetype" type="xsd:string" msdata:Ordinal="4" />
+              <xsd:attribute ref="xml:space" />
+            </xsd:complexType>
+          </xsd:element>
+          <xsd:element name="resheader">
+            <xsd:complexType>
+              <xsd:sequence>
+                <xsd:element name="value" type="xsd:string" minOccurs="0" msdata:Ordinal="1" />
+              </xsd:sequence>
+              <xsd:attribute name="name" type="xsd:string" use="required" />
+            </xsd:complexType>
+          </xsd:element>
+        </xsd:choice>
+      </xsd:complexType>
+    </xsd:element>
+  </xsd:schema>
+  <resheader name="resmimetype">
+    <value>text/microsoft-resx</value>
+  </resheader>
+  <resheader name="version">
+    <value>2.0</value>
+  </resheader>
+  <resheader name="reader">
+    <value>System.Resources.ResXResourceReader, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </resheader>
+  <resheader name="writer">
+    <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </resheader>
+  <data name="btn_ApplyAndNext" xml:space="preserve">
+    <value>اعمال &amp;&amp; رفتن به بعدی</value>
+  </data>
+  <data name="btn_InsertFromTakenDate" xml:space="preserve">
+    <value>استفاده از تاریخ عکس‌برداری</value>
+  </data>
+  <data name="btn_PullMostRecentPasteSettings" xml:space="preserve">
+    <value>دریافت تنظیمات «آخرین» چسباندن</value>
+  </data>
+  <data name="btn_PullMostRecentTrackSyncShift" xml:space="preserve">
+    <value>دریافت تنظیمات «آخرین» جابه‌جایی</value>
+  </data>
+  <data name="btn_RemoveGeoData" xml:space="preserve">
+    <value>حذف داده‌های GPS و مکان</value>
+  </data>
+  <data name="btn_ResetToDefaults" xml:space="preserve">
+    <value>بازنشانی به پیش‌فرض‌ها</value>
+  </data>
+  <data name="btn_RestartLater" xml:space="preserve">
+    <value>راه‌اندازی مجدد بعداً</value>
+  </data>
+  <data name="btn_RestartNow" xml:space="preserve">
+    <value>راه‌اندازی مجدد اکنون</value>
+  </data>
+  <data name="btn_SetCurrentValues" xml:space="preserve">
+    <value>تنظیم مقادیر فعلی برای همه تصاویر انتخاب‌شده برای ویرایش...</value>
+  </data>
+  <data name="ckb_AddXMPSideCar" xml:space="preserve">
+    <value>افزودن/بازنویسی پروندهٔ همراه XMP</value>
+  </data>
+  <data name="ckb_DeSelectAll" xml:space="preserve">
+    <value>انتخاب/لغو انتخاب همه</value>
+  </data>
+  <data name="ckb_DoNotQueryAPI" xml:space="preserve">
+    <value>جستجوی معکوس مکان انجام نشود (فقط مختصات دریافت شود، نه شهر/استان و غیره)</value>
+  </data>
+  <data name="ckb_ExportTrackIncludeAltitude" xml:space="preserve">
+    <value>شامل داده‌های ارتفاع در خروجی</value>
+  </data>
+  <data name="ckb_ImportExport_CityRulesSettings" xml:space="preserve">
+    <value>CityRulesSettings</value>
+  </data>
+  <data name="ckb_IncludePredeterminedCountries" xml:space="preserve">
+    <value>کشورهای «از پیش تعیین‌شده» هم شامل شوند؟ (پیوند بالا + هشدار را ببینید)</value>
+  </data>
+  <data name="ckb_LoadTrackOntoMap" xml:space="preserve">
+    <value>قراردادن پروندهٔ مسیر روی نقشه</value>
+  </data>
+  <data name="ckb_OffsetTime" xml:space="preserve">
+    <value>اختلاف منطقه زمانی</value>
+  </data>
+  <data name="ckb_OverlayGPXForSelectedDatesOnly" xml:space="preserve">
+    <value>فقط برای تاریخ‌هایی که بین اولین و آخرین تاریخ پرونده‌های انتخاب‌شده قرار دارند</value>
+  </data>
+  <data name="ckb_OverwriteOriginal" xml:space="preserve">
+    <value>نسخهٔ پشتیبان xxx_original ساخته نشود</value>
+  </data>
+  <data name="ckb_PopulatedPlacesOnly" xml:space="preserve">
+    <value>فقط داده‌های API با فیلتر «مکان‌های مسکونی» (fcode=PPL) نمایش داده شود [توصیه نمی‌شود]</value>
+  </data>
+  <data name="ckb_ProcessOriginalFile" xml:space="preserve">
+    <value>خود پروندهٔ تصویر پردازش شود</value>
+  </data>
+  <data name="ckb_QuestionStopProcessingRows" xml:space="preserve">
+    <value>پردازش ردیف‌های بعدی متوقف شود؟</value>
+  </data>
+  <data name="ckb_RemoveGeoDataRemovesTimeOffset" xml:space="preserve">
+    <value>عملکرد «حذف داده‌های مکانی» اختلاف منطقه زمانی را هم حذف می‌کند</value>
+  </data>
+  <data name="ckb_ReplaceBlankToponyms" xml:space="preserve">
+    <value>جایگزین کردن مقادیر خالی شهر، استان و مکان فرعی با: </value>
+  </data>
+  <data name="ckb_ResetFileDateToCreated" xml:space="preserve">
+    <value>بازنشانی تاریخ و زمان پروندهٔ تصویر به تاریخ ایجاد</value>
+  </data>
+  <data name="ckb_ResetMapToZero" xml:space="preserve">
+    <value>اگر داده‌ی مکانی نبود، نقشه روی 0/0 تنظیم شود</value>
+  </data>
+  <data name="ckb_StopProcessingRules" xml:space="preserve">
+    <value>پس از اولین تطابق کشور+هدف، پردازش قواعد متوقف شود</value>
+  </data>
+  <data name="ckb_UpdateCheckPreRelease" xml:space="preserve">
+    <value>به‌روزرسانی‌های پیش‌انتشار [بتا] هم بررسی شوند؟</value>
+  </data>
+  <data name="ckb_UseDarkMode" xml:space="preserve">
+    <value>حالت تاریک در رابط برنامه استفاده شود؟</value>
+  </data>
+  <data name="ckb_UseImperialNotMetric" xml:space="preserve">
+    <value>برای ارتفاع از واحد امپریال (فوت) استفاده شود (به‌جای متریک [متر])</value>
+  </data>
+  <data name="ckb_UseTimeZone" xml:space="preserve">
+    <value>از این منطقه زمانی استفاده شود:</value>
+  </data>
+  <data name="clh_BlankOutTargetPoint" xml:space="preserve">
+    <value>خالی شود؟</value>
+  </data>
+  <data name="clh_DataPointConditionType" xml:space="preserve">
+    <value>اگر</value>
+  </data>
+  <data name="clh_DataPointConditionValue" xml:space="preserve">
+    <value>مقدار</value>
+  </data>
+  <data name="clh_DataPointName" xml:space="preserve">
+    <value>چه</value>
+  </data>
+  <data name="clh_ExifTag" xml:space="preserve">
+    <value>برچسب Exif (داخلی GTN)</value>
+  </data>
+  <data name="clh_Folder" xml:space="preserve">
+    <value>پوشه</value>
+  </data>
+  <data name="clh_ModifiedValue" xml:space="preserve">
+    <value>مقدار تغییریافته (ذخیره‌نشده)</value>
+  </data>
+  <data name="clh_OriginalValue" xml:space="preserve">
+    <value>مقدار اصلی (ذخیره‌شده)</value>
+  </data>
+  <data name="clh_TargetPointName" xml:space="preserve">
+    <value>آنگاه</value>
+  </data>
+  <data name="clh_TargetPointNameCustomCityLogic" xml:space="preserve">
+    <value>شهر را از این بخش می‌خواند</value>
+  </data>
+  <data name="clh_TargetPointOutcome" xml:space="preserve">
+    <value>می‌شود</value>
+  </data>
+  <data name="clh_TargetPointOutcomeCustom" xml:space="preserve">
+    <value>نتیجهٔ سفارشی</value>
+  </data>
+  <data name="cmi_OpenCoordsInAPI" xml:space="preserve">
+    <value>باز کردن مختصات در API</value>
+  </data>
+  <data name="cmi_RemoveCachedData" xml:space="preserve">
+    <value>حذف داده‌های حافظهٔ نهان</value>
+  </data>
+  <data name="cmi_ShowHideCols" xml:space="preserve">
+    <value>نمایش یا پنهان کردن ستون‌ها</value>
+  </data>
+  <data name="fbd_StartupFolder" xml:space="preserve">
+    <value>انتخاب پوشهٔ شروع برنامه</value>
+  </data>
+  <data name="frm_FrmEditFileData" xml:space="preserve">
+    <value>ویرایش داده‌ها</value>
+  </data>
+  <data name="frm_FrmImportExportGpx" xml:space="preserve">
+    <value>وارد کردن داده‌های GPX/JSON</value>
+  </data>
+  <data name="frm_FrmManageFavourites" xml:space="preserve">
+    <value>مدیریت علاقه‌مندی‌ها</value>
+  </data>
+  <data name="frm_FrmPasteWhat" xml:space="preserve">
+    <value>چسباندن… چه؟</value>
+  </data>
+  <data name="frm_FrmPickDataFromAPIBox" xml:space="preserve">
+    <value>انتخاب مقادیر نام مکان</value>
+  </data>
+  <data name="frm_FrmPleaseWaitBox" xml:space="preserve">
+    <value>لطفاً تا بارگذاری پوشه صبر کنید.</value>
+  </data>
+  <data name="frm_FrmSettings" xml:space="preserve">
+    <value>تنظیمات</value>
+  </data>
+  <data name="gbx_AppSettings" xml:space="preserve">
+    <value>تنظیمات برنامه</value>
+  </data>
+  <data name="gbx_CreateDate" xml:space="preserve">
+    <value>تاریخ ایجاد</value>
+  </data>
+  <data name="gbx_Dates" xml:space="preserve">
+    <value>تاریخ‌ها</value>
+  </data>
+  <data name="gbx_EditImageList" xml:space="preserve">
+    <value>تصاویر انتخاب‌شده برای ویرایش</value>
+  </data>
+  <data name="gbx_GeoNamesLanguageSettings" xml:space="preserve">
+    <value>تنظیمات زبان GeoNames</value>
+  </data>
+  <data name="gbx_GeoNamesSettings" xml:space="preserve">
+    <value>تنظیمات GeoNames</value>
+  </data>
+  <data name="gbx_GetAltitude" xml:space="preserve">
+    <value>دریافت داده‌های ارتفاع</value>
+  </data>
+  <data name="gbx_GetToponomy" xml:space="preserve">
+    <value>دریافت داده‌های نام مکان</value>
+  </data>
+  <data name="gbx_GPSData" xml:space="preserve">
+    <value>داده‌های GPS</value>
+  </data>
+  <data name="gbx_ImportExportGpxSource" xml:space="preserve">
+    <value>منبع</value>
+  </data>
+  <data name="gbx_ImportExportGpxTimeSetting" xml:space="preserve">
+    <value>تنظیم زمان</value>
+  </data>
+  <data name="gbx_LocationData" xml:space="preserve">
+    <value>داده‌های مکان</value>
+  </data>
+  <data name="gbx_MapColourMode" xml:space="preserve">
+    <value>حالت رنگ نقشه</value>
+  </data>
+  <data name="gbx_OtherSettings" xml:space="preserve">
+    <value>سایر تنظیمات</value>
+  </data>
+  <data name="gbx_SaveTrackTo" xml:space="preserve">
+    <value>ذخیرهٔ مسیر (گزینه‌ها)</value>
+  </data>
+  <data name="gbx_TakenDate" xml:space="preserve">
+    <value>تاریخ عکس‌برداری (تصویر)</value>
+  </data>
+  <data name="Generic_All" xml:space="preserve">
+    <value>همه</value>
+  </data>
+  <data name="Generic_Cancel" xml:space="preserve">
+    <value>لغو</value>
+  </data>
+  <data name="Generic_City" xml:space="preserve">
+    <value>شهر</value>
+  </data>
+  <data name="Generic_Close" xml:space="preserve">
+    <value>بستن</value>
+  </data>
+  <data name="Generic_Coordinates" xml:space="preserve">
+    <value>مختصات</value>
+  </data>
+  <data name="Generic_Country" xml:space="preserve">
+    <value>کشور</value>
+  </data>
+  <data name="Generic_CountryCode" xml:space="preserve">
+    <value>کد کشور</value>
+  </data>
+  <data name="Generic_CreateDate" xml:space="preserve">
+    <value>تاریخ ایجاد</value>
+  </data>
+  <data name="Generic_Days" xml:space="preserve">
+    <value>روز</value>
+  </data>
+  <data name="Generic_Decimal" xml:space="preserve">
+    <value>اعشاری</value>
+  </data>
+  <data name="Generic_Delete" xml:space="preserve">
+    <value>حذف</value>
+  </data>
+  <data name="Generic_DestCoordinates" xml:space="preserve">
+    <value>مختصات مقصد</value>
+  </data>
+  <data name="Generic_Export" xml:space="preserve">
+    <value>خروجی گرفتن</value>
+  </data>
+  <data name="Generic_ExportTrackTimeStampType" xml:space="preserve">
+    <value>مقدار مهر زمانی</value>
+  </data>
+  <data name="Generic_ExposureTime" xml:space="preserve">
+    <value>زمان نوردهی</value>
+  </data>
+  <data name="Generic_Favourites" xml:space="preserve">
+    <value>علاقه‌مندی‌ها</value>
+  </data>
+  <data name="Generic_Feet" xml:space="preserve">
+    <value>فوت</value>
+  </data>
+  <data name="Generic_Feet_Abbr" xml:space="preserve">
+    <value>فوت</value>
+  </data>
+  <data name="Generic_FileModifyDate" xml:space="preserve">
+    <value>تاریخ پرونده</value>
+  </data>
+  <data name="Generic_FileName" xml:space="preserve">
+    <value>نام پرونده</value>
+  </data>
+  <data name="Generic_Fnumber" xml:space="preserve">
+    <value>دیافراگم</value>
+  </data>
+  <data name="Generic_FocalLength" xml:space="preserve">
+    <value>فاصلهٔ کانونی</value>
+  </data>
+  <data name="Generic_FocalLengthIn35mmFormat" xml:space="preserve">
+    <value>فاصلهٔ کانونی (35mm)</value>
+  </data>
+  <data name="Generic_ForAllImages" xml:space="preserve">
+    <value>برای همه تصاویر</value>
+  </data>
+  <data name="Generic_ForThisImage" xml:space="preserve">
+    <value>برای این تصویر</value>
+  </data>
+  <data name="Generic_GPSAltitude" xml:space="preserve">
+    <value>ارتفاع</value>
+  </data>
+  <data name="Generic_GPSAltitudeRef" xml:space="preserve">
+    <value>مرجع ارتفاع</value>
+  </data>
+  <data name="Generic_GPSDateTime" xml:space="preserve">
+    <value>تاریخ و زمان GPS</value>
+  </data>
+  <data name="Generic_GPSDestLatitude" xml:space="preserve">
+    <value>عرض جغرافیایی مقصد</value>
+  </data>
+  <data name="Generic_GPSDestLatitudeRef" xml:space="preserve">
+    <value>مرجع عرض جغرافیایی مقصد</value>
+  </data>
+  <data name="Generic_GPSDestLongitude" xml:space="preserve">
+    <value>طول جغرافیایی مقصد</value>
+  </data>
+  <data name="Generic_GPSDestLongitudeRef" xml:space="preserve">
+    <value>مرجع طول جغرافیایی مقصد</value>
+  </data>
+  <data name="Generic_GPSImgDirection" xml:space="preserve">
+    <value>جهت تصویر</value>
+  </data>
+  <data name="Generic_GPSImgDirectionRef" xml:space="preserve">
+    <value>مرجع جهت تصویر</value>
+  </data>
+  <data name="Generic_GPSLatitude" xml:space="preserve">
+    <value>عرض جغرافیایی</value>
+  </data>
+  <data name="Generic_GPSLatitudeRef" xml:space="preserve">
+    <value>مرجع عرض جغرافیایی</value>
+  </data>
+  <data name="Generic_GPSLongitude" xml:space="preserve">
+    <value>طول جغرافیایی</value>
+  </data>
+  <data name="Generic_GPSLongitudeRef" xml:space="preserve">
+    <value>مرجع طول جغرافیایی</value>
+  </data>
+  <data name="Generic_GPSSpeed" xml:space="preserve">
+    <value>سرعت</value>
+  </data>
+  <data name="Generic_GPSSpeedRef" xml:space="preserve">
+    <value>مرجع سرعت</value>
+  </data>
+  <data name="Generic_GUID" xml:space="preserve">
+    <value>GUID</value>
+  </data>
+  <data name="Generic_Hours" xml:space="preserve">
+    <value>ساعت</value>
+  </data>
+  <data name="Generic_Import" xml:space="preserve">
+    <value>وارد کردن</value>
+  </data>
+  <data name="Generic_Insert" xml:space="preserve">
+    <value>درج</value>
+  </data>
+  <data name="Generic_IPTCKeywords" xml:space="preserve">
+    <value>کلیدواژه‌های IPTC</value>
+  </data>
+  <data name="Generic_ISO" xml:space="preserve">
+    <value>سرعت ISO</value>
+  </data>
+  <data name="Generic_LensSpec" xml:space="preserve">
+    <value>لنز</value>
+  </data>
+  <data name="Generic_Make" xml:space="preserve">
+    <value>سازنده</value>
+  </data>
+  <data name="Generic_Metres" xml:space="preserve">
+    <value>متر</value>
+  </data>
+  <data name="Generic_Metres_Abbr" xml:space="preserve">
+    <value>متر</value>
+  </data>
+  <data name="Generic_Miles" xml:space="preserve">
+    <value>مایل</value>
+  </data>
+  <data name="Generic_Minutes" xml:space="preserve">
+    <value>دقیقه</value>
+  </data>
+  <data name="Generic_Model" xml:space="preserve">
+    <value>مدل</value>
+  </data>
+  <data name="Generic_No" xml:space="preserve">
+    <value>خیر</value>
+  </data>
+  <data name="Generic_None" xml:space="preserve">
+    <value>هیچ‌کدام</value>
+  </data>
+  <data name="Generic_OffsetTime" xml:space="preserve">
+    <value>اختلاف منطقه زمانی</value>
+  </data>
+  <data name="Generic_OK" xml:space="preserve">
+    <value>تأیید</value>
+  </data>
+  <data name="Generic_PleaseWait" xml:space="preserve">
+    <value>لطفاً صبر کنید...</value>
+  </data>
+  <data name="Generic_QuestionDontAskAgain" xml:space="preserve">
+    <value>دیگر نپرس</value>
+  </data>
+  <data name="Generic_Rating" xml:space="preserve">
+    <value>امتیاز</value>
+  </data>
+  <data name="Generic_Rename" xml:space="preserve">
+    <value>تغییر نام</value>
+  </data>
+  <data name="Generic_Save" xml:space="preserve">
+    <value>ذخیرهٔ تغییرات فعلی</value>
+  </data>
+  <data name="Generic_Seconds" xml:space="preserve">
+    <value>ثانیه</value>
+  </data>
+  <data name="Generic_ShowPassword" xml:space="preserve">
+    <value>نمایش گذرواژه</value>
+  </data>
+  <data name="Generic_ShowUserName" xml:space="preserve">
+    <value>نمایش نام کاربری</value>
+  </data>
+  <data name="Generic_State" xml:space="preserve">
+    <value>استان/ایالت</value>
+  </data>
+  <data name="Generic_Sublocation" xml:space="preserve">
+    <value>مکان فرعی</value>
+  </data>
+  <data name="Generic_TakenDate" xml:space="preserve">
+    <value>تاریخ عکس‌برداری</value>
+  </data>
+  <data name="Generic_TZTime" xml:space="preserve">
+    <value>تنظیم منطقه زمانی:</value>
+  </data>
+  <data name="Generic_UseDST" xml:space="preserve">
+    <value>استفاده از ساعت تابستانی؟</value>
+  </data>
+  <data name="Generic_XMLSubjects" xml:space="preserve">
+    <value>موضوعات XML</value>
+  </data>
+  <data name="Generic_Yes" xml:space="preserve">
+    <value>بله</value>
+  </data>
+  <data name="lbl_ARCGIS_APIKey" xml:space="preserve">
+    <value>کلید API ARCGIS</value>
+  </data>
+  <data name="lbl_CameraTime" xml:space="preserve">
+    <value>تاریخ/زمان دوربین</value>
+  </data>
+  <data name="lbl_CameraTimeNote" xml:space="preserve">
+    <value>توجه: جابه‌جایی زمان فقط زمانی لازم است که مهرهای زمانی تصاویر با زمان GPS درست همگام نباشند. مگر لازم باشد، روی 0 ثانیه بماند.</value>
+  </data>
+  <data name="lbl_CancelPressed" xml:space="preserve">
+    <value>لغو فشرده شد. تجزیهٔ پوشه متوقف شد، اما پرونده‌هایی که جمع‌آوری شده‌اند تجزیه خواهند شد.</value>
+  </data>
+  <data name="lbl_ChoiceOfferCount" xml:space="preserve">
+    <value>این تعداد گزینهٔ نام مکان نمایش داده شود</value>
+  </data>
+  <data name="lbl_ChoiceRadius" xml:space="preserve">
+    <value>در شعاع [کیلومتر]</value>
+  </data>
+  <data name="lbl_ExportTrackOrderBy" xml:space="preserve">
+    <value>مرتب‌سازی نقاط مسیر بر اساس</value>
+  </data>
+  <data name="lbl_ExportTrackTimeStampType" xml:space="preserve">
+    <value>مقدار مهر زمانی</value>
+  </data>
+  <data name="lbl_ExportTrackTimeStampTypeNote" xml:space="preserve">
+    <value>اگر GPSDateTime را انتخاب کنید و پرونده‌تان چنین ویژگی‌ای نداشته باشد، خروجی‌گیری ناموفق می‌شود. 
+برخی پرونده‌های HEIC این ویژگی را دارند، بیشتر قالب‌های دیگر ندارند.</value>
+  </data>
+  <data name="lbl_GeoMaxExtSecs" xml:space="preserve">
+    <value>حداکثر زمان برون‌یابی (اختلاف زمانی بین مهر زمانی عکس‌برداری و مهر زمانی نقطهٔ مسیر) بر حسب ثانیه.</value>
+  </data>
+  <data name="lbl_GeoMaxIntSecs" xml:space="preserve">
+    <value>حداکثر زمان درون‌یابی («حدس مسیر») بر حسب ثانیه. برای غیرفعال کردن، روی 0 تنظیم کنید.</value>
+  </data>
+  <data name="lbl_GeoNames_Pwd" xml:space="preserve">
+    <value>گذرواژهٔ GeoNames</value>
+  </data>
+  <data name="lbl_GeoNames_UserName" xml:space="preserve">
+    <value>نام کاربری GeoNames</value>
+  </data>
+  <data name="lbl_importFromAnotherFolder" xml:space="preserve">
+    <value>&lt;-- برای تعیین پوشهٔ منبع وارد کردن، اینجا کلیک کنید</value>
+  </data>
+  <data name="lbl_importOneFile" xml:space="preserve">
+    <value>&lt;-- برای تعیین پروندهٔ منبع وارد کردن، اینجا کلیک کنید</value>
+  </data>
+  <data name="lbl_ImportTimeAgainst" xml:space="preserve">
+    <value>مهر زمانی پرونده‌های مسیر را با این مورد مقایسه کن:</value>
+  </data>
+  <data name="lbl_Language" xml:space="preserve">
+    <value>زبان</value>
+  </data>
+  <data name="lbl_OffsetTime" xml:space="preserve">
+    <value>منطقه زمانی</value>
+  </data>
+  <data name="lbl_ParseProgress_Normal" xml:space="preserve">
+    <value>آماده</value>
+  </data>
+  <data name="lbl_ParseProgress_Read" xml:space="preserve">
+    <value>در حال خواندن:</value>
+  </data>
+  <data name="lbl_ParseProgress_Write" xml:space="preserve">
+    <value>در حال نوشتن:</value>
+  </data>
+  <data name="lbl_ParsingFolders" xml:space="preserve">
+    <value>در حال تجزیهٔ پرونده‌ها &amp;&amp; پوشه‌ها، لطفاً صبر کنید. </value>
+  </data>
+  <data name="lbl_PleaseWaitBoxActionParsing" xml:space="preserve">
+    <value>در حال تجزیهٔ داده‌ها:</value>
+  </data>
+  <data name="lbl_PleaseWaitBoxActionPopulatingListView" xml:space="preserve">
+    <value>در حال پر کردن جدول اصلی (ListView)</value>
+  </data>
+  <data name="lbl_PleaseWaitBoxActionScanning" xml:space="preserve">
+    <value>در حال اسکن پرونده:</value>
+  </data>
+  <data name="lbl_PressCancelToStop" xml:space="preserve">
+    <value>برای توقف، لغو را فشار دهید.</value>
+  </data>
+  <data name="lbl_QuestionAddToponomy" xml:space="preserve">
+    <value>آیا می‌خواهید مقادیر ارتفاع و نام مکان را هم تخصیص دهید؟
+اگر خیر را انتخاب کنید، داده‌های عرض/طول جغرافیایی ممکن است با هر داده‌ی نام مکان جاسازی‌شده ناهمگام شوند.
+اگر روی «دیگر نپرس» کلیک کنید، پاسخ بله در نظر گرفته می‌شود و تا پایان این نشست دوباره پرسیده نمی‌شود. برای بازنشانی، برنامه را راه‌اندازی مجدد کنید.</value>
+  </data>
+  <data name="lbl_SaveTrackTo" xml:space="preserve">
+    <value>ذخیرهٔ خروجی در</value>
+  </data>
+  <data name="lbl_SelectColsTitle" xml:space="preserve">
+    <value>انتخاب ستون‌ها</value>
+  </data>
+  <data name="lbl_ShiftTrackTimeBy" xml:space="preserve">
+    <value>جابه‌جا کردن زمان پروندهٔ مسیر به اندازهٔ:</value>
+  </data>
+  <data name="gbx_Startup_Folder" xml:space="preserve">
+    <value>پوشهٔ شروع</value>
+  </data>
+  <data name="lbl_TZNote" xml:space="preserve">
+    <value>توجه: اگر برچسب تاریخ/زمان منطقه زمانی نداشته باشد، ممکن است یکی به آن افزوده شود (در زیر را ببینید)، وگرنه زمان محلی سیستم فرض می‌شود.</value>
+  </data>
+  <data name="lbl_TZTime" xml:space="preserve">
+    <value>تنظیم منطقه زمانی:</value>
+  </data>
+  <data name="mbc_Error" xml:space="preserve">
+    <value>خطا</value>
+  </data>
+  <data name="mbc_Information" xml:space="preserve">
+    <value>اطلاعات</value>
+  </data>
+  <data name="mbc_Question" xml:space="preserve">
+    <value>پرسش</value>
+  </data>
+  <data name="mbc_Warning" xml:space="preserve">
+    <value>هشدار</value>
+  </data>
+  <data name="mbx_DirectoryElementCollection_ErrorParsing" xml:space="preserve">
+    <value>خطا هنگام تجزیهٔ پوشه به DirectoryElements</value>
+  </data>
+  <data name="mbx_FrmEditFileData_ErrorAPIError" xml:space="preserve">
+    <value>برنامه در ارتباط با API خطا داشت. اگر خطای «عدم مجوز» گرفتید، لطفاً نام کاربری خود را در تنظیمات به‌عنوان گذرواژه وارد کنید.</value>
+  </data>
+  <data name="mbx_FrmEditFileData_ErrorInvalidSender" xml:space="preserve">
+    <value>این یک اشکال است.  لطفاً در GitHub گزارش دهید و ذکر کنید که «فرستنده» این بود: </value>
+  </data>
+  <data name="mbx_FrmEditFileData_InfoDataUpdated" xml:space="preserve">
+    <value>داده‌ها به‌روزرسانی شد.</value>
+  </data>
+  <data name="mbx_FrmEditFileData_WarningFileDisappeared" xml:space="preserve">
+    <value>به نظر می‌رسد پرونده‌های شما ناپدید شده‌اند.</value>
+  </data>
+  <data name="mbx_FrmEditFileData_WarningLatLongMustBeNumbers" xml:space="preserve">
+    <value>این باید فقط عدد باشد. به‌طور پیش‌فرض صفر در نظر گرفته می‌شود.</value>
+  </data>
+  <data name="mbx_FrmImportExportGpx_AskUserWantsReport" xml:space="preserve">
+    <value>آیا می‌خواهید گزارش فرایند وارد کردن را ببینید؟</value>
+  </data>
+  <data name="mbx_FrmImportExportGpx_FileOrFolderDoesntExist" xml:space="preserve">
+    <value>پرونده یا پوشهٔ انتخاب‌شده نامعتبر است.</value>
+  </data>
+  <data name="mbx_FrmImportExportGpx_NoFileSelected" xml:space="preserve">
+    <value>هیچ پرونده‌ای برای وارد کردن انتخاب نشده است.</value>
+  </data>
+  <data name="mbx_FrmImportExportGpx_TrackContainsNoData" xml:space="preserve">
+    <value>وارد کردن قرارگیری مسیر روی نقشه ناموفق بود - داده‌ی مرتبطی پیدا نشد.</value>
+  </data>
+  <data name="mbx_FrmImportNoStoredShiftValues" xml:space="preserve">
+    <value>هیچ مقدار «جابه‌جایی» ذخیره نشده است. داده‌ها صفر باقی می‌مانند.</value>
+  </data>
+  <data name="mbx_FrmMainApp_ErrorCantCreateSQLiteDB" xml:space="preserve">
+    <value>پایگاه‌داده SQLite ساخته نشد (لطفاً در GitHub گزارش دهید): </value>
+  </data>
+  <data name="mbx_FrmMainApp_ErrorCantLoadSQLiteDB" xml:space="preserve">
+    <value>بارگذاری داده از SQL ناموفق بود (لطفاً در GitHub گزارش دهید): </value>
+  </data>
+  <data name="mbx_FrmMainApp_ErrorCantLoadWebView2" xml:space="preserve">
+    <value>خطا در بارگذاری WebView2 - آیا آن را نصب کرده‌اید؟</value>
+  </data>
+  <data name="mbx_FrmMainApp_ErrorCantReadDefaultSQLiteDB" xml:space="preserve">
+    <value>خواندن مقادیر پیش‌فرض از SQL ناموفق بود (لطفاً در GitHub گزارش دهید): </value>
+  </data>
+  <data name="mbx_FrmMainApp_ErrorCantWriteSQLiteDB" xml:space="preserve">
+    <value>پایگاه‌داده ساخته شد اما در SQLite نمی‌توان نوشت (لطفاً در GitHub گزارش دهید): </value>
+  </data>
+  <data name="mbx_FrmMainApp_ErrorClearingFileDataQTables" xml:space="preserve">
+    <value>خطا در پاک کردن جدول‌های filedata-Q (لطفاً در GitHub گزارش دهید): </value>
+  </data>
+  <data name="mbx_FrmMainApp_ErrorDoubleBuffer" xml:space="preserve">
+    <value>خطای DoubleBuffer (لطفاً در GitHub گزارش دهید): </value>
+  </data>
+  <data name="mbx_FrmMainApp_ErrorFileGoneMissing" xml:space="preserve">
+    <value>به نظر می‌رسد پرونده دیگر وجود ندارد: </value>
+  </data>
+  <data name="mbx_FrmMainApp_ErrorInitializeComponent" xml:space="preserve">
+    <value>خطا در FrmMainApp.InitializeComponent (لطفاً در GitHub گزارش دهید): </value>
+  </data>
+  <data name="mbx_FrmMainApp_ErrorInitializeWebViewEnsureCoreWebView2Async" xml:space="preserve">
+    <value>خطا در FrmMainApp.InitialiseWebView (await wbv_MapArea.EnsureCoreWebView2Async(c2wv)) (لطفاً در GitHub گزارش دهید): </value>
+  </data>
+  <data name="mbx_FrmMainApp_ErrorInitializeWebViewIsWebMessageEnabled" xml:space="preserve">
+    <value>خطا در FrmMainApp.InitialiseWebView (IsWebMessageEnabled) (لطفاً در GitHub گزارش دهید): </value>
+  </data>
+  <data name="mbx_FrmMainApp_ErrorInitializeWebViewNavigateToStringInHTMLFile" xml:space="preserve">
+    <value>خطا در FrmMainApp.InitialiseWebView (NavigateToString در پروندهٔ HTMLCode) (لطفاً در GitHub گزارش دهید): </value>
+  </data>
+  <data name="mbx_FrmMainApp_ErrorInitializeWebViewParseCoordsFromHTMLFile" xml:space="preserve">
+    <value>خطا در FrmMainApp.InitialiseWebView (تجزیهٔ مختصات از پروندهٔ HTMLCode) (لطفاً در GitHub گزارش دهید): </value>
+  </data>
+  <data name="mbx_FrmMainApp_ErrorInitializeWebViewReadHTMLFile" xml:space="preserve">
+    <value>خطا در FrmMainApp.InitialiseWebView (خواندن پروندهٔ HTMLCode) (لطفاً در GitHub گزارش دهید): </value>
+  </data>
+  <data name="mbx_FrmMainApp_ErrorInitializeWebViewReplaceStringInHTMLFile" xml:space="preserve">
+    <value>خطا در FrmMainApp.InitialiseWebView (جایگزین کردن ثابت‌ها در پروندهٔ HTMLCode) (لطفاً در GitHub گزارش دهید): </value>
+  </data>
+  <data name="mbx_FrmMainApp_ErrorInitializeWebViewWebMessageReceived" xml:space="preserve">
+    <value>خطا هنگام اجرای wbv_MapArea_WebMessageReceived (لطفاً در GitHub گزارش دهید): </value>
+  </data>
+  <data name="mbx_FrmMainApp_ErrorInvalidFolder" xml:space="preserve">
+    <value>به نظر می‌رسد پوشهٔ واردشده معتبر نیست. به C:\ برگردانده شود؟</value>
+  </data>
+  <data name="mbx_FrmMainApp_ErrorLanguageFileColumnHeaders" xml:space="preserve">
+    <value>هنگام خواندن پروندهٔ زبان و تخصیص سرستون‌ها خطایی رخ داد (لطفاً در GitHub گزارش دهید): </value>
+  </data>
+  <data name="mbx_FrmMainApp_ErrorNavigateMapGoHTMLCode" xml:space="preserve">
+    <value>خطا در FrmMainApp.NavigateMapGo (رشتهٔ HTMLCode) (لطفاً در GitHub گزارش دهید): </value>
+  </data>
+  <data name="mbx_FrmMainApp_ErrorRemoveGeoDataFailed" xml:space="preserve">
+    <value>فرایند حذف داده‌های مکانی ناموفق بود یا خطا برگرداند.</value>
+  </data>
+  <data name="mbx_FrmMainApp_ErrorResizingColumns" xml:space="preserve">
+    <value>تغییر اندازهٔ ستون‌ها ناموفق بود (لطفاً در GitHub گزارش دهید): </value>
+  </data>
+  <data name="mbx_FrmMainApp_ErrorSettingStartupFolder" xml:space="preserve">
+    <value>تنظیم پوشهٔ شروع پیش‌فرض ناموفق بود (لطفاً در GitHub گزارش دهید): </value>
+  </data>
+  <data name="mbx_FrmMainApp_InfoCachedDataNotRemoved" xml:space="preserve">
+    <value>هیچ داده‌ای حذف نشد. یا موردهای معتبری انتخاب نکرده‌اید، یا موردهای انتخابی داده‌ی حافظهٔ نهان نداشتند.</value>
+  </data>
+  <data name="mbx_FrmMainApp_InfoCachedDataRemoved" xml:space="preserve">
+    <value>اگر داده‌ای بود، داده‌های حافظهٔ نهان موردهای انتخابی حذف شد.</value>
+  </data>
+  <data name="mbx_FrmMainApp_InfoFavouriteNameCannotBeBlank" xml:space="preserve">
+    <value>نام نمی‌تواند خالی باشد</value>
+  </data>
+  <data name="mbx_FrmMainApp_InfoFavouriteNotValid" xml:space="preserve">
+    <value>موردی که انتخاب کرده‌اید معتبر نیست</value>
+  </data>
+  <data name="mbx_FrmMainApp_InfoFavouriteSaved" xml:space="preserve">
+    <value>علاقه‌مندی با موفقیت ذخیره شد</value>
+  </data>
+  <data name="mbx_FrmMainApp_NoFavouritesDefined" xml:space="preserve">
+    <value>هنوز علاقه‌مندی‌ای تعریف نکرده‌اید. با دکمه‌های زیر نقشه یکی اضافه کنید.</value>
+  </data>
+  <data name="mbx_FrmMainApp_QuestionAddDraggedDataPointToFiles" xml:space="preserve">
+    <value>آیا می‌خواهید مختصات را به پرونده(های) انتخاب‌شده تخصیص دهید؟</value>
+  </data>
+  <data name="mbx_FrmMainApp_QuestionDisableFlatMode" xml:space="preserve">
+    <value>حالت تخت روشن است. می‌خواهید آن را خاموش کنید؟</value>
+  </data>
+  <data name="mbx_FrmMainApp_QuestionNoRowsFromAPI" xml:space="preserve">
+    <value>پرس‌وجوی API هیچ اطلاعات معتبری برنگرداند. آیا می‌خواهید مقادیر نام مکان را خالی کنید؟</value>
+  </data>
+  <data name="mbx_FrmMainApp_QuestionRunImportExportInFlatMode" xml:space="preserve">
+    <value>اجرای وارد کردن/خروجی گرفتن مسیر در حالت تخت ایدهٔ بدی است، زیرا تعامل با مسیرها از منطقی ویژه استفاده می‌کند که نمی‌تواند پرونده‌های هم‌نامِ احتمالی در پوشه‌های مختلف را تشخیص دهد. مطمئن هستید که می‌خواهید این کار را اجرا کنید؟</value>
+  </data>
+  <data name="mbx_FrmMainApp_WarningMultipleImageFilesForXMP" xml:space="preserve">
+    <value>هشدار: پرونده‌های همراه زیر با چند پروندهٔ تصویر هم‌نام‌اند - ممکن است داده‌ها اشتباه خوانده شده باشند:</value>
+  </data>
+  <data name="mbx_FrmMainApp_WarningNoItemSelected" xml:space="preserve">
+    <value>هیچ موردی انتخاب نشده است.</value>
+  </data>
+  <data name="mbx_FrmMainApp_WarningTooManyFilesSelected" xml:space="preserve">
+    <value>دقیقاً 1 پرونده باید انتخاب شود.</value>
+  </data>
+  <data name="mbx_FrmPasteWhat_NoDateShiftToPaste" xml:space="preserve">
+    <value>در مجموعهٔ کپی هیچ مقداری برای جابه‌جایی تاریخ و زمان مشخص نشده است</value>
+  </data>
+  <data name="mbx_FrmSettings_dgv_CustomRules_ColumnCannotBeEmpty" xml:space="preserve">
+    <value>همهٔ ستون‌های فهرست کشویی باید مقدار داشته باشند و مقدار شرط «اگر» هم نباید خالی باشد.</value>
+  </data>
+  <data name="mbx_FrmSettings_dgv_CustomRules_CustomOutcomeCannotBeEmpty" xml:space="preserve">
+    <value>اگر برای «نتیجه» گزینهٔ «سفارشی» را انتخاب کنید، ستون «نتیجهٔ سفارشی» نباید خالی باشد. اگر فرم تنظیمات را ببندید و این مشکل رفع نشود، ردیفتان حذف خواهد شد.</value>
+  </data>
+  <data name="mbx_FrmSettings_ErrorExportFailed" xml:space="preserve">
+    <value>خروجی گرفتن ناموفق بود: </value>
+  </data>
+  <data name="mbx_FrmSettings_ErrorImportFailed" xml:space="preserve">
+    <value>وارد کردن ناموفق بود: </value>
+  </data>
+  <data name="mbx_FrmSettings_PleaseRestartApp" xml:space="preserve">
+    <value>برای اعمال تغییر، لطفاً برنامه را راه‌اندازی مجدد کنید.</value>
+  </data>
+  <data name="mbx_FrmSettings_QuestionWhatToExport" xml:space="preserve">
+    <value>آنچه را می‌خواهید خروجی بگیرید انتخاب کنید. توجه داشته باشید که این عملکرد داده‌هایی را خروجی می‌گیرد که _در_ پایگاه‌داده هستند، یا به عبارت دیگر ذخیره شده‌اند. اگر تغییرات در انتظار در تنظیمات دارید، خارج شوید، آن‌ها را ذخیره کنید (در فرم تنظیمات روی تأیید کلیک کنید) و سپس به اینجا برگردید.</value>
+  </data>
+  <data name="mbx_FrmSettings_QuestionWhatToImport" xml:space="preserve">
+    <value>آنچه را می‌خواهید وارد کنید انتخاب کنید. توجه داشته باشید که پس از تکمیل موفق فرایند وارد کردن، بخش‌های مرتبط پایگاه‌داده بازنویسی می‌شوند. اگر چیزی شکست بخورد، یک پروندهٔ پشتیبان از پایگاه‌داده‌تان در پوشهٔ AppData خواهید داشت.</value>
+  </data>
+  <data name="Generic_Done" xml:space="preserve">
+    <value>انجام شد.</value>
+  </data>
+  <data name="mbx_GenericDoneRestartApp" xml:space="preserve">
+    <value>انجام شد - احتمالاً می‌خواهید برنامه را راه‌اندازی مجدد کنید.</value>
+  </data>
+  <data name="mbx_GenericPathLikelyUTF" xml:space="preserve">
+    <value>به احتمال زیاد مسیر پرونده شامل نویسه‌های UTF (غیراستاندارد، مانند آسیایی، سیریلیک و غیره) است و این ممکن است خطا را ایجاد کند. لطفاً مطمئن شوید که گزینهٔ “Use Unicode UTF-8 for worldwide language support” را فعال کرده‌اید. (برای این موضوع به «مشکلات شناخته‌شده» در Readme مراجعه کنید)</value>
+  </data>
+  <data name="mbx_HelperStaticExifNoAPI" xml:space="preserve">
+    <value>اتصال به API ناموفق بود - آیا احیاناً آفلاین هستید؟</value>
+  </data>
+  <data name="mbx_Helper_ErrorAsyncExifToolExecuteAsyncFailed" xml:space="preserve">
+    <value>asyncExifTool.ExecuteAsync ناموفق بود (لطفاً در GitHub گزارش دهید): </value>
+  </data>
+  <data name="mbx_Helper_ErrorCantReadDefaultSQLiteDB" xml:space="preserve">
+    <value>خواندن مقادیر پیش‌فرض از SQL ناموفق بود (لطفاً در GitHub گزارش دهید): </value>
+  </data>
+  <data name="mbx_Helper_QuestionFileQIsNotEmpty" xml:space="preserve">
+    <value>برخی داده‌ها تغییر کرده‌اند - می‌خواهید ذخیره کنید؟ 
+اگر خیر را کلیک کنید، داده‌ها دور ریخته می‌شوند</value>
+  </data>
+  <data name="mbx_Helper_WarningExifToolVerAPIResponse" xml:space="preserve">
+    <value>API ExifToolVerAPIResponse پاسخ زیر را برگرداند: </value>
+  </data>
+  <data name="mbx_Helper_WarningFileDisappeared" xml:space="preserve">
+    <value>به نظر می‌رسد پرونده‌های شما ناپدید شده‌اند.</value>
+  </data>
+  <data name="mbx_Helper_WarningGeoNamesAPIResponse" xml:space="preserve">
+    <value>API GeoNames پاسخ زیر را برگرداند: </value>
+  </data>
+  <data name="mbx_Helper_WarningGTNVerAPIResponse" xml:space="preserve">
+    <value>API GitHub پاسخ زیر را برگرداند: </value>
+  </data>
+  <data name="mbx_Helper_WarningNoARCGISKey" xml:space="preserve">
+    <value>برای عملکرد درست برنامه باید کلید API ArcGIS را در تنظیمات وارد کنید.</value>
+  </data>
+  <data name="mbx_Helper_WarningNothingInWriteQueue" xml:space="preserve">
+    <value>صف نوشتن شما خالی است.</value>
+  </data>
+  <data name="mbx_Helper_WarningNothingToPaste" xml:space="preserve">
+    <value>چیزی برای چسباندن وجود ندارد.</value>
+  </data>
+  <data name="mbx_Helper_WarningNoWriteSettingEnabled" xml:space="preserve">
+    <value>هم پردازش پروندهٔ اصلی _و_ هم XMP همراه را غیرفعال کرده‌اید، بنابراین چیزی برای نوشتن وجود ندارد.</value>
+  </data>
+  <data name="mbx_Helper_WarningTooManyFilesSelected" xml:space="preserve">
+    <value>این فقط زمانی کار می‌کند که دقیقاً یک پرونده انتخاب کرده باشید.</value>
+  </data>
+  <data name="mns_File" xml:space="preserve">
+    <value>پرونده</value>
+  </data>
+  <data name="mns_Help" xml:space="preserve">
+    <value>راهنما</value>
+  </data>
+  <data name="mns_Settings" xml:space="preserve">
+    <value>تنظیمات</value>
+  </data>
+  <data name="pbx_Browse_Startup_Folder" xml:space="preserve">
+    <value>مرور پوشهٔ شروع</value>
+  </data>
+  <data name="pbx_imagePreviewCouldNotRetrieve" xml:space="preserve">
+    <value>پیش‌نمایش تصویر بازیابی یا ساخته نشد</value>
+  </data>
+  <data name="pbx_imagePreviewEmptyText" xml:space="preserve">
+    <value>تصویری برای نمایش نیست</value>
+  </data>
+  <data name="pbx_importFromAnotherFolder" xml:space="preserve">
+    <value>مرور پوشهٔ مسیرها</value>
+  </data>
+  <data name="pbx_importOneFile" xml:space="preserve">
+    <value>مرور پروندهٔ مسیر</value>
+  </data>
+  <data name="rbt_CreateDateSetToFixedDate" xml:space="preserve">
+    <value>تنظیم به تاریخ ثابت</value>
+  </data>
+  <data name="rbt_CreateDateTimeShift" xml:space="preserve">
+    <value>جابه‌جایی زمان</value>
+  </data>
+  <data name="rbt_importFromAnotherFolder" xml:space="preserve">
+    <value>وارد کردن از پوشهٔ دیگر</value>
+  </data>
+  <data name="rbt_importFromCurrentFolder" xml:space="preserve">
+    <value>وارد کردن از پوشهٔ فعلی</value>
+  </data>
+  <data name="rbt_importOneFile" xml:space="preserve">
+    <value>وارد کردن از پروندهٔ انتخابی</value>
+  </data>
+  <data name="rbt_MapColourModeDarkInverse" xml:space="preserve">
+    <value>تاریک (معکوس)</value>
+  </data>
+  <data name="rbt_MapColourModeDarkPale" xml:space="preserve">
+    <value>تاریک (کم‌رنگ)</value>
+  </data>
+  <data name="rbt_MapColourModeNormal" xml:space="preserve">
+    <value>عادی</value>
+  </data>
+  <data name="rbt_PasteCreateDateActual" xml:space="preserve">
+    <value>واقعی (مقادیر ثابت)</value>
+  </data>
+  <data name="rbt_PasteCreateDateShift" xml:space="preserve">
+    <value>جابه‌جایی زمان</value>
+  </data>
+  <data name="rbt_PasteTakenDateActual" xml:space="preserve">
+    <value>واقعی (مقادیر ثابت)</value>
+  </data>
+  <data name="rbt_PasteTakenDateShift" xml:space="preserve">
+    <value>جابه‌جایی زمان</value>
+  </data>
+  <data name="rbt_TakenDateSetToFixedDate" xml:space="preserve">
+    <value>تنظیم به تاریخ ثابت</value>
+  </data>
+  <data name="rbt_TakenDateTimeShift" xml:space="preserve">
+    <value>جابه‌جایی زمان</value>
+  </data>
+  <data name="rbt_TryUseGeoNamesLanguage" xml:space="preserve">
+    <value>هنگام دریافت نام مکان‌ها تلاش شود از این زبان استفاده شود:</value>
+  </data>
+  <data name="rbt_UseGeoNamesLocalLanguage" xml:space="preserve">
+    <value>هنگام دریافت نام مکان‌ها تلاش شود از «زبان محلی» استفاده شود</value>
+  </data>
+  <data name="rbx_CustomCityLogicExplanation" xml:space="preserve">
+    <value>این یک ویژگی پیشرفته است. AdminName1-4 و ToponymName به خروجی‌های API اشاره می‌کنند، پس اگر این‌ها را نمی‌فهمید، احتمالاً بهتر است به این بخش دست نزنید. 
+برای مرور کلی، این را ببینید: https://github.com/nemethviktor/GeoTagNinja/issues/38#issuecomment-1356844255 .
+این تنظیم به شما امکان می‌دهد کشورهای دلخواه خود را اضافه کنید تا مقدار «شهر» را از یکی از AdminNameهای مشخص دریافت کنید.</value>
+  </data>
+  <data name="rbx_CustomCityLogicExplanationBold" xml:space="preserve">
+    <value>توجه داشته باشید که تغییرات در جدول زیر بی‌درنگ اعمال می‌شوند و دکمه‌های تأیید/لغو تأثیر مستقیمی روی آن‌ها ندارند. اگر می‌خواهید در همین نشست داده‌ها را دوباره بگیرید، برای پرونده‌هایی که ممکن است تحت تأثیر تغییراتتان باشند باید راست‌کلیک کرده و «حذف داده‌های حافظهٔ نهان» را انتخاب کنید (یا فقط برنامه را راه‌اندازی مجدد کنید).</value>
+  </data>
+  <data name="rbx_CustomRulesExplanation" xml:space="preserve">
+    <value>این یک ویژگی پیشرفته است. AdminName1-4 و ToponymName به خروجی‌های API اشاره می‌کنند، پس اگر این‌ها را نمی‌فهمید، احتمالاً بهتر است به این بخش دست نزنید. 
+دربارهٔ «کشورهای از پیش تعیین‌شده» (کادر زیر): دربارهٔ آن‌ها اینجا بخوانید: https://github.com/nemethviktor/GeoTagNinja/issues/38#issuecomment-1356844255 + برگهٔ دیگر را ببینید - توجه: اگر این تنظیم را غیرفعال کنید، سلول‌های CountryCode که خارج از گروه مرتبط قرار می‌گیرند خالی می‌شوند، اما آن ردیف‌ها واقعاً حذف نمی‌شوند.
+همهٔ ستون‌ها به‌جز «سفارشی» الزامی‌اند، اما اگر «نتیجه» را «سفارشی» بگذارید و ستون «سفارشی» را خالی بگذارید، ردیف نادیده گرفته می‌شود. داده‌ها به حروف بزرگ و کوچک حساس نیستند. برای هر نقطهٔ داده (مثلاً شهر، استان) آخرین ردیف، ردیف‌های قبلی را بازنویسی می‌کند. در کل، معقول باشید. هرچه ردیف بیشتری اضافه کنید، کندتر خواهد شد.
+مثال: داده‌ی پیش‌فرض API برای لندن (بریتانیا) ضعیف است، زیرا برای آن منطقهٔ خاص adminName2 = «Greater London» است و به همین دلیل کنار گذاشته می‌شود (شهرها معمولاً از «ToponymName» می‌آیند). -&gt; تنظیم کنید: «چه» = «adminName2»، «اگر» = «است»، «مقدار شرط» = «Greater London»، «آنگاه» = «شهر»، «می‌شود» = «adminName2». کل کار را در ردیف دوم تکرار کنید، اما «آنگاه» = «Sub_Loction» و «می‌شود» = «ToponymName».</value>
+  </data>
+  <data name="rbx_CustomRulesExplanationBold" xml:space="preserve">
+    <value>توجه داشته باشید که تغییرات در جدول زیر بی‌درنگ اعمال می‌شوند و دکمه‌های تأیید/لغو تأثیر مستقیمی روی آن‌ها ندارند. اگر می‌خواهید در همین نشست داده‌ها را دوباره بگیرید، برای پرونده‌هایی که ممکن است تحت تأثیر تغییراتتان باشند باید راست‌کلیک کرده و «حذف داده‌های حافظهٔ نهان» را انتخاب کنید (یا فقط برنامه را راه‌اندازی مجدد کنید).</value>
+  </data>
+  <data name="rbx_Register_ArcGIS" xml:space="preserve">
+    <value>برای استفاده از قابلیت جستجوی نقشه به یک کلید API ArcGIS نیاز دارید. 
+ArcGIS از ژوئن ۲۰۲۴ روند ثبت‌نام خود را تغییر داده است. [اینجا](https://location.arcgis.com/sign-up/) ثبت‌نام کنید
+اکنون باید یک نشانی پورتال مشخص کنید. هر چیزی که می‌خواهید وارد کنید.
+به `Developer credential creator` اسکرول کنید یا بروید
+سپس `New Item`
+سپس `Developer Credentials`
+`API Key` را انتخاب کنید (نه OAUth)
+تاریخ انقضا را تا جایی که می‌توانید در آینده تنظیم کنید (1 سال)
+`Referrers` را خالی بگذارید
+در صفحهٔ بعد `Geocoding (not stored)` را انتخاب کنید
+در صفحهٔ بعد از `Item Access` بگذرید
+در صفحهٔ بعد هر عنوانی وارد کنید
+در نهایت روی `Generate the API key and go to item details page. I am ready to copy and save the key.` کلیک کنید
+هنگام درخواست، کلید API را ذخیره کنید. اگر این کار را همان موقع نکنید، باید کلید دیگری بسازید.</value>
+  </data>
+  <data name="rbx_Register_GeoNames" xml:space="preserve">
+    <value>برای استفاده از قابلیت جستجوی معکوس/جستجوی مکان (عرض/طول جغرافیایی ← کشور/شهر/...) به یک حساب GeoNames نیاز دارید. یکی را اینجا بسازید: http://www.geonames.org/login و سپس دسترسی «Free Web Services» را اینجا فعال کنید: https://www.geonames.org/manageaccount</value>
+  </data>
+  <data name="tcr_EditData" xml:space="preserve">
+    <value>ویرایش داده‌ها</value>
+  </data>
+  <data name="tmi_File" xml:space="preserve">
+    <value>پرونده</value>
+  </data>
+  <data name="tmi_File_CopyGeoData" xml:space="preserve">
+    <value>کپی همه داده‌های مکانی</value>
+  </data>
+  <data name="frm_BatchRename" xml:space="preserve">
+    <value>تغییر نام گروهی</value>
+  </data>
+  <data name="frm_BatchRename_Preview" xml:space="preserve">
+    <value>تغییر نام گروهی - پیش‌نمایش</value>
+  </data>
+  <data name="gbx_BatchRename_Presets" xml:space="preserve">
+    <value>پیش‌تنظیم‌ها</value>
+  </data>
+  <data name="gbx_BatchRename_Destination" xml:space="preserve">
+    <value>پوشهٔ مقصد</value>
+  </data>
+  <data name="gbx_BatchRename_Names" xml:space="preserve">
+    <value>نام‌های جدید پرونده‌ها</value>
+  </data>
+  <data name="gbx_BatchRename_Options" xml:space="preserve">
+    <value>گزینه‌ها</value>
+  </data>
+  <data name="gbx_BatchRename_Preview" xml:space="preserve">
+    <value>پیش‌نمایش</value>
+  </data>
+  <data name="lbl_BatchRename_Preset" xml:space="preserve">
+    <value>پیش‌تنظیم</value>
+  </data>
+  <data name="lbl_BatchRename_Modified" xml:space="preserve">
+    <value>(تغییریافته)</value>
+  </data>
+  <data name="btn_BatchRename_Save" xml:space="preserve">
+    <value>ذخیره...</value>
+  </data>
+  <data name="btn_BatchRename_Delete" xml:space="preserve">
+    <value>حذف</value>
+  </data>
+  <data name="rbt_BatchRename_SameFolder" xml:space="preserve">
+    <value>تغییر نام در همان پوشه</value>
+  </data>
+  <data name="rbt_BatchRename_MoveToFolder" xml:space="preserve">
+    <value>انتقال به پوشهٔ دیگر</value>
+  </data>
+  <data name="rbt_BatchRename_CopyToFolder" xml:space="preserve">
+    <value>کپی به پوشهٔ دیگر</value>
+  </data>
+  <data name="btn_BatchRename_Browse" xml:space="preserve">
+    <value>مرور...</value>
+  </data>
+  <data name="lbl_BatchRename_Compatibility" xml:space="preserve">
+    <value>سازگاری</value>
+  </data>
+  <data name="ckb_BatchRename_Windows" xml:space="preserve">
+    <value>Windows</value>
+  </data>
+  <data name="ckb_BatchRename_Mac" xml:space="preserve">
+    <value>Mac</value>
+  </data>
+  <data name="ckb_BatchRename_Unix" xml:space="preserve">
+    <value>Unix</value>
+  </data>
+  <data name="lbl_BatchRename_CurrentFilename" xml:space="preserve">
+    <value>نام فعلی پرونده</value>
+  </data>
+  <data name="lbl_BatchRename_NewFilename" xml:space="preserve">
+    <value>نام جدید پرونده</value>
+  </data>
+  <data name="lbl_BatchRename_Note" xml:space="preserve">
+    <value>یادداشت</value>
+  </data>
+  <data name="lbl_BatchRename_Unchanged" xml:space="preserve">
+    <value>بدون تغییر</value>
+  </data>
+  <data name="btn_BatchRename_Rename" xml:space="preserve">
+    <value>تغییر نام</value>
+  </data>
+  <data name="btn_BatchRename_PreviewAll" xml:space="preserve">
+    <value>پیش‌نمایش</value>
+  </data>
+  <data name="lbl_BatchRename_Find" xml:space="preserve">
+    <value>یافتن</value>
+  </data>
+  <data name="lbl_BatchRename_ReplaceWith" xml:space="preserve">
+    <value>جایگزینی با</value>
+  </data>
+  <data name="ckb_BatchRename_IgnoreCase" xml:space="preserve">
+    <value>نادیده گرفتن حروف بزرگ/کوچک</value>
+  </data>
+  <data name="ckb_BatchRename_ReplaceAll" xml:space="preserve">
+    <value>جایگزینی همه</value>
+  </data>
+  <data name="ckb_BatchRename_UseRegex" xml:space="preserve">
+    <value>استفاده از عبارت منظم</value>
+  </data>
+  <data name="lbl_BatchRename_Kind_Text" xml:space="preserve">
+    <value>متن</value>
+  </data>
+  <data name="lbl_BatchRename_Kind_NewExtension" xml:space="preserve">
+    <value>پسوند جدید</value>
+  </data>
+  <data name="lbl_BatchRename_Kind_CurrentFilename" xml:space="preserve">
+    <value>نام فعلی پرونده</value>
+  </data>
+  <data name="lbl_BatchRename_Kind_PreservedFilename" xml:space="preserve">
+    <value>نام حفظ‌شدهٔ پرونده</value>
+  </data>
+  <data name="lbl_BatchRename_Kind_SequenceNumber" xml:space="preserve">
+    <value>شمارهٔ ترتیبی</value>
+  </data>
+  <data name="lbl_BatchRename_Kind_SequenceLetter" xml:space="preserve">
+    <value>حرف ترتیبی</value>
+  </data>
+  <data name="lbl_BatchRename_Kind_DateTime" xml:space="preserve">
+    <value>تاریخ و زمان</value>
+  </data>
+  <data name="lbl_BatchRename_Kind_Metadata" xml:space="preserve">
+    <value>فراداده</value>
+  </data>
+  <data name="lbl_BatchRename_Kind_FolderName" xml:space="preserve">
+    <value>نام پوشه</value>
+  </data>
+  <data name="lbl_BatchRename_Kind_StringSubstitution" xml:space="preserve">
+    <value>جایگزینی رشته</value>
+  </data>
+  <data name="lbl_BatchRename_Case_Original" xml:space="preserve">
+    <value>حالت اصلی</value>
+  </data>
+  <data name="lbl_BatchRename_Case_Lower" xml:space="preserve">
+    <value>حروف کوچک</value>
+  </data>
+  <data name="lbl_BatchRename_Case_Upper" xml:space="preserve">
+    <value>حروف بزرگ</value>
+  </data>
+  <data name="lbl_BatchRename_Part_NameAndExtension" xml:space="preserve">
+    <value>نام + پسوند</value>
+  </data>
+  <data name="lbl_BatchRename_Part_Name" xml:space="preserve">
+    <value>نام</value>
+  </data>
+  <data name="lbl_BatchRename_Part_Extension" xml:space="preserve">
+    <value>پسوند</value>
+  </data>
+  <data name="lbl_BatchRename_Part_NumberSuffix" xml:space="preserve">
+    <value>پسوند شماره</value>
+  </data>
+  <data name="lbl_BatchRename_DateSource_DateTaken" xml:space="preserve">
+    <value>تاریخ عکس‌برداری</value>
+  </data>
+  <data name="lbl_BatchRename_DateSource_DateCreated" xml:space="preserve">
+    <value>تاریخ ایجاد</value>
+  </data>
+  <data name="lbl_BatchRename_DateSource_FileModified" xml:space="preserve">
+    <value>تاریخ تغییر پرونده</value>
+  </data>
+  <data name="lbl_BatchRename_DateSource_FileCreated" xml:space="preserve">
+    <value>تاریخ ایجاد پرونده</value>
+  </data>
+  <data name="lbl_BatchRename_DateSource_Today" xml:space="preserve">
+    <value>امروز</value>
+  </data>
+  <data name="lbl_BatchRename_DateSource_Yesterday" xml:space="preserve">
+    <value>دیروز</value>
+  </data>
+  <data name="lbl_BatchRename_Digits_1" xml:space="preserve">
+    <value>یک رقم</value>
+  </data>
+  <data name="lbl_BatchRename_Digits_2" xml:space="preserve">
+    <value>دو رقم</value>
+  </data>
+  <data name="lbl_BatchRename_Digits_3" xml:space="preserve">
+    <value>سه رقم</value>
+  </data>
+  <data name="lbl_BatchRename_Digits_4" xml:space="preserve">
+    <value>چهار رقم</value>
+  </data>
+  <data name="lbl_BatchRename_Digits_5" xml:space="preserve">
+    <value>پنج رقم</value>
+  </data>
+  <data name="lbl_BatchRename_Digits_6" xml:space="preserve">
+    <value>شش رقم</value>
+  </data>
+  <data name="lbl_BatchRename_SubstituteSource_OriginalFilename" xml:space="preserve">
+    <value>نام اصلی پرونده</value>
+  </data>
+  <data name="lbl_BatchRename_SubstituteSource_PreservedFilename" xml:space="preserve">
+    <value>نام حفظ‌شدهٔ پرونده</value>
+  </data>
+  <data name="lbl_BatchRename_Field_Country" xml:space="preserve">
+    <value>کشور</value>
+  </data>
+  <data name="lbl_BatchRename_Field_CountryCode" xml:space="preserve">
+    <value>کد کشور</value>
+  </data>
+  <data name="lbl_BatchRename_Field_State" xml:space="preserve">
+    <value>استان/ایالت</value>
+  </data>
+  <data name="lbl_BatchRename_Field_City" xml:space="preserve">
+    <value>شهر</value>
+  </data>
+  <data name="lbl_BatchRename_Field_Sublocation" xml:space="preserve">
+    <value>مکان فرعی</value>
+  </data>
+  <data name="lbl_BatchRename_Field_Make" xml:space="preserve">
+    <value>سازندهٔ دوربین</value>
+  </data>
+  <data name="lbl_BatchRename_Field_Model" xml:space="preserve">
+    <value>مدل دوربین</value>
+  </data>
+  <data name="lbl_BatchRename_Field_LensSpec" xml:space="preserve">
+    <value>لنز</value>
+  </data>
+  <data name="lbl_BatchRename_Field_Rating" xml:space="preserve">
+    <value>امتیاز</value>
+  </data>
+  <data name="lbl_BatchRename_Field_ExposureTime" xml:space="preserve">
+    <value>زمان نوردهی</value>
+  </data>
+  <data name="lbl_BatchRename_Field_Fnumber" xml:space="preserve">
+    <value>دیافراگم (عدد F)</value>
+  </data>
+  <data name="lbl_BatchRename_Field_FocalLength" xml:space="preserve">
+    <value>فاصلهٔ کانونی</value>
+  </data>
+  <data name="lbl_BatchRename_Field_ISO" xml:space="preserve">
+    <value>ISO</value>
+  </data>
+  <data name="lbl_BatchRename_Field_Artist" xml:space="preserve">
+    <value>هنرمند</value>
+  </data>
+  <data name="lbl_BatchRename_Field_Byline" xml:space="preserve">
+    <value>سازنده (امضا)</value>
+  </data>
+  <data name="lbl_BatchRename_Field_Copyright" xml:space="preserve">
+    <value>حق نشر</value>
+  </data>
+  <data name="lbl_BatchRename_Field_Credit" xml:space="preserve">
+    <value>اعتبار</value>
+  </data>
+  <data name="lbl_BatchRename_Field_Source" xml:space="preserve">
+    <value>منبع</value>
+  </data>
+  <data name="lbl_BatchRename_Field_ObjectName" xml:space="preserve">
+    <value>عنوان (نام شیء)</value>
+  </data>
+  <data name="lbl_BatchRename_Field_Headline" xml:space="preserve">
+    <value>تیتر</value>
+  </data>
+  <data name="lbl_BatchRename_Field_Category" xml:space="preserve">
+    <value>دسته</value>
+  </data>
+  <data name="mbx_BatchRename_OneFile" xml:space="preserve">
+    <value>یک پرونده پردازش خواهد شد</value>
+  </data>
+  <data name="mbx_BatchRename_ManyFiles" xml:space="preserve">
+    <value>{0} پرونده پردازش خواهد شد</value>
+  </data>
+  <data name="mbx_BatchRename_SomeBlocked" xml:space="preserve">
+    <value>{0} از {1} پرونده را نمی‌توان تغییر نام داد: به پیش‌نمایش نگاه کنید</value>
+  </data>
+  <data name="mbx_BatchRename_PresetNamePrompt" xml:space="preserve">
+    <value>نام پیش‌تنظیم:</value>
+  </data>
+  <data name="mbx_BatchRename_PresetUnreadable" xml:space="preserve">
+    <value>پیش‌تنظیم '{0}' خوانده نشد.</value>
+  </data>
+  <data name="mbx_BatchRename_PresetReplace" xml:space="preserve">
+    <value>پیش‌تنظیمی به نام '{0}' از قبل وجود دارد. جایگزین شود؟</value>
+  </data>
+  <data name="mbx_BatchRename_PresetSaveFailed" xml:space="preserve">
+    <value>پیش‌تنظیم ذخیره نشد.</value>
+  </data>
+  <data name="mbx_BatchRename_PresetDelete" xml:space="preserve">
+    <value>پیش‌تنظیم '{0}' حذف شود؟</value>
+  </data>
+  <data name="mbx_BatchRename_Preflight" xml:space="preserve">
+    <value>هیچ پرونده‌ای تغییر نام نداده است. ابتدا این موارد باید رفع شوند:
+
+{0}</value>
+  </data>
+  <data name="mbx_BatchRename_MoreProblems" xml:space="preserve">
+    <value>... و {0} مورد دیگر (در پیش‌نمایش همه را می‌بینید)</value>
+  </data>
+  <data name="mbx_BatchRename_SelectFiles" xml:space="preserve">
+    <value>ابتدا پرونده‌های مورد نظر برای تغییر نام را انتخاب کنید.</value>
+  </data>
+  <data name="mbx_BatchRename_NothingRenamed" xml:space="preserve">
+    <value>هیچ تغییر نامی انجام نشد (هر کاری که انجام شده بود برگردانده شد).
+
+{0}</value>
+  </data>
+  <data name="mbx_BatchRename_StepFailed" xml:space="preserve">
+    <value>{0}
+
+همهٔ کارهای انجام‌شده تا این مرحله برگردانده شدند، بنابراین هیچ پرونده‌ای تغییر نکرده است.
+
+بدون {1} ادامه داده شود (و هر پرونده‌ای که قرار بود آن نام را بگیرد)؟
+بله: بقیه را تغییر نام بده. خیر: متوقف شو؛ همهٔ پرونده‌ها همان‌طور که بودند باقی می‌مانند.</value>
+  </data>
+  <data name="mbx_BatchRename_NothingLeft" xml:space="preserve">
+    <value>چیزی برای تغییر نام باقی نمانده است.</value>
+  </data>
+  <data name="mbx_BatchRename_DoneSkipped" xml:space="preserve">
+    <value>{0} پرونده پردازش شد. همان‌طور که بودند باقی ماندند:
+{1}</value>
+  </data>
+  <data name="mbx_BatchRename_AndMore" xml:space="preserve">
+    <value>... و {0} مورد دیگر</value>
+  </data>
+  <data name="mbx_BatchRename_Problem_NoDestination" xml:space="preserve">
+    <value>پوشهٔ مقصد انتخاب نشده است</value>
+  </data>
+  <data name="mbx_BatchRename_Problem_EmptyName" xml:space="preserve">
+    <value>نام جدید خالی است</value>
+  </data>
+  <data name="mbx_BatchRename_Problem_Reserved" xml:space="preserve">
+    <value>'{0}' در ویندوز یک نام رزروشده است</value>
+  </data>
+  <data name="mbx_BatchRename_Problem_NameTooLong" xml:space="preserve">
+    <value>نام جدید بیش از حد طولانی است</value>
+  </data>
+  <data name="mbx_BatchRename_Problem_PathTooLong" xml:space="preserve">
+    <value>مسیر جدید بیش از حد طولانی است</value>
+  </data>
+  <data name="mbx_BatchRename_Problem_NoDate" xml:space="preserve">
+    <value>{0} برای استفاده وجود ندارد</value>
+  </data>
+  <data name="mbx_BatchRename_Problem_BadRegex" xml:space="preserve">
+    <value>عبارت منظم معتبر نیست</value>
+  </data>
+  <data name="mbx_BatchRename_Problem_RegexTimeout" xml:space="preserve">
+    <value>اجرای عبارت منظم خیلی طول می‌کشد</value>
+  </data>
+  <data name="mbx_BatchRename_Problem_NameClaimed" xml:space="preserve">
+    <value>پروندهٔ دیگری این نام را دارد (یا از قبل دارد)</value>
+  </data>
+  <data name="mbx_BatchRename_Problem_FileExists" xml:space="preserve">
+    <value>پروندهٔ دیگری با این نام از قبل وجود دارد</value>
+  </data>
+  <data name="mbx_BatchRename_Problem_SidecarExists" xml:space="preserve">
+    <value>پروندهٔ همراه XMP با این نام از قبل وجود دارد</value>
+  </data>
+  <data name="mbx_BatchRename_Problem_Gone" xml:space="preserve">
+    <value>پرونده دیگر آنجا نیست</value>
+  </data>
+  <data name="mbx_BatchRename_Problem_BeingSaved" xml:space="preserve">
+    <value>پرونده در حال ذخیره‌شدن توسط GeoTagNinja است</value>
+  </data>
+  <data name="mbx_BatchRename_Problem_InUse" xml:space="preserve">
+    <value>پرونده در حال استفاده توسط برنامهٔ دیگری است</value>
+  </data>
+  <data name="mbx_BatchRename_Problem_FolderNotWritable" xml:space="preserve">
+    <value>نمی‌توان در پوشهٔ '{0}' نوشت</value>
+  </data>
+  <data name="mbx_BatchRename_Problem_NoSpace" xml:space="preserve">
+    <value>فضای کافی در {0} وجود ندارد: {1} مگابایت لازم است، {2} مگابایت آزاد است</value>
+  </data>
+  <data name="mbx_BatchRename_Problem_Unfixed" xml:space="preserve">
+    <value>این دسته مشکلاتی دارد که ابتدا باید رفع شوند.</value>
+  </data>
+  <data name="tmi_File_BatchRename" xml:space="preserve">
+    <value>تغییر نام گروهی...</value>
+  </data>
+  <data name="cmi_BatchRename" xml:space="preserve">
+    <value>تغییر نام گروهی...</value>
+  </data>
+  <data name="tmi_File_EditFiles" xml:space="preserve">
+    <value>ویرایش پرونده‌ها...</value>
+  </data>
+  <data name="tmi_File_FlatMode" xml:space="preserve">
+    <value>حالت تخت (تجزیهٔ زیرپوشه‌ها)</value>
+  </data>
+  <data name="tmi_File_ImportExportGPX" xml:space="preserve">
+    <value>وارد کردن/خروجی گرفتن پروندهٔ مسیر GPX/JSON...</value>
+  </data>
+  <data name="tmi_File_PasteGeoData" xml:space="preserve">
+    <value>چسباندن همه داده‌های مکانی...</value>
+  </data>
+  <data name="tmi_File_Quit" xml:space="preserve">
+    <value>خروج</value>
+  </data>
+  <data name="tmi_File_SaveAll" xml:space="preserve">
+    <value>ذخیرهٔ همه</value>
+  </data>
+  <data name="tmi_Help" xml:space="preserve">
+    <value>راهنما</value>
+  </data>
+  <data name="tmi_Help_About" xml:space="preserve">
+    <value>درباره...</value>
+  </data>
+  <data name="tmi_Help_Help" xml:space="preserve">
+    <value>راهنما</value>
+  </data>
+  <data name="tmi_Help_BugReport" xml:space="preserve">
+    <value>گزارش اشکال (GitHub)</value>
+  </data>
+  <data name="tmi_Help_FeedbackFeatureRequest" xml:space="preserve">
+    <value>درخواست قابلیت جدید (GitHub)</value>
+  </data>
+  <data name="tmi_Settings" xml:space="preserve">
+    <value>تنظیمات</value>
+  </data>
+  <data name="tmi_Settings_Favourites" xml:space="preserve">
+    <value>مدیریت علاقه‌مندی‌ها</value>
+  </data>
+  <data name="tmi_Settings_Settings" xml:space="preserve">
+    <value>تنظیمات</value>
+  </data>
+  <data name="tpg_Application" xml:space="preserve">
+    <value>برنامه</value>
+  </data>
+  <data name="tpg_CustomCityLogic" xml:space="preserve">
+    <value>منطق سفارشی تخصیص شهر</value>
+  </data>
+  <data name="tpg_CustomRules" xml:space="preserve">
+    <value>قواعد سفارشی</value>
+  </data>
+  <data name="tpg_DateTime" xml:space="preserve">
+    <value>تاریخ و زمان</value>
+  </data>
+  <data name="tpg_Exif" xml:space="preserve">
+    <value>Exif</value>
+  </data>
+  <data name="tpg_FileOptions" xml:space="preserve">
+    <value>گزینه‌های پرونده</value>
+  </data>
+  <data name="tpg_GeoNames" xml:space="preserve">
+    <value>تنظیمات GeoNames</value>
+  </data>
+  <data name="tpg_ImportExport_Export" xml:space="preserve">
+    <value>خروجی گرفتن مسیرها</value>
+  </data>
+  <data name="tpg_ImportExport_Import" xml:space="preserve">
+    <value>وارد کردن مسیرها</value>
+  </data>
+  <data name="tpg_Location" xml:space="preserve">
+    <value>مکان</value>
+  </data>
+  <data name="tpg_Map" xml:space="preserve">
+    <value>نقشه</value>
+  </data>
+  <data name="tsb_BugReport" xml:space="preserve">
+    <value>گزارش اشکال (نیاز به حساب GitHub دارد)</value>
+  </data>
+  <data name="tsb_EditFile" xml:space="preserve">
+    <value>ویرایش پرونده</value>
+  </data>
+  <data name="tsb_FeedbackFeatureRequest" xml:space="preserve">
+    <value>درخواست قابلیت جدید (نیاز به حساب GitHub دارد)</value>
+  </data>
+  <data name="tsb_GetAllFromWeb" xml:space="preserve">
+    <value>دریافت اطلاعات نام مکان و ارتفاع برای همهٔ پرونده‌های انتخاب‌شده</value>
+  </data>
+  <data name="tsb_ImportGPX" xml:space="preserve">
+    <value>وارد کردن پرونده‌های مسیر GPX/JSON</value>
+  </data>
+  <data name="tsb_ExportGPX" xml:space="preserve">
+    <value>خروجی گرفتن پروندهٔ مسیر (GPX/KML)</value>
+  </data>
+  <data name="tsb_OneFolderUp" xml:space="preserve">
+    <value>پوشهٔ والد</value>
+  </data>
+  <data name="tsb_Refresh_lvwFileList" xml:space="preserve">
+    <value>تازه‌سازی فهرست پرونده‌ها</value>
+  </data>
+  <data name="tsb_RemoveGeoData" xml:space="preserve">
+    <value>حذف همه داده‌های مکان</value>
+  </data>
+  <data name="tsb_SaveFiles" xml:space="preserve">
+    <value>ذخیرهٔ پرونده‌ها</value>
+  </data>
+  <data name="tsr_FolderControl" xml:space="preserve">
+    <value>کنترل پوشه</value>
+  </data>
+  <data name="tsr_MainAppToolStrip" xml:space="preserve">
+    <value>اصلی</value>
+  </data>
+  <data name="ttp_GPSDataPaste" xml:space="preserve">
+    <value>برای چسباندن یک جفت عدد اعشاری معتبر در جای‌نگهدارهای عرض/طول جغرافیایی، CTRL+V را فشار دهید. 
+کلیپ‌بورد باید فقط یک جفت عدد اعشاری داشته باشد، ترجیحاً در قالب «invariant» (انگلیسی)، یعنی عدد صحیح-نقطه-عدد اعشاری-کاما-عدد صحیح-نقطه-عدد اعشاری، مثلاً 12.345, 56.897
+با این حال کد _باید_ بتواند قالب‌های دیگر را هم درک کند. توجه داشته باشید اگر کلیپ‌بورد چیزی غیر از موارد بالا داشته باشد، عملیات ناموفق می‌شود (هیچ اتفاقی نمی‌افتد.)</value>
+  </data>
+  <data name="btn_NavigateMapGo" xml:space="preserve">
+    <value>نمایش روی نقشه</value>
+  </data>
+  <data name="btn_loctToFile" xml:space="preserve">
+    <value>ذخیره در پرونده(ها)</value>
+  </data>
+  <data name="btn_loctToFileDestination" xml:space="preserve">
+    <value>ذخیره در مقصد</value>
+  </data>
+  <data name="btn_SaveFavourite" xml:space="preserve">
+    <value>ذخیرهٔ عکس</value>
+  </data>
+  <data name="btn_LoadFavourite" xml:space="preserve">
+    <value>اعمال روی عکس‌ها</value>
+  </data>
+  <data name="btn_ManageFavourites" xml:space="preserve">
+    <value>مدیریت...</value>
+  </data>
+  <data name="ttp_LoadFavourite" xml:space="preserve">
+    <value>فراداده‌های پرونده(های) انتخاب‌شده را از علاقه‌مندی‌هایتان بارگذاری کنید</value>
+  </data>
+  <data name="ttp_loctToFile" xml:space="preserve">
+    <value>مختصات فعلی را در پرونده(های) انتخاب‌شده ذخیره کنید</value>
+  </data>
+  <data name="ttp_loctToFileDestination" xml:space="preserve">
+    <value>مختصات فعلی را در مقصد پرونده(های) انتخاب‌شده ذخیره کنید</value>
+  </data>
+  <data name="ttp_ManageFavourites" xml:space="preserve">
+    <value>مدیریت علاقه‌مندی‌ها</value>
+  </data>
+  <data name="ttp_NavigateMapGo" xml:space="preserve">
+    <value>مختصات پرونده‌های انتخاب‌شده را روی نقشه قرار دهید</value>
+  </data>
+  <data name="ttp_OffsetTime" xml:space="preserve">
+    <value>منطقه‌های زمانی هنگام باز شدن، بدون توجه به مقدار ذخیره‌شده، خالی می‌مانند. برای TZ برچسب Exif وجود ندارد، فقط 'Offset' وجود دارد که چیزی شبیه '+01:00' است. از آنجا که نه نشانه‌ای برای TZ و نه برای DST وجود دارد، نمی‌توانم تشخیص دهم که '+01:00' در واقع BST بوده یا CET، که یکی ساعت تابستانی است و دیگری نیست. یا به‌صورت دستی تنظیم کنید یا از وب دریافت کنید - ترکیب مختصات + تاریخ ایجاد به برنامه کمک قطعی می‌کند تا منطقهٔ زمانی واقعی را تشخیص دهد. مقداری که در کادر متنی فقط‌خواندنی است در پرونده ذخیره خواهد شد.</value>
+  </data>
+  <data name="ttp_SaveFavourite" xml:space="preserve">
+    <value>ذخیره (یا بازنویسی) فراداده‌های پروندهٔ انتخاب‌شدهٔ فعلی در علاقه‌مندی‌ها</value>
+  </data>
+  <data name="ckb_ImportExport_ApplicationSettings" xml:space="preserve">
+    <value>ApplicationSettings</value>
+  </data>
+  <data name="ckb_ImportExport_CustomRulesSettings" xml:space="preserve">
+    <value>CustomRulesSettings</value>
+  </data>
+  <data name="ckb_ImportExport_Favourites" xml:space="preserve">
+    <value>علاقه‌مندی‌ها</value>
+  </data>
+  <data name="ckb_ImportExport_EditTemplates" xml:space="preserve">
+    <value>الگوهای ویرایش داده</value>
+  </data>
+  <data name="ckb_ImportExport_FieldHistory" xml:space="preserve">
+    <value>تاریخچهٔ فیلدهای ویرایش داده</value>
+  </data>
+  <data name="ckb_ImportExport_BatchRenamePresets" xml:space="preserve">
+    <value>پیش‌تنظیم‌های تغییر نام گروهی</value>
+  </data>
+  <data name="Generic_TimeZoneID" xml:space="preserve">
+    <value>شناسهٔ منطقه زمانی</value>
+  </data>
+  <data name="Generic_Distance" xml:space="preserve">
+    <value>فاصله</value>
+  </data>
+  <data name="cmi_OpenCoordsInBrowser" xml:space="preserve">
+    <value>باز کردن مختصات در مرورگر/نقشه‌ها</value>
+  </data>
+  <data name="cmi_OpenCoordsInBrowserBing" xml:space="preserve">
+    <value>Bing</value>
+  </data>
+  <data name="cmi_OpenCoordsInBrowserGeoNamesMaps" xml:space="preserve">
+    <value>GeoNames (نقشه‌ها)</value>
+  </data>
+  <data name="cmi_OpenCoordsInBrowserGoogle" xml:space="preserve">
+    <value>Google Maps</value>
+  </data>
+  <data name="cmi_OpenCoordsInBrowserWeGoHere" xml:space="preserve">
+    <value>WeGo/Here</value>
+  </data>
+  <data name="cmi_OpenCoordsInBrowserOpenStreetMap" xml:space="preserve">
+    <value>OpenStreetMap</value>
+  </data>
+  <data name="tmi_File_ImportFavouritesFromGeoSetter" xml:space="preserve">
+    <value>وارد کردن علاقه‌مندی‌ها از Geosetter...</value>
+  </data>
+  <data name="ofd_Settings_GetDatabaseFileToImport_SelectDatabaseFile" xml:space="preserve">
+    <value>یک پروندهٔ پایگاه‌داده انتخاب کنید</value>
+  </data>
+  <data name="ofd_tmi_File_ImportFavouritesFromGeoSetter_SelectFile" xml:space="preserve">
+    <value>پروندهٔ خروجی علاقه‌مندی‌های GS را انتخاب کنید</value>
+  </data>
+  <data name="mbx_FrmMainApp_ErrorImportGeoSetterFavourites" xml:space="preserve">
+    <value>خطا هنگام وارد کردن علاقه‌مندی‌های GeoSetter.</value>
+  </data>
+  <data name="mbx_FrmMainApp_InfoImportGeoSetterFavouritesDone" xml:space="preserve">
+    <value>علاقه‌مندی‌های GeoSetter وارد شد. موارد واردشده: </value>
+  </data>
+  <data name="ckb_ShowThumbnails" xml:space="preserve">
+    <value>نمایش تصاویر بندانگشتی به‌جای جدول</value>
+  </data>
+  <data name="ttp_ShowThumbnails" xml:space="preserve">
+    <value>این باعث افت شدید عملکرد می‌شود (طبق اندازه‌گیری‌های من تا 7 برابر)، بنابراین توصیه نمی‌شود.</value>
+  </data>
+  <data name="Generic_SaveDefaults" xml:space="preserve">
+    <value>ذخیرهٔ پیش‌فرض‌ها</value>
+  </data>
+  <data name="ttp_FrmImportExport_SaveDefaults" xml:space="preserve">
+    <value>برخی پیش‌فرض‌ها را ذخیره می‌کند. فعلاً: محل منبع وارد کردن، تنظیمات TZ و DST، حداکثر درون‌یابی/برون‌یابی.</value>
+  </data>
+  <data name="mbx_FrmImportExportGpx_ExportCompleted" xml:space="preserve">
+    <value>خروجی گرفتن پروندهٔ GPX کامل شد</value>
+  </data>
+  <data name="Generic_GPSDOP" xml:space="preserve">
+    <value>کاهش دقت (DOP)</value>
+  </data>
+  <data name="Generic_GPSHPositioningError" xml:space="preserve">
+    <value>خطای موقعیت‌یابی افقی GPS</value>
+  </data>
+  <data name="cmi_PasteGeoData" xml:space="preserve">
+    <value>چسباندن همه داده‌های مکانی...</value>
+  </data>
+  <data name="cmi_CopyGeoData" xml:space="preserve">
+    <value>کپی همه داده‌های مکانی</value>
+  </data>
+  <data name="tmi_Edit_SelectAll" xml:space="preserve">
+    <value>انتخاب همه</value>
+  </data>
+  <data name="cmi_SelectAll" xml:space="preserve">
+    <value>انتخاب همه</value>
+  </data>
+  <data name="tmi_Edit_SelectNone" xml:space="preserve">
+    <value>لغو انتخاب همه</value>
+  </data>
+  <data name="cmi_SelectNone" xml:space="preserve">
+    <value>لغو انتخاب همه</value>
+  </data>
+  <data name="tmi_Edit_InvertSelection" xml:space="preserve">
+    <value>معکوس کردن انتخاب</value>
+  </data>
+  <data name="cmi_InvertSelection" xml:space="preserve">
+    <value>معکوس کردن انتخاب</value>
+  </data>
+  <data name="tmi_Edit" xml:space="preserve">
+    <value>ویرایش</value>
+  </data>
+  <data name="tmi_Help_Donate" xml:space="preserve">
+    <value>حمایت مالی</value>
+  </data>
+  <data name="tmi_Help_Donate_PayPal" xml:space="preserve">
+    <value>PayPal...</value>
+  </data>
+  <data name="tmi_Help_Donate_Revolut" xml:space="preserve">
+    <value>Revolut (QR)...</value>
+  </data>
+  <data name="tmi_Help_Donate_BuyMeCoffee" xml:space="preserve">
+    <value>BuyMeACoffee...</value>
+  </data>
+  <data name="tmi_File_SaveSelected" xml:space="preserve">
+    <value>ذخیرهٔ موارد انتخاب‌شده</value>
+  </data>
+  <data name="rbt_SetStartup_Folder" xml:space="preserve">
+    <value>تنظیم پوشهٔ شروع</value>
+  </data>
+  <data name="rbt_UseLastUsedFolder" xml:space="preserve">
+    <value>استفاده از آخرین پوشهٔ استفاده‌شده</value>
+  </data>
+  <data name="tmi_Debug" xml:space="preserve">
+    <value>اشکال‌زدایی</value>
+  </data>
+  <data name="tmi_Debug_CustomiseWinformControls" xml:space="preserve">
+    <value>سفارشی‌سازی کنترل‌های Winform</value>
+  </data>
+  <data name="frm_FrmCustomiseFormControls" xml:space="preserve">
+    <value>سفارشی‌سازی کنترل‌های Winform</value>
+  </data>
+  <data name="ckb_RetainMapZoom" xml:space="preserve">
+    <value>حفظ سطح بزرگنمایی نقشه بین کلیک‌ها</value>
+  </data>
+  <data name="mbx_FrmMainApp_ErrorNonHydratedItemsPresent" xml:space="preserve">
+    <value>انتخاب شما شامل پرونده‌هایی است که تجزیه نشده‌اند و برای ویرایش بارگذاری نخواهند شد.</value>
+  </data>
+  <data name="Generic_Ready" xml:space="preserve">
+    <value>آماده</value>
+  </data>
+  <data name="Generic_ReadingMetadataProgress" xml:space="preserve">
+    <value>در حال خواندن فراداده: {0} از {1}</value>
+  </data>
+  <data name="Generic_Total" xml:space="preserve">
+    <value>مجموع</value>
+  </data>
+  <data name="Generic_GeoData" xml:space="preserve">
+    <value>داده‌های مکانی</value>
+  </data>
+  <data name="Generic_Files" xml:space="preserve">
+    <value>پرونده‌ها</value>
+  </data>
+  <data name="mbx_FrmMainApp_WarningDataParseStillInProgress" xml:space="preserve">
+    <value>تجزیهٔ داده هنوز در حال انجام است - تا پایان آن این عمل نمی‌تواند ادامه یابد. کمی بعد دوباره امتحان کنید.</value>
+  </data>
+  <data name="Generic_IsEmpty" xml:space="preserve">
+    <value>خالی است</value>
+  </data>
+  <data name="Generic_IsNotEmpty" xml:space="preserve">
+    <value>خالی نیست</value>
+  </data>
+  <data name="Generic_Is" xml:space="preserve">
+    <value>برابر است با</value>
+  </data>
+  <data name="Generic_IsNot" xml:space="preserve">
+    <value>برابر نیست با</value>
+  </data>
+  <data name="Generic_Contains" xml:space="preserve">
+    <value>شامل</value>
+  </data>
+  <data name="Generic_DoesntContain" xml:space="preserve">
+    <value>شامل نیست</value>
+  </data>
+  <data name="Generic_ClearAll" xml:space="preserve">
+    <value>پاک کردن همه</value>
+  </data>
+  <data name="ckb_AlwaysRecenterMap" xml:space="preserve">
+    <value>همیشه نقشه دوباره در مرکز قرار گیرد؟</value>
+  </data>
+  <data name="ckb_DoNotDownloadAltitude" xml:space="preserve">
+    <value>مقادیر ارتفاع را از API دانلود نکن</value>
+  </data>
+  <data name="ckb_PreserveFileModifiedDate" xml:space="preserve">
+    <value>تاریخ تغییر پرونده هنگام ذخیره تغییر نکند</value>
+  </data>
+  <data name="tmi_View" xml:space="preserve">
+    <value>نما</value>
+  </data>
+  <data name="tmi_View_Details" xml:space="preserve">
+    <value>جزئیات</value>
+  </data>
+  <data name="tmi_View_Thumbnails" xml:space="preserve">
+    <value>بندانگشتی‌ها</value>
+  </data>
+  <data name="tmi_View_ThumbnailSize" xml:space="preserve">
+    <value>اندازهٔ بندانگشتی</value>
+  </data>
+  <data name="tmi_View_ThumbnailSize_Small" xml:space="preserve">
+    <value>کوچک</value>
+  </data>
+  <data name="tmi_View_ThumbnailSize_Medium" xml:space="preserve">
+    <value>متوسط</value>
+  </data>
+  <data name="tmi_View_ThumbnailSize_Large" xml:space="preserve">
+    <value>بزرگ</value>
+  </data>
+  <data name="tmi_View_ThumbnailSize_ExtraLarge" xml:space="preserve">
+    <value>خیلی بزرگ</value>
+  </data>
+  <data name="tmi_View_ThumbnailSize_Smaller" xml:space="preserve">
+    <value>بندانگشتی‌های کوچک‌تر</value>
+  </data>
+  <data name="tmi_View_ThumbnailSize_Larger" xml:space="preserve">
+    <value>بندانگشتی‌های بزرگ‌تر</value>
+  </data>
+  <data name="ttp_ThumbnailSize" xml:space="preserve">
+    <value>اندازهٔ بندانگشتی</value>
+  </data>
+  <data name="tmi_View_SortBy" xml:space="preserve">
+    <value>مرتب‌سازی بر اساس</value>
+  </data>
+  <data name="tmi_View_SortBy_Ascending" xml:space="preserve">
+    <value>صعودی</value>
+  </data>
+  <data name="tmi_View_SortBy_Descending" xml:space="preserve">
+    <value>نزولی</value>
+  </data>
+  <data name="gbx_AllFavourites" xml:space="preserve">
+    <value>همهٔ علاقه‌مندی‌ها</value>
+  </data>
+  <data name="gbx_FavouriteDetails" xml:space="preserve">
+    <value>جزئیات</value>
+  </data>
+  <data name="gbx_FavouriteAdditionalInfo" xml:space="preserve">
+    <value>اطلاعات تکمیلی</value>
+  </data>
+  <data name="lbl_FavouriteName" xml:space="preserve">
+    <value>نام:</value>
+  </data>
+  <data name="lbl_FavouriteCoordinates" xml:space="preserve">
+    <value>مختصات:</value>
+  </data>
+  <data name="lbl_FavouriteRadius" xml:space="preserve">
+    <value>شعاع [متر]:</value>
+  </data>
+  <data name="ckb_FavouriteAutoAssign" xml:space="preserve">
+    <value>تخصیص خودکار</value>
+  </data>
+  <data name="ckb_FavouriteSnap" xml:space="preserve">
+    <value>قرار دادن تصاویر روی موقعیت علاقه‌مندی</value>
+  </data>
+  <data name="lbl_FavouriteTimeZone" xml:space="preserve">
+    <value>منطقه زمانی:</value>
+  </data>
+  <data name="lbl_FavouriteKeywords" xml:space="preserve">
+    <value>کلیدواژه‌ها:</value>
+  </data>
+  <data name="btn_FavouriteGetFromWeb" xml:space="preserve">
+    <value>دریافت از وب</value>
+  </data>
+  <data name="btn_FavouriteClearAll" xml:space="preserve">
+    <value>پاک کردن همه مقادیر</value>
+  </data>
+  <data name="btn_FavouriteAccept" xml:space="preserve">
+    <value>پذیرفتن</value>
+  </data>
+  <data name="btn_FavouriteDiscard" xml:space="preserve">
+    <value>صرف‌نظر</value>
+  </data>
+  <data name="btn_FavouriteAddKeyword" xml:space="preserve">
+    <value>افزودن</value>
+  </data>
+  <data name="btn_FavouriteRemoveKeyword" xml:space="preserve">
+    <value>حذف</value>
+  </data>
+  <data name="lbl_FavouritesCount" xml:space="preserve">
+    <value>{0} مورد ({1} انتخاب‌شده)</value>
+  </data>
+  <data name="tsd_GroupBy" xml:space="preserve">
+    <value>گروه‌بندی بر اساس</value>
+  </data>
+  <data name="tmi_GroupByCountryCode" xml:space="preserve">
+    <value>کد کشور</value>
+  </data>
+  <data name="tmi_GroupByCountry" xml:space="preserve">
+    <value>کشور</value>
+  </data>
+  <data name="tmi_GroupByState" xml:space="preserve">
+    <value>استان/ایالت</value>
+  </data>
+  <data name="tmi_GroupByCity" xml:space="preserve">
+    <value>شهر</value>
+  </data>
+  <data name="tmi_GroupByCoordinates" xml:space="preserve">
+    <value>مختصات</value>
+  </data>
+  <data name="tmi_GroupByNone" xml:space="preserve">
+    <value>بدون گروه‌بندی</value>
+  </data>
+  <data name="tmi_GroupByBlank" xml:space="preserve">
+    <value>(هیچ)</value>
+  </data>
+  <data name="tsb_Duplicate" xml:space="preserve">
+    <value>تکثیر</value>
+  </data>
+  <data name="tsb_Delete" xml:space="preserve">
+    <value>حذف</value>
+  </data>
+  <data name="tsb_AddFromSelection" xml:space="preserve">
+    <value>افزودن از عکس انتخاب‌شده</value>
+  </data>
+  <data name="mbx_FrmManageFavourites_WarningNameTaken" xml:space="preserve">
+    <value>علاقه‌مندی دیگری از قبل این نام را دارد.</value>
+  </data>
+  <data name="mbx_FrmManageFavourites_WarningAltitudeInvalid" xml:space="preserve">
+    <value>ارتفاع باید یک عدد باشد.</value>
+  </data>
+  <data name="mbx_FrmManageFavourites_WarningNoCoordinates" xml:space="preserve">
+    <value>مختصاتی برای استفاده وجود ندارد. عکسی را انتخاب کنید که موقعیت داشته باشد.</value>
+  </data>
+  <data name="mbx_FrmManageFavourites_QuestionAcceptChanges" xml:space="preserve">
+    <value>تغییرات این علاقه‌مندی پذیرفته شود؟</value>
+  </data>
+  <data name="mbx_FrmManageFavourites_QuestionDiscardAll" xml:space="preserve">
+    <value>بدون ذخیرهٔ تغییرات علاقه‌مندی‌ها بسته شود؟</value>
+  </data>
+  <data name="mbx_FrmManageFavourites_InfoWebNothingFound" xml:space="preserve">
+    <value>سرویس وب برای این موقعیت چیزی ندارد.</value>
+  </data>
+  <data name="tpg_Keywords" xml:space="preserve">
+    <value>دسته‌ها/کلیدواژه‌ها</value>
+  </data>
+  <data name="tpg_SourceDescription" xml:space="preserve">
+    <value>منبع/توضیحات</value>
+  </data>
+  <data name="tpg_Contact" xml:space="preserve">
+    <value>تماس</value>
+  </data>
+  <data name="lbl_SectionSource" xml:space="preserve">
+    <value>منبع</value>
+  </data>
+  <data name="lbl_SectionDescription" xml:space="preserve">
+    <value>توضیحات</value>
+  </data>
+  <data name="lbl_Category" xml:space="preserve">
+    <value>دسته</value>
+  </data>
+  <data name="lbl_SupplementalCategories" xml:space="preserve">
+    <value>دسته‌های تکمیلی</value>
+  </data>
+  <data name="lbl_IPTCKeywords" xml:space="preserve">
+    <value>کلیدواژه‌ها</value>
+  </data>
+  <data name="lbl_Artist" xml:space="preserve">
+    <value>هنرمند</value>
+  </data>
+  <data name="lbl_CaptionWriter" xml:space="preserve">
+    <value>نویسندهٔ شرح</value>
+  </data>
+  <data name="lbl_Source" xml:space="preserve">
+    <value>منبع</value>
+  </data>
+  <data name="lbl_Credit" xml:space="preserve">
+    <value>اعتبار</value>
+  </data>
+  <data name="lbl_SourceURL" xml:space="preserve">
+    <value>نشانی</value>
+  </data>
+  <data name="lbl_Copyright" xml:space="preserve">
+    <value>حق نشر</value>
+  </data>
+  <data name="lbl_ObjectName" xml:space="preserve">
+    <value>نام شیء</value>
+  </data>
+  <data name="lbl_Headline" xml:space="preserve">
+    <value>تیتر</value>
+  </data>
+  <data name="lbl_Caption" xml:space="preserve">
+    <value>شرح</value>
+  </data>
+  <data name="lbl_SpecialInstructions" xml:space="preserve">
+    <value>دستورالعمل‌های ویژه</value>
+  </data>
+  <data name="lbl_Byline" xml:space="preserve">
+    <value>امضا</value>
+  </data>
+  <data name="lbl_BylineTitle" xml:space="preserve">
+    <value>عنوان امضا</value>
+  </data>
+  <data name="lbl_CreatorAddress" xml:space="preserve">
+    <value>نشانی</value>
+  </data>
+  <data name="lbl_CreatorCity" xml:space="preserve">
+    <value>شهر</value>
+  </data>
+  <data name="lbl_CreatorPostalCode" xml:space="preserve">
+    <value>کد پستی</value>
+  </data>
+  <data name="lbl_CreatorRegion" xml:space="preserve">
+    <value>استان/ایالت</value>
+  </data>
+  <data name="lbl_CreatorCountry" xml:space="preserve">
+    <value>کشور</value>
+  </data>
+  <data name="lbl_CreatorPhone" xml:space="preserve">
+    <value>تلفن</value>
+  </data>
+  <data name="lbl_CreatorEmail" xml:space="preserve">
+    <value>ایمیل</value>
+  </data>
+  <data name="lbl_CreatorURL" xml:space="preserve">
+    <value>نشانی وب</value>
+  </data>
+  <data name="tmi_FieldMenu_InsertFrom" xml:space="preserve">
+    <value>درج از</value>
+  </data>
+  <data name="tmi_FieldMenu_CopyTo" xml:space="preserve">
+    <value>کپی به</value>
+  </data>
+  <data name="tmi_FieldMenu_CopySelectionToCategories" xml:space="preserve">
+    <value>کپی انتخاب به دسته‌ها</value>
+  </data>
+  <data name="tmi_FieldMenu_CopySelectionToKeywords" xml:space="preserve">
+    <value>کپی انتخاب به کلیدواژه‌ها</value>
+  </data>
+  <data name="tmi_FieldMenu_MostRecentlyUsed" xml:space="preserve">
+    <value>موارد اخیراً استفاده‌شده</value>
+  </data>
+  <data name="tmi_FieldMenu_ForgetRemembered" xml:space="preserve">
+    <value>فراموش کردن یک مورد به‌یادسپرده‌شده</value>
+  </data>
+  <data name="lbl_ContactPrefix" xml:space="preserve">
+    <value>تماس</value>
+  </data>
+  <data name="btn_LoadFromTemplate" xml:space="preserve">
+    <value>بارگذاری از الگو...</value>
+  </data>
+  <data name="btn_LoadFromImage" xml:space="preserve">
+    <value>بارگذاری از تصویر...</value>
+  </data>
+  <data name="btn_SaveAsTemplate" xml:space="preserve">
+    <value>ذخیره به‌عنوان الگو...</value>
+  </data>
+  <data name="lbl_TemplateName" xml:space="preserve">
+    <value>الگو:</value>
+  </data>
+  <data name="lbl_TemplateInclude" xml:space="preserve">
+    <value>این‌ها را استفاده کن:</value>
+  </data>
+  <data name="btn_TemplateDelete" xml:space="preserve">
+    <value>حذف</value>
+  </data>
+  <data name="chk_TemplateGroup_Country" xml:space="preserve">
+    <value>کشور</value>
+  </data>
+  <data name="chk_TemplateGroup_State" xml:space="preserve">
+    <value>استان/ایالت</value>
+  </data>
+  <data name="chk_TemplateGroup_City" xml:space="preserve">
+    <value>شهر</value>
+  </data>
+  <data name="chk_TemplateGroup_Sublocation" xml:space="preserve">
+    <value>مکان فرعی</value>
+  </data>
+  <data name="chk_TemplateGroup_Position" xml:space="preserve">
+    <value>موقعیت GPS</value>
+  </data>
+  <data name="chk_TemplateGroup_Altitude" xml:space="preserve">
+    <value>ارتفاع</value>
+  </data>
+  <data name="chk_TemplateGroup_Direction" xml:space="preserve">
+    <value>جهت تصویر</value>
+  </data>
+  <data name="chk_TemplateGroup_Destination" xml:space="preserve">
+    <value>مقصد</value>
+  </data>
+  <data name="chk_TemplateGroup_TakenDate" xml:space="preserve">
+    <value>تاریخ عکس‌برداری</value>
+  </data>
+  <data name="chk_TemplateGroup_CreateDate" xml:space="preserve">
+    <value>تاریخ ایجاد</value>
+  </data>
+  <data name="chk_TemplateGroup_OffsetTime" xml:space="preserve">
+    <value>اختلاف منطقه زمانی</value>
+  </data>
+  <data name="mbx_FrmEditTemplateDialog_QuestionDeleteTemplate" xml:space="preserve">
+    <value>الگوی '{0}' حذف شود؟</value>
+  </data>
+  <data name="mbx_FrmEditTemplateDialog_QuestionOverwriteTemplate" xml:space="preserve">
+    <value>الگویی به نام '{0}' از قبل وجود دارد. جایگزین شود؟</value>
+  </data>
+  <data name="mbx_FrmEditFileData_ErrorTemplateNotSaved" xml:space="preserve">
+    <value>الگو ذخیره نشد.</value>
+  </data>
+  <data name="mbx_FrmEditFileData_InfoImageHasNothingToLoad" xml:space="preserve">
+    <value>این پرونده چیزی ندارد که این فرم بتواند آن را بارگذاری کند.</value>
+  </data>
+  <data name="lbl_Sexagesimal" xml:space="preserve">
+    <value>شصت‌گانی</value>
+  </data>
+  <data name="lbl_ImageDirection" xml:space="preserve">
+    <value>جهت تصویر [°]:</value>
+  </data>
+  <data name="lbl_DestLatitude" xml:space="preserve">
+    <value>عرض جغرافیایی مقصد:</value>
+  </data>
+  <data name="lbl_DestLongitude" xml:space="preserve">
+    <value>طول جغرافیایی مقصد:</value>
+  </data>
+  <data name="btn_GetAltitudeFromWeb" xml:space="preserve">
+    <value>دریافت از وب</value>
+  </data>
+  <data name="mbx_FrmEditFileData_InfoCoordinatesNeededForAltitude" xml:space="preserve">
+    <value>ابتدا عرض و طول جغرافیایی را وارد کنید.</value>
+  </data>
+  <data name="mbx_FrmEditFileData_WarningNoAltitudeFromWeb" xml:space="preserve">
+    <value>سرویس وب برای این موقعیت ارتفاعی ندارد.</value>
+  </data>
+  <data name="ckb_SyncGeoKeywords" xml:space="preserve">
+    <value>کلیدواژه‌ها با مکان همگام بمانند (نام‌های مکان و کلیدواژه‌های geo:)</value>
+  </data>
+  <data name="ckb_ShowChangelogAfterUpdate" xml:space="preserve">
+    <value>پس از به‌روزرسانی، آنچه تغییر کرده نمایش داده شود</value>
+  </data>
+  <data name="mbx_Helper_InfoRemoveGeoDataKeywordsRemain" xml:space="preserve">
+    <value>داده‌های مکان حذف شد، اما کلیدواژه‌هایتان تغییری نکرده‌اند: هر نام مکان یا کلیدواژهٔ «geo:» در آن‌ها همان‌طور که بودند باقی می‌مانند. برای اینکه با تغییرات مکان همگام شوند، گزینهٔ «کلیدواژه‌ها با مکان همگام بمانند» را در تنظیمات فعال کنید.</value>
+  </data>
+  <data name="tmi_View_FolderTree" xml:space="preserve">
+    <value>درخت پوشه</value>
+  </data>
+  <data name="lbl_FolderTree_Title" xml:space="preserve">
+    <value>پوشه‌ها</value>
+  </data>
+  <data name="tsb_FolderTree_Favourites" xml:space="preserve">
+    <value>پوشه‌های علاقه‌مندی</value>
+  </data>
+  <data name="tmi_FolderTree_AddCurrent" xml:space="preserve">
+    <value>افزودن پوشهٔ فعلی به علاقه‌مندی‌ها</value>
+  </data>
+  <data name="tmi_FolderTree_RemoveCurrent" xml:space="preserve">
+    <value>حذف پوشهٔ فعلی از علاقه‌مندی‌ها</value>
+  </data>
+  <data name="tmi_FolderTree_NoFavourites" xml:space="preserve">
+    <value>(هنوز پوشهٔ علاقه‌مندی‌ای نیست)</value>
+  </data>
+  <data name="tsb_FolderTree_Refresh" xml:space="preserve">
+    <value>تازه‌سازی درخت پوشه</value>
+  </data>
+  <data name="tsb_FolderTree_Hide" xml:space="preserve">
+    <value>پنهان کردن درخت پوشه (Ctrl+B)</value>
+  </data>
+  <data name="cmi_FolderTree_AddThis" xml:space="preserve">
+    <value>افزودن به علاقه‌مندی‌ها</value>
+  </data>
+  <data name="cmi_FolderTree_RemoveThis" xml:space="preserve">
+    <value>حذف از علاقه‌مندی‌ها</value>
+  </data>
+  <data name="tsb_Donate" xml:space="preserve">
+    <value>BuyMeACoffee (حمایت مالی، در مرورگر باز می‌شود)</value>
+  </data>
+</root>
