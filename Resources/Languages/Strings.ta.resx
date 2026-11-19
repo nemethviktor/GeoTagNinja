@@ -1083,4 +1083,986 @@
   <data name="cmi_PasteGeoData" xml:space="preserve">
     <value>அனைத்து சியோடேட்டாவையும் ஒட்டவும்...</value>
   </data>
+  <data name="btn_ApplyAndNext" xml:space="preserve">
+    <value>பயன்படுத்தி &amp;&amp; அடுத்ததற்குச் செல்</value>
+  </data>
+  <data name="btn_InsertFromTakenDate" xml:space="preserve">
+    <value>எடுக்கப்பட்ட தேதியைப் பயன்படுத்து</value>
+  </data>
+  <data name="btn_PullMostRecentPasteSettings" xml:space="preserve">
+    <value>"சமீபத்திய" ஒட்டும் அமைப்புகளைப் பெறு</value>
+  </data>
+  <data name="btn_PullMostRecentTrackSyncShift" xml:space="preserve">
+    <value>"சமீபத்திய" சிப்ட் அமைப்புகளைப் பெறு</value>
+  </data>
+  <data name="btn_RemoveGeoData" xml:space="preserve">
+    <value>GPS மற்றும் இருப்பிடத் தரவை அகற்று</value>
+  </data>
+  <data name="btn_ResetToDefaults" xml:space="preserve">
+    <value>இயல்புநிலைகளுக்கு மீட்டமை</value>
+  </data>
+  <data name="btn_RestartLater" xml:space="preserve">
+    <value>பின்னர் மறுதொடக்கம் செய்</value>
+  </data>
+  <data name="btn_RestartNow" xml:space="preserve">
+    <value>இப்போது மறுதொடக்கம் செய்</value>
+  </data>
+  <data name="btn_SetCurrentValues" xml:space="preserve">
+    <value>திருத்துவதற்காகத் தேர்ந்தெடுக்கப்பட்ட அனைத்துப் படங்களுக்கும் தற்போதைய மதிப்புகளை அமை...</value>
+  </data>
+  <data name="Generic_ShowUserName" xml:space="preserve">
+    <value>பயனர் பெயரைக் காட்டு</value>
+  </data>
+  <data name="mbc_Error" xml:space="preserve">
+    <value>பிழை</value>
+  </data>
+  <data name="mbc_Information" xml:space="preserve">
+    <value>தகவல்</value>
+  </data>
+  <data name="mbc_Question" xml:space="preserve">
+    <value>கேள்வி</value>
+  </data>
+  <data name="mbc_Warning" xml:space="preserve">
+    <value>எச்சரிக்கை</value>
+  </data>
+  <data name="frm_BatchRename" xml:space="preserve">
+    <value>தொகுதி மறுபெயரிடுதல்</value>
+  </data>
+  <data name="frm_BatchRename_Preview" xml:space="preserve">
+    <value>தொகுதி மறுபெயரிடுதல் - முன்னோட்டம்</value>
+  </data>
+  <data name="gbx_BatchRename_Presets" xml:space="preserve">
+    <value>முன்னமைவுகள்</value>
+  </data>
+  <data name="gbx_BatchRename_Destination" xml:space="preserve">
+    <value>இலக்கு கோப்புறை</value>
+  </data>
+  <data name="gbx_BatchRename_Names" xml:space="preserve">
+    <value>புதிய கோப்புப் பெயர்கள்</value>
+  </data>
+  <data name="gbx_BatchRename_Options" xml:space="preserve">
+    <value>விருப்பங்கள்</value>
+  </data>
+  <data name="gbx_BatchRename_Preview" xml:space="preserve">
+    <value>முன்னோட்டம்</value>
+  </data>
+  <data name="lbl_BatchRename_Preset" xml:space="preserve">
+    <value>முன்னமைவு</value>
+  </data>
+  <data name="lbl_BatchRename_Modified" xml:space="preserve">
+    <value>(மாற்றப்பட்டது)</value>
+  </data>
+  <data name="btn_BatchRename_Save" xml:space="preserve">
+    <value>சேமி...</value>
+  </data>
+  <data name="btn_BatchRename_Delete" xml:space="preserve">
+    <value>நீக்கு</value>
+  </data>
+  <data name="rbt_BatchRename_SameFolder" xml:space="preserve">
+    <value>அதே கோப்புறையில் மறுபெயரிடு</value>
+  </data>
+  <data name="rbt_BatchRename_MoveToFolder" xml:space="preserve">
+    <value>வேறு கோப்புறைக்கு நகர்த்து</value>
+  </data>
+  <data name="rbt_BatchRename_CopyToFolder" xml:space="preserve">
+    <value>வேறு கோப்புறைக்கு நகலெடு</value>
+  </data>
+  <data name="btn_BatchRename_Browse" xml:space="preserve">
+    <value>உலாவு...</value>
+  </data>
+  <data name="lbl_BatchRename_Compatibility" xml:space="preserve">
+    <value>இணக்கத்தன்மை</value>
+  </data>
+  <data name="ckb_BatchRename_Windows" xml:space="preserve">
+    <value>Windows</value>
+  </data>
+  <data name="ckb_BatchRename_Mac" xml:space="preserve">
+    <value>Mac</value>
+  </data>
+  <data name="ckb_BatchRename_Unix" xml:space="preserve">
+    <value>Unix</value>
+  </data>
+  <data name="lbl_BatchRename_CurrentFilename" xml:space="preserve">
+    <value>தற்போதைய கோப்புப் பெயர்</value>
+  </data>
+  <data name="lbl_BatchRename_NewFilename" xml:space="preserve">
+    <value>புதிய கோப்புப் பெயர்</value>
+  </data>
+  <data name="lbl_BatchRename_Note" xml:space="preserve">
+    <value>குறிப்பு</value>
+  </data>
+  <data name="lbl_BatchRename_Unchanged" xml:space="preserve">
+    <value>மாற்றப்படாதது</value>
+  </data>
+  <data name="btn_BatchRename_Rename" xml:space="preserve">
+    <value>மறுபெயரிடு</value>
+  </data>
+  <data name="btn_BatchRename_PreviewAll" xml:space="preserve">
+    <value>முன்னோட்டம்</value>
+  </data>
+  <data name="lbl_BatchRename_Find" xml:space="preserve">
+    <value>கண்டுபிடி</value>
+  </data>
+  <data name="lbl_BatchRename_ReplaceWith" xml:space="preserve">
+    <value>இதனுடன் மாற்று</value>
+  </data>
+  <data name="ckb_BatchRename_IgnoreCase" xml:space="preserve">
+    <value>பெரிய/சிறிய எழுத்தைப் புறக்கணி</value>
+  </data>
+  <data name="ckb_BatchRename_ReplaceAll" xml:space="preserve">
+    <value>அனைத்தையும் மாற்று</value>
+  </data>
+  <data name="ckb_BatchRename_UseRegex" xml:space="preserve">
+    <value>வழக்கமான வெளிப்பாட்டைப் பயன்படுத்து</value>
+  </data>
+  <data name="lbl_BatchRename_Kind_Text" xml:space="preserve">
+    <value>உரை</value>
+  </data>
+  <data name="lbl_BatchRename_Kind_NewExtension" xml:space="preserve">
+    <value>புதிய நீட்டிப்பு</value>
+  </data>
+  <data name="lbl_BatchRename_Kind_CurrentFilename" xml:space="preserve">
+    <value>தற்போதைய கோப்புப் பெயர்</value>
+  </data>
+  <data name="lbl_BatchRename_Kind_PreservedFilename" xml:space="preserve">
+    <value>பாதுகாக்கப்பட்ட கோப்புப் பெயர்</value>
+  </data>
+  <data name="lbl_BatchRename_Kind_SequenceNumber" xml:space="preserve">
+    <value>வரிசை எண்</value>
+  </data>
+  <data name="lbl_BatchRename_Kind_SequenceLetter" xml:space="preserve">
+    <value>வரிசை எழுத்து</value>
+  </data>
+  <data name="lbl_BatchRename_Kind_DateTime" xml:space="preserve">
+    <value>தேதி நேரம்</value>
+  </data>
+  <data name="lbl_BatchRename_Kind_Metadata" xml:space="preserve">
+    <value>மெட்டாடேட்டா</value>
+  </data>
+  <data name="lbl_BatchRename_Kind_FolderName" xml:space="preserve">
+    <value>கோப்புறைப் பெயர்</value>
+  </data>
+  <data name="lbl_BatchRename_Kind_StringSubstitution" xml:space="preserve">
+    <value>சரம் மாற்றீடு</value>
+  </data>
+  <data name="lbl_BatchRename_Case_Original" xml:space="preserve">
+    <value>அசல் எழுத்துவடிவம்</value>
+  </data>
+  <data name="lbl_BatchRename_Case_Lower" xml:space="preserve">
+    <value>சிறிய எழுத்து</value>
+  </data>
+  <data name="lbl_BatchRename_Case_Upper" xml:space="preserve">
+    <value>பெரிய எழுத்து</value>
+  </data>
+  <data name="lbl_BatchRename_Part_NameAndExtension" xml:space="preserve">
+    <value>பெயர் + நீட்டிப்பு</value>
+  </data>
+  <data name="lbl_BatchRename_Part_Name" xml:space="preserve">
+    <value>பெயர்</value>
+  </data>
+  <data name="lbl_BatchRename_Part_Extension" xml:space="preserve">
+    <value>நீட்டிப்பு</value>
+  </data>
+  <data name="lbl_BatchRename_Part_NumberSuffix" xml:space="preserve">
+    <value>எண் பின்னொட்டு</value>
+  </data>
+  <data name="lbl_BatchRename_DateSource_DateTaken" xml:space="preserve">
+    <value>எடுக்கப்பட்ட தேதி</value>
+  </data>
+  <data name="lbl_BatchRename_DateSource_DateCreated" xml:space="preserve">
+    <value>உருவாக்கிய தேதி</value>
+  </data>
+  <data name="lbl_BatchRename_DateSource_FileModified" xml:space="preserve">
+    <value>கோப்பு மாற்றப்பட்ட தேதி</value>
+  </data>
+  <data name="lbl_BatchRename_DateSource_FileCreated" xml:space="preserve">
+    <value>கோப்பு உருவாக்கப்பட்ட தேதி</value>
+  </data>
+  <data name="lbl_BatchRename_DateSource_Today" xml:space="preserve">
+    <value>இன்று</value>
+  </data>
+  <data name="lbl_BatchRename_DateSource_Yesterday" xml:space="preserve">
+    <value>நேற்று</value>
+  </data>
+  <data name="lbl_BatchRename_Digits_1" xml:space="preserve">
+    <value>ஒரு இலக்கம்</value>
+  </data>
+  <data name="lbl_BatchRename_Digits_2" xml:space="preserve">
+    <value>இரண்டு இலக்கங்கள்</value>
+  </data>
+  <data name="lbl_BatchRename_Digits_3" xml:space="preserve">
+    <value>மூன்று இலக்கங்கள்</value>
+  </data>
+  <data name="lbl_BatchRename_Digits_4" xml:space="preserve">
+    <value>நான்கு இலக்கங்கள்</value>
+  </data>
+  <data name="lbl_BatchRename_Digits_5" xml:space="preserve">
+    <value>ஐந்து இலக்கங்கள்</value>
+  </data>
+  <data name="lbl_BatchRename_Digits_6" xml:space="preserve">
+    <value>ஆறு இலக்கங்கள்</value>
+  </data>
+  <data name="lbl_BatchRename_SubstituteSource_OriginalFilename" xml:space="preserve">
+    <value>அசல் கோப்புப் பெயர்</value>
+  </data>
+  <data name="lbl_BatchRename_SubstituteSource_PreservedFilename" xml:space="preserve">
+    <value>பாதுகாக்கப்பட்ட கோப்புப் பெயர்</value>
+  </data>
+  <data name="lbl_BatchRename_Field_Country" xml:space="preserve">
+    <value>நாடு</value>
+  </data>
+  <data name="lbl_BatchRename_Field_CountryCode" xml:space="preserve">
+    <value>நாட்டுக் குறியீடு</value>
+  </data>
+  <data name="lbl_BatchRename_Field_State" xml:space="preserve">
+    <value>மாநிலம்/மாகாணம்</value>
+  </data>
+  <data name="lbl_BatchRename_Field_City" xml:space="preserve">
+    <value>நகரம்</value>
+  </data>
+  <data name="lbl_BatchRename_Field_Sublocation" xml:space="preserve">
+    <value>துணை இருப்பிடம்</value>
+  </data>
+  <data name="lbl_BatchRename_Field_Make" xml:space="preserve">
+    <value>கேமரா தயாரிப்பாளர்</value>
+  </data>
+  <data name="lbl_BatchRename_Field_Model" xml:space="preserve">
+    <value>கேமரா மாதிரி</value>
+  </data>
+  <data name="lbl_BatchRename_Field_LensSpec" xml:space="preserve">
+    <value>லென்ச்</value>
+  </data>
+  <data name="lbl_BatchRename_Field_Rating" xml:space="preserve">
+    <value>மதிப்பீடு</value>
+  </data>
+  <data name="lbl_BatchRename_Field_ExposureTime" xml:space="preserve">
+    <value>நேரிடுதல் காலம்</value>
+  </data>
+  <data name="lbl_BatchRename_Field_Fnumber" xml:space="preserve">
+    <value>துளை (F-எண்)</value>
+  </data>
+  <data name="lbl_BatchRename_Field_FocalLength" xml:space="preserve">
+    <value>குவிய நீளம்</value>
+  </data>
+  <data name="lbl_BatchRename_Field_ISO" xml:space="preserve">
+    <value>ISO</value>
+  </data>
+  <data name="lbl_BatchRename_Field_Artist" xml:space="preserve">
+    <value>கலைஞர்</value>
+  </data>
+  <data name="lbl_BatchRename_Field_Byline" xml:space="preserve">
+    <value>உருவாக்கியவர் (பைலைன்)</value>
+  </data>
+  <data name="lbl_BatchRename_Field_Copyright" xml:space="preserve">
+    <value>பதிப்புரிமை</value>
+  </data>
+  <data name="lbl_BatchRename_Field_Credit" xml:space="preserve">
+    <value>வரவு</value>
+  </data>
+  <data name="lbl_BatchRename_Field_Source" xml:space="preserve">
+    <value>மூலம்</value>
+  </data>
+  <data name="lbl_BatchRename_Field_ObjectName" xml:space="preserve">
+    <value>தலைப்பு (பொருளின் பெயர்)</value>
+  </data>
+  <data name="lbl_BatchRename_Field_Headline" xml:space="preserve">
+    <value>தலைப்புச் செய்தி</value>
+  </data>
+  <data name="lbl_BatchRename_Field_Category" xml:space="preserve">
+    <value>வகை</value>
+  </data>
+  <data name="mbx_BatchRename_OneFile" xml:space="preserve">
+    <value>ஒரு கோப்பு செயலாக்கப்படும்</value>
+  </data>
+  <data name="mbx_BatchRename_ManyFiles" xml:space="preserve">
+    <value>{0} கோப்புகள் செயலாக்கப்படும்</value>
+  </data>
+  <data name="mbx_BatchRename_SomeBlocked" xml:space="preserve">
+    <value>{1} கோப்புகளில் {0} மறுபெயரிட முடியாது: முன்னோட்டத்தைப் பார்க்கவும்</value>
+  </data>
+  <data name="mbx_BatchRename_PresetNamePrompt" xml:space="preserve">
+    <value>முன்னமைவின் பெயர்:</value>
+  </data>
+  <data name="mbx_BatchRename_PresetUnreadable" xml:space="preserve">
+    <value>முன்னமைவு '{0}' ஐப் படிக்க முடியவில்லை.</value>
+  </data>
+  <data name="mbx_BatchRename_PresetReplace" xml:space="preserve">
+    <value>'{0}' என்ற முன்னமைவு ஏற்கனவே உள்ளது. அதை மாற்றவா?</value>
+  </data>
+  <data name="mbx_BatchRename_PresetSaveFailed" xml:space="preserve">
+    <value>முன்னமைவைச் சேமிக்க முடியவில்லை.</value>
+  </data>
+  <data name="mbx_BatchRename_PresetDelete" xml:space="preserve">
+    <value>முன்னமைவு '{0}' ஐ நீக்கவா?</value>
+  </data>
+  <data name="mbx_BatchRename_Preflight" xml:space="preserve">
+    <value>எதுவும் மறுபெயரிடப்படவில்லை. முதலில் இவற்றைச் சரிசெய்ய வேண்டும்:
+
+{0}</value>
+  </data>
+  <data name="mbx_BatchRename_MoreProblems" xml:space="preserve">
+    <value>... மேலும் {0} (அனைத்தையும் முன்னோட்டத்தில் காணலாம்)</value>
+  </data>
+  <data name="mbx_BatchRename_SelectFiles" xml:space="preserve">
+    <value>முதலில் மறுபெயரிட வேண்டிய கோப்புகளைத் தேர்ந்தெடுக்கவும்.</value>
+  </data>
+  <data name="mbx_BatchRename_NothingRenamed" xml:space="preserve">
+    <value>எதுவும் மறுபெயரிடப்படவில்லை (ஏற்கனவே செய்யப்பட்டவை மீண்டும் பழைய நிலைக்குத் திருப்பப்பட்டன).
+
+{0}</value>
+  </data>
+  <data name="mbx_BatchRename_StepFailed" xml:space="preserve">
+    <value>{0}
+
+இதுவரை செய்த அனைத்தும் திரும்பப் பெறப்பட்டன, எனவே எந்தக் கோப்பும் மாற்றப்படவில்லை.
+
+{1} இல்லாமல் தொடரவா (அந்தப் பெயரைப் பெறவிருந்த கோப்புகள் உட்பட)?
+ஆம்: மீதமுள்ளவற்றை மறுபெயரிடு. இல்லை: நிறுத்து; அனைத்துக் கோப்புகளும் அப்படியே இருக்கும்.</value>
+  </data>
+  <data name="mbx_BatchRename_NothingLeft" xml:space="preserve">
+    <value>மறுபெயரிட எதுவும் மீதமில்லை.</value>
+  </data>
+  <data name="mbx_BatchRename_DoneSkipped" xml:space="preserve">
+    <value>{0} கோப்பு(கள்) செயலாக்கப்பட்டன. அப்படியே விடப்பட்டவை:
+{1}</value>
+  </data>
+  <data name="mbx_BatchRename_AndMore" xml:space="preserve">
+    <value>... மேலும் {0}</value>
+  </data>
+  <data name="mbx_BatchRename_Problem_NoDestination" xml:space="preserve">
+    <value>இலக்கு கோப்புறை தேர்ந்தெடுக்கப்படவில்லை</value>
+  </data>
+  <data name="mbx_BatchRename_Problem_EmptyName" xml:space="preserve">
+    <value>புதிய பெயர் காலியாக உள்ளது</value>
+  </data>
+  <data name="mbx_BatchRename_Problem_Reserved" xml:space="preserve">
+    <value>'{0}' என்பது Windows இல் ஒதுக்கப்பட்ட பெயர்</value>
+  </data>
+  <data name="mbx_BatchRename_Problem_NameTooLong" xml:space="preserve">
+    <value>புதிய பெயர் மிக நீளமாக உள்ளது</value>
+  </data>
+  <data name="mbx_BatchRename_Problem_PathTooLong" xml:space="preserve">
+    <value>புதிய பாதை மிக நீளமாக உள்ளது</value>
+  </data>
+  <data name="mbx_BatchRename_Problem_NoDate" xml:space="preserve">
+    <value>பயன்படுத்த {0} இல்லை</value>
+  </data>
+  <data name="mbx_BatchRename_Problem_BadRegex" xml:space="preserve">
+    <value>வழக்கமான வெளிப்பாடு செல்லுபடியாகாது</value>
+  </data>
+  <data name="mbx_BatchRename_Problem_RegexTimeout" xml:space="preserve">
+    <value>வழக்கமான வெளிப்பாடு எடுத்துக்கொள்ளும் நேரம் அதிகம்</value>
+  </data>
+  <data name="mbx_BatchRename_Problem_NameClaimed" xml:space="preserve">
+    <value>வேறொரு கோப்பு இந்தப் பெயரைப் பெறுகிறது (அல்லது ஏற்கனவே கொண்டுள்ளது)</value>
+  </data>
+  <data name="mbx_BatchRename_Problem_FileExists" xml:space="preserve">
+    <value>இந்தப் பெயரில் ஒரு கோப்பு ஏற்கனவே உள்ளது</value>
+  </data>
+  <data name="mbx_BatchRename_Problem_SidecarExists" xml:space="preserve">
+    <value>இந்தப் பெயரில் XMP சைட்கார் ஏற்கனவே உள்ளது</value>
+  </data>
+  <data name="mbx_BatchRename_Problem_Gone" xml:space="preserve">
+    <value>கோப்பு இனி அங்கு இல்லை</value>
+  </data>
+  <data name="mbx_BatchRename_Problem_BeingSaved" xml:space="preserve">
+    <value>கோப்பு GeoTagNinja மூலம் சேமிக்கப்பட்டுக்கொண்டிருக்கிறது</value>
+  </data>
+  <data name="mbx_BatchRename_Problem_InUse" xml:space="preserve">
+    <value>கோப்பு வேறொரு நிரலால் பயன்பாட்டில் உள்ளது</value>
+  </data>
+  <data name="mbx_BatchRename_Problem_FolderNotWritable" xml:space="preserve">
+    <value>கோப்புறை '{0}' இல் எழுத முடியவில்லை</value>
+  </data>
+  <data name="mbx_BatchRename_Problem_NoSpace" xml:space="preserve">
+    <value>{0} இல் போதுமான இடம் இல்லை: {1} MB தேவை, {2} MB காலியாக உள்ளது</value>
+  </data>
+  <data name="mbx_BatchRename_Problem_Unfixed" xml:space="preserve">
+    <value>தொகுதியில் முதலில் சரிசெய்ய வேண்டிய சிக்கல்கள் உள்ளன.</value>
+  </data>
+  <data name="tmi_File_BatchRename" xml:space="preserve">
+    <value>தொகுதி மறுபெயரிடுதல்...</value>
+  </data>
+  <data name="cmi_BatchRename" xml:space="preserve">
+    <value>தொகுதி மறுபெயரிடுதல்...</value>
+  </data>
+  <data name="tmi_Help_Help" xml:space="preserve">
+    <value>உதவி</value>
+  </data>
+  <data name="btn_NavigateMapGo" xml:space="preserve">
+    <value>வரைபடத்தில் காட்டு</value>
+  </data>
+  <data name="btn_loctToFile" xml:space="preserve">
+    <value>கோப்பு(களில்) சேமி</value>
+  </data>
+  <data name="btn_loctToFileDestination" xml:space="preserve">
+    <value>இலக்கில் சேமி</value>
+  </data>
+  <data name="btn_SaveFavourite" xml:space="preserve">
+    <value>புகைப்படத்தைச் சேமி</value>
+  </data>
+  <data name="btn_LoadFavourite" xml:space="preserve">
+    <value>புகைப்படங்களுக்குப் பயன்படுத்து</value>
+  </data>
+  <data name="btn_ManageFavourites" xml:space="preserve">
+    <value>நிர்வகி...</value>
+  </data>
+  <data name="ckb_ImportExport_ApplicationSettings" xml:space="preserve">
+    <value>பயன்பாட்டு அமைப்புகள்</value>
+  </data>
+  <data name="ckb_ImportExport_CustomRulesSettings" xml:space="preserve">
+    <value>தனிப்பயன் விதி அமைப்புகள்</value>
+  </data>
+  <data name="ckb_ImportExport_Favourites" xml:space="preserve">
+    <value>பிடித்தவை</value>
+  </data>
+  <data name="ckb_ImportExport_EditTemplates" xml:space="preserve">
+    <value>தரவு வார்ப்புருக்களைத் திருத்து</value>
+  </data>
+  <data name="ckb_ImportExport_FieldHistory" xml:space="preserve">
+    <value>தரவுத் திருத்த புல வரலாறு</value>
+  </data>
+  <data name="ckb_ImportExport_BatchRenamePresets" xml:space="preserve">
+    <value>தொகுதி மறுபெயரிடுதல் முன்னமைவுகள்</value>
+  </data>
+  <data name="Generic_TimeZoneID" xml:space="preserve">
+    <value>நேர மண்டல ID</value>
+  </data>
+  <data name="Generic_Distance" xml:space="preserve">
+    <value>தூரம்</value>
+  </data>
+  <data name="cmi_OpenCoordsInBrowser" xml:space="preserve">
+    <value>உலாவியில்/வரைபடங்களில் ஒருங்கிணைப்புகளைத் திற</value>
+  </data>
+  <data name="cmi_OpenCoordsInBrowserBing" xml:space="preserve">
+    <value>Bing</value>
+  </data>
+  <data name="cmi_OpenCoordsInBrowserGeoNamesMaps" xml:space="preserve">
+    <value>GeoNames (Maps)</value>
+  </data>
+  <data name="cmi_OpenCoordsInBrowserGoogle" xml:space="preserve">
+    <value>Google Maps</value>
+  </data>
+  <data name="cmi_OpenCoordsInBrowserWeGoHere" xml:space="preserve">
+    <value>WeGo/Here</value>
+  </data>
+  <data name="cmi_OpenCoordsInBrowserOpenStreetMap" xml:space="preserve">
+    <value>OpenStreetMap</value>
+  </data>
+  <data name="tmi_File_ImportFavouritesFromGeoSetter" xml:space="preserve">
+    <value>Geosetter இலிருந்து பிடித்தவற்றை இறக்குமதி செய்...</value>
+  </data>
+  <data name="ofd_Settings_GetDatabaseFileToImport_SelectDatabaseFile" xml:space="preserve">
+    <value>தரவுத்தளக் கோப்பைத் தேர்ந்தெடுக்கவும்</value>
+  </data>
+  <data name="ofd_tmi_File_ImportFavouritesFromGeoSetter_SelectFile" xml:space="preserve">
+    <value>GS பிடித்தவை ஏற்றுமதிக் கோப்பைத் தேர்ந்தெடுக்கவும்</value>
+  </data>
+  <data name="mbx_FrmMainApp_ErrorImportGeoSetterFavourites" xml:space="preserve">
+    <value>GeoSetter பிடித்தவற்றை இறக்குமதி செய்வதில் பிழை.</value>
+  </data>
+  <data name="mbx_FrmMainApp_InfoImportGeoSetterFavouritesDone" xml:space="preserve">
+    <value>GeoSetter பிடித்தவை இறக்குமதி செய்யப்பட்டன. இறக்குமதி செய்யப்பட்ட உருப்படிகள்: </value>
+  </data>
+  <data name="ckb_ShowThumbnails" xml:space="preserve">
+    <value>கட்டத்திற்குப் பதிலாக படச் சிறுபடங்களைக் காட்டு</value>
+  </data>
+  <data name="ttp_ShowThumbnails" xml:space="preserve">
+    <value>இது செயல்திறனை மிகவும் குறைக்கும் (என் அளவீடுகளின்படி 7 மடங்கு வரை), எனவே பரிந்துரைக்கப்படவில்லை.</value>
+  </data>
+  <data name="Generic_SaveDefaults" xml:space="preserve">
+    <value>இயல்புநிலைகளைச் சேமி</value>
+  </data>
+  <data name="ttp_FrmImportExport_SaveDefaults" xml:space="preserve">
+    <value>சில இயல்புநிலைகளைச் சேமிக்கிறது. தற்போது: இறக்குமதி மூல இருப்பிடம், TZ &amp; DST அமைப்புகள், அதிகபட்ச இடைக்கணிப்பு/எக்ச்ட்ராபோலேசன்.</value>
+  </data>
+  <data name="mbx_FrmImportExportGpx_ExportCompleted" xml:space="preserve">
+    <value>GPX கோப்பு ஏற்றுமதி முடிந்தது</value>
+  </data>
+  <data name="Generic_GPSDOP" xml:space="preserve">
+    <value>துல்லியக் குறைவு (DOP)</value>
+  </data>
+  <data name="Generic_GPSHPositioningError" xml:space="preserve">
+    <value>GPS கிடைமட்ட நிலைப்படுத்தல் பிழை</value>
+  </data>
+  <data name="tmi_Edit_SelectAll" xml:space="preserve">
+    <value>அனைத்தையும் தேர்ந்தெடு</value>
+  </data>
+  <data name="cmi_SelectAll" xml:space="preserve">
+    <value>அனைத்தையும் தேர்ந்தெடு</value>
+  </data>
+  <data name="tmi_Edit_SelectNone" xml:space="preserve">
+    <value>எதையும் தேர்ந்தெடுக்காதே</value>
+  </data>
+  <data name="cmi_SelectNone" xml:space="preserve">
+    <value>எதையும் தேர்ந்தெடுக்காதே</value>
+  </data>
+  <data name="tmi_Edit_InvertSelection" xml:space="preserve">
+    <value>தேர்வை மாற்று</value>
+  </data>
+  <data name="cmi_InvertSelection" xml:space="preserve">
+    <value>தேர்வை மாற்று</value>
+  </data>
+  <data name="tmi_Edit" xml:space="preserve">
+    <value>திருத்து</value>
+  </data>
+  <data name="tmi_Help_Donate" xml:space="preserve">
+    <value>நன்கொடை</value>
+  </data>
+  <data name="tmi_Help_Donate_PayPal" xml:space="preserve">
+    <value>PayPal...</value>
+  </data>
+  <data name="tmi_Help_Donate_Revolut" xml:space="preserve">
+    <value>Revolut (QR)...</value>
+  </data>
+  <data name="tmi_Help_Donate_BuyMeCoffee" xml:space="preserve">
+    <value>BuyMeACoffee...</value>
+  </data>
+  <data name="tmi_File_SaveSelected" xml:space="preserve">
+    <value>தேர்ந்தெடுத்ததைச் சேமி</value>
+  </data>
+  <data name="rbt_SetStartup_Folder" xml:space="preserve">
+    <value>தொடக்க கோப்புறையை அமை</value>
+  </data>
+  <data name="rbt_UseLastUsedFolder" xml:space="preserve">
+    <value>கடைசியாகப் பயன்படுத்திய கோப்புறையைப் பயன்படுத்து</value>
+  </data>
+  <data name="tmi_Debug" xml:space="preserve">
+    <value>பிழைதிருத்தம்</value>
+  </data>
+  <data name="tmi_Debug_CustomiseWinformControls" xml:space="preserve">
+    <value>Winform கட்டுப்பாடுகளைத் தனிப்பயனாக்கு</value>
+  </data>
+  <data name="frm_FrmCustomiseFormControls" xml:space="preserve">
+    <value>Winform கட்டுப்பாடுகளைத் தனிப்பயனாக்கு</value>
+  </data>
+  <data name="ckb_RetainMapZoom" xml:space="preserve">
+    <value>கிளிக்குகளுக்கு இடையில் வரைபட ஜூம் நிலையைத் தக்க வை</value>
+  </data>
+  <data name="mbx_FrmMainApp_ErrorNonHydratedItemsPresent" xml:space="preserve">
+    <value>உங்கள் தேர்வில் பாகுபடுத்தப்படாத கோப்புகள் உள்ளன; அவை திருத்துவதற்காக ஏற்றப்படாது.</value>
+  </data>
+  <data name="Generic_Ready" xml:space="preserve">
+    <value>தயார்</value>
+  </data>
+  <data name="Generic_ReadingMetadataProgress" xml:space="preserve">
+    <value>மெட்டாடேட்டா படிக்கப்படுகிறது: {1} இல் {0}</value>
+  </data>
+  <data name="Generic_Total" xml:space="preserve">
+    <value>மொத்தம்</value>
+  </data>
+  <data name="Generic_GeoData" xml:space="preserve">
+    <value>புவியியல் தரவு</value>
+  </data>
+  <data name="Generic_Files" xml:space="preserve">
+    <value>கோப்புகள்</value>
+  </data>
+  <data name="mbx_FrmMainApp_WarningDataParseStillInProgress" xml:space="preserve">
+    <value>தரவு பாகுபடுத்தல் இன்னும் நடைபெற்று வருகிறது - அது முடியும் வரை இந்தச் செயல் தொடர முடியாது. சிறிது நேரம் கழித்து மீண்டும் முயற்சிக்கவும்.</value>
+  </data>
+  <data name="Generic_IsEmpty" xml:space="preserve">
+    <value>காலியாக உள்ளது</value>
+  </data>
+  <data name="Generic_IsNotEmpty" xml:space="preserve">
+    <value>காலியாக இல்லை</value>
+  </data>
+  <data name="Generic_Is" xml:space="preserve">
+    <value>சமம்</value>
+  </data>
+  <data name="Generic_IsNot" xml:space="preserve">
+    <value>சமமில்லை</value>
+  </data>
+  <data name="Generic_Contains" xml:space="preserve">
+    <value>கொண்டுள்ளது</value>
+  </data>
+  <data name="Generic_DoesntContain" xml:space="preserve">
+    <value>கொண்டிருக்கவில்லை</value>
+  </data>
+  <data name="Generic_ClearAll" xml:space="preserve">
+    <value>அனைத்தையும் அழி</value>
+  </data>
+  <data name="ckb_AlwaysRecenterMap" xml:space="preserve">
+    <value>வரைபடத்தை எப்போதும் மீண்டும் மையப்படுத்தவா?</value>
+  </data>
+  <data name="ckb_DoNotDownloadAltitude" xml:space="preserve">
+    <value>API இலிருந்து உயர மதிப்புகளைப் பதிவிறக்க வேண்டாம்</value>
+  </data>
+  <data name="ckb_PreserveFileModifiedDate" xml:space="preserve">
+    <value>சேமிக்கும்போது கோப்பின் மாற்றப்பட்ட தேதியை மாற்ற வேண்டாம்</value>
+  </data>
+  <data name="tmi_View" xml:space="preserve">
+    <value>காட்சி</value>
+  </data>
+  <data name="tmi_View_Details" xml:space="preserve">
+    <value>விவரங்கள்</value>
+  </data>
+  <data name="tmi_View_Thumbnails" xml:space="preserve">
+    <value>சிறுபடங்கள்</value>
+  </data>
+  <data name="tmi_View_ThumbnailSize" xml:space="preserve">
+    <value>சிறுபட அளவு</value>
+  </data>
+  <data name="tmi_View_ThumbnailSize_Small" xml:space="preserve">
+    <value>சிறியது</value>
+  </data>
+  <data name="tmi_View_ThumbnailSize_Medium" xml:space="preserve">
+    <value>நடுத்தரம்</value>
+  </data>
+  <data name="tmi_View_ThumbnailSize_Large" xml:space="preserve">
+    <value>பெரியது</value>
+  </data>
+  <data name="tmi_View_ThumbnailSize_ExtraLarge" xml:space="preserve">
+    <value>மிகப் பெரியது</value>
+  </data>
+  <data name="tmi_View_ThumbnailSize_Smaller" xml:space="preserve">
+    <value>சிறிய சிறுபடங்கள்</value>
+  </data>
+  <data name="tmi_View_ThumbnailSize_Larger" xml:space="preserve">
+    <value>பெரிய சிறுபடங்கள்</value>
+  </data>
+  <data name="ttp_ThumbnailSize" xml:space="preserve">
+    <value>சிறுபட அளவு</value>
+  </data>
+  <data name="tmi_View_SortBy" xml:space="preserve">
+    <value>வரிசைப்படுத்து</value>
+  </data>
+  <data name="tmi_View_SortBy_Ascending" xml:space="preserve">
+    <value>ஏறுவரிசை</value>
+  </data>
+  <data name="tmi_View_SortBy_Descending" xml:space="preserve">
+    <value>இறங்குவரிசை</value>
+  </data>
+  <data name="gbx_AllFavourites" xml:space="preserve">
+    <value>அனைத்துப் பிடித்தவைகளும்</value>
+  </data>
+  <data name="gbx_FavouriteDetails" xml:space="preserve">
+    <value>விவரங்கள்</value>
+  </data>
+  <data name="gbx_FavouriteAdditionalInfo" xml:space="preserve">
+    <value>கூடுதல் தகவல்</value>
+  </data>
+  <data name="lbl_FavouriteName" xml:space="preserve">
+    <value>பெயர்:</value>
+  </data>
+  <data name="lbl_FavouriteCoordinates" xml:space="preserve">
+    <value>ஒருங்கிணைப்புகள்:</value>
+  </data>
+  <data name="lbl_FavouriteRadius" xml:space="preserve">
+    <value>ஆரம் [மீ]:</value>
+  </data>
+  <data name="ckb_FavouriteAutoAssign" xml:space="preserve">
+    <value>தானாக ஒதுக்கு</value>
+  </data>
+  <data name="ckb_FavouriteSnap" xml:space="preserve">
+    <value>படங்களைப் பிடித்தவையின் நிலைக்குப் பொருத்து</value>
+  </data>
+  <data name="lbl_FavouriteTimeZone" xml:space="preserve">
+    <value>நேர மண்டலம்:</value>
+  </data>
+  <data name="lbl_FavouriteKeywords" xml:space="preserve">
+    <value>முக்கிய வார்த்தைகள்:</value>
+  </data>
+  <data name="btn_FavouriteGetFromWeb" xml:space="preserve">
+    <value>இணையத்திலிருந்து பெறு</value>
+  </data>
+  <data name="btn_FavouriteClearAll" xml:space="preserve">
+    <value>அனைத்து மதிப்புகளையும் அழி</value>
+  </data>
+  <data name="btn_FavouriteAccept" xml:space="preserve">
+    <value>ஏற்றுக்கொள்</value>
+  </data>
+  <data name="btn_FavouriteDiscard" xml:space="preserve">
+    <value>நிராகரி</value>
+  </data>
+  <data name="btn_FavouriteAddKeyword" xml:space="preserve">
+    <value>சேர்</value>
+  </data>
+  <data name="btn_FavouriteRemoveKeyword" xml:space="preserve">
+    <value>அகற்று</value>
+  </data>
+  <data name="lbl_FavouritesCount" xml:space="preserve">
+    <value>{0} உருப்படிகள் ({1} தேர்ந்தெடுக்கப்பட்டவை)</value>
+  </data>
+  <data name="tsd_GroupBy" xml:space="preserve">
+    <value>குழுவாக்கு</value>
+  </data>
+  <data name="tmi_GroupByCountryCode" xml:space="preserve">
+    <value>நாட்டுக் குறியீடு</value>
+  </data>
+  <data name="tmi_GroupByCountry" xml:space="preserve">
+    <value>நாடு</value>
+  </data>
+  <data name="tmi_GroupByState" xml:space="preserve">
+    <value>மாநிலம்/மாகாணம்</value>
+  </data>
+  <data name="tmi_GroupByCity" xml:space="preserve">
+    <value>நகரம்</value>
+  </data>
+  <data name="tmi_GroupByCoordinates" xml:space="preserve">
+    <value>ஒருங்கிணைப்புகள்</value>
+  </data>
+  <data name="tmi_GroupByNone" xml:space="preserve">
+    <value>குழுவாக்கம் இல்லை</value>
+  </data>
+  <data name="tmi_GroupByBlank" xml:space="preserve">
+    <value>(எதுவுமில்லை)</value>
+  </data>
+  <data name="tsb_Duplicate" xml:space="preserve">
+    <value>நகல்</value>
+  </data>
+  <data name="tsb_Delete" xml:space="preserve">
+    <value>நீக்கு</value>
+  </data>
+  <data name="tsb_AddFromSelection" xml:space="preserve">
+    <value>தேர்ந்தெடுத்த புகைப்படத்திலிருந்து சேர்</value>
+  </data>
+  <data name="mbx_FrmManageFavourites_WarningNameTaken" xml:space="preserve">
+    <value>வேறொரு பிடித்தது ஏற்கனவே இந்தப் பெயரைக் கொண்டுள்ளது.</value>
+  </data>
+  <data name="mbx_FrmManageFavourites_WarningAltitudeInvalid" xml:space="preserve">
+    <value>உயரம் ஓர் எண்ணாக இருக்க வேண்டும்.</value>
+  </data>
+  <data name="mbx_FrmManageFavourites_WarningNoCoordinates" xml:space="preserve">
+    <value>பயன்படுத்த ஒருங்கிணைப்புகள் இல்லை. நிலை உள்ள புகைப்படத்தைத் தேர்ந்தெடுக்கவும்.</value>
+  </data>
+  <data name="mbx_FrmManageFavourites_QuestionAcceptChanges" xml:space="preserve">
+    <value>இந்தப் பிடித்ததின் மாற்றங்களை ஏற்கவா?</value>
+  </data>
+  <data name="mbx_FrmManageFavourites_QuestionDiscardAll" xml:space="preserve">
+    <value>பிடித்தவைகளின் மாற்றங்களைச் சேமிக்காமல் மூடவா?</value>
+  </data>
+  <data name="mbx_FrmManageFavourites_InfoWebNothingFound" xml:space="preserve">
+    <value>இணைய சேவையில் இந்த நிலைக்கான தகவல் இல்லை.</value>
+  </data>
+  <data name="tpg_Keywords" xml:space="preserve">
+    <value>வகைகள்/முக்கிய வார்த்தைகள்</value>
+  </data>
+  <data name="tpg_SourceDescription" xml:space="preserve">
+    <value>மூலம்/விளக்கம்</value>
+  </data>
+  <data name="tpg_Contact" xml:space="preserve">
+    <value>தொடர்பு</value>
+  </data>
+  <data name="lbl_SectionSource" xml:space="preserve">
+    <value>மூலம்</value>
+  </data>
+  <data name="lbl_SectionDescription" xml:space="preserve">
+    <value>விளக்கம்</value>
+  </data>
+  <data name="lbl_Category" xml:space="preserve">
+    <value>வகை</value>
+  </data>
+  <data name="lbl_SupplementalCategories" xml:space="preserve">
+    <value>கூடுதல் வகைகள்</value>
+  </data>
+  <data name="lbl_IPTCKeywords" xml:space="preserve">
+    <value>முக்கிய வார்த்தைகள்</value>
+  </data>
+  <data name="lbl_Artist" xml:space="preserve">
+    <value>கலைஞர்</value>
+  </data>
+  <data name="lbl_CaptionWriter" xml:space="preserve">
+    <value>தலைப்பு எழுதுபவர்</value>
+  </data>
+  <data name="lbl_Source" xml:space="preserve">
+    <value>மூலம்</value>
+  </data>
+  <data name="lbl_Credit" xml:space="preserve">
+    <value>வரவு</value>
+  </data>
+  <data name="lbl_SourceURL" xml:space="preserve">
+    <value>URL</value>
+  </data>
+  <data name="lbl_Copyright" xml:space="preserve">
+    <value>பதிப்புரிமை</value>
+  </data>
+  <data name="lbl_ObjectName" xml:space="preserve">
+    <value>பொருளின் பெயர்</value>
+  </data>
+  <data name="lbl_Headline" xml:space="preserve">
+    <value>தலைப்புச் செய்தி</value>
+  </data>
+  <data name="lbl_Caption" xml:space="preserve">
+    <value>விளக்கக் குறிப்பு</value>
+  </data>
+  <data name="lbl_SpecialInstructions" xml:space="preserve">
+    <value>சிறப்பு அறிவுறுத்தல்கள்</value>
+  </data>
+  <data name="lbl_Byline" xml:space="preserve">
+    <value>பைலைன்</value>
+  </data>
+  <data name="lbl_BylineTitle" xml:space="preserve">
+    <value>பைலைன் தலைப்பு</value>
+  </data>
+  <data name="lbl_CreatorAddress" xml:space="preserve">
+    <value>முகவரி</value>
+  </data>
+  <data name="lbl_CreatorCity" xml:space="preserve">
+    <value>நகரம்</value>
+  </data>
+  <data name="lbl_CreatorPostalCode" xml:space="preserve">
+    <value>அஞ்சல் குறியீடு</value>
+  </data>
+  <data name="lbl_CreatorRegion" xml:space="preserve">
+    <value>மாநிலம்/மாகாணம்</value>
+  </data>
+  <data name="lbl_CreatorCountry" xml:space="preserve">
+    <value>நாடு</value>
+  </data>
+  <data name="lbl_CreatorPhone" xml:space="preserve">
+    <value>தொலைபேசி</value>
+  </data>
+  <data name="lbl_CreatorEmail" xml:space="preserve">
+    <value>மின்னஞ்சல்</value>
+  </data>
+  <data name="lbl_CreatorURL" xml:space="preserve">
+    <value>URL</value>
+  </data>
+  <data name="tmi_FieldMenu_InsertFrom" xml:space="preserve">
+    <value>இதிலிருந்து செருகு</value>
+  </data>
+  <data name="tmi_FieldMenu_CopyTo" xml:space="preserve">
+    <value>இதற்கு நகலெடு</value>
+  </data>
+  <data name="tmi_FieldMenu_CopySelectionToCategories" xml:space="preserve">
+    <value>தேர்வை வகைகளுக்கு நகலெடு</value>
+  </data>
+  <data name="tmi_FieldMenu_CopySelectionToKeywords" xml:space="preserve">
+    <value>தேர்வை முக்கிய வார்த்தைகளுக்கு நகலெடு</value>
+  </data>
+  <data name="tmi_FieldMenu_MostRecentlyUsed" xml:space="preserve">
+    <value>சமீபத்தில் பயன்படுத்திய உருப்படிகள்</value>
+  </data>
+  <data name="tmi_FieldMenu_ForgetRemembered" xml:space="preserve">
+    <value>நினைவில் வைக்கப்பட்ட உருப்படி ஒன்றை மற</value>
+  </data>
+  <data name="lbl_ContactPrefix" xml:space="preserve">
+    <value>தொடர்பு</value>
+  </data>
+  <data name="btn_LoadFromTemplate" xml:space="preserve">
+    <value>வார்ப்புருவிலிருந்து ஏற்று...</value>
+  </data>
+  <data name="btn_LoadFromImage" xml:space="preserve">
+    <value>படத்திலிருந்து ஏற்று...</value>
+  </data>
+  <data name="btn_SaveAsTemplate" xml:space="preserve">
+    <value>வார்ப்புருவாகச் சேமி...</value>
+  </data>
+  <data name="lbl_TemplateName" xml:space="preserve">
+    <value>வார்ப்புரு:</value>
+  </data>
+  <data name="lbl_TemplateInclude" xml:space="preserve">
+    <value>இவற்றைப் பயன்படுத்து:</value>
+  </data>
+  <data name="btn_TemplateDelete" xml:space="preserve">
+    <value>நீக்கு</value>
+  </data>
+  <data name="chk_TemplateGroup_Country" xml:space="preserve">
+    <value>நாடு</value>
+  </data>
+  <data name="chk_TemplateGroup_State" xml:space="preserve">
+    <value>மாநிலம்/மாகாணம்</value>
+  </data>
+  <data name="chk_TemplateGroup_City" xml:space="preserve">
+    <value>நகரம்</value>
+  </data>
+  <data name="chk_TemplateGroup_Sublocation" xml:space="preserve">
+    <value>துணை இருப்பிடம்</value>
+  </data>
+  <data name="chk_TemplateGroup_Position" xml:space="preserve">
+    <value>GPS நிலை</value>
+  </data>
+  <data name="chk_TemplateGroup_Altitude" xml:space="preserve">
+    <value>உயரம்</value>
+  </data>
+  <data name="chk_TemplateGroup_Direction" xml:space="preserve">
+    <value>படத்தின் திசை</value>
+  </data>
+  <data name="chk_TemplateGroup_Destination" xml:space="preserve">
+    <value>இலக்கு</value>
+  </data>
+  <data name="chk_TemplateGroup_TakenDate" xml:space="preserve">
+    <value>எடுக்கப்பட்ட தேதி</value>
+  </data>
+  <data name="chk_TemplateGroup_CreateDate" xml:space="preserve">
+    <value>உருவாக்கிய தேதி</value>
+  </data>
+  <data name="chk_TemplateGroup_OffsetTime" xml:space="preserve">
+    <value>நேர மண்டல ஆஃப்செட்</value>
+  </data>
+  <data name="mbx_FrmEditTemplateDialog_QuestionDeleteTemplate" xml:space="preserve">
+    <value>வார்ப்புரு '{0}' ஐ நீக்கவா?</value>
+  </data>
+  <data name="mbx_FrmEditTemplateDialog_QuestionOverwriteTemplate" xml:space="preserve">
+    <value>'{0}' என்ற வார்ப்புரு ஏற்கனவே உள்ளது. அதை மாற்றவா?</value>
+  </data>
+  <data name="mbx_FrmEditFileData_ErrorTemplateNotSaved" xml:space="preserve">
+    <value>வார்ப்புருவைச் சேமிக்க முடியவில்லை.</value>
+  </data>
+  <data name="mbx_FrmEditFileData_InfoImageHasNothingToLoad" xml:space="preserve">
+    <value>அந்தக் கோப்பில் இந்தப் படிவம் ஏற்றக்கூடியது எதுவும் இல்லை.</value>
+  </data>
+  <data name="lbl_Sexagesimal" xml:space="preserve">
+    <value>அறுபதடிமானம் (Sexagesimal)</value>
+  </data>
+  <data name="lbl_ImageDirection" xml:space="preserve">
+    <value>படத்தின் திசை [°]:</value>
+  </data>
+  <data name="lbl_DestLatitude" xml:space="preserve">
+    <value>இலக்கு அட்சரேகை:</value>
+  </data>
+  <data name="lbl_DestLongitude" xml:space="preserve">
+    <value>இலக்கு தீர்க்கரேகை:</value>
+  </data>
+  <data name="btn_GetAltitudeFromWeb" xml:space="preserve">
+    <value>இணையத்திலிருந்து பெறு</value>
+  </data>
+  <data name="mbx_FrmEditFileData_InfoCoordinatesNeededForAltitude" xml:space="preserve">
+    <value>முதலில் ஓர் அட்சரேகையையும் தீர்க்கரேகையையும் உள்ளிடவும்.</value>
+  </data>
+  <data name="mbx_FrmEditFileData_WarningNoAltitudeFromWeb" xml:space="preserve">
+    <value>இணைய சேவையில் இந்த நிலைக்கான உயரம் இல்லை.</value>
+  </data>
+  <data name="ckb_SyncGeoKeywords" xml:space="preserve">
+    <value>இருப்பிடத்துடன் முக்கிய வார்த்தைகளை ஒத்திசையில் வை (இடப் பெயர்களும் geo: முக்கிய வார்த்தைகளும்)</value>
+  </data>
+  <data name="ckb_ShowChangelogAfterUpdate" xml:space="preserve">
+    <value>புதுப்பித்த பிறகு என்ன மாறியுள்ளது என்பதைக் காட்டு</value>
+  </data>
+  <data name="mbx_Helper_InfoRemoveGeoDataKeywordsRemain" xml:space="preserve">
+    <value>இருப்பிடத் தரவு அகற்றப்பட்டது, ஆனால் உங்கள் முக்கிய வார்த்தைகள் தொடப்படவில்லை: அவற்றிலுள்ள இடப் பெயர்களும் "geo:" முக்கிய வார்த்தைகளும் அப்படியே இருக்கும். இருப்பிட மாற்றங்களை அவை பின்பற்ற வேண்டுமெனில், அமைப்புகளில் "இருப்பிடத்துடன் முக்கிய வார்த்தைகளை ஒத்திசையில் வை" என்பதை இயக்கவும்.</value>
+  </data>
+  <data name="tmi_View_FolderTree" xml:space="preserve">
+    <value>கோப்புறை மரம்</value>
+  </data>
+  <data name="lbl_FolderTree_Title" xml:space="preserve">
+    <value>கோப்புறைகள்</value>
+  </data>
+  <data name="tsb_FolderTree_Favourites" xml:space="preserve">
+    <value>பிடித்த கோப்புறைகள்</value>
+  </data>
+  <data name="tmi_FolderTree_AddCurrent" xml:space="preserve">
+    <value>தற்போதைய கோப்புறையைப் பிடித்தவைகளில் சேர்</value>
+  </data>
+  <data name="tmi_FolderTree_RemoveCurrent" xml:space="preserve">
+    <value>தற்போதைய கோப்புறையைப் பிடித்தவைகளிலிருந்து அகற்று</value>
+  </data>
+  <data name="tmi_FolderTree_NoFavourites" xml:space="preserve">
+    <value>(பிடித்த கோப்புறைகள் இன்னும் இல்லை)</value>
+  </data>
+  <data name="tsb_FolderTree_Refresh" xml:space="preserve">
+    <value>கோப்புறை மரத்தைப் புதுப்பி</value>
+  </data>
+  <data name="tsb_FolderTree_Hide" xml:space="preserve">
+    <value>கோப்புறை மரத்தை மறை (Ctrl+B)</value>
+  </data>
+  <data name="cmi_FolderTree_AddThis" xml:space="preserve">
+    <value>பிடித்தவைகளில் சேர்</value>
+  </data>
+  <data name="cmi_FolderTree_RemoveThis" xml:space="preserve">
+    <value>பிடித்தவைகளிலிருந்து அகற்று</value>
+  </data>
+  <data name="tsb_Donate" xml:space="preserve">
+    <value>BuyMeACoffee (நன்கொடை, உலாவியில் திறக்கும்)</value>
+  </data>
 </root>

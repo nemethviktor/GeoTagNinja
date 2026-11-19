@@ -332,7 +332,7 @@
     <value>Tak</value>
   </data>
   <data name="lbl_ChoiceOfferCount" xml:space="preserve">
-    <value> </value>
+    <value>Pokaż tyle opcji toponimów</value>
   </data>
   <data name="lbl_ChoiceRadius" xml:space="preserve">
     <value>W promieniu [km]</value>
@@ -2002,5 +2002,8 @@ Tak: zmień nazwy pozostałych plików.  Nie: przerwij operację – wszystkie p
   </data>
   <data name="ckb_SyncGeoKeywords" xml:space="preserve">
     <value>Zachowaj słowa kluczowe z lokalizacji (nazwy miejsc i geograficzne słowa kluczowe)</value>
+  </data>
+  <data name="tsb_Donate" xml:space="preserve">
+    <value>BuyMeACoffee (darowizna, otwiera się w przeglądarce)</value>
   </data>
 </root>
