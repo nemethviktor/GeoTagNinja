@@ -2,6 +2,7 @@
 using System;
 using System.Collections.Generic;
 using System.Globalization;
+using System.Linq;
 using static GeoTagNinja.Model.DirectoryElement;
 using static GeoTagNinja.Model.SourcesAndAttributes;
 
@@ -21,8 +22,11 @@ namespace GeoTagNinja.Helpers.Exif;
 ///         shows.
 ///     </para>
 ///     <para>
-///         Only the location is handled here. Other staged changes to a video are not written (see
-///         <see cref="Plan.HasOtherEdits" />), because writing them would claim success for tags ExifTool drops.
+///         Beyond the location, only the XMP tags can be written to a video (title, caption, keywords, place names, rating,
+///         creator and so on): the IPTC and EXIF tags the same attributes also carry are silently dropped by ExifTool for
+///         an MP4/MOV (checked to write and read back with a real clip). Dates are not written yet (a video keeps them as UTC
+///         in the QuickTime atoms; see <see cref="IsXmpWritable" />). Whatever else is staged is not written (see
+///         <see cref="Plan.HasOtherEdits" />), because writing it would claim success for tags ExifTool drops.
 ///     </para>
 /// </remarks>
 internal static class VideoLocationArguments
@@ -39,6 +43,51 @@ internal static class VideoLocationArguments
         ElementAttribute.RemoveAllGPS
     ];
 
+    /// <summary>The attributes that carry a date: not written to a video yet (it needs its own handling of UTC and offsets).</summary>
+    private static readonly HashSet<ElementAttribute> DateAttributes =
+    [
+        ElementAttribute.TakenDate,
+        ElementAttribute.CreateDate
+    ];
+
+    /// <summary>
+    ///     Whether the attribute can be written to a video: it has an XMP tag (the only metadata block ExifTool can put in an
+    ///     MP4/MOV besides the QuickTime atoms), and it is neither the location (written by <see cref="Lines" />) nor a
+    ///     date.
+    /// </summary>
+    internal static bool IsXmpWritable(ElementAttribute attribute)
+    {
+        if (LocationAttributes.Contains(item: attribute) ||
+            DateAttributes.Contains(item: attribute))
+        {
+            return false;
+        }
+
+        try
+        {
+            return GetElementAttributesOut(attributeToFind: attribute)?.Any(predicate: IsXmpTag) == true;
+        }
+        catch (Exception)
+        {
+            // an attribute with no tag mapping at all
+            return false;
+        }
+    }
+
+    /// <summary>Just the XMP tags of an attribute's out-tags: the others are dropped by ExifTool for a video.</summary>
+    internal static List<string> XmpTagsOnly(List<string> tags)
+    {
+        return tags == null
+            ? []
+            : tags.Where(predicate: IsXmpTag)
+                  .ToList();
+    }
+
+    private static bool IsXmpTag(string tag)
+    {
+        return tag.StartsWith(value: "XMP", comparisonType: StringComparison.OrdinalIgnoreCase);
+    }
+
     /// <summary>What to write for one video.</summary>
     internal sealed class Plan
     {
@@ -48,8 +97,14 @@ internal static class VideoLocationArguments
         /// <summary>The video has a staged location edit, which <see cref="Lines" /> writes.</summary>
         internal bool HasLocationEdit => Lines.Count > 0;
 
+        /// <summary>The video has staged edits that can be written as XMP (see <see cref="IsXmpWritable" />).</summary>
+        internal bool HasXmpEdit { get; set; }
+
+        /// <summary>There is something to write to the video.</summary>
+        internal bool HasWritableEdit => HasLocationEdit || HasXmpEdit;
+
         /// <summary>
-        ///     The video has staged edits that are not its location (a date, a place name, keywords...). They are not
+        ///     The video has staged edits that cannot be written to it (a date, an EXIF-only value...). They are not
         ///     written, and the user is told.
         /// </summary>
         internal bool HasOtherEdits { get; set; }
@@ -130,7 +185,15 @@ internal static class VideoLocationArguments
 
             if (!LocationAttributes.Contains(item: attribute))
             {
-                plan.HasOtherEdits = true;
+                if (IsXmpWritable(attribute: attribute))
+                {
+                    plan.HasXmpEdit = true;
+                }
+                else
+                {
+                    plan.HasOtherEdits = true;
+                }
+
                 continue;
             }
 

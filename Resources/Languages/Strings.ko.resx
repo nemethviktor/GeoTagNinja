@@ -2007,13 +2007,13 @@ ArcGIS는 2024년 6월부터 등록 절차를 변경했습니다. [여기](https
     <value>파일 &amp;&amp; 폴더를 분석하는 중입니다. 잠시 기다려 주십시오. </value>
   </data>
   <data name="mbx_Helper_WarningVideoNotWritable" xml:space="preserve">
-    <value>현재는 동영상 파일의 위치만 저장할 수 있습니다. 그 밖의 변경 사항은 저장되지 않았습니다.</value>
+    <value>날짜와 일부 다른 정보는 아직 동영상 파일에 저장할 수 없으므로 해당 변경 사항은 기록되지 않았습니다. 나머지는 모두 저장되었습니다.</value>
   </data>
   <data name="ckb_EnableVideoFiles" xml:space="preserve">
     <value>동영상 파일 표시 (실험적)</value>
   </data>
   <data name="mbx_Helper_WarningVideoExperimental" xml:space="preserve">
-    <value>동영상 지원은 실험적 기능입니다. 동영상 파일은 읽을 수 있으며(촬영 위치와 날짜가 표시됨) 위치는 저장할 수 있지만, 그 밖의 변경 사항은 아직 저장할 수 없습니다. 동영상 파일을 보려면 폴더를 다시 여세요.</value>
+    <value>동영상 지원은 실험적입니다. 동영상 파일은 읽을 수 있으며(촬영 위치와 날짜가 표시됨), 촬영 위치와 설명 정보(제목, 캡션, 키워드, 장소 이름, 평점)는 저장할 수 있지만 날짜는 아직 저장할 수 없습니다. 동영상 파일을 보려면 폴더를 다시 여세요.</value>
   </data>
   <data name="lbl_FfmpegPath" xml:space="preserve">
     <value>ffmpeg 경로 (선택 사항, 동영상 미리 보기용)</value>

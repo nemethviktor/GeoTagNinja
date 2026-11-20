@@ -2066,13 +2066,13 @@ Oui : renommer le reste.  Non : arrêter ; tous les fichiers restent tels qu'ils
     <value>BuyMeACoffee (faire un don, s'ouvre dans le navigateur)</value>
   </data>
   <data name="mbx_Helper_WarningVideoNotWritable" xml:space="preserve">
-    <value>Seule la position des fichiers vidéo peut être enregistrée pour le moment. Les autres modifications n&apos;ont pas été enregistrées.</value>
+    <value>Les dates et certaines autres informations ne peuvent pas encore être enregistrées dans les fichiers vidéo, ces modifications n&apos;ont donc pas été écrites. Le reste a été enregistré.</value>
   </data>
   <data name="ckb_EnableVideoFiles" xml:space="preserve">
     <value>Afficher les fichiers vidéo (expérimental)</value>
   </data>
   <data name="mbx_Helper_WarningVideoExperimental" xml:space="preserve">
-    <value>La prise en charge des vidéos est expérimentale. Les fichiers vidéo peuvent être lus (leur position et leur date sont affichées) et leur position peut être enregistrée, mais les autres modifications ne peuvent pas encore être enregistrées. Rouvrez le dossier pour voir les fichiers vidéo.</value>
+    <value>La prise en charge des vidéos est expérimentale. Les fichiers vidéo peuvent être lus (leur position et leur date sont affichées), et leur position ainsi que leurs informations descriptives (titre, légende, mots-clés, noms de lieux, note) peuvent être enregistrées, mais les dates ne peuvent pas encore l&apos;être. Rouvrez le dossier pour voir les fichiers vidéo.</value>
   </data>
   <data name="lbl_FfmpegPath" xml:space="preserve">
     <value>Chemin vers ffmpeg (facultatif, pour les aperçus vidéo)</value>

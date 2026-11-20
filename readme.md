@@ -59,7 +59,7 @@ There is a "short" (15 mins) demo on [YouTube](https://youtu.be/ulP1ZG7mH-I) if 
 - Batch Rename (`Ctrl+Shift+R`): rename, move or copy many files at once from a pattern (folder name, text, sequence number, dates, metadata, find-and-replace), with presets, a preview and XMP sidecars following along
 - Remove all geodata from files in one go
 - Flat Mode: load all subfolders of the current folder at once
-- Thumbnail View (switch from the `View` menu at any time; resize with `Ctrl` + mouse wheel, the slider or the menu), plus previews for common image types including RAW, HEIC, PNG and WEBP. Video files (MP4, MOV, ...) can be listed, their location and dates read and their location saved with the experimental `Show video files` setting
+- Thumbnail View (switch from the `View` menu at any time; resize with `Ctrl` + mouse wheel, the slider or the menu), plus previews for common image types including RAW, HEIC, PNG and WEBP. Video files (MP4, MOV, ...) can be listed, their location and dates read, and their location and descriptive details (title, caption, keywords, place names...) saved, with the experimental `Show video files` setting
 - Streaming folder load with progress on the taskbar button; loading a folder can be cancelled
 - Dark Mode (including a dark map option) and a choice of map layers
 - Optionally leave a file's modified date untouched when saving (`Settings`), so a photo keeps showing when it was taken rather than when its location was added

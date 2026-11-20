@@ -2007,13 +2007,13 @@ Hata hivyo msimbo unapaswa kuelewa mipangilio mingine. Kumbuka kwamba ikiwa ubao
     <value>BuyMeACoffee (changia, inafungua kivinjari)</value>
   </data>
   <data name="mbx_Helper_WarningVideoNotWritable" xml:space="preserve">
-    <value>Kwa sasa, eneo la faili za video pekee ndilo linaloweza kuhifadhiwa. Mabadiliko mengine kwenye faili hizo hayakuandikwa.</value>
+    <value>Tarehe na baadhi ya maelezo mengine bado haziwezi kuhifadhiwa kwenye faili za video, kwa hivyo mabadiliko hayo hayakuandikwa. Mengine yote yamehifadhiwa.</value>
   </data>
   <data name="ckb_EnableVideoFiles" xml:space="preserve">
     <value>Onyesha faili za video (majaribio)</value>
   </data>
   <data name="mbx_Helper_WarningVideoExperimental" xml:space="preserve">
-    <value>Usaidizi wa video ni wa majaribio. Faili za video zinaweza kusomwa (eneo na tarehe zake huonyeshwa) na eneo lake linaweza kuhifadhiwa, lakini mabadiliko mengine kwenye faili hizo bado hayawezi kuhifadhiwa. Fungua upya folda ili kuona faili za video.</value>
+    <value>Usaidizi wa video ni wa majaribio. Faili za video zinaweza kusomwa (mahali na tarehe zake zinaonyeshwa), na mahali pake pamoja na maelezo ya kufafanua (kichwa, maelezo mafupi, maneno muhimu, majina ya mahali, ukadiriaji) yanaweza kuhifadhiwa, lakini tarehe bado haziwezi kuhifadhiwa. Fungua upya folda ili kuona faili za video.</value>
   </data>
   <data name="lbl_FfmpegPath" xml:space="preserve">
     <value>Njia ya ffmpeg (si lazima, kwa hakiki za video)</value>

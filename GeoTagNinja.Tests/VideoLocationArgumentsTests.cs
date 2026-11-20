@@ -225,4 +225,76 @@ public class VideoLocationArgumentsTests
         Assert.That(actual: plan.HasLocationEdit, expression: Is.False);
         Assert.That(actual: plan.HasOtherEdits, expression: Is.False);
     }
+
+    /// <summary>These carry an XMP tag, so they can be written to a video (checked with a real MP4).</summary>
+    [TestCase(ElementAttribute.Caption)]
+    [TestCase(ElementAttribute.ObjectName)]
+    [TestCase(ElementAttribute.Headline)]
+    [TestCase(ElementAttribute.Copyright)]
+    [TestCase(ElementAttribute.Byline)]
+    [TestCase(ElementAttribute.City)]
+    [TestCase(ElementAttribute.State)]
+    [TestCase(ElementAttribute.Country)]
+    [TestCase(ElementAttribute.CountryCode)]
+    [TestCase(ElementAttribute.Sublocation)]
+    [TestCase(ElementAttribute.Rating)]
+    [TestCase(ElementAttribute.IPTCKeywords)]
+    [TestCase(ElementAttribute.XMLSubjects)]
+    [TestCase(ElementAttribute.CreatorEmail)]
+    public void AttributesWithAnXmpTag_CanBeWrittenToAVideo(ElementAttribute attribute)
+    {
+        Assert.That(actual: VideoLocationArguments.IsXmpWritable(attribute: attribute), expression: Is.True);
+    }
+
+    /// <summary>
+    ///     The location has its own writer, the dates are left for later, and the rest have no XMP tag at all (a
+    ///     video would silently drop what they write).
+    /// </summary>
+    [TestCase(ElementAttribute.GPSLatitude)]
+    [TestCase(ElementAttribute.GPSLongitude)]
+    [TestCase(ElementAttribute.GPSAltitude)]
+    [TestCase(ElementAttribute.RemoveAllGPS)]
+    [TestCase(ElementAttribute.TakenDate)]
+    [TestCase(ElementAttribute.CreateDate)]
+    [TestCase(ElementAttribute.GPSSpeed)]
+    [TestCase(ElementAttribute.Make)]
+    public void LocationDatesAndAttributesWithoutAnXmpTag_AreNotWrittenAsXmp(ElementAttribute attribute)
+    {
+        Assert.That(actual: VideoLocationArguments.IsXmpWritable(attribute: attribute), expression: Is.False);
+    }
+
+    [Test]
+    public void XmpTagsOnly_DropsTheTagsAVideoCannotHold()
+    {
+        var kept = VideoLocationArguments.XmpTagsOnly(tags: ["IPTC:Keywords", "XMP-dc:Subject", "EXIF:Copyright", "xmp-dc:Rights", "City"]);
+
+        Assert.That(actual: kept, expression: Is.EqualTo(expected: new[] { "XMP-dc:Subject", "xmp-dc:Rights" }));
+        Assert.That(actual: VideoLocationArguments.XmpTagsOnly(tags: null), expression: Is.Empty);
+    }
+
+    [Test]
+    public void StagedCaption_IsPlannedAsAnXmpEdit()
+    {
+        DirectoryElement video = NewVideo();
+        Set(element: video, attribute: ElementAttribute.Caption, value: "A walk by the river", version: AttributeVersion.Stage3ReadyToWrite);
+
+        VideoLocationArguments.Plan plan = VideoLocationArguments.PlanFor(element: video, useImperial: false);
+
+        Assert.That(actual: plan.HasXmpEdit, expression: Is.True);
+        Assert.That(actual: plan.HasWritableEdit, expression: Is.True);
+        Assert.That(actual: plan.HasLocationEdit, expression: Is.False);
+        Assert.That(actual: plan.HasOtherEdits, expression: Is.False);
+    }
+
+    [Test]
+    public void StagedSpeed_HasNowhereToGoOnAVideo()
+    {
+        DirectoryElement video = NewVideo();
+        Set(element: video, attribute: ElementAttribute.GPSSpeed, value: 12.5, version: AttributeVersion.Stage3ReadyToWrite);
+
+        VideoLocationArguments.Plan plan = VideoLocationArguments.PlanFor(element: video, useImperial: false);
+
+        Assert.That(actual: plan.HasWritableEdit, expression: Is.False);
+        Assert.That(actual: plan.HasOtherEdits, expression: Is.True);
+    }
 }

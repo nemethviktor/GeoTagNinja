@@ -2007,13 +2007,13 @@ Sí: renombrar el resto.  No: detener; todos los archivos siguen como estaban.</
     <value>BuyMeACoffee (donar, se abre en el navegador)</value>
   </data>
   <data name="mbx_Helper_WarningVideoNotWritable" xml:space="preserve">
-    <value>Por ahora solo se puede guardar la ubicación de los archivos de vídeo. Los demás cambios en ellos no se guardaron.</value>
+    <value>Las fechas y algunos otros datos todavía no se pueden guardar en los archivos de vídeo, así que esos cambios no se escribieron. Todo lo demás se guardó.</value>
   </data>
   <data name="ckb_EnableVideoFiles" xml:space="preserve">
     <value>Mostrar archivos de vídeo (experimental)</value>
   </data>
   <data name="mbx_Helper_WarningVideoExperimental" xml:space="preserve">
-    <value>La compatibilidad con vídeo es experimental. Los archivos de vídeo se pueden leer (se muestran su ubicación y su fecha) y su ubicación se puede guardar, pero aún no se pueden guardar otros cambios en ellos. Vuelva a abrir la carpeta para ver los archivos de vídeo.</value>
+    <value>La compatibilidad con vídeo es experimental. Los archivos de vídeo se pueden leer (se muestran su ubicación y su fecha), y se pueden guardar su ubicación y los datos descriptivos (título, descripción, palabras clave, nombres de lugares, valoración), pero todavía no se pueden guardar las fechas. Vuelva a abrir la carpeta para ver los archivos de vídeo.</value>
   </data>
   <data name="lbl_FfmpegPath" xml:space="preserve">
     <value>Ruta a ffmpeg (opcional, para vistas previas de vídeo)</value>

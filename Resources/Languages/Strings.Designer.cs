@@ -3484,7 +3484,7 @@ namespace GeoTagNinja.Resources.Languages {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Video support is experimental. Video files can be read (their location and date are shown) and their location can be saved, but other changes to them can&apos;t be saved yet. Reopen the folder to see the video files..
+        ///   Looks up a localized string similar to Video support is experimental. Video files can be read (their location and date are shown), and their location and descriptive details (title, caption, keywords, place names, rating) can be saved, but dates can&apos;t be saved yet. Reopen the folder to see the video files..
         /// </summary>
         public static string mbx_Helper_WarningVideoExperimental {
             get {
@@ -3493,7 +3493,7 @@ namespace GeoTagNinja.Resources.Languages {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Only the location of video files can be saved for now. Other changes to them were not written..
+        ///   Looks up a localized string similar to Dates and some other details can&apos;t be saved to video files yet, so those changes were not written. Everything else was saved..
         /// </summary>
         public static string mbx_Helper_WarningVideoNotWritable {
             get {

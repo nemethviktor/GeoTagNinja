@@ -73,9 +73,9 @@ internal static class WriteSaveToFile
                             skippedVideoFile = true;
                         }
 
-                        if (!videoPlan.HasLocationEdit)
+                        if (!videoPlan.HasWritableEdit)
                         {
-                            Log.Warn(message: $"{fileNameWithPath} - nothing writable staged for this video (only its location can be written). Skipped.");
+                            Log.Warn(message: $"{fileNameWithPath} - nothing writable staged for this video (only its location and XMP metadata can be written). Skipped.");
                             skippedVideoFile = true;
                             continue;
                         }
@@ -253,7 +253,7 @@ internal static class WriteSaveToFile
                                     exifArgsForSidecar: ref exifArgsForSidecar);
                             }
                         }
-                        else
+
                         foreach (DataRow dataRow in dtFileWriteQueue.Rows)
                         {
                             string settingId = dataRow[columnName: "settingId"]
@@ -277,6 +277,18 @@ internal static class WriteSaveToFile
                             catch
                             {
                                 // ignore.
+                            }
+
+                            // A video: its location is written above; of the rest only what can go into its XMP (see
+                            // VideoLocationArguments), and only those tags, as ExifTool drops the IPTC/EXIF ones for a video.
+                            if (videoLocationLines != null)
+                            {
+                                if (!VideoLocationArguments.IsXmpWritable(attribute: attribute))
+                                {
+                                    continue;
+                                }
+
+                                orderedTags = VideoLocationArguments.XmpTagsOnly(tags: orderedTags);
                             }
 
                             Log.Trace(message: $"{fileNameWithPath} - {settingId}: {settingValue}");

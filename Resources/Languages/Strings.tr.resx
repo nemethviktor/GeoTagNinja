@@ -2007,13 +2007,13 @@ Bununla birlikte kod diğer düzenleri de anlayabilmelidir. Panoda yukarıdakile
     <value>BuyMeACoffee (bağış yap, tarayıcıda açılır)</value>
   </data>
   <data name="mbx_Helper_WarningVideoNotWritable" xml:space="preserve">
-    <value>Şimdilik yalnızca video dosyalarının konumu kaydedilebilir. Bunlardaki diğer değişiklikler yazılmadı.</value>
+    <value>Tarihler ve diğer bazı ayrıntılar henüz video dosyalarına kaydedilemediği için bu değişiklikler yazılmadı. Diğer her şey kaydedildi.</value>
   </data>
   <data name="ckb_EnableVideoFiles" xml:space="preserve">
     <value>Video dosyalarını göster (deneysel)</value>
   </data>
   <data name="mbx_Helper_WarningVideoExperimental" xml:space="preserve">
-    <value>Video desteği deneyseldir. Video dosyaları okunabilir (konumları ve tarihleri gösterilir) ve konumları kaydedilebilir, ancak bunlardaki diğer değişiklikler henüz kaydedilemez. Video dosyalarını görmek için klasörü yeniden açın.</value>
+    <value>Video desteği deneyseldir. Video dosyaları okunabilir (konumları ve tarihleri gösterilir), konumları ve açıklayıcı bilgileri (başlık, açıklama, anahtar kelimeler, yer adları, derecelendirme) kaydedilebilir, ancak tarihler henüz kaydedilemez. Video dosyalarını görmek için klasörü yeniden açın.</value>
   </data>
   <data name="lbl_FfmpegPath" xml:space="preserve">
     <value>ffmpeg yolu (isteğe bağlı, video önizlemeleri için)</value>

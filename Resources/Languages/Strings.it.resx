@@ -2007,13 +2007,13 @@ Detto questo, il codice _dovrebbe_ essere in grado di interpretare anche altri f
     <value>Analisi di file &amp;&amp; cartelle in corso, attendere. </value>
   </data>
   <data name="mbx_Helper_WarningVideoNotWritable" xml:space="preserve">
-    <value>Per ora si può salvare solo la posizione dei file video. Le altre modifiche non sono state salvate.</value>
+    <value>Date e alcuni altri dettagli non possono ancora essere salvati nei file video, quindi queste modifiche non sono state scritte. Tutto il resto è stato salvato.</value>
   </data>
   <data name="ckb_EnableVideoFiles" xml:space="preserve">
     <value>Mostra file video (sperimentale)</value>
   </data>
   <data name="mbx_Helper_WarningVideoExperimental" xml:space="preserve">
-    <value>Il supporto video è sperimentale. I file video possono essere letti (ne vengono mostrati la posizione e la data) e la loro posizione può essere salvata, ma per ora non è possibile salvare altre modifiche. Riapri la cartella per vedere i file video.</value>
+    <value>Il supporto video è sperimentale. I file video possono essere letti (ne vengono mostrate la posizione e la data), e la posizione e i dettagli descrittivi (titolo, didascalia, parole chiave, nomi di luoghi, valutazione) possono essere salvati, ma le date non possono ancora essere salvate. Riapri la cartella per vedere i file video.</value>
   </data>
   <data name="lbl_FfmpegPath" xml:space="preserve">
     <value>Percorso di ffmpeg (facoltativo, per le anteprime video)</value>

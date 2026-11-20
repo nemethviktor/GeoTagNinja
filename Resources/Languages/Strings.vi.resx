@@ -2007,13 +2007,13 @@ Dù vậy mã _nên_ có thể đọc được các định dạng khác. Lưu �
     <value>BuyMeACoffee (ủng hộ, mở trong trình duyệt)</value>
   </data>
   <data name="mbx_Helper_WarningVideoNotWritable" xml:space="preserve">
-    <value>Hiện chỉ có thể lưu vị trí của tệp video. Các thay đổi khác đối với tệp này chưa được ghi.</value>
+    <value>Ngày và một số thông tin khác hiện chưa thể lưu vào tệp video, nên các thay đổi đó chưa được ghi. Mọi thứ còn lại đã được lưu.</value>
   </data>
   <data name="ckb_EnableVideoFiles" xml:space="preserve">
     <value>Hiển thị tệp video (thử nghiệm)</value>
   </data>
   <data name="mbx_Helper_WarningVideoExperimental" xml:space="preserve">
-    <value>Hỗ trợ video đang ở giai đoạn thử nghiệm. Có thể đọc các tệp video (hiển thị vị trí và ngày) và lưu vị trí của chúng, nhưng các thay đổi khác vẫn chưa thể lưu. Hãy mở lại thư mục để xem các tệp video.</value>
+    <value>Hỗ trợ video đang ở giai đoạn thử nghiệm. Có thể đọc các tệp video (hiển thị vị trí và ngày của chúng), và có thể lưu vị trí cùng thông tin mô tả (tiêu đề, chú thích, từ khóa, tên địa điểm, xếp hạng), nhưng hiện chưa thể lưu ngày. Hãy mở lại thư mục để xem các tệp video.</value>
   </data>
   <data name="lbl_FfmpegPath" xml:space="preserve">
     <value>Đường dẫn tới ffmpeg (tùy chọn, để xem trước video)</value>

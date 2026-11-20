@@ -2007,13 +2007,13 @@ Meski demikian, kode ini _seharusnya_ dapat memahami format lain. Perhatikan bah
     <value>BuyMeACoffee (donasi, dibuka di browser)</value>
   </data>
   <data name="mbx_Helper_WarningVideoNotWritable" xml:space="preserve">
-    <value>Saat ini hanya lokasi file video yang dapat disimpan. Perubahan lain pada file tersebut tidak disimpan.</value>
+    <value>Tanggal dan beberapa detail lainnya belum dapat disimpan ke file video, sehingga perubahan tersebut tidak ditulis. Semua yang lain telah disimpan.</value>
   </data>
   <data name="ckb_EnableVideoFiles" xml:space="preserve">
     <value>Tampilkan file video (eksperimental)</value>
   </data>
   <data name="mbx_Helper_WarningVideoExperimental" xml:space="preserve">
-    <value>Dukungan video bersifat eksperimental. File video dapat dibaca (lokasi dan tanggalnya ditampilkan) dan lokasinya dapat disimpan, tetapi perubahan lain pada file tersebut belum dapat disimpan. Buka kembali folder untuk melihat file video.</value>
+    <value>Dukungan video bersifat eksperimental. File video dapat dibaca (lokasi dan tanggalnya ditampilkan), dan lokasi serta detail deskriptifnya (judul, keterangan, kata kunci, nama tempat, peringkat) dapat disimpan, tetapi tanggal belum dapat disimpan. Buka kembali folder untuk melihat file video.</value>
   </data>
   <data name="lbl_FfmpegPath" xml:space="preserve">
     <value>Jalur ke ffmpeg (opsional, untuk pratinjau video)</value>
