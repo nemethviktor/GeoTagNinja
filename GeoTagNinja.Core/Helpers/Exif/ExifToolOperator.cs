@@ -31,18 +31,62 @@ internal static class ExifToolOperator
     private static int _exifInvokeCounter;
 
     /// <summary>
+    ///     When a write run is collecting missing files (see the <c>missingFiles</c> parameter of
+    ///     <see cref="RunExifTool" />), recognises ExifTool's "File not found" line and its "N files weren't updated due
+    ///     to errors" summary. The path from the former is added to <paramref name="missingFiles" />.
+    /// </summary>
+    /// <returns>True if the line is one of those two and so must not be shown to the user.</returns>
+    private static bool TryCaptureMissingFile(string line,
+                                              ISet<string> missingFiles)
+    {
+        if (missingFiles == null || string.IsNullOrEmpty(value: line))
+        {
+            return false;
+        }
+
+        const string notFoundMarker = "File not found - ";
+        int markerIndex = line.IndexOf(value: notFoundMarker, comparisonType: StringComparison.OrdinalIgnoreCase);
+        if (markerIndex >= 0)
+        {
+            lock (missingFiles)
+            {
+                _ = missingFiles.Add(item: NormaliseArgPath(path: line.Substring(startIndex: markerIndex + notFoundMarker.Length)));
+            }
+
+            return true;
+        }
+
+        // the summary ExifTool prints after the failed file; it adds nothing the retry does not already handle
+        return line.IndexOf(value: "due to errors", comparisonType: StringComparison.OrdinalIgnoreCase) >= 0 &&
+               line.IndexOf(value: "weren't update", comparisonType: StringComparison.OrdinalIgnoreCase) >= 0;
+    }
+
+    /// <summary>
+    ///     ExifTool reports paths with forward slashes; the argfile has them as Windows paths. Makes them comparable.
+    /// </summary>
+    internal static string NormaliseArgPath(string path)
+    {
+        return path.Trim().Replace(oldChar: '/', newChar: '\\');
+    }
+
+    /// <summary>
     ///     This is a unified method for calling ExifTool. Any special "dealings" are done inside the message handling.
     ///     (possibly the wrong spot to do it)
     /// </summary>
     /// <param name="exiftoolCmd">Variables that need to be passed to ET</param>
-        /// <param name="initiator">String value of "who called it". </param>
+    /// <param name="initiator">String value of "who called it". </param>
     /// <param name="processOriginalFile"></param>
     /// <param name="writeXmpSideCar"></param>
+    /// <param name="missingFiles">
+    ///     Write runs only. When not null, a file ExifTool reports as "not found" is added here (as a normalised path)
+    ///     instead of being shown to the user, so the caller can retry it. Null shows every message as before.
+    /// </param>
     /// <returns>Empty Task</returns>
     internal static async Task RunExifTool(string exiftoolCmd,
                                            ExifToolInititators initiator,
                                            bool processOriginalFile = false,
-                                           bool writeXmpSideCar = false)
+                                           bool writeXmpSideCar = false,
+                                           ISet<string> missingFiles = null)
     {
         int lviIndex = 0;
         _exifInvokeCounter += 1;
@@ -79,6 +123,11 @@ internal static class ExifToolOperator
                     {
                         if (!string.IsNullOrEmpty(value: data.Data))
                         {
+                            if (TryCaptureMissingFile(line: data.Data, missingFiles: missingFiles))
+                            {
+                                return;
+                            }
+
                             if (data.Data.Contains(value: "="))
                             {
                                 string exifToolLineWithoutEqualSigns =
@@ -218,6 +267,11 @@ internal static class ExifToolOperator
                     {
                         if (!string.IsNullOrEmpty(value: data.Data))
                         {
+                            if (TryCaptureMissingFile(line: data.Data, missingFiles: missingFiles))
+                            {
+                                return;
+                            }
+
                             string dataData = data.Data;
                             bool hideWarning = ignoreExifToolWarningsList.Any(predicate: s =>
                                 dataData.IndexOf(value: s, comparisonType: StringComparison.OrdinalIgnoreCase) >= 0);

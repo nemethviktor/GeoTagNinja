@@ -595,11 +595,10 @@ internal static class WriteSaveToFile
             Log.Info(message: "Starting ExifTool.");
             ///////////////
 
-            await ExifToolOperator.RunExifTool(exiftoolCmd: exiftoolCmd,
-                                                         initiator: ExifToolInititators.ExifWriteExifToFile,
-                                                         processOriginalFile: processOriginalFile,
-                                                         writeXmpSideCar: writeXMPSideCar
-            );
+            await RunWriteWithRetry(argsFile: argsFile,
+                                    exiftoolCmd: exiftoolCmd,
+                                    processOriginalFile: processOriginalFile,
+                                    writeXMPSideCar: writeXMPSideCar);
         }
         else if (!queueWasEmpty)
         {
@@ -636,6 +635,125 @@ internal static class WriteSaveToFile
         UiServices.SetTaskbarProgress(state: UiTaskbarProgress.NoProgress);
         UiServices.SetStatusText(text: $"{HelperControlAndMessageBoxHandling.ReturnControlText("Generic_Ready", HelperControlAndMessageBoxHandling.FakeControlTypes.Generic)}.");
         FileLocking.FilesAreBeingSaved = false;
+    }
+
+    private const int MaxQuietRetryPasses = 20;
+    private const int MaxPassesWithoutProgress = 3;
+    private const int RetryDelayMilliseconds = 1000;
+
+    /// <summary>
+    ///     Runs the write argfile through ExifTool. Cloud-backed folders (Proton Drive, #237) can make files vanish
+    ///     for a moment after a neighbour was written, so ExifTool answers "File not found" for files that exist and
+    ///     only about one file per run gets saved. The files reported missing are therefore retried quietly, after a
+    ///     short pause, for as long as each pass makes progress. Whatever is still failing then gets a final run that
+    ///     shows ExifTool's messages as usual, so a genuinely missing file is still reported (just a few seconds later).
+    /// </summary>
+    private static async Task RunWriteWithRetry(string argsFile,
+                                                string exiftoolCmd,
+                                                bool processOriginalFile,
+                                                bool writeXMPSideCar)
+    {
+        List<List<string>> blocks = ReadArgBlocks(argsFile: argsFile);
+        HashSet<string> missingFiles = new(comparer: StringComparer.OrdinalIgnoreCase);
+        int passesWithoutProgress = 0;
+        int previousMissingCount = int.MaxValue;
+
+        for (int pass = 0; pass < MaxQuietRetryPasses; pass++)
+        {
+            missingFiles.Clear();
+            await ExifToolOperator.RunExifTool(exiftoolCmd: exiftoolCmd,
+                                               initiator: ExifToolInititators.ExifWriteExifToFile,
+                                               processOriginalFile: processOriginalFile,
+                                               writeXmpSideCar: writeXMPSideCar,
+                                               missingFiles: missingFiles);
+
+            if (missingFiles.Count == 0)
+            {
+                return;
+            }
+
+            passesWithoutProgress = missingFiles.Count < previousMissingCount ? 0 : passesWithoutProgress + 1;
+            previousMissingCount = missingFiles.Count;
+            Log.Info(message: $"Pass {pass + 1}: {missingFiles.Count} file(s) reported as not found ({string.Join(separator: ", ", values: missingFiles)}).");
+
+            if (passesWithoutProgress >= MaxPassesWithoutProgress)
+            {
+                break;
+            }
+
+            // keep only the blocks of the files that failed
+            blocks = blocks.Where(predicate: block => missingFiles.Contains(item: ExifToolOperator.NormaliseArgPath(path: block[index: 0])))
+                           .ToList();
+            if (blocks.Count == 0)
+            {
+                // ExifTool named something that is not one of ours; nothing to retry, so don't hide it.
+                break;
+            }
+
+            WriteArgBlocks(argsFile: argsFile, blocks: blocks);
+            await Task.Delay(millisecondsDelay: RetryDelayMilliseconds);
+        }
+
+        // Last go, loud: shows the user whatever still cannot be written.
+        if (missingFiles.Count > 0)
+        {
+            List<List<string>> remaining = blocks.Where(predicate: block => missingFiles.Contains(item: ExifToolOperator.NormaliseArgPath(path: block[index: 0])))
+                                                 .ToList();
+            if (remaining.Count > 0)
+            {
+                WriteArgBlocks(argsFile: argsFile, blocks: remaining);
+            }
+
+            await ExifToolOperator.RunExifTool(exiftoolCmd: exiftoolCmd,
+                                               initiator: ExifToolInititators.ExifWriteExifToFile,
+                                               processOriginalFile: processOriginalFile,
+                                               writeXmpSideCar: writeXMPSideCar);
+        }
+    }
+
+    /// <summary>
+    ///     Splits the argfile into one block per ExifTool command (a block ends at its "-execute" line). The first line
+    ///     of a block is the file path it applies to.
+    /// </summary>
+    private static List<List<string>> ReadArgBlocks(string argsFile)
+    {
+        List<List<string>> blocks = [];
+        List<string> current = [];
+        foreach (string line in File.ReadAllLines(path: argsFile, encoding: Encoding.UTF8))
+        {
+            if (line == "-execute")
+            {
+                if (current.Count > 0)
+                {
+                    blocks.Add(item: current);
+                }
+
+                current = [];
+            }
+            else if (line.Length > 0)
+            {
+                current.Add(item: line);
+            }
+        }
+
+        return blocks;
+    }
+
+    private static void WriteArgBlocks(string argsFile,
+                                       List<List<string>> blocks)
+    {
+        StringBuilder sb = new();
+        foreach (List<string> block in blocks)
+        {
+            foreach (string line in block)
+            {
+                _ = sb.Append(value: line).Append(value: Environment.NewLine);
+            }
+
+            _ = sb.Append(value: "-execute").Append(value: Environment.NewLine);
+        }
+
+        File.WriteAllText(path: argsFile, contents: sb.ToString(), encoding: Encoding.UTF8);
     }
 
     /// <summary>
