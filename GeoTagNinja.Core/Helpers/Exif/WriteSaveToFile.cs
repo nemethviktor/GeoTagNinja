@@ -60,14 +60,27 @@ internal static class WriteSaveToFile
                 string folderNameToWrite = Path.GetDirectoryName(path: dirElemFileToModify.FileNameWithPath);
                 if (File.Exists(path: fileNameWithPath))
                 {
-                    // Video is read-only for now (see SupportedFileExtensions.IsVideoFile): ExifTool would drop the
-                    // EXIF/GPS tags this method writes and still report success, so the file is skipped and the user
-                    // told. Its pending edits stay staged, and the other files in the batch are written as usual.
+                    // A video has no EXIF block: ExifTool drops the GPS tags written for photos and still reports
+                    // success. Only its location is written, as the QuickTime location atoms players read
+                    // (VideoLocationArguments); other staged changes to it are not written and the user is told. A video
+                    // with nothing to write is skipped before any argument is built, and its edits stay staged.
+                    List<string> videoLocationLines = null;
                     if (SupportedFileExtensions.IsVideoFile(fileNameOrExtension: fileNameWithoutPath))
                     {
-                        Log.Warn(message: $"{fileNameWithPath} - video files cannot be written yet. Skipped.");
-                        skippedVideoFile = true;
-                        continue;
+                        VideoLocationArguments.Plan videoPlan = VideoLocationArguments.PlanFor(element: dirElemFileToModify, useImperial: HelperVariables.UserSettingUseImperial);
+                        if (videoPlan.HasOtherEdits)
+                        {
+                            skippedVideoFile = true;
+                        }
+
+                        if (!videoPlan.HasLocationEdit)
+                        {
+                            Log.Warn(message: $"{fileNameWithPath} - nothing writable staged for this video (only its location can be written). Skipped.");
+                            skippedVideoFile = true;
+                            continue;
+                        }
+
+                        videoLocationLines = videoPlan.Lines;
                     }
 
                     exifArgsForOriginalFile = "";
@@ -144,11 +157,12 @@ internal static class WriteSaveToFile
                             exifArgsForSidecar: ref exifArgsForSidecar);
                     }
 
-                    // this is re issue #159 and blocking certain warnings from cropping up
-                    // -api
-                    UpdateArgsFile(argfileToUpdate: ArgfileToUpdate.Orig, whatText: "-api",
-                        exifArgsForOriginalFile: ref exifArgsForOriginalFile,
-                        exifArgsForSidecar: ref exifArgsForSidecar);
+                    // (No "-api" line here. #159 added "-api" followed by a "NoWarning=(...)" line to hide harmless ExifTool
+                    // warnings; #165 moved that filtering to the app (ExifToolOperator.ignoreExifToolWarningsList) and deleted the
+                    // second line but left the first. A bare "-api" makes ExifTool take the NEXT argument as an API option name
+                    // and drop it, so the first tag line of every write was lost: masked for a photo (the first line is a GPS
+                    // latitude that is written again under another name), but a video's location would lose one of its two
+                    // atoms.)
 
                     UpdateArgsFile(argfileToUpdate: ArgfileToUpdate.SideCar, whatText: Path.Combine(
                             path1: folderNameToWrite, path2:
@@ -230,6 +244,16 @@ internal static class WriteSaveToFile
                         bool deleteTagAlreadyAdded = false;
 
                         // add tags to argsFile
+                        if (videoLocationLines != null)
+                        {
+                            foreach (string videoLine in videoLocationLines)
+                            {
+                                UpdateArgsFile(argfileToUpdate: ArgfileToUpdate.Orig, whatText: videoLine,
+                                    exifArgsForOriginalFile: ref exifArgsForOriginalFile,
+                                    exifArgsForSidecar: ref exifArgsForSidecar);
+                            }
+                        }
+                        else
                         foreach (DataRow dataRow in dtFileWriteQueue.Rows)
                         {
                             string settingId = dataRow[columnName: "settingId"]

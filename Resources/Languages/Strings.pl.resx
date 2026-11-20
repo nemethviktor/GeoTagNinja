@@ -2007,13 +2007,13 @@ Tak: zmień nazwy pozostałych plików.  Nie: przerwij operację – wszystkie p
     <value>Postaw mi kawę (darowizna, otwiera przeglądarkę)</value>
   </data>
   <data name="mbx_Helper_WarningVideoNotWritable" xml:space="preserve">
-    <value>Pliki wideo można odczytać, ale nie można ich jeszcze zapisywać, dlatego wprowadzone w nich zmiany nie zostały zapisane. Pozostałe pliki z tego samego zapisu zostały zapisane jak zwykle.</value>
+    <value>Na razie można zapisać tylko lokalizację plików wideo. Pozostałe zmiany w nich nie zostały zapisane.</value>
   </data>
   <data name="ckb_EnableVideoFiles" xml:space="preserve">
     <value>Pokaż pliki wideo (eksperymentalne)</value>
   </data>
   <data name="mbx_Helper_WarningVideoExperimental" xml:space="preserve">
-    <value>Obsługa wideo jest eksperymentalna. Pliki wideo można odczytać (wyświetlane są ich lokalizacja i data), ale zmian w nich na razie nie można zapisać. Aby zobaczyć pliki wideo, otwórz ponownie folder.</value>
+    <value>Obsługa wideo jest eksperymentalna. Pliki wideo można odczytać (wyświetlane są ich lokalizacja i data), a lokalizację można zapisać, ale inne zmiany nie mogą być jeszcze zapisane. Otwórz ponownie folder, aby zobaczyć pliki wideo.</value>
   </data>
   <data name="lbl_FfmpegPath" xml:space="preserve">
     <value>Ścieżka do ffmpeg (opcjonalnie, dla podglądów wideo)</value>

@@ -2007,13 +2007,13 @@ Dito isso, o código _deveria_ conseguir interpretar outros formatos. Observe qu
     <value>BuyMeACoffee (doar, abre no navegador)</value>
   </data>
   <data name="mbx_Helper_WarningVideoNotWritable" xml:space="preserve">
-    <value>Arquivos de vídeo podem ser lidos, mas ainda não podem ser salvos, por isso as alterações feitas neles não foram gravadas. Os outros arquivos do mesmo salvamento foram gravados normalmente.</value>
+    <value>Por enquanto, apenas a localização dos arquivos de vídeo pode ser salva. As outras alterações não foram gravadas.</value>
   </data>
   <data name="ckb_EnableVideoFiles" xml:space="preserve">
     <value>Mostrar arquivos de vídeo (experimental)</value>
   </data>
   <data name="mbx_Helper_WarningVideoExperimental" xml:space="preserve">
-    <value>O suporte a vídeo é experimental. Arquivos de vídeo podem ser lidos (o local e a data são exibidos), mas as alterações neles ainda não podem ser salvas. Reabra a pasta para ver os arquivos de vídeo.</value>
+    <value>O suporte a vídeos é experimental. Os arquivos de vídeo podem ser lidos (a localização e a data são exibidas) e a localização deles pode ser salva, mas outras alterações ainda não podem ser salvas. Reabra a pasta para ver os arquivos de vídeo.</value>
   </data>
   <data name="lbl_FfmpegPath" xml:space="preserve">
     <value>Caminho para o ffmpeg (opcional, para visualizações de vídeo)</value>

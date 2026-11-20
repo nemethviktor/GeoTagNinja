@@ -2007,13 +2007,13 @@ Ezzel együtt a kód _képes_ más elrendezéseket is értelmezni. Ha a vágóla
     <value>BuyMeACoffee (adományozás, böngészőben nyílik meg)</value>
   </data>
   <data name="mbx_Helper_WarningVideoNotWritable" xml:space="preserve">
-    <value>A videófájlok egyelőre csak olvashatók, mentésük még nem lehetséges, ezért a rajtuk végzett módosítások nem kerültek mentésre. Az ugyanabban a mentésben szereplő többi fájl a szokásos módon mentésre került.</value>
+    <value>Egyelőre csak a videofájlok helye menthető. Egyéb módosításaik nem lettek mentve.</value>
   </data>
   <data name="ckb_EnableVideoFiles" xml:space="preserve">
     <value>Videofájlok megjelenítése (kísérleti)</value>
   </data>
   <data name="mbx_Helper_WarningVideoExperimental" xml:space="preserve">
-    <value>A videótámogatás kísérleti jellegű. A videofájlok olvashatók (megjelenik a helyük és a dátumuk), de a rajtuk végzett módosításokat még nem lehet menteni. A videofájlok megtekintéséhez nyissa meg újra a mappát.</value>
+    <value>A videótámogatás kísérleti jellegű. A videofájlok beolvashatók (megjelenik a helyük és a dátumuk), és a helyük menthető, de egyéb módosításaikat egyelőre nem lehet menteni. A videofájlok megtekintéséhez nyissa meg újra a mappát.</value>
   </data>
   <data name="lbl_FfmpegPath" xml:space="preserve">
     <value>ffmpeg elérési útja (opcionális, videó előnézetekhez)</value>

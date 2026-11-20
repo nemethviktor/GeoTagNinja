@@ -18,9 +18,9 @@ internal static class SupportedFileExtensions
     {
         string[] result =
         {
-            "360	GoPro 360 video (MP4-based, read-only for now)",
-            "3g2	3GPP2 video (QuickTime-based, read-only for now)",
-            "3gp	3GPP video (QuickTime-based, read-only for now)",
+            "360	GoPro 360 video (MP4-based, experimental)",
+            "3g2	3GPP2 video (QuickTime-based, experimental)",
+            "3gp	3GPP video (QuickTime-based, experimental)",
             "arq	Sony Alpha Pixel-Shift RAW (TIFF-based)",
             "arw	Sony Alpha RAW (TIFF-based)",
             "avif	AV1 Image File Format (QuickTime-based)",
@@ -49,13 +49,13 @@ internal static class SupportedFileExtensions
             "jpx	JPEG 2000 image [Compound/Extended]",
             "jxl	JPEG XL (codestream and ISO BMFF)",
             "jxr	Windows HD Photo / Media Photo / JPEG XR (TIFF-based)",
-            "lrv	GoPro low-resolution video (MP4-based, read-only for now)",
-            "m4v	iTunes video (MPEG-4, read-only for now)",
+            "lrv	GoPro low-resolution video (MP4-based, experimental)",
+            "m4v	iTunes video (MPEG-4, experimental)",
             "mef	Mamiya (RAW) Electronic Format (TIFF-based)",
             "mie	Meta Information Encapsulation (MIE specification)",
             "mos	Creo Leaf Mosaic (TIFF-based)",
-            "mov	Apple QuickTime movie (read-only for now)",
-            "mp4	MPEG-4 video (read-only for now)",
+            "mov	Apple QuickTime movie (experimental)",
+            "mp4	MPEG-4 video (experimental)",
             "mpo	Extended Multi-Picture format (JPEG with MPF extensions)",
             "mrw	Minolta RAW",
             "nef	Nikon (RAW) Electronic Format (TIFF-based)",
@@ -84,9 +84,9 @@ internal static class SupportedFileExtensions
 
     /// <summary>
     ///     The video extensions in <see cref="AllCompatibleExtensions" />. They are listed and read like photos (their
-    ///     location and dates come from the QuickTime atoms), but cannot be written yet: ExifTool silently drops the
-    ///     EXIF/GPS tags this application writes when the target is an MP4/MOV, so a "save" would claim success and
-    ///     change nothing a player can see.
+    ///     location and dates come from the QuickTime atoms), but only their location can be written, by
+    ///     <see cref="Exif.VideoLocationArguments" />: ExifTool silently drops the EXIF/GPS tags written for photos when
+    ///     the target is an MP4/MOV, so a generic save would claim success and change nothing a player can see.
     /// </summary>
     private static readonly HashSet<string> VideoExtensions = new(comparer: System.StringComparer.OrdinalIgnoreCase)
     {

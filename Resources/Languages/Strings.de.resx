@@ -2008,13 +2008,13 @@ Ja: den Rest umbenennen.  Nein: abbrechen; alle Dateien bleiben unverändert.</v
     <value>BuyMeACoffee (spenden, öffnet im Browser)</value>
   </data>
   <data name="mbx_Helper_WarningVideoNotWritable" xml:space="preserve">
-    <value>Videodateien können derzeit gelesen, aber noch nicht gespeichert werden, daher wurden Änderungen daran nicht geschrieben. Andere Dateien im selben Speichervorgang wurden wie gewohnt geschrieben.</value>
+    <value>Vorerst kann nur der Standort von Videodateien gespeichert werden. Andere Änderungen daran wurden nicht gespeichert.</value>
   </data>
   <data name="ckb_EnableVideoFiles" xml:space="preserve">
     <value>Videodateien anzeigen (experimentell)</value>
   </data>
   <data name="mbx_Helper_WarningVideoExperimental" xml:space="preserve">
-    <value>Die Videounterstützung ist experimentell. Videodateien können gelesen werden (Ort und Datum werden angezeigt), Änderungen daran können aber noch nicht gespeichert werden. Öffnen Sie den Ordner erneut, um die Videodateien zu sehen.</value>
+    <value>Die Videounterstützung ist experimentell. Videodateien können gelesen werden (ihr Standort und ihr Datum werden angezeigt), und ihr Standort kann gespeichert werden, andere Änderungen daran können jedoch noch nicht gespeichert werden. Öffnen Sie den Ordner erneut, um die Videodateien zu sehen.</value>
   </data>
   <data name="lbl_FfmpegPath" xml:space="preserve">
     <value>Pfad zu ffmpeg (optional, für Videovorschauen)</value>
