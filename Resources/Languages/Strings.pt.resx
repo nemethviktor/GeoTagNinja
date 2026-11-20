@@ -2015,4 +2015,10 @@ Dito isso, o código _deveria_ conseguir interpretar outros formatos. Observe qu
   <data name="mbx_Helper_WarningVideoExperimental" xml:space="preserve">
     <value>O suporte a vídeo é experimental. Arquivos de vídeo podem ser lidos (o local e a data são exibidos), mas as alterações neles ainda não podem ser salvas. Reabra a pasta para ver os arquivos de vídeo.</value>
   </data>
+  <data name="lbl_FfmpegPath" xml:space="preserve">
+    <value>Caminho para o ffmpeg (opcional, para visualizações de vídeo)</value>
+  </data>
+  <data name="btn_FfmpegBrowse" xml:space="preserve">
+    <value>Procurar...</value>
+  </data>
 </root>

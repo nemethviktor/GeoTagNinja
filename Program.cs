@@ -47,6 +47,8 @@ internal static class Program
     {
         GeoTagNinja.Helpers.Data.ApplicationSettings.ReloadSettingTables = () => _ = GeoTagNinja.Helpers.Startup.AppStartup.AppStartupReadSQLiteTables();
         GeoTagNinja.Helpers.UI.UiServices.Host = new GeoTagNinja.Helpers.UI.WinFormsDialogs();
+        // a video's picture, when no ffmpeg is set up: what Windows Explorer would show
+        GeoTagNinja.Helpers.Exif.VideoFrameProvider.PlatformFrameProvider = GeoTagNinja.Helpers.UI.ShellThumbnail.TryGet;
         Application.EnableVisualStyles();
         Application.SetCompatibleTextRenderingDefault(defaultValue: false);
 

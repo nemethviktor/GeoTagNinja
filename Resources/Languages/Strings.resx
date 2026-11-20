@@ -2603,4 +2603,12 @@ That said the code _should_ be able to comprehend other layouts. Note if the cli
     <value>Video files can be read but not saved to yet, so any changes to them were not written. Other files in the same save were written as usual.</value>
     <comment>Shown after a save that included video files, which are skipped</comment>
   </data>
+  <data name="lbl_FfmpegPath" xml:space="preserve">
+    <value>Path to ffmpeg (optional, for video previews)</value>
+    <comment>Settings: where ffmpeg is, so video files can get a preview picture</comment>
+  </data>
+  <data name="btn_FfmpegBrowse" xml:space="preserve">
+    <value>Browse...</value>
+    <comment>Settings: browse for the ffmpeg program</comment>
+  </data>
 </root>

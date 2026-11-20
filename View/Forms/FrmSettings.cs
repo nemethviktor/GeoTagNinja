@@ -1,6 +1,7 @@
 ﻿using NLog;
 using GeoTagNinja.Helpers;
 using GeoTagNinja.Helpers.Data;
+using GeoTagNinja.Helpers.Exif;
 using GeoTagNinja.Helpers.FileSystem;
 using GeoTagNinja.Helpers.Localisation;
 using GeoTagNinja.Helpers.Startup;
@@ -68,6 +69,7 @@ public partial class FrmSettings : Form
         AddCodeCreatedCheckBox(name: "ckb_SyncGeoKeywords");
         AddCodeCreatedCheckBox(name: "ckb_ShowChangelogAfterUpdate");
         AddCodeCreatedCheckBox(name: "ckb_EnableVideoFiles");
+        AddFfmpegPathControls();
 
         // this one is largely responsible for disabling the detection of "new" (changed) data. (ie when going from "noting" to "something")
         _nowLoadingSettingsData = true;
@@ -113,6 +115,70 @@ public partial class FrmSettings : Form
         checkBox.CheckStateChanged += Any_ckb_CheckStateChanged;
         gbx_AppSettings.Controls.Add(value: checkBox);
         gbx_AppSettings.Height = Math.Max(val1: gbx_AppSettings.Height, val2: checkBox.Bottom + 12);
+    }
+
+    /// <summary>
+    ///     Adds the row for the optional ffmpeg path (a label, a text box and a Browse button) under everything else in
+    ///     the Application group, in code like the code-created checkboxes. The names are the setting id and the captions'
+    ///     resource names. A path that does not point at a file or a folder holding ffmpeg is shown in red; whether it
+    ///     really is ffmpeg is checked when a video needs a picture (see <c>VideoFrameProvider</c>).
+    /// </summary>
+    private void AddFfmpegPathControls()
+    {
+        int bottom = 0;
+        foreach (Control child in gbx_AppSettings.Controls)
+        {
+            bottom = Math.Max(val1: bottom, val2: child.Bottom);
+        }
+
+        Label label = new()
+        {
+            Name = "lbl_FfmpegPath",
+            AutoSize = true,
+            Location = new Point(x: 15, y: bottom + 12)
+        };
+        TextBox textBox = new()
+        {
+            Name = "tbx_FfmpegPath",
+            Width = 320,
+            Location = new Point(x: 15, y: label.Bottom + 20)
+        };
+        Button browse = new()
+        {
+            Name = "btn_FfmpegBrowse",
+            AutoSize = true,
+            UseVisualStyleBackColor = true,
+            Location = new Point(x: textBox.Right + 6, y: textBox.Top - 1)
+        };
+
+        textBox.TextChanged += Any_tbx_TextChanged;
+        textBox.TextChanged += (sender,
+                                args) =>
+        {
+            TextBox box = (TextBox)sender;
+            box.ForeColor = string.IsNullOrWhiteSpace(value: box.Text) ||
+                            VideoFrameProvider.ResolveFfmpegPath(configured: box.Text) != null
+                ? SystemColors.WindowText
+                : Color.Firebrick;
+        };
+        browse.Click += (sender,
+                         args) =>
+        {
+            using OpenFileDialog dialog = new()
+            {
+                Filter = "ffmpeg|ffmpeg.exe|*.exe|*.exe", // a program name: nothing to translate
+                CheckFileExists = true
+            };
+            if (dialog.ShowDialog() == DialogResult.OK)
+            {
+                textBox.Text = dialog.FileName;
+            }
+        };
+
+        gbx_AppSettings.Controls.Add(value: label);
+        gbx_AppSettings.Controls.Add(value: textBox);
+        gbx_AppSettings.Controls.Add(value: browse);
+        gbx_AppSettings.Height = Math.Max(val1: gbx_AppSettings.Height, val2: textBox.Bottom + 12);
     }
 
     private void AssignControlLabelsAndValues()

@@ -2015,4 +2015,10 @@ Hata hivyo msimbo unapaswa kuelewa mipangilio mingine. Kumbuka kwamba ikiwa ubao
   <data name="mbx_Helper_WarningVideoExperimental" xml:space="preserve">
     <value>Usaidizi wa video ni wa majaribio. Faili za video zinaweza kusomwa (mahali pake na tarehe yake vinaonyeshwa), lakini mabadiliko kwenye faili hizo bado hayawezi kuhifadhiwa. Fungua upya folda ili kuona faili za video.</value>
   </data>
+  <data name="lbl_FfmpegPath" xml:space="preserve">
+    <value>Njia ya ffmpeg (si lazima, kwa hakiki za video)</value>
+  </data>
+  <data name="btn_FfmpegBrowse" xml:space="preserve">
+    <value>Vinjari...</value>
+  </data>
 </root>

@@ -2,6 +2,7 @@
 using GeoTagNinja.Helpers;
 using GeoTagNinja.Helpers.Data;
 using GeoTagNinja.Helpers.Exif;
+using GeoTagNinja.Helpers.FileSystem;
 using GeoTagNinja.Helpers.UI;
 using GeoTagNinja.Model;
 using GeoTagNinja.View.FileList;
@@ -722,9 +723,31 @@ internal sealed class ThumbnailView : ScrollableControl
         g.FillRectangle(brush: brush, rect: box);
 
         string label = element.Extension?.ToUpperInvariant() ?? string.Empty;
+
+        // a video that has no picture (no ffmpeg, and no Windows thumbnail for its codec) gets a play symbol above its type
+        bool isVideo = SupportedFileExtensions.IsVideoFile(fileNameOrExtension: element.Extension);
+        if (isVideo)
+        {
+            int diameter = Math.Max(val1: 12, val2: Math.Min(val1: box.Width, val2: box.Height) / 2);
+            int centreX = box.X + (box.Width / 2);
+            int centreY = box.Y + (box.Height / 2) - (diameter / 8);
+            SmoothingMode previousMode = g.SmoothingMode;
+            g.SmoothingMode = SmoothingMode.AntiAlias;
+            using SolidBrush discBrush = new(color: ThemeHelper.IsDark ? Color.FromArgb(red: 70, green: 72, blue: 84) : Color.FromArgb(red: 200, green: 200, blue: 200));
+            using SolidBrush triangleBrush = new(color: ThemeHelper.IsDark ? Color.Gray : Color.DimGray);
+            g.FillEllipse(brush: discBrush, x: centreX - (diameter / 2), y: centreY - (diameter / 2), width: diameter, height: diameter);
+            g.FillPolygon(brush: triangleBrush, points:
+            [
+                new Point(x: centreX - (diameter / 6), y: centreY - (diameter / 4)),
+                new Point(x: centreX - (diameter / 6), y: centreY + (diameter / 4)),
+                new Point(x: centreX + (diameter / 4), y: centreY)
+            ]);
+            g.SmoothingMode = previousMode;
+        }
+
         TextRenderer.DrawText(dc: g, text: label, font: Font, bounds: box,
             foreColor: ThemeHelper.IsDark ? Color.Gray : Color.DimGray,
-            flags: TextFormatFlags.HorizontalCenter | TextFormatFlags.VerticalCenter | TextFormatFlags.NoPadding);
+            flags: (isVideo ? TextFormatFlags.Bottom : TextFormatFlags.VerticalCenter) | TextFormatFlags.HorizontalCenter | TextFormatFlags.NoPadding);
     }
 
     #endregion

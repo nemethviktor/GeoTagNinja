@@ -3500,5 +3500,23 @@ namespace GeoTagNinja.Resources.Languages {
                 return ResourceManager.GetString("mbx_Helper_WarningVideoNotWritable", resourceCulture);
             }
         }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Path to ffmpeg (optional, for video previews).
+        /// </summary>
+        public static string lbl_FfmpegPath {
+            get {
+                return ResourceManager.GetString("lbl_FfmpegPath", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Browse....
+        /// </summary>
+        public static string btn_FfmpegBrowse {
+            get {
+                return ResourceManager.GetString("btn_FfmpegBrowse", resourceCulture);
+            }
+        }
     }
 }

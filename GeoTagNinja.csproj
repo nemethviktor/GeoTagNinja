@@ -188,6 +188,7 @@
     </Compile>
     <Compile Include="Helpers\UI\ControlTextApplier.cs" />
     <Compile Include="Helpers\UI\WinFormsDialogs.cs" />
+    <Compile Include="Helpers\UI\ShellThumbnail.cs" />
     <Compile Include="Helpers\UI\SkiaBridge.cs" />
     <Compile Include="Helpers\Data\ThumbnailImages.cs" />
     <Compile Include="Helpers\UI\ReportBox.cs" />

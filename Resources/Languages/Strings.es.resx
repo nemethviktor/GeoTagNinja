@@ -2015,4 +2015,10 @@ Sí: renombrar el resto.  No: detener; todos los archivos siguen como estaban.</
   <data name="mbx_Helper_WarningVideoExperimental" xml:space="preserve">
     <value>La compatibilidad con vídeo es experimental. Los archivos de vídeo se pueden leer (se muestran su ubicación y su fecha), pero aún no se pueden guardar los cambios en ellos. Vuelva a abrir la carpeta para ver los archivos de vídeo.</value>
   </data>
+  <data name="lbl_FfmpegPath" xml:space="preserve">
+    <value>Ruta a ffmpeg (opcional, para vistas previas de vídeo)</value>
+  </data>
+  <data name="btn_FfmpegBrowse" xml:space="preserve">
+    <value>Explorar...</value>
+  </data>
 </root>

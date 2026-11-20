@@ -2015,4 +2015,10 @@ ArcGIS نے جون 2024 سے اپنا رجسٹریشن کا عمل تبدیل ک
   <data name="mbx_Helper_WarningVideoExperimental" xml:space="preserve">
     <value>ویڈیو کی معاونت تجرباتی ہے۔ ویڈیو فائلیں پڑھی جا سکتی ہیں (ان کا مقام اور تاریخ دکھائی جاتی ہے)، لیکن ان میں تبدیلیاں ابھی محفوظ نہیں کی جا سکتیں۔ ویڈیو فائلیں دیکھنے کے لیے فولڈر دوبارہ کھولیں۔</value>
   </data>
+  <data name="lbl_FfmpegPath" xml:space="preserve">
+    <value>ffmpeg کا راستہ (اختیاری، ویڈیو پیش نظاروں کے لیے)</value>
+  </data>
+  <data name="btn_FfmpegBrowse" xml:space="preserve">
+    <value>براؤز کریں...</value>
+  </data>
 </root>

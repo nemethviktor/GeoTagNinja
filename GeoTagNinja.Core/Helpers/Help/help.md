@@ -133,7 +133,7 @@ Open `Settings` > `Settings`. A few worth knowing:
 - **GeoNames user name** is needed for place names and altitude.
 - **Process the original image** (per extension): write into RAW files as well as an XMP sidecar, or the sidecar only.
 - **Keep keywords in step with the location**: on by default; see *Tagging photos with a location*.
-- **Show video files (experimental)**: off by default. Switched on, MP4, MOV and similar clips are listed after you reopen the folder, with the location and date they carry (a phone clip's location, a GoPro's). Videos can be read but not saved yet: saving skips them and says so, and the other files in the same save are written as usual.
+- **Show video files (experimental)**: off by default. Switched on, MP4, MOV and similar clips are listed after you reopen the folder, with the location and date they carry (a phone clip's location, a GoPro's). Videos can be read but not saved yet: saving skips them and says so, and the other files in the same save are written as usual. For a picture of each video in the thumbnail view and the preview pane, Windows' own thumbnail is used; to cover every codec (iPhone and many Android clips are HEVC) give **Path to ffmpeg** the location of ffmpeg (the file, or the folder holding it). The path is shown in red if nothing is there; if it is not a working ffmpeg, the Windows thumbnail is used instead, and a video with no picture at all shows a play symbol.
 - **Leave the modified date untouched** when saving, so the file keeps its date.
 - **After an update, show what has changed**: on by default.
 - Dark Mode, the map layers and the language. Until you choose a language, GeoTagNinja uses your Windows display language if it has been translated well enough, otherwise English.

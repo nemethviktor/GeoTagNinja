@@ -2015,4 +2015,10 @@
   <data name="mbx_Helper_WarningVideoExperimental" xml:space="preserve">
     <value>دعم الفيديو تجريبي. يمكن قراءة ملفات الفيديو (يتم عرض موقعها وتاريخها)، لكن لا يمكن حفظ التغييرات عليها بعد. أعد فتح المجلد لرؤية ملفات الفيديو.</value>
   </data>
+  <data name="lbl_FfmpegPath" xml:space="preserve">
+    <value>المسار إلى ffmpeg (اختياري، لمعاينات الفيديو)</value>
+  </data>
+  <data name="btn_FfmpegBrowse" xml:space="preserve">
+    <value>استعراض...</value>
+  </data>
 </root>

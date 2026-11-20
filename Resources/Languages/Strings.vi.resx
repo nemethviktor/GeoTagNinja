@@ -2015,4 +2015,10 @@ Dù vậy mã _nên_ có thể đọc được các định dạng khác. Lưu �
   <data name="mbx_Helper_WarningVideoExperimental" xml:space="preserve">
     <value>Hỗ trợ video đang ở giai đoạn thử nghiệm. Có thể đọc các tệp video (hiển thị vị trí và ngày của chúng), nhưng chưa thể lưu thay đổi đối với chúng. Mở lại thư mục để xem các tệp video.</value>
   </data>
+  <data name="lbl_FfmpegPath" xml:space="preserve">
+    <value>Đường dẫn tới ffmpeg (tùy chọn, để xem trước video)</value>
+  </data>
+  <data name="btn_FfmpegBrowse" xml:space="preserve">
+    <value>Chọn...</value>
+  </data>
 </root>

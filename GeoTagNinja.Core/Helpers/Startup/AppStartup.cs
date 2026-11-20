@@ -267,7 +267,8 @@ internal static class AppStartup
             {
                 { "UserSettingArcGisApiKey", "tbx_ARCGIS_APIKey" },
                 { "UserSettingGeoNamesUserName", "tbx_GeoNames_UserName" },
-                { "UserSettingGeoNamesPwd", "tbx_GeoNames_Pwd" }
+                { "UserSettingGeoNamesPwd", "tbx_GeoNames_Pwd" },
+                { "UserSettingFfmpegPath", "tbx_FfmpegPath" }
             },
             [key: "tpg_ImportExport_Import"] = new Dictionary<string, string>
             {

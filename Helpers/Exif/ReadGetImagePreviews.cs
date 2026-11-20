@@ -1,4 +1,5 @@
 ﻿using GeoTagNinja.Helpers.Data;
+using GeoTagNinja.Helpers.FileSystem;
 using GeoTagNinja.Helpers.UI;
 using GeoTagNinja.Model;
 using GeoTagNinja.View.Controls;
@@ -152,6 +153,16 @@ internal static class ReadGetImagePreviews
     {
         try
         {
+            // a video: one decoded frame (ffmpeg if set up, else Windows' own thumbnail); nothing is cached, and
+            // when neither can make one the pane says so
+            if (SupportedFileExtensions.IsVideoFile(fileNameOrExtension: extension))
+            {
+                using SkiaSharp.SKBitmap? frame = VideoFrameProvider.TryCreate(videoPath: fileNameWithPath, size: PreviewMinLongEdge);
+                return frame == null
+                    ? null
+                    : SkiaBridge.ToBitmap(source: frame);
+            }
+
             if (ThumbnailGenerator.IsGdiPlusFormat(extension: extension))
             {
                 using FileStream stream = new(path: fileNameWithPath, mode: FileMode.Open, access: FileAccess.Read,

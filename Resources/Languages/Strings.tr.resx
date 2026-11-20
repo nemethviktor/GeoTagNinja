@@ -2015,4 +2015,10 @@ Bununla birlikte kod diğer düzenleri de anlayabilmelidir. Panoda yukarıdakile
   <data name="mbx_Helper_WarningVideoExperimental" xml:space="preserve">
     <value>Video desteği deneyseldir. Video dosyaları okunabilir (konumları ve tarihleri gösterilir), ancak bunlardaki değişiklikler henüz kaydedilemez. Video dosyalarını görmek için klasörü yeniden açın.</value>
   </data>
+  <data name="lbl_FfmpegPath" xml:space="preserve">
+    <value>ffmpeg yolu (isteğe bağlı, video önizlemeleri için)</value>
+  </data>
+  <data name="btn_FfmpegBrowse" xml:space="preserve">
+    <value>Gözat...</value>
+  </data>
 </root>

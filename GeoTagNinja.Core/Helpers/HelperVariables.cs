@@ -154,6 +154,12 @@ internal static class HelperVariables
     /// </summary>
     internal static bool UserSettingEnableVideoFiles = false;
 
+    /// <summary>
+    ///     Where ffmpeg is (the file, or the folder holding it), so video files can get a preview picture. Blank, or not a
+    ///     working ffmpeg, means the platform's own thumbnail is used instead (see <see cref="Exif.VideoFrameProvider" />).
+    /// </summary>
+    internal static string UserSettingFfmpegPath = "";
+
     internal static bool UserSettingImportGPXUseParticularTimeZone;
     internal static bool UserSettingImportGPXUseDST;
 

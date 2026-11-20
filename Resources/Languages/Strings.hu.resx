@@ -2015,4 +2015,10 @@ Ezzel együtt a kód _képes_ más elrendezéseket is értelmezni. Ha a vágóla
   <data name="mbx_Helper_WarningVideoExperimental" xml:space="preserve">
     <value>A videótámogatás kísérleti jellegű. A videofájlok olvashatók (megjelenik a helyük és a dátumuk), de a rajtuk végzett módosításokat még nem lehet menteni. A videofájlok megtekintéséhez nyissa meg újra a mappát.</value>
   </data>
+  <data name="lbl_FfmpegPath" xml:space="preserve">
+    <value>ffmpeg elérési útja (opcionális, videó előnézetekhez)</value>
+  </data>
+  <data name="btn_FfmpegBrowse" xml:space="preserve">
+    <value>Tallózás...</value>
+  </data>
 </root>

@@ -2074,4 +2074,10 @@
   <data name="mbx_Helper_WarningVideoExperimental" xml:space="preserve">
     <value>வீடியோ ஆதரவு சோதனை நிலையில் உள்ளது. வீடியோ கோப்புகளைப் படிக்கலாம் (அவற்றின் இருப்பிடமும் தேதியும் காட்டப்படும்), ஆனால் அவற்றில் செய்யும் மாற்றங்களை இன்னும் சேமிக்க முடியாது. வீடியோ கோப்புகளைப் பார்க்க கோப்புறையை மீண்டும் திறக்கவும்.</value>
   </data>
+  <data name="lbl_FfmpegPath" xml:space="preserve">
+    <value>ffmpeg பாதை (விருப்பத்தேர்வு, வீடியோ முன்னோட்டங்களுக்கு)</value>
+  </data>
+  <data name="btn_FfmpegBrowse" xml:space="preserve">
+    <value>உலாவு...</value>
+  </data>
 </root>

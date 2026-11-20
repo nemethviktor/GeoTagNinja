@@ -2016,4 +2016,10 @@ Ja: den Rest umbenennen.  Nein: abbrechen; alle Dateien bleiben unverändert.</v
   <data name="mbx_Helper_WarningVideoExperimental" xml:space="preserve">
     <value>Die Videounterstützung ist experimentell. Videodateien können gelesen werden (Ort und Datum werden angezeigt), Änderungen daran können aber noch nicht gespeichert werden. Öffnen Sie den Ordner erneut, um die Videodateien zu sehen.</value>
   </data>
+  <data name="lbl_FfmpegPath" xml:space="preserve">
+    <value>Pfad zu ffmpeg (optional, für Videovorschauen)</value>
+  </data>
+  <data name="btn_FfmpegBrowse" xml:space="preserve">
+    <value>Durchsuchen...</value>
+  </data>
 </root>

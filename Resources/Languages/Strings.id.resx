@@ -2015,4 +2015,10 @@ Meski demikian, kode ini _seharusnya_ dapat memahami format lain. Perhatikan bah
   <data name="mbx_Helper_WarningVideoExperimental" xml:space="preserve">
     <value>Dukungan video bersifat eksperimental. File video dapat dibaca (lokasi dan tanggalnya ditampilkan), tetapi perubahan padanya belum dapat disimpan. Buka kembali folder untuk melihat file video.</value>
   </data>
+  <data name="lbl_FfmpegPath" xml:space="preserve">
+    <value>Jalur ke ffmpeg (opsional, untuk pratinjau video)</value>
+  </data>
+  <data name="btn_FfmpegBrowse" xml:space="preserve">
+    <value>Telusuri...</value>
+  </data>
 </root>

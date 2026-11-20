@@ -2015,4 +2015,10 @@ ArcGIS ২০২৪ সালের জুন থেকে তাদের ন�
   <data name="mbx_Helper_WarningVideoExperimental" xml:space="preserve">
     <value>ভিডিও সমর্থন পরীক্ষামূলক। ভিডিও ফাইল পড়া যায় (তাদের অবস্থান ও তারিখ দেখানো হয়), তবে এগুলোতে পরিবর্তন এখনও সংরক্ষণ করা যায় না। ভিডিও ফাইল দেখতে ফোল্ডারটি আবার খুলুন।</value>
   </data>
+  <data name="lbl_FfmpegPath" xml:space="preserve">
+    <value>ffmpeg-এর পথ (ঐচ্ছিক, ভিডিও প্রিভিউয়ের জন্য)</value>
+  </data>
+  <data name="btn_FfmpegBrowse" xml:space="preserve">
+    <value>ব্রাউজ করুন...</value>
+  </data>
 </root>

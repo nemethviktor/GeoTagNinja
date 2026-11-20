@@ -2015,4 +2015,10 @@ ArcGIS از ژوئن ۲۰۲۴ روند ثبت‌نام خود را تغییر د
   <data name="mbx_Helper_WarningVideoExperimental" xml:space="preserve">
     <value>پشتیبانی از ویدیو آزمایشی است. فایل‌های ویدیویی خوانده می‌شوند (مکان و تاریخ آن‌ها نشان داده می‌شود)، اما هنوز امکان ذخیره تغییرات در آن‌ها وجود ندارد. برای دیدن فایل‌های ویدیویی، پوشه را دوباره باز کنید.</value>
   </data>
+  <data name="lbl_FfmpegPath" xml:space="preserve">
+    <value>مسیر ffmpeg (اختیاری، برای پیش‌نمایش ویدیو)</value>
+  </data>
+  <data name="btn_FfmpegBrowse" xml:space="preserve">
+    <value>مرور...</value>
+  </data>
 </root>

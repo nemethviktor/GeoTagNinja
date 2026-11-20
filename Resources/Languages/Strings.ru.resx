@@ -2015,4 +2015,10 @@
   <data name="mbx_Helper_WarningVideoExperimental" xml:space="preserve">
     <value>Поддержка видео является экспериментальной. Видеофайлы можно читать (отображаются их расположение и дата), но сохранять изменения в них пока нельзя. Откройте папку заново, чтобы увидеть видеофайлы.</value>
   </data>
+  <data name="lbl_FfmpegPath" xml:space="preserve">
+    <value>Путь к ffmpeg (необязательно, для превью видео)</value>
+  </data>
+  <data name="btn_FfmpegBrowse" xml:space="preserve">
+    <value>Обзор...</value>
+  </data>
 </root>

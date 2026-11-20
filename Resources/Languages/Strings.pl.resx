@@ -2015,4 +2015,10 @@ Tak: zmień nazwy pozostałych plików.  Nie: przerwij operację – wszystkie p
   <data name="mbx_Helper_WarningVideoExperimental" xml:space="preserve">
     <value>Obsługa wideo jest eksperymentalna. Pliki wideo można odczytać (wyświetlane są ich lokalizacja i data), ale zmian w nich na razie nie można zapisać. Aby zobaczyć pliki wideo, otwórz ponownie folder.</value>
   </data>
+  <data name="lbl_FfmpegPath" xml:space="preserve">
+    <value>Ścieżka do ffmpeg (opcjonalnie, dla podglądów wideo)</value>
+  </data>
+  <data name="btn_FfmpegBrowse" xml:space="preserve">
+    <value>Przeglądaj...</value>
+  </data>
 </root>
