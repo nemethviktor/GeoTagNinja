@@ -2006,4 +2006,13 @@ ArcGIS 自 2024 年 6 月起更改了注册流程。请在[此处](https://locat
   <data name="tsb_Donate" xml:space="preserve">
     <value>BuyMeACoffee（捐赠，在浏览器中打开）</value>
   </data>
+  <data name="mbx_Helper_WarningVideoNotWritable" xml:space="preserve">
+    <value>视频文件目前可以读取，但尚不支持保存，因此对它们所做的任何更改均未写入。同一次保存中的其他文件已照常写入。</value>
+  </data>
+  <data name="ckb_EnableVideoFiles" xml:space="preserve">
+    <value>显示视频文件（实验性）</value>
+  </data>
+  <data name="mbx_Helper_WarningVideoExperimental" xml:space="preserve">
+    <value>视频支持目前处于实验阶段。可以读取视频文件（会显示其位置和日期），但暂时无法保存对视频文件的更改。请重新打开文件夹以查看视频文件。</value>
+  </data>
 </root>

@@ -133,7 +133,8 @@ public static class SourcesAndAttributes
                         [
                             "XMP:GPSAltitude",
                             "EXIF:GPSAltitude",
-                            "GPS:GPSAltitude"
+                            "GPS:GPSAltitude",
+                            "Composite:GPSAltitude"
                         ],
                         OutAttributes =
                         [
@@ -155,7 +156,8 @@ public static class SourcesAndAttributes
                         [
                             "XMP:GPSAltitudeRef",
                             "EXIF:GPSAltitudeRef",
-                            "GPS:GPSAltitudeRef"
+                            "GPS:GPSAltitudeRef",
+                            "Composite:GPSAltitudeRef"
                         ],
                         OutAttributes =
                         [
@@ -297,7 +299,8 @@ public static class SourcesAndAttributes
                         [
                             "XMP:GPSLatitude",
                             "EXIF:GPSLatitude",
-                            "GPS:GPSLatitude"
+                            "GPS:GPSLatitude",
+                            "Composite:GPSLatitude"
                         ],
                         OutAttributes =
                         [
@@ -339,7 +342,8 @@ public static class SourcesAndAttributes
                         [
                             "XMP:GPSLongitude",
                             "EXIF:GPSLongitude",
-                            "GPS:GPSLongitude"
+                            "GPS:GPSLongitude",
+                            "Composite:GPSLongitude"
                         ],
                         OutAttributes =
                         [
@@ -687,7 +691,8 @@ public static class SourcesAndAttributes
                         InAttributes =
                         [
                             "XMP:DateTimeOriginal",
-                            "EXIF:DateTimeOriginal"
+                            "EXIF:DateTimeOriginal",
+                            "QuickTime:CreationDate"
                         ],
                         OutAttributes =
                         [
@@ -706,7 +711,8 @@ public static class SourcesAndAttributes
                         InAttributes =
                         [
                             "XMP:CreateDate",
-                            "EXIF:CreateDate"
+                            "EXIF:CreateDate",
+                            "QuickTime:CreateDate"
                         ],
                         OutAttributes =
                         [

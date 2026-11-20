@@ -2006,4 +2006,13 @@ ArcGIS змінили процес реєстрації з червня 2024 р�
   <data name="tsb_Donate" xml:space="preserve">
     <value>BuyMeACoffee (підтримати, відкривається в браузері)</value>
   </data>
+  <data name="mbx_Helper_WarningVideoNotWritable" xml:space="preserve">
+    <value>Відеофайли поки що можна лише читати, але зберігати в них зміни ще не можна, тож внесені зміни не було записано. Інші файли в цьому збереженні записано як звичайно.</value>
+  </data>
+  <data name="ckb_EnableVideoFiles" xml:space="preserve">
+    <value>Показувати відеофайли (експериментально)</value>
+  </data>
+  <data name="mbx_Helper_WarningVideoExperimental" xml:space="preserve">
+    <value>Підтримка відео є експериментальною. Відеофайли можна читати (показуються їх розташування та дата), але зміни в них поки що не можна зберегти. Щоб побачити відеофайли, знову відкрийте папку.</value>
+  </data>
 </root>

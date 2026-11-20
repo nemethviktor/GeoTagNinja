@@ -2006,4 +2006,13 @@ ArcGIS జూన్ 2024 నుండి వారి నమోదు ప్ర�
   <data name="tsb_Donate" xml:space="preserve">
     <value>BuyMeACoffee (విరాళం, బ్రౌజర్‌లో తెరుచుకుంటుంది)</value>
   </data>
+  <data name="mbx_Helper_WarningVideoNotWritable" xml:space="preserve">
+    <value>వీడియో ఫైళ్లను చదవవచ్చు కానీ ఇంకా సేవ్ చేయలేము, కాబట్టి వాటిలో చేసిన మార్పులు వ్రాయబడలేదు. అదే సేవ్‌లో ఉన్న ఇతర ఫైళ్లు యథావిధిగా వ్రాయబడ్డాయి.</value>
+  </data>
+  <data name="ckb_EnableVideoFiles" xml:space="preserve">
+    <value>వీడియో ఫైళ్లను చూపించు (ప్రయోగాత్మకం)</value>
+  </data>
+  <data name="mbx_Helper_WarningVideoExperimental" xml:space="preserve">
+    <value>వీడియో మద్దతు ప్రయోగాత్మకంగా ఉంది. వీడియో ఫైళ్లను చదవవచ్చు (వాటి స్థానం, తేదీ చూపబడతాయి), కానీ వాటిలో మార్పులను ఇంకా సేవ్ చేయలేరు. వీడియో ఫైళ్లను చూడటానికి ఫోల్డర్‌ను మళ్లీ తెరవండి.</value>
+  </data>
 </root>

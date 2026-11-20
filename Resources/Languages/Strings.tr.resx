@@ -2006,4 +2006,13 @@ Bununla birlikte kod diğer düzenleri de anlayabilmelidir. Panoda yukarıdakile
   <data name="tsb_Donate" xml:space="preserve">
     <value>BuyMeACoffee (bağış yap, tarayıcıda açılır)</value>
   </data>
+  <data name="mbx_Helper_WarningVideoNotWritable" xml:space="preserve">
+    <value>Video dosyaları okunabilir ancak henüz kaydedilemez, bu nedenle bunlardaki değişiklikler yazılmadı. Aynı kaydetme işlemindeki diğer dosyalar her zamanki gibi yazıldı.</value>
+  </data>
+  <data name="ckb_EnableVideoFiles" xml:space="preserve">
+    <value>Video dosyalarını göster (deneysel)</value>
+  </data>
+  <data name="mbx_Helper_WarningVideoExperimental" xml:space="preserve">
+    <value>Video desteği deneyseldir. Video dosyaları okunabilir (konumları ve tarihleri gösterilir), ancak bunlardaki değişiklikler henüz kaydedilemez. Video dosyalarını görmek için klasörü yeniden açın.</value>
+  </data>
 </root>

@@ -2006,4 +2006,13 @@ ArcGIS ने जून 2024 पासून त्यांची नोंद�
   <data name="tsb_Donate" xml:space="preserve">
     <value>BuyMeACoffee (देणगी द्या, ब्राउझरमध्ये उघडते)</value>
   </data>
+  <data name="mbx_Helper_WarningVideoNotWritable" xml:space="preserve">
+    <value>व्हिडिओ फाइल्स वाचता येतात, पण त्या अजून जतन करता येत नाहीत, त्यामुळे त्यातील कोणतेही बदल लिहिले गेले नाहीत. त्याच जतन प्रक्रियेतील इतर फाइल्स नेहमीप्रमाणे लिहिल्या गेल्या.</value>
+  </data>
+  <data name="ckb_EnableVideoFiles" xml:space="preserve">
+    <value>व्हिडिओ फाइल दाखवा (प्रायोगिक)</value>
+  </data>
+  <data name="mbx_Helper_WarningVideoExperimental" xml:space="preserve">
+    <value>व्हिडिओ समर्थन प्रायोगिक आहे. व्हिडिओ फाइल वाचता येतात (त्यांचे ठिकाण आणि तारीख दाखवली जाते), पण त्यातील बदल अजून जतन करता येत नाहीत. व्हिडिओ फाइल पाहण्यासाठी फोल्डर पुन्हा उघडा.</value>
+  </data>
 </root>

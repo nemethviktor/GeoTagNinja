@@ -2006,4 +2006,13 @@ Detto questo, il codice _dovrebbe_ essere in grado di interpretare anche altri f
   <data name="lbl_ParsingFolders" xml:space="preserve">
     <value>Analisi di file &amp;&amp; cartelle in corso, attendere. </value>
   </data>
+  <data name="mbx_Helper_WarningVideoNotWritable" xml:space="preserve">
+    <value>I file video possono essere letti ma non ancora salvati, quindi le modifiche apportate non sono state scritte. Gli altri file dello stesso salvataggio sono stati scritti normalmente.</value>
+  </data>
+  <data name="ckb_EnableVideoFiles" xml:space="preserve">
+    <value>Mostra file video (sperimentale)</value>
+  </data>
+  <data name="mbx_Helper_WarningVideoExperimental" xml:space="preserve">
+    <value>Il supporto video è sperimentale. I file video possono essere letti (vengono mostrati posizione e data), ma le modifiche non possono ancora essere salvate. Riapri la cartella per vedere i file video.</value>
+  </data>
 </root>

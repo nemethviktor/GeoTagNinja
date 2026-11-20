@@ -67,6 +67,7 @@ public partial class FrmSettings : Form
         FrmHelp.Attach(form: this, topicId: "settings");
         AddCodeCreatedCheckBox(name: "ckb_SyncGeoKeywords");
         AddCodeCreatedCheckBox(name: "ckb_ShowChangelogAfterUpdate");
+        AddCodeCreatedCheckBox(name: "ckb_EnableVideoFiles");
 
         // this one is largely responsible for disabling the detection of "new" (changed) data. (ie when going from "noting" to "something")
         _nowLoadingSettingsData = true;
@@ -270,6 +271,12 @@ public partial class FrmSettings : Form
         foreach (string ext in
                  SupportedFileExtensions.AllCompatibleExtensions())
         {
+            if (!HelperVariables.UserSettingEnableVideoFiles &&
+                SupportedFileExtensions.IsVideoFile(fileNameOrExtension: ext.Split('\t')[0]))
+            {
+                continue;
+            }
+
             _ = lbx_fileExtensions.Items.Add(item: ext);
         }
 
@@ -1079,6 +1086,18 @@ public partial class FrmSettings : Form
                       .Split('\t')
                       .FirstOrDefault()}_{ckb.Name}"
     : ckb.Name;
+            if (controlName == "ckb_EnableVideoFiles" &&
+                ckb.Checked)
+            {
+                // video is experimental and read-only for now: say so before it is relied on
+                Themer.ShowMessageBox(
+                    message: HelperControlAndMessageBoxHandling.ReturnControlText(
+                        controlName: "mbx_Helper_WarningVideoExperimental",
+                        fakeControlType: HelperControlAndMessageBoxHandling.FakeControlTypes.MessageBox),
+                    icon: MessageBoxIcon.Warning,
+                    buttons: MessageBoxButtons.OK);
+            }
+
             if (controlName == "ckb_ReplaceBlankToponyms")
             {
                 tbx_ReplaceBlankToponyms.Enabled = ckb.Checked;

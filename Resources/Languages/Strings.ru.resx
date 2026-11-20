@@ -2006,4 +2006,13 @@
   <data name="tsb_Donate" xml:space="preserve">
     <value>BuyMeACoffee (пожертвовать, откроется в браузере)</value>
   </data>
+  <data name="mbx_Helper_WarningVideoNotWritable" xml:space="preserve">
+    <value>Видеофайлы пока можно читать, но сохранять в них изменения нельзя, поэтому внесённые в них изменения не были записаны. Остальные файлы из этого сохранения были записаны как обычно.</value>
+  </data>
+  <data name="ckb_EnableVideoFiles" xml:space="preserve">
+    <value>Показывать видеофайлы (экспериментально)</value>
+  </data>
+  <data name="mbx_Helper_WarningVideoExperimental" xml:space="preserve">
+    <value>Поддержка видео является экспериментальной. Видеофайлы можно читать (отображаются их расположение и дата), но сохранять изменения в них пока нельзя. Откройте папку заново, чтобы увидеть видеофайлы.</value>
+  </data>
 </root>

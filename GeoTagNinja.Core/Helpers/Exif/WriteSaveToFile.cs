@@ -42,6 +42,7 @@ internal static class WriteSaveToFile
 
         bool failWriteNothingEnabled = false;
         bool queueWasEmpty = true;
+        bool skippedVideoFile = false;
 
         UiServices.SetTaskbarProgress(state: UiTaskbarProgress.Indeterminate);
         string exifArgsForOriginalFile = "";
@@ -59,6 +60,16 @@ internal static class WriteSaveToFile
                 string folderNameToWrite = Path.GetDirectoryName(path: dirElemFileToModify.FileNameWithPath);
                 if (File.Exists(path: fileNameWithPath))
                 {
+                    // Video is read-only for now (see SupportedFileExtensions.IsVideoFile): ExifTool would drop the
+                    // EXIF/GPS tags this method writes and still report success, so the file is skipped and the user
+                    // told. Its pending edits stay staged, and the other files in the batch are written as usual.
+                    if (SupportedFileExtensions.IsVideoFile(fileNameOrExtension: fileNameWithoutPath))
+                    {
+                        Log.Warn(message: $"{fileNameWithPath} - video files cannot be written yet. Skipped.");
+                        skippedVideoFile = true;
+                        continue;
+                    }
+
                     exifArgsForOriginalFile = "";
                     exifArgsForSidecar = "";
                     string fileExtension = Path.GetExtension(path: fileNameWithoutPath)
@@ -564,12 +575,22 @@ internal static class WriteSaveToFile
                 icon: UiMessageIcon.Warning,
                 buttons: UiMessageButtons.OK);
         }
-        else
+        else if (!skippedVideoFile)
         {
             Log.Info(message: "Queue was empty. Nothing Written.");
             UiServices.ShowMessageBox(
                 message: HelperControlAndMessageBoxHandling.ReturnControlText(
                     controlName: "mbx_Helper_WarningNothingInWriteQueue",
+                    fakeControlType: HelperControlAndMessageBoxHandling.FakeControlTypes.MessageBox),
+                icon: UiMessageIcon.Warning,
+                buttons: UiMessageButtons.OK);
+        }
+
+        if (skippedVideoFile)
+        {
+            UiServices.ShowMessageBox(
+                message: HelperControlAndMessageBoxHandling.ReturnControlText(
+                    controlName: "mbx_Helper_WarningVideoNotWritable",
                     fakeControlType: HelperControlAndMessageBoxHandling.FakeControlTypes.MessageBox),
                 icon: UiMessageIcon.Warning,
                 buttons: UiMessageButtons.OK);

@@ -3473,5 +3473,32 @@ namespace GeoTagNinja.Resources.Languages {
                 return ResourceManager.GetString("tmi_View_SortBy_Descending", resourceCulture);
             }
         }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Show video files (experimental).
+        /// </summary>
+        public static string ckb_EnableVideoFiles {
+            get {
+                return ResourceManager.GetString("ckb_EnableVideoFiles", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Video support is experimental. Video files can be read (their location and date are shown), but changes to them can&apos;t be saved yet. Reopen the folder to see the video files..
+        /// </summary>
+        public static string mbx_Helper_WarningVideoExperimental {
+            get {
+                return ResourceManager.GetString("mbx_Helper_WarningVideoExperimental", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Video files can be read but not saved to yet, so any changes to them were not written. Other files in the same save were written as usual..
+        /// </summary>
+        public static string mbx_Helper_WarningVideoNotWritable {
+            get {
+                return ResourceManager.GetString("mbx_Helper_WarningVideoNotWritable", resourceCulture);
+            }
+        }
     }
 }

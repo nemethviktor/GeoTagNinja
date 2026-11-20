@@ -2006,4 +2006,13 @@ Dù vậy mã _nên_ có thể đọc được các định dạng khác. Lưu �
   <data name="tsb_Donate" xml:space="preserve">
     <value>BuyMeACoffee (ủng hộ, mở trong trình duyệt)</value>
   </data>
+  <data name="mbx_Helper_WarningVideoNotWritable" xml:space="preserve">
+    <value>Tệp video hiện có thể đọc nhưng chưa thể lưu, nên mọi thay đổi trên các tệp này chưa được ghi. Các tệp khác trong cùng lần lưu đã được ghi như bình thường.</value>
+  </data>
+  <data name="ckb_EnableVideoFiles" xml:space="preserve">
+    <value>Hiển thị tệp video (thử nghiệm)</value>
+  </data>
+  <data name="mbx_Helper_WarningVideoExperimental" xml:space="preserve">
+    <value>Hỗ trợ video đang ở giai đoạn thử nghiệm. Có thể đọc các tệp video (hiển thị vị trí và ngày của chúng), nhưng chưa thể lưu thay đổi đối với chúng. Mở lại thư mục để xem các tệp video.</value>
+  </data>
 </root>

@@ -2006,4 +2006,13 @@ ArcGIS از ژوئن ۲۰۲۴ روند ثبت‌نام خود را تغییر د
   <data name="tsb_Donate" xml:space="preserve">
     <value>BuyMeACoffee (حمایت مالی، در مرورگر باز می‌شود)</value>
   </data>
+  <data name="mbx_Helper_WarningVideoNotWritable" xml:space="preserve">
+    <value>فایل‌های ویدیویی هنوز قابل ذخیره‌سازی نیستند و فقط می‌توان آن‌ها را خواند، بنابراین هیچ تغییری در آن‌ها نوشته نشد. سایر فایل‌های این ذخیره‌سازی مانند همیشه نوشته شدند.</value>
+  </data>
+  <data name="ckb_EnableVideoFiles" xml:space="preserve">
+    <value>نمایش فایل‌های ویدیویی (آزمایشی)</value>
+  </data>
+  <data name="mbx_Helper_WarningVideoExperimental" xml:space="preserve">
+    <value>پشتیبانی از ویدیو آزمایشی است. فایل‌های ویدیویی خوانده می‌شوند (مکان و تاریخ آن‌ها نشان داده می‌شود)، اما هنوز امکان ذخیره تغییرات در آن‌ها وجود ندارد. برای دیدن فایل‌های ویدیویی، پوشه را دوباره باز کنید.</value>
+  </data>
 </root>

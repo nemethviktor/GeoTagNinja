@@ -2006,4 +2006,13 @@ Meski demikian, kode ini _seharusnya_ dapat memahami format lain. Perhatikan bah
   <data name="tsb_Donate" xml:space="preserve">
     <value>BuyMeACoffee (donasi, dibuka di browser)</value>
   </data>
+  <data name="mbx_Helper_WarningVideoNotWritable" xml:space="preserve">
+    <value>File video saat ini dapat dibaca tetapi belum dapat disimpan, sehingga perubahan padanya tidak ditulis. File lain dalam penyimpanan yang sama ditulis seperti biasa.</value>
+  </data>
+  <data name="ckb_EnableVideoFiles" xml:space="preserve">
+    <value>Tampilkan file video (eksperimental)</value>
+  </data>
+  <data name="mbx_Helper_WarningVideoExperimental" xml:space="preserve">
+    <value>Dukungan video bersifat eksperimental. File video dapat dibaca (lokasi dan tanggalnya ditampilkan), tetapi perubahan padanya belum dapat disimpan. Buka kembali folder untuk melihat file video.</value>
+  </data>
 </root>

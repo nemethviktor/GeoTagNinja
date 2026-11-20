@@ -27,6 +27,10 @@ Note: `ckb_SyncGeoKeywords` ("Keep keywords in step with the location") is the e
 form reads its controls by name, so it needs only points 2 to 4. Its logic is `Helpers/Geo/GeoKeywordSync`, called from
 `WriteSaveToFile` just before the write queue is built.
 
+## Video files (experimental, read-only)
+
+`Settings` > `Show video files (experimental)` (`UserSettingEnableVideoFiles`, code-created checkbox like `ckb_SyncGeoKeywords`) decides whether the folder scan sees the extensions that `SupportedFileExtensions.IsVideoFile` recognises. Reading needs nothing special: `SourcesAndAttributes` lists `Composite:GPSLatitude` / `GPSLongitude` / `GPSAltitude` / `GPSAltitudeRef` after the EXIF and XMP tags, `QuickTime:CreateDate` (UTC) for `CreateDate` and `QuickTime:CreationDate` (local wall clock, from the `Keys` atom) for `TakenDate`. The app runs ExifTool with `-G`, so the group is the family-0 name (`QuickTime`, never `Keys`). Writing is blocked in `WriteSaveToFile`: ExifTool drops `-GPS:` / `-exif:` tags on an MP4/MOV, so a save would report success and change nothing a player reads. What a real write needs (found with real Samsung S25 and GoPro clips and synthetic ones): write `-Keys:GPSCoordinates` and `-UserData:GPSCoordinates` together (Samsung writes only the `UserData` one and players read that one; our own read prefers `Keys`), as `lat, lon[, alt]`; `-gps*=` removes both; IPTC can't be written to video (XMP can); the default `-geotime` fails on video, it needs `-geotime<QuickTime:CreateDate` with `-api QuickTimeUTC`; read the file back afterwards to confirm. Video descriptions in the extension list must not contain the words `raw` or `tiff`: the per-extension defaults key off them (`VideoTagTests` guards it). Still open: thumbnails, dates and time zones, very large files, `-ee` on long GPS-track clips.
+
 ## Adding a table to the settings database
 
 A table that holds something the user made must be importable and exportable, or moving to another machine loses it. Four things:

@@ -2006,4 +2006,13 @@ ArcGIS نے جون 2024 سے اپنا رجسٹریشن کا عمل تبدیل ک
   <data name="tsb_Donate" xml:space="preserve">
     <value>BuyMeACoffee (عطیہ کریں، براؤزر میں کھلتا ہے)</value>
   </data>
+  <data name="mbx_Helper_WarningVideoNotWritable" xml:space="preserve">
+    <value>ویڈیو فائلیں پڑھی جا سکتی ہیں، لیکن ابھی ان کو محفوظ نہیں کیا جا سکتا، اس لیے ان میں کی گئی کوئی بھی تبدیلی تحریر نہیں کی گئی۔ اسی محفوظ کرنے کے عمل میں شامل دیگر فائلیں معمول کے مطابق تحریر کی گئیں۔</value>
+  </data>
+  <data name="ckb_EnableVideoFiles" xml:space="preserve">
+    <value>ویڈیو فائلیں دکھائیں (تجرباتی)</value>
+  </data>
+  <data name="mbx_Helper_WarningVideoExperimental" xml:space="preserve">
+    <value>ویڈیو کی معاونت تجرباتی ہے۔ ویڈیو فائلیں پڑھی جا سکتی ہیں (ان کا مقام اور تاریخ دکھائی جاتی ہے)، لیکن ان میں تبدیلیاں ابھی محفوظ نہیں کی جا سکتیں۔ ویڈیو فائلیں دیکھنے کے لیے فولڈر دوبارہ کھولیں۔</value>
+  </data>
 </root>

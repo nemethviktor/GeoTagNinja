@@ -2006,4 +2006,13 @@ ArcGIS は 2024 年 6 月に登録手続きを変更しました。[こちら](h
   <data name="tsb_Donate" xml:space="preserve">
     <value>BuyMeACoffee（寄付、ブラウザーで開きます）</value>
   </data>
+  <data name="mbx_Helper_WarningVideoNotWritable" xml:space="preserve">
+    <value>動画ファイルは読み取りはできますが、まだ保存には対応していないため、変更は書き込まれませんでした。同じ保存処理のその他のファイルは通常どおり書き込まれました。</value>
+  </data>
+  <data name="ckb_EnableVideoFiles" xml:space="preserve">
+    <value>動画ファイルを表示（実験的）</value>
+  </data>
+  <data name="mbx_Helper_WarningVideoExperimental" xml:space="preserve">
+    <value>動画のサポートは実験的な機能です。動画ファイルは読み取れます（位置と日付が表示されます）が、変更はまだ保存できません。動画ファイルを表示するには、フォルダーを開き直してください。</value>
+  </data>
 </root>

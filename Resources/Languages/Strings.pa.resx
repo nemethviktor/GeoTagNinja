@@ -2006,4 +2006,13 @@ ArcGIS ਨੇ ਜੂਨ 2024 ਤੋਂ ਆਪਣੀ ਰਜਿਸਟ੍ਰੇਸ�
   <data name="lbl_ParsingFolders" xml:space="preserve">
     <value>ਫਾਈਲਾਂ &amp;&amp; ਫੋਲਡਰਾਂ ਦੀ ਪੜਤਾਲ ਹੋ ਰਹੀ ਹੈ, ਕਿਰਪਾ ਕਰਕੇ ਉਡੀਕ ਕਰੋ। </value>
   </data>
+  <data name="mbx_Helper_WarningVideoNotWritable" xml:space="preserve">
+    <value>ਵੀਡੀਓ ਫ਼ਾਈਲਾਂ ਪੜ੍ਹੀਆਂ ਜਾ ਸਕਦੀਆਂ ਹਨ ਪਰ ਅਜੇ ਸੇਵ ਨਹੀਂ ਕੀਤੀਆਂ ਜਾ ਸਕਦੀਆਂ, ਇਸ ਲਈ ਉਹਨਾਂ ਵਿੱਚ ਕੀਤੀਆਂ ਤਬਦੀਲੀਆਂ ਲਿਖੀਆਂ ਨਹੀਂ ਗਈਆਂ। ਉਸੇ ਸੇਵ ਵਿੱਚ ਸ਼ਾਮਲ ਹੋਰ ਫ਼ਾਈਲਾਂ ਆਮ ਵਾਂਗ ਲਿਖੀਆਂ ਗਈਆਂ।</value>
+  </data>
+  <data name="ckb_EnableVideoFiles" xml:space="preserve">
+    <value>ਵੀਡੀਓ ਫਾਈਲਾਂ ਦਿਖਾਓ (ਪ੍ਰਯੋਗਾਤਮਕ)</value>
+  </data>
+  <data name="mbx_Helper_WarningVideoExperimental" xml:space="preserve">
+    <value>ਵੀਡੀਓ ਸਹਾਇਤਾ ਪ੍ਰਯੋਗਾਤਮਕ ਹੈ। ਵੀਡੀਓ ਫਾਈਲਾਂ ਪੜ੍ਹੀਆਂ ਜਾ ਸਕਦੀਆਂ ਹਨ (ਉਹਨਾਂ ਦੀ ਥਾਂ ਅਤੇ ਤਾਰੀਖ ਦਿਖਾਈ ਜਾਂਦੀ ਹੈ), ਪਰ ਉਹਨਾਂ ਵਿੱਚ ਤਬਦੀਲੀਆਂ ਅਜੇ ਸੰਭਾਲੀਆਂ ਨਹੀਂ ਜਾ ਸਕਦੀਆਂ। ਵੀਡੀਓ ਫਾਈਲਾਂ ਦੇਖਣ ਲਈ ਫੋਲਡਰ ਮੁੜ ਖੋਲ੍ਹੋ।</value>
+  </data>
 </root>

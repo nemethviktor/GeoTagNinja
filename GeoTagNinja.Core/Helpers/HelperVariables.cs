@@ -149,6 +149,11 @@ internal static class HelperVariables
     /// </summary>
     internal static bool UserSettingPreserveFileModifiedDate = false;
 
+    /// <summary>
+    ///     Whether video files (MP4, MOV, ...) are listed. Experimental and read-only for now, so off unless the user asks.
+    /// </summary>
+    internal static bool UserSettingEnableVideoFiles = false;
+
     internal static bool UserSettingImportGPXUseParticularTimeZone;
     internal static bool UserSettingImportGPXUseDST;
 

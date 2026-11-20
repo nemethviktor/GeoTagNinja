@@ -2006,4 +2006,13 @@ Tak: zmień nazwy pozostałych plików.  Nie: przerwij operację – wszystkie p
   <data name="tsb_Donate" xml:space="preserve">
     <value>Postaw mi kawę (darowizna, otwiera przeglądarkę)</value>
   </data>
+  <data name="mbx_Helper_WarningVideoNotWritable" xml:space="preserve">
+    <value>Pliki wideo można odczytać, ale nie można ich jeszcze zapisywać, dlatego wprowadzone w nich zmiany nie zostały zapisane. Pozostałe pliki z tego samego zapisu zostały zapisane jak zwykle.</value>
+  </data>
+  <data name="ckb_EnableVideoFiles" xml:space="preserve">
+    <value>Pokaż pliki wideo (eksperymentalne)</value>
+  </data>
+  <data name="mbx_Helper_WarningVideoExperimental" xml:space="preserve">
+    <value>Obsługa wideo jest eksperymentalna. Pliki wideo można odczytać (wyświetlane są ich lokalizacja i data), ale zmian w nich na razie nie można zapisać. Aby zobaczyć pliki wideo, otwórz ponownie folder.</value>
+  </data>
 </root>

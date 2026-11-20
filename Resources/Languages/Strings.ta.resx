@@ -2065,4 +2065,13 @@
   <data name="tsb_Donate" xml:space="preserve">
     <value>BuyMeACoffee (நன்கொடை, உலாவியில் திறக்கும்)</value>
   </data>
+  <data name="mbx_Helper_WarningVideoNotWritable" xml:space="preserve">
+    <value>வீடியோ கோப்புகளைப் படிக்க முடியும், ஆனால் இன்னும் சேமிக்க முடியாது, எனவே அவற்றில் செய்யப்பட்ட மாற்றங்கள் எழுதப்படவில்லை. அதே சேமிப்பில் இருந்த மற்ற கோப்புகள் வழக்கம்போல் எழுதப்பட்டன.</value>
+  </data>
+  <data name="ckb_EnableVideoFiles" xml:space="preserve">
+    <value>வீடியோ கோப்புகளைக் காட்டு (சோதனை நிலை)</value>
+  </data>
+  <data name="mbx_Helper_WarningVideoExperimental" xml:space="preserve">
+    <value>வீடியோ ஆதரவு சோதனை நிலையில் உள்ளது. வீடியோ கோப்புகளைப் படிக்கலாம் (அவற்றின் இருப்பிடமும் தேதியும் காட்டப்படும்), ஆனால் அவற்றில் செய்யும் மாற்றங்களை இன்னும் சேமிக்க முடியாது. வீடியோ கோப்புகளைப் பார்க்க கோப்புறையை மீண்டும் திறக்கவும்.</value>
+  </data>
 </root>

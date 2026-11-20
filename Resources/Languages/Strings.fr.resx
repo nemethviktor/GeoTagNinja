@@ -2065,4 +2065,13 @@ Oui : renommer le reste.  Non : arrêter ; tous les fichiers restent tels qu'ils
   <data name="tsb_Donate" xml:space="preserve">
     <value>BuyMeACoffee (faire un don, s'ouvre dans le navigateur)</value>
   </data>
+  <data name="mbx_Helper_WarningVideoNotWritable" xml:space="preserve">
+    <value>Les fichiers vidéo peuvent être lus mais ne peuvent pas encore être enregistrés ; les modifications qui leur sont apportées n&apos;ont donc pas été écrites. Les autres fichiers de la même sauvegarde ont été écrits normalement.</value>
+  </data>
+  <data name="ckb_EnableVideoFiles" xml:space="preserve">
+    <value>Afficher les fichiers vidéo (expérimental)</value>
+  </data>
+  <data name="mbx_Helper_WarningVideoExperimental" xml:space="preserve">
+    <value>La prise en charge des vidéos est expérimentale. Les fichiers vidéo peuvent être lus (leur emplacement et leur date sont affichés), mais les modifications ne peuvent pas encore être enregistrées. Rouvrez le dossier pour voir les fichiers vidéo.</value>
+  </data>
 </root>

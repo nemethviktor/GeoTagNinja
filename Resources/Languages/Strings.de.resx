@@ -2007,4 +2007,13 @@ Ja: den Rest umbenennen.  Nein: abbrechen; alle Dateien bleiben unverändert.</v
   <data name="tsb_Donate" xml:space="preserve">
     <value>BuyMeACoffee (spenden, öffnet im Browser)</value>
   </data>
+  <data name="mbx_Helper_WarningVideoNotWritable" xml:space="preserve">
+    <value>Videodateien können derzeit gelesen, aber noch nicht gespeichert werden, daher wurden Änderungen daran nicht geschrieben. Andere Dateien im selben Speichervorgang wurden wie gewohnt geschrieben.</value>
+  </data>
+  <data name="ckb_EnableVideoFiles" xml:space="preserve">
+    <value>Videodateien anzeigen (experimentell)</value>
+  </data>
+  <data name="mbx_Helper_WarningVideoExperimental" xml:space="preserve">
+    <value>Die Videounterstützung ist experimentell. Videodateien können gelesen werden (Ort und Datum werden angezeigt), Änderungen daran können aber noch nicht gespeichert werden. Öffnen Sie den Ordner erneut, um die Videodateien zu sehen.</value>
+  </data>
 </root>

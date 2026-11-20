@@ -59,6 +59,7 @@ did not.) Logic that cannot depend on the locale does not use the matrix.
 | `TagTransformationTests` | The per-tag clean-up of raw ExifTool output — rationals, units, the "35 mm equivalent" phrasing. |
 | `FavouriteMatcherTests` (and `FavouriteGroupingTests`) | Deciding which favourite a photo is in: distance, the south/west sign convention, nearest-wins, and a favourite's text position being read the same under every locale. Wrong here means photos relabelled (or, with Snap, moved) to the wrong place. |
 | `ReadPipelineParityTests` | The track-file reader drifting away from the file reader again. They were separate implementations of the same transformations until they were merged; these assert both entry points give the same typed values for the same tags. |
+| `VideoTagTests` | Video clips: the location and dates read from the QuickTime tags ExifTool reports (Samsung and iPhone-style clips, a zero create date, photo tags still winning), the video extension helper, and that the folder scan only sees video when the setting is on. |
 
 ## The bug these found on day one
 

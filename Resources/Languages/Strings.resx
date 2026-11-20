@@ -2591,4 +2591,16 @@ That said the code _should_ be able to comprehend other layouts. Note if the cli
     <value>BuyMeACoffee (donate, opens in browser)</value>
     <comment>Donate button in the main menu</comment>
   </data>
+  <data name="ckb_EnableVideoFiles" xml:space="preserve">
+    <value>Show video files (experimental)</value>
+    <comment>Settings: shows MP4/MOV etc. in the file list. Experimental, read-only for now</comment>
+  </data>
+  <data name="mbx_Helper_WarningVideoExperimental" xml:space="preserve">
+    <value>Video support is experimental. Video files can be read (their location and date are shown), but changes to them can&apos;t be saved yet. Reopen the folder to see the video files.</value>
+    <comment>Shown when the user ticks the video option in Settings</comment>
+  </data>
+  <data name="mbx_Helper_WarningVideoNotWritable" xml:space="preserve">
+    <value>Video files can be read but not saved to yet, so any changes to them were not written. Other files in the same save were written as usual.</value>
+    <comment>Shown after a save that included video files, which are skipped</comment>
+  </data>
 </root>

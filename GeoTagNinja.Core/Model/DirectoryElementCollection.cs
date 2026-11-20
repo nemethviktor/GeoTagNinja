@@ -129,6 +129,7 @@ public class DirectoryElementCollection : List<DirectoryElement>
             : XMPFileNameWithPath;
 
         DirectoryElement jpgFallback = null;
+        DirectoryElement videoFallback = null;
 
         foreach (DirectoryElement item in this)
         {
@@ -138,6 +139,14 @@ public class DirectoryElementCollection : List<DirectoryElement>
                 // Ignore the XMP file itself
                 if (item.FileNameWithPath.EndsWith(".xmp", StringComparison.OrdinalIgnoreCase))
                 {
+                    continue;
+                }
+
+                // A video that shares the photo's name (an iPhone Live Photo's .MOV, a Samsung motion photo's .MP4) is
+                // the last choice: the sidecar belongs to the photo.
+                if (SupportedFileExtensions.IsVideoFile(fileNameOrExtension: item.FileNameWithPath))
+                {
+                    videoFallback = item;
                     continue;
                 }
 
@@ -159,7 +168,7 @@ public class DirectoryElementCollection : List<DirectoryElement>
         }
 
         // If we finished the loop and never found a Raw file, return the JPG (if found)
-        return jpgFallback;
+        return jpgFallback ?? videoFallback;
     }
 
     /// <summary>

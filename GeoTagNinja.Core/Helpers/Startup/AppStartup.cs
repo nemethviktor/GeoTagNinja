@@ -300,7 +300,8 @@ internal static class AppStartup
                 { "UserSettingShowThumbnails", "ckb_ShowThumbnails" },
                 { "UserSettingRetainMapZoom", "ckb_RetainMapZoom" },
                 { "UserSettingDoNotDownloadAltitude", "ckb_DoNotDownloadAltitude" },
-                { "UserSettingPreserveFileModifiedDate", "ckb_PreserveFileModifiedDate" }
+                { "UserSettingPreserveFileModifiedDate", "ckb_PreserveFileModifiedDate" },
+                { "UserSettingEnableVideoFiles", "ckb_EnableVideoFiles" }
             },
             [key: "tpg_ImportExport_Import"] = new Dictionary<string, string>
             {

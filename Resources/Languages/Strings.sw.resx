@@ -2006,4 +2006,13 @@ Hata hivyo msimbo unapaswa kuelewa mipangilio mingine. Kumbuka kwamba ikiwa ubao
   <data name="tsb_Donate" xml:space="preserve">
     <value>BuyMeACoffee (changia, inafungua kivinjari)</value>
   </data>
+  <data name="mbx_Helper_WarningVideoNotWritable" xml:space="preserve">
+    <value>Faili za video zinaweza kusomwa lakini bado haziwezi kuhifadhiwa, kwa hiyo mabadiliko yoyote kwenye faili hizo hayakuandikwa. Faili nyingine katika hifadhi hiyo hiyo ziliandikwa kama kawaida.</value>
+  </data>
+  <data name="ckb_EnableVideoFiles" xml:space="preserve">
+    <value>Onyesha faili za video (majaribio)</value>
+  </data>
+  <data name="mbx_Helper_WarningVideoExperimental" xml:space="preserve">
+    <value>Usaidizi wa video ni wa majaribio. Faili za video zinaweza kusomwa (mahali pake na tarehe yake vinaonyeshwa), lakini mabadiliko kwenye faili hizo bado hayawezi kuhifadhiwa. Fungua upya folda ili kuona faili za video.</value>
+  </data>
 </root>

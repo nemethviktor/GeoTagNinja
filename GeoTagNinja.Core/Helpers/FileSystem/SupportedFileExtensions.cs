@@ -18,6 +18,9 @@ internal static class SupportedFileExtensions
     {
         string[] result =
         {
+            "360	GoPro 360 video (MP4-based, read-only for now)",
+            "3g2	3GPP2 video (QuickTime-based, read-only for now)",
+            "3gp	3GPP video (QuickTime-based, read-only for now)",
             "arq	Sony Alpha Pixel-Shift RAW (TIFF-based)",
             "arw	Sony Alpha RAW (TIFF-based)",
             "avif	AV1 Image File Format (QuickTime-based)",
@@ -46,9 +49,13 @@ internal static class SupportedFileExtensions
             "jpx	JPEG 2000 image [Compound/Extended]",
             "jxl	JPEG XL (codestream and ISO BMFF)",
             "jxr	Windows HD Photo / Media Photo / JPEG XR (TIFF-based)",
+            "lrv	GoPro low-resolution video (MP4-based, read-only for now)",
+            "m4v	iTunes video (MPEG-4, read-only for now)",
             "mef	Mamiya (RAW) Electronic Format (TIFF-based)",
             "mie	Meta Information Encapsulation (MIE specification)",
             "mos	Creo Leaf Mosaic (TIFF-based)",
+            "mov	Apple QuickTime movie (read-only for now)",
+            "mp4	MPEG-4 video (read-only for now)",
             "mpo	Extended Multi-Picture format (JPEG with MPF extensions)",
             "mrw	Minolta RAW",
             "nef	Nikon (RAW) Electronic Format (TIFF-based)",
@@ -76,6 +83,35 @@ internal static class SupportedFileExtensions
     }
 
     /// <summary>
+    ///     The video extensions in <see cref="AllCompatibleExtensions" />. They are listed and read like photos (their
+    ///     location and dates come from the QuickTime atoms), but cannot be written yet: ExifTool silently drops the
+    ///     EXIF/GPS tags this application writes when the target is an MP4/MOV, so a "save" would claim success and
+    ///     change nothing a player can see.
+    /// </summary>
+    private static readonly HashSet<string> VideoExtensions = new(comparer: System.StringComparer.OrdinalIgnoreCase)
+    {
+        "360", "3g2", "3gp", "lrv", "m4v", "mov", "mp4"
+    };
+
+    /// <summary>
+    ///     Whether the file is a video (see <see cref="VideoExtensions" />).
+    /// </summary>
+    /// <param name="fileNameOrExtension">A file name, path or bare extension, with or without the leading dot.</param>
+    internal static bool IsVideoFile(string fileNameOrExtension)
+    {
+        if (string.IsNullOrWhiteSpace(value: fileNameOrExtension))
+        {
+            return false;
+        }
+
+        string extension = fileNameOrExtension.Contains(value: ".")
+            ? System.IO.Path.GetExtension(path: fileNameOrExtension)
+            : fileNameOrExtension;
+
+        return VideoExtensions.Contains(item: extension.TrimStart('.'));
+    }
+
+    /// <summary>
     ///     List of extensions that take an XMP sidecar
     /// </summary>
     internal static string[] FileExtensionsThatUseXMP()
@@ -99,7 +135,8 @@ internal static class SupportedFileExtensions
 
     /// <summary>
     ///     Extracts only the file name extensions from the list of
-    ///     AllCompatibleExtensions. The returned array is a copy and
+    ///     AllCompatibleExtensions, leaving out the video ones unless the user has switched video support on
+    ///     (<see cref="HelperVariables.UserSettingEnableVideoFiles" />). The returned array is a copy and
     ///     can be used freely.
     /// </summary>
     /// <returns>An array of file extensions supported</returns>
@@ -118,7 +155,10 @@ internal static class SupportedFileExtensions
                                  ?.Trim();
         }
 
-        return allowedExtensions;
+        return HelperVariables.UserSettingEnableVideoFiles
+            ? allowedExtensions
+            : allowedExtensions.Where(predicate: extension => !IsVideoFile(fileNameOrExtension: extension))
+                               .ToArray();
     }
 
     /// <summary>

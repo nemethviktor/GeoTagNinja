@@ -2006,4 +2006,13 @@ Ezzel együtt a kód _képes_ más elrendezéseket is értelmezni. Ha a vágóla
   <data name="tsb_Donate" xml:space="preserve">
     <value>BuyMeACoffee (adományozás, böngészőben nyílik meg)</value>
   </data>
+  <data name="mbx_Helper_WarningVideoNotWritable" xml:space="preserve">
+    <value>A videófájlok egyelőre csak olvashatók, mentésük még nem lehetséges, ezért a rajtuk végzett módosítások nem kerültek mentésre. Az ugyanabban a mentésben szereplő többi fájl a szokásos módon mentésre került.</value>
+  </data>
+  <data name="ckb_EnableVideoFiles" xml:space="preserve">
+    <value>Videofájlok megjelenítése (kísérleti)</value>
+  </data>
+  <data name="mbx_Helper_WarningVideoExperimental" xml:space="preserve">
+    <value>A videótámogatás kísérleti jellegű. A videofájlok olvashatók (megjelenik a helyük és a dátumuk), de a rajtuk végzett módosításokat még nem lehet menteni. A videofájlok megtekintéséhez nyissa meg újra a mappát.</value>
+  </data>
 </root>
