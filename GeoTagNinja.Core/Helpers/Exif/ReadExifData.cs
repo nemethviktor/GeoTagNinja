@@ -217,8 +217,14 @@ internal static class ReadExifData
                                     break;
                             }
 
-                            if (comparisonIsTrue && ((stopProcessingRules && !customRuleChangedSublocation) ||
-                                                     !stopProcessingRules))
+                            // "Stop processing rules": once a rule has set a target (State, City or Sublocation) for
+                            // this country, later rules for that same target are skipped, so the first match wins.
+                            if (comparisonIsTrue &&
+                                !(stopProcessingRules &&
+                                  ($"{dataRow[columnName: "TargetPointName"]}" == "State" && customRuleChangedState ||
+                                   $"{dataRow[columnName: "TargetPointName"]}" == "City" && customRuleChangedCity ||
+                                   $"{dataRow[columnName: "TargetPointName"]}" == "Sublocation" &&
+                                   customRuleChangedSublocation)))
                             {
                                 string? TargetPointName = $"{dataRow[columnName: "TargetPointName"]}";
                                 string? TargetPointOutcome = $"{dataRow[columnName: "TargetPointOutcome"]}";
@@ -285,7 +291,6 @@ internal static class ReadExifData
                                     case "Sublocation":
                                         switch (TargetPointOutcome)
                                         {
-                                            //todo dontprocessmorerules
                                             case "AdminName1":
                                                 Sublocation = AdminName1InSQL;
                                                 break;
@@ -620,9 +625,13 @@ internal static class ReadExifData
                                                 break;
                                         }
 
+                                        // "Stop processing rules": first match per target wins (see the identical check above).
                                         if (comparisonIsTrue &&
-                                            ((stopProcessingRules && !customRuleChangedSublocation) ||
-                                             !stopProcessingRules))
+                                            !(stopProcessingRules &&
+                                              ($"{dataRow[columnName: "TargetPointName"]}" == "State" && customRuleChangedState ||
+                                               $"{dataRow[columnName: "TargetPointName"]}" == "City" && customRuleChangedCity ||
+                                               $"{dataRow[columnName: "TargetPointName"]}" == "Sublocation" &&
+                                               customRuleChangedSublocation)))
                                         {
                                             string? TargetPointName = $"{dataRow[columnName: "TargetPointName"]}";
                                             string? TargetPointOutcome = $"{dataRow[columnName: "TargetPointOutcome"]}";
