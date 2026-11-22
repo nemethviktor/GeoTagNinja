@@ -1118,7 +1118,13 @@ public partial class FrmEditFileData : Form
         int tzStartInt)
     {
         // cbx_OffsetTime.FindString(TZ, 18) doesn't seem to work so....
-        for (int i = 0; i <= cbx_OffsetTime.Items.Count; i++)
+        if (string.IsNullOrEmpty(value: TZ))
+        {
+            return;
+        }
+
+        // Strictly "<": "<=" read one past the end and threw when no entry matched (#238).
+        for (int i = 0; i < cbx_OffsetTime.Items.Count; i++)
         {
             string cbxText = cbx_OffsetTime.Items[index: i]
                                            .ToString();
