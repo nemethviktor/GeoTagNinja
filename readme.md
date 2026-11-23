@@ -60,6 +60,8 @@ There is a "short" (15 mins) demo on [YouTube](https://youtu.be/ulP1ZG7mH-I) if 
 - Remove all geodata from files in one go
 - Flat Mode: load all subfolders of the current folder at once
 - Thumbnail View (switch from the `View` menu at any time; resize with `Ctrl` + mouse wheel, the slider or the menu), plus previews for common image types including RAW, HEIC, PNG and WEBP. Video files (MP4, MOV, ...) can be listed, their location and dates read, and their location and descriptive details (title, caption, keywords, place names...) saved, with the experimental `Show video files` setting
+- Folder tree at the left of the main window (`Ctrl+B`) with favourite folders, `Edit File(s)` tabs for categories/keywords, source/description and contact details, templates, and Manage Favourites with radius, auto-assign and snap
+- Also opens `AVIF`, `CRW`, `CRM`, `PSD` and `PSB` files
 - Streaming folder load with progress on the taskbar button; loading a folder can be cancelled
 - Dark Mode (including a dark map option) and a choice of map layers
 - Optionally leave a file's modified date untouched when saving (`Settings`), so a photo keeps showing when it was taken rather than when its location was added
@@ -70,10 +72,7 @@ There is a "short" (15 mins) demo on [YouTube](https://youtu.be/ulP1ZG7mH-I) if 
 
 ### Upcoming Features & Changes:
 
-The following are changes that are in the `master` branch but haven't been built as part of a release yet:
-
-- `Thumbnail View` has moved from `Settings` to the new `View` menu (`View` > `Details` / `Thumbnails`; your previous choice carries over) and can be switched at any time without restarting. The thumbnail size can be changed with `Ctrl` + mouse wheel, the slider under the list, or `View` > `Thumbnail Size`. Thumbnails are now generated in the background (the ones you can see first), are no longer slow on RAW files, and are remembered between sessions in `thumbnailcache.sqlite` in the Roaming folder (it is safe to delete). In Thumbnail View you can sort from `View` > `Sort By`, rename with `F2`, drag a rectangle over empty space to select several pictures, and right-click (or `Shift`+`F10`) for the usual actions; there are no column headers, so filtering by column is `Details` only.
-- `Edit File(s)` has three new tabs ported from the old GeoSetter-style dialog: `Categories/Keywords`, `Source/Description` and `Contact` (artist, credit, copyright, caption, headline, byline, creator address/phone/e-mail/URL and so on). The `...` button beside most text fields offers `Insert from`/`Copy to` another field, `Copy Selection to Categories/Keywords` the most recently used values of that field, and `Forget a Remembered Item` to drop a typo or test entry from that list. `Load from Template...`, `Save as Template...` and `Load from Image...` (under the tabs) move a chosen set of values between the photo, a saved template and another image; dates and the time zone are unticked by default. The `Location` tab also gained the coordinates as degrees-minutes-seconds, `Image Direction` (with a compass), `Dest. Latitude`/`Dest. Longitude` and `Get from Web` for the altitude.
+Nothing yet: everything in `master` is in the latest release (Build 9823). See [`changelog.md`](changelog.md) for what each release brought.
 
 ## Parameters
 
