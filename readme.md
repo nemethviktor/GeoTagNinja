@@ -133,7 +133,7 @@ Things to note:
 
 If you want to build the project, Visual Studio is the most straightforward option. That said, the main project can also be built from VS Code.
 
-There are 2 parts to the project. One is the "main" app, the other is the installer. The installer is a Visual Studio Installer Projects (`.vdproj`) project in `GeoTagNinja_Setup/`, part of `GeoTagNinja.sln`. It needs the "Microsoft Visual Studio Installer Projects" extension, and MSBuild can't build it, so build it from the VS IDE (Release). It packages the Release build output, and some of its source paths are absolute (`C:\Users\<you>\AppData\Local\build\...`), so on another machine re-point those in the IDE. The `.msi` it produces is git-ignored.
+There are 2 parts to the project. One is the "main" app, the other is the installer. The installer is a [WiX](https://wixtoolset.org) v7 project (`GeoTagNinja.Setup.wixproj`, with `Package.wxs` and `Files.wxs`) in `GeoTagNinja.Setup/`, kept out of `GeoTagNinja.sln`. It builds from the command line (double-click `build-installer.bat` in the repo root, or `powershell -File .vscode\msbuild.ps1 -Action Installer`, or the `Build installer` VS Code task): a Release build of the app and the tests, then the installer, and the `.msi` lands in `%LOCALAPPDATA%\build\GeoTagNinja\GeoTagNinja.Setup\bin\x64\Release\GeoTagNinja_Setup.msi` (git-ignored). It packages the Release output by wildcard, so a new DLL or translation needs no installer edit. WiX v7 ships under the [Open Source Maintenance Fee](https://docs.firegiant.com/wix/osmf/) licence, which only charges projects earning over US$10,000 a year; the project file accepts its EULA (`<AcceptEula>wix7</AcceptEula>`). The installer's `UpgradeCode` (in `Package.wxs`) is what makes a new release replace an older install, including ones made by the old Visual Studio Installer Projects setup, so it must never change.
 
 For the "main" project you should be okay without anything separate once the proper toolchain is installed. This repo is an older-style .NET Framework 4.8 WinForms project, so VS Code is fine as an editor/task runner but it still relies on the Visual Studio/MSBuild toolchain underneath.
 
@@ -149,10 +149,11 @@ The repo includes VS Code workspace files under `.vscode/` for the main app:
 - `Build GeoTagNinja (Debug x64)`
 - `Run GeoTagNinja (Debug x64)`
 - `Test GeoTagNinja` (runs the NUnit tests against the Debug build)
+- `Build installer (Release x64 + MSI)` (Release solution build and tests, then the WiX installer)
 
 The tasks call `.vscode\msbuild.ps1`, which finds MSBuild through `vswhere`. F5 launches the exe from `%LOCALAPPDATA%\build\GeoTagNinja\`.
 
-`GeoTagNinja_Setup/` (the installer) is deliberately **not** part of the VS Code workflow. It is a Visual Studio Installer Projects `.vdproj`, which MSBuild skips with warning `MSB4078` (harmless, it appears in every solution build) and which only builds from the Visual Studio IDE. The `.vscode` tasks build, run and test the app only.
+`GeoTagNinja.Setup/` (the WiX installer) is deliberately not in `GeoTagNinja.sln`: Visual Studio can only open a `.wixproj` with the (free) FireGiant HeatWave extension, so the project is built from the command line instead. Edit its `.wxs` files as plain text.
 
 ### Tests
 

@@ -1,0 +1,40 @@
+﻿<Wix xmlns="http://wixtoolset.org/schemas/v4/wxs">
+
+  <!-- What gets installed: the Release build output of GeoTagNinja.csproj. Wildcards, so a new dependency or a new
+       translation needs no installer edit (the old vdproj listed ~60 files by hand).
+       Deliberately NOT shipped: *.pdb, *.xml docs, libSkiaSharp.dylib, the x86/arm64/runtimes folders and the
+       stray language folders NuGet packages drop next to the exe (cs, da, lv ...). -->
+  <Fragment>
+    <ComponentGroup Id="AppFiles" Directory="APPLICATIONFOLDER">
+
+      <!-- The exe is listed on its own so its file version becomes the MSI version (Package/@Version). -->
+      <Component Id="GeoTagNinjaExeComponent" Guid="*">
+        <File Id="GeoTagNinjaExe" Source="$(AppBinDir)GeoTagNinja.exe" KeyPath="yes" />
+      </Component>
+
+      <!-- The licence text, shipped as the old setup did. -->
+      <Component Id="LicenceComponent" Guid="*">
+        <File Id="LicenceRtf" Source="$(RepoRoot)Resources\gpl-3.0.rtf" KeyPath="yes" />
+      </Component>
+
+      <!-- Managed and native DLLs, app config and the bundled docs, all in the exe folder. -->
+      <Files Include="$(AppBinDir)*.dll" />
+      <Files Include="$(AppBinDir)GeoTagNinja.exe.config" />
+      <Files Include="$(AppBinDir)*.md" />
+
+      <!-- Content folders: see the DirectoryRef below. A wildcard on its own would flatten them into the exe folder
+           (the app then cannot find Resources\map.html). -->
+
+      <!-- Translations: one <code>\GeoTagNinja.Core.resources.dll per Strings.<code>.resx. The pattern, not a list,
+           is what makes a new language ship (InstallerLanguageCoverageTests checks it is still here). -->
+      <Files Include="$(AppBinDir)**\GeoTagNinja.Core.resources.dll" />
+      <Files Include="$(AppBinDir)**\AutoUpdater.NET.resources.dll" />
+    </ComponentGroup>
+
+    <!-- Files keeps sub-folders only below the wildcard, so each content folder gets its own Directory. -->
+    <ComponentGroup Id="AppContentFolders">
+      <Files Include="$(AppBinDir)Resources\**" Subdirectory="Resources" Directory="APPLICATIONFOLDER" />
+      <Files Include="$(AppBinDir)Images\**" Subdirectory="Images" Directory="APPLICATIONFOLDER" />
+    </ComponentGroup>
+  </Fragment>
+</Wix>

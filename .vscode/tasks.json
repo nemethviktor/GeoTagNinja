@@ -56,6 +56,24 @@
       "problemMatcher": []
     },
     {
+      "label": "Build installer (Release x64 + MSI)",
+      "type": "process",
+      "command": "powershell",
+      "args": [
+        "-NoProfile",
+        "-ExecutionPolicy",
+        "Bypass",
+        "-File",
+        "${workspaceFolder}\\.vscode\\msbuild.ps1",
+        "-Action",
+        "Installer"
+      ],
+      "dependsOn": "Restore GeoTagNinja packages",
+      "dependsOrder": "sequence",
+      "group": "build",
+      "problemMatcher": "$msCompile"
+    },
+    {
       "label": "Test GeoTagNinja",
       "type": "process",
       "command": "powershell",

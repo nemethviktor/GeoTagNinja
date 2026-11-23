@@ -50,7 +50,7 @@ Helpers/
   HelperVariables.cs   application-wide mutable state (see below)
 
 GeoTagNinja.Tests/             NUnit tests for the value-handling logic; see its README.md
-GeoTagNinja_Setup/             Visual Studio installer project (.vdproj, IDE-built only; the .msi output is git-ignored)
+GeoTagNinja.Setup/             WiX v7 installer (.wixproj + Package.wxs + Files.wxs; not in the .sln, built by `msbuild.ps1 -Action Installer`; the .msi output is git-ignored)
 
 ```
 

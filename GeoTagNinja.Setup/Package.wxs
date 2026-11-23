@@ -1,0 +1,82 @@
+﻿<Wix xmlns="http://wixtoolset.org/schemas/v4/wxs"
+     xmlns:ui="http://wixtoolset.org/schemas/v4/wxs/ui">
+
+  <!-- UpgradeCode is the identity that makes a new release replace an older install instead of sitting next to it.
+       It is the same code the old GeoTagNinja_Setup.vdproj used, so people upgrading from any earlier .msi get
+       their old copy removed. NEVER change it. Id="*" gives each build a fresh ProductCode, as before. -->
+  <Package Name="GeoTagNinja"
+           Manufacturer="Viktor Nemeth"
+           Version="!(bind.FileVersion.GeoTagNinjaExe)"
+           UpgradeCode="BC5D781B-8C8A-448F-959D-1278E90D092E"
+           Language="1033"
+           Scope="perUserOrMachine"
+           InstallerVersion="500">
+
+    <SummaryInformation Description="GeoTagNinja Setup" />
+
+    <!-- Same behaviour as the old setup: replaces older versions, and (like the old DetectNewerInstalledVersion=FALSE)
+         lets a re-install of the same version through. Downgrades are blocked. -->
+    <MajorUpgrade Schedule="afterInstallInitialize"
+                  AllowSameVersionUpgrades="yes"
+                  DowngradeErrorMessage="A newer version of GeoTagNinja is already installed. Uninstall it first if you really want to go back." />
+
+    <!-- MajorUpgrade's row only matches products whose ProductLanguage is 1033. The old Visual Studio setup was built with
+         LangId 0 (neutral), so it was skipped and installing this MSI over it left two "GeoTagNinja" entries. This extra,
+         language-agnostic row finds those old installs; RemoveExistingProducts (scheduled by MajorUpgrade) removes them too. -->
+    <Upgrade Id="BC5D781B-8C8A-448F-959D-1278E90D092E">
+      <UpgradeVersion Minimum="0.0.0" Maximum="!(bind.FileVersion.GeoTagNinjaExe)" IncludeMaximum="yes"
+                      Property="LEGACY_NEUTRAL_LANGUAGE_FOUND" MigrateFeatures="yes" />
+    </Upgrade>
+
+    <MediaTemplate EmbedCab="yes" CompressionLevel="high" />
+
+    <Icon Id="AppIcon.ico" SourceFile="$(RepoRoot)Resources\AppIcon.ico" />
+    <Property Id="ARPPRODUCTICON" Value="AppIcon.ico" />
+    <Property Id="ARPCONTACT" Value="Viktor Nemeth" />
+    <Property Id="ARPHELPLINK" Value="https://github.com/nemethviktor/GeoTagNinja" />
+    <Property Id="ARPURLINFOABOUT" Value="https://geotag.ninja" />
+
+    <!-- .NET Framework 4.8 (Release >= 528040). The app is net48; WebView2 is deliberately not bundled (see readme). -->
+    <Property Id="NETFRAMEWORKRELEASE">
+      <RegistrySearch Id="NetFrameworkRelease" Root="HKLM" Key="SOFTWARE\Microsoft\NET Framework Setup\NDP\v4\Full" Name="Release" Type="raw" Bitness="always64" />
+    </Property>
+    <Launch Condition="Installed OR (NETFRAMEWORKRELEASE &gt;= &quot;#528040&quot;)"
+            Message="GeoTagNinja needs the Microsoft .NET Framework 4.8. Please install it from https://dotnet.microsoft.com/en-us/download/dotnet-framework/net48 and run this setup again." />
+
+    <!-- "Just me" / "Everyone" choice and a folder page, as in the old setup (default: Just me). -->
+    <Property Id="ApplicationFolderName" Value="GeoTagNinja" />
+    <Property Id="WixAppFolder" Value="WixPerUserFolder" />
+    <!-- Banner across the top of the installer pages: the old setup's installerBackground.jpg, cropped (not scaled: 9 px off the
+         top, 2 off the bottom) to the 493x58 the WiX dialogs expect and saved as BMP (Windows Installer only reliably shows BMP). -->
+    <WixVariable Id="WixUIBannerBmp" Value="$(RepoRoot)GeoTagNinja.Setup\Banner.bmp" />
+    <WixVariable Id="WixUILicenseRtf" Value="$(RepoRoot)Resources\gpl-3.0.rtf" />
+    <ui:WixUI Id="WixUI_Advanced" />
+
+    <StandardDirectory Id="ProgramFiles6432Folder">
+      <Directory Id="APPLICATIONFOLDER" Name="GeoTagNinja" />
+    </StandardDirectory>
+    <StandardDirectory Id="ProgramMenuFolder" />
+    <StandardDirectory Id="DesktopFolder" />
+
+    <!-- Start Menu and Desktop shortcuts. The registry value is the component's key path, which is what keeps
+         per-user installs valid (a shortcut cannot be its own key path). -->
+    <ComponentGroup Id="ShortcutComponents">
+      <Component Id="StartMenuShortcut" Directory="ProgramMenuFolder" Guid="*">
+        <Shortcut Id="StartMenuShortcutLink" Name="GeoTagNinja" Target="[APPLICATIONFOLDER]GeoTagNinja.exe"
+                  WorkingDirectory="APPLICATIONFOLDER" Icon="AppIcon.ico" />
+        <RegistryValue Root="HKCU" Key="Software\Viktor Nemeth\GeoTagNinja" Name="StartMenuShortcut" Type="integer" Value="1" KeyPath="yes" />
+      </Component>
+      <Component Id="DesktopShortcut" Directory="DesktopFolder" Guid="*">
+        <Shortcut Id="DesktopShortcutLink" Name="GeoTagNinja" Target="[APPLICATIONFOLDER]GeoTagNinja.exe"
+                  WorkingDirectory="APPLICATIONFOLDER" Icon="AppIcon.ico" />
+        <RegistryValue Root="HKCU" Key="Software\Viktor Nemeth\GeoTagNinja" Name="DesktopShortcut" Type="integer" Value="1" KeyPath="yes" />
+      </Component>
+    </ComponentGroup>
+
+    <Feature Id="Main" Title="GeoTagNinja" Level="1" AllowAbsent="no">
+      <ComponentGroupRef Id="AppFiles" />
+      <ComponentGroupRef Id="AppContentFolders" />
+      <ComponentGroupRef Id="ShortcutComponents" />
+    </Feature>
+  </Package>
+</Wix>
