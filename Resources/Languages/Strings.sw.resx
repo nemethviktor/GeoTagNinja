@@ -2021,4 +2021,14 @@ Hata hivyo msimbo unapaswa kuelewa mipangilio mingine. Kumbuka kwamba ikiwa ubao
   <data name="btn_FfmpegBrowse" xml:space="preserve">
     <value>Vinjari...</value>
   </data>
+  <data name="mbx_UpgradeNotice_ArcGisKeyNoLongerNeeded" xml:space="preserve">
+    <value>Kisanduku cha kutafuta cha ramani hakihitaji tena ufunguo wa API wa ArcGIS.
+
+Sasa maeneo hutafutwa kwanza kupitia GeoNames (kwa kutumia jina la mtumiaji kutoka Mipangilio), kisha Photon, kisha Nominatim, kwa hiyo hakuna haja ya kujisajili tena. Ufunguo uliohifadhiwa awali hautumiki tena.</value>
+  </data>
+  <data name="mbx_UpgradeNotice_NewLanguage" xml:space="preserve">
+    <value>GeoTagNinja sasa inapatikana kwa {0}, lugha ambayo Windows yako imewekwa.
+
+Ili kuitumia, fungua Mipangilio, chagua lugha hiyo kwenye orodha ya Lugha kisha uanzishe upya programu. Tafsiri ni rasimu za awali, kwa hiyo marekebisho yanakaribishwa (tazama readme kuona jinsi ya kusaidia). Ukipendelea Kiingereza, huhitaji kufanya chochote.</value>
+  </data>
 </root>

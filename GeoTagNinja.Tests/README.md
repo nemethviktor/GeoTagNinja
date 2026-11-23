@@ -62,6 +62,7 @@ did not.) Logic that cannot depend on the locale does not use the matrix.
 | `VideoTagTests` | Video clips: the location and dates read from the QuickTime tags ExifTool reports (Samsung and iPhone-style clips, a zero create date, photo tags still winning), the video extension helper, and that the folder scan only sees video when the setting is on. |
 | `VideoFrameProviderTests` | Which ffmpeg the Settings path points at (a file, a folder, quoted, missing, junk characters), that a file that is not ffmpeg is not taken for one, and the fallback order (invalid ffmpeg to the platform thumbnail to nothing). No ffmpeg is run. |
 | `VideoLocationArgumentsTests` | The ExifTool arguments for a video's location: the `lat, lon[, alt]` text is invariant in every locale, both QuickTime atoms are written, a coordinate not staged is kept from the file, imperial altitude goes in as metres, a removed value is not resurrected, removal clears everything, which attributes can go into a video's XMP (and that only their XMP tags are kept), and dates and EXIF-only values are flagged instead of written. |
+| `InstallerLanguageCoverageTests` | A language being translated but not shipped. `GeoTagNinja_Setup.vdproj` has no wildcards, so every `Strings.<code>.resx` needs its own `<code>\GeoTagNinja.Core.resources.dll` entry; without it the installed app offers English only. Reads the `.vdproj` as text (the one test that touches a source file). |
 
 ## The bug these found on day one
 

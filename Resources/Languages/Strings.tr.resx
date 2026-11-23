@@ -2021,4 +2021,14 @@ Bununla birlikte kod diğer düzenleri de anlayabilmelidir. Panoda yukarıdakile
   <data name="btn_FfmpegBrowse" xml:space="preserve">
     <value>Gözat...</value>
   </data>
+  <data name="mbx_UpgradeNotice_ArcGisKeyNoLongerNeeded" xml:space="preserve">
+    <value>Haritanın arama kutusu artık ArcGIS API anahtarı gerektirmiyor.
+
+Artık yerler önce GeoNames (Ayarlar&apos;daki kullanıcı adı kullanılarak), sonra Photon, ardından Nominatim üzerinden aranıyor; bu yüzden bunun için artık kayıt olmanız gerekmiyor. Daha önce kaydettiğiniz anahtar artık kullanılmıyor.</value>
+  </data>
+  <data name="mbx_UpgradeNotice_NewLanguage" xml:space="preserve">
+    <value>GeoTagNinja artık Windows diliniz olarak ayarlanmış olan {0} dilinde kullanılabiliyor.
+
+Kullanmak için Ayarlar&apos;ı açın, Dil listesinden seçin ve uygulamayı yeniden başlatın. Çeviriler ilk taslaklardır, bu yüzden düzeltmeler memnuniyetle karşılanır (nasıl yardımcı olabileceğinizi readme dosyasında bulabilirsiniz). İngilizceyi tercih ederseniz yapmanız gereken bir şey yok.</value>
+  </data>
 </root>

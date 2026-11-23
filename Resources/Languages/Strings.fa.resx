@@ -2021,4 +2021,14 @@ ArcGIS از ژوئن ۲۰۲۴ روند ثبت‌نام خود را تغییر د
   <data name="btn_FfmpegBrowse" xml:space="preserve">
     <value>مرور...</value>
   </data>
+  <data name="mbx_UpgradeNotice_ArcGisKeyNoLongerNeeded" xml:space="preserve">
+    <value>کادر جستجوی نقشه دیگر به کلید API ArcGIS نیازی ندارد.
+
+اکنون مکان‌ها را ابتدا با GeoNames (با استفاده از نام کاربری تنظیمات)، سپس Photon و بعد Nominatim جستجو می‌کند، بنابراین دیگر نیازی به ثبت‌نام برای آن نیست. کلیدی که قبلاً ذخیره کرده‌اید دیگر استفاده نمی‌شود.</value>
+  </data>
+  <data name="mbx_UpgradeNotice_NewLanguage" xml:space="preserve">
+    <value>GeoTagNinja اکنون به زبان {0} در دسترس است، زبانی که ویندوز شما روی آن تنظیم شده است.
+
+برای استفاده از آن، تنظیمات را باز کنید، آن را در فهرست «زبان» انتخاب کنید و برنامه را دوباره راه‌اندازی کنید. ترجمه‌ها پیش‌نویس اولیه هستند، بنابراین اصلاحات شما استقبال می‌شود (برای دانستن نحوه کمک به readme مراجعه کنید). اگر انگلیسی را ترجیح می‌دهید، کاری لازم نیست.</value>
+  </data>
 </root>

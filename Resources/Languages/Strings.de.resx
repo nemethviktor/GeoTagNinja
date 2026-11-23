@@ -2022,4 +2022,14 @@ Ja: den Rest umbenennen.  Nein: abbrechen; alle Dateien bleiben unverändert.</v
   <data name="btn_FfmpegBrowse" xml:space="preserve">
     <value>Durchsuchen...</value>
   </data>
+  <data name="mbx_UpgradeNotice_ArcGisKeyNoLongerNeeded" xml:space="preserve">
+    <value>Das Suchfeld der Karte benötigt keinen ArcGIS-API-Schlüssel mehr.
+
+Die Orte werden jetzt zuerst über GeoNames (mit dem Benutzernamen aus den Einstellungen), dann über Photon und danach über Nominatim gesucht. Dafür muss also nichts mehr registriert werden. Ein früher gespeicherter Schlüssel wird nicht mehr verwendet.</value>
+  </data>
+  <data name="mbx_UpgradeNotice_NewLanguage" xml:space="preserve">
+    <value>GeoTagNinja ist jetzt auf {0} verfügbar, der Sprache, die auf Ihrem Windows eingestellt ist.
+
+Um sie zu verwenden, öffnen Sie die Einstellungen, wählen Sie sie in der Liste „Sprache“ aus und starten Sie die App neu. Die Übersetzungen sind erste Entwürfe, Korrekturen sind daher willkommen (wie Sie helfen können, steht in der readme). Wenn Sie Englisch bevorzugen, müssen Sie nichts tun.</value>
+  </data>
 </root>

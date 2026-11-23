@@ -2021,4 +2021,14 @@ Dù vậy mã _nên_ có thể đọc được các định dạng khác. Lưu �
   <data name="btn_FfmpegBrowse" xml:space="preserve">
     <value>Chọn...</value>
   </data>
+  <data name="mbx_UpgradeNotice_ArcGisKeyNoLongerNeeded" xml:space="preserve">
+    <value>Hộp tìm kiếm trên bản đồ không còn cần khóa API ArcGIS nữa.
+
+Hiện các địa điểm được tìm trước qua GeoNames (dùng tên người dùng trong Cài đặt), sau đó đến Photon, rồi đến Nominatim, nên không còn cần đăng ký gì nữa. Khóa đã lưu trước đây không còn được sử dụng.</value>
+  </data>
+  <data name="mbx_UpgradeNotice_NewLanguage" xml:space="preserve">
+    <value>GeoTagNinja hiện có sẵn bằng {0}, ngôn ngữ đang được đặt trong Windows của bạn.
+
+Để sử dụng, hãy mở Cài đặt, chọn ngôn ngữ đó trong danh sách Ngôn ngữ rồi khởi động lại ứng dụng. Các bản dịch là bản nháp ban đầu nên rất hoan nghênh góp ý sửa lỗi (xem readme để biết cách giúp). Nếu bạn thích tiếng Anh, bạn không cần làm gì cả.</value>
+  </data>
 </root>

@@ -2021,4 +2021,14 @@ ArcGIS は 2024 年 6 月に登録手続きを変更しました。[こちら](h
   <data name="btn_FfmpegBrowse" xml:space="preserve">
     <value>参照...</value>
   </data>
+  <data name="mbx_UpgradeNotice_ArcGisKeyNoLongerNeeded" xml:space="preserve">
+    <value>地図の検索ボックスでは、ArcGIS API キーが不要になりました。
+
+現在は、場所の検索に GeoNames（設定で指定したユーザー名を使用）、Photon、Nominatim の順で問い合わせるため、登録が必要なものはありません。以前に保存したキーは使用されなくなります。</value>
+  </data>
+  <data name="mbx_UpgradeNotice_NewLanguage" xml:space="preserve">
+    <value>GeoTagNinja が {0} に対応しました。Windows で設定されている言語です。
+
+使用するには、設定を開いて「言語」の一覧からこの言語を選び、アプリを再起動してください。翻訳は最初の草稿のため、修正の提案を歓迎します（協力方法は readme をご覧ください）。英語を希望する場合は、何もする必要はありません。</value>
+  </data>
 </root>

@@ -77,4 +77,25 @@ public class UpgradeNoticeTests
 
         Assert.That(actual: buildToStore, expression: Is.EqualTo(expected: 9910));
     }
-}
+
+    [TestCase("en", "hu", true)]
+    [TestCase(null, "de", true)]
+    [TestCase("en", "en", false)]      // Windows is English: nothing to offer
+    [TestCase("en", "", false)]
+    [TestCase("de", "de", false)]      // already following Windows
+    [TestCase("fr", "hu", false)]      // chose a language themselves
+    public void NewLanguageNotice_OnlyForEnglishAppOnATranslatedWindowsLanguage(string appLanguage,
+                                                                                string windowsLanguage,
+                                                                                bool shown)
+    {
+        string text = UpgradeNotices.NewLanguageNoticeText(appLanguage: appLanguage, windowsLanguage: windowsLanguage);
+
+        Assert.That(actual: text != null, expression: Is.EqualTo(expected: shown));
+    }
+
+    [Test]
+    public void NewLanguageNotice_NamesTheLanguage()
+    {
+        Assert.That(actual: UpgradeNotices.NewLanguageNoticeText(appLanguage: "en", windowsLanguage: "de"),
+            expression: Does.Contain(expected: "German"));
+    }}

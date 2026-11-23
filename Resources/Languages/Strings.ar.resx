@@ -2021,4 +2021,14 @@
   <data name="btn_FfmpegBrowse" xml:space="preserve">
     <value>استعراض...</value>
   </data>
+  <data name="mbx_UpgradeNotice_ArcGisKeyNoLongerNeeded" xml:space="preserve">
+    <value>لم يعد مربع البحث في الخريطة يحتاج إلى مفتاح ArcGIS API.
+
+يبحث الآن عن الأماكن باستخدام GeoNames (باستخدام اسم المستخدم من الإعدادات)، ثم Photon، ثم Nominatim، لذا لم يعد هناك ما يلزم تسجيله لذلك. لم يعد المفتاح الذي حفظته سابقًا مستخدمًا.</value>
+  </data>
+  <data name="mbx_UpgradeNotice_NewLanguage" xml:space="preserve">
+    <value>تتوفر GeoTagNinja الآن بلغة {0}، وهي اللغة المضبوطة في Windows لديك.
+
+لاستخدامها، افتح الإعدادات واختر منها في قائمة اللغة ثم أعد تشغيل التطبيق. الترجمات مسودات أولية، لذا فالتصويبات موضع ترحيب (راجع ملف readme لمعرفة كيفية المساعدة). إذا كنت تفضل الإنجليزية، فلا يلزمك فعل أي شيء.</value>
+  </data>
 </root>

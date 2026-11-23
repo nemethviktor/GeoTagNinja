@@ -2021,4 +2021,14 @@ ArcGIS نے جون 2024 سے اپنا رجسٹریشن کا عمل تبدیل ک
   <data name="btn_FfmpegBrowse" xml:space="preserve">
     <value>براؤز کریں...</value>
   </data>
+  <data name="mbx_UpgradeNotice_ArcGisKeyNoLongerNeeded" xml:space="preserve">
+    <value>نقشے کے سرچ باکس کو اب ArcGIS API کلید کی ضرورت نہیں۔
+
+اب مقامات پہلے GeoNames (ترتیبات سے صارف نام استعمال کرتے ہوئے)، پھر Photon، اور پھر Nominatim سے تلاش کیے جاتے ہیں، اس لیے اب اس کے لیے کہیں رجسٹر کرنے کی ضرورت نہیں۔ پہلے محفوظ کی گئی کلید اب استعمال نہیں ہوتی۔</value>
+  </data>
+  <data name="mbx_UpgradeNotice_NewLanguage" xml:space="preserve">
+    <value>GeoTagNinja اب {0} میں دستیاب ہے، جو آپ کے Windows میں سیٹ کی گئی زبان ہے۔
+
+اسے استعمال کرنے کے لیے ترتیبات کھولیں، زبان کی فہرست میں سے اسے منتخب کریں اور ایپ کو دوبارہ شروع کریں۔ ترجمے ابتدائی مسودے ہیں، اس لیے اصلاحات خوش آمدید ہیں (مدد کیسے کریں یہ readme میں دیکھیں)۔ اگر آپ انگریزی کو ترجیح دیتے ہیں تو کچھ کرنے کی ضرورت نہیں۔</value>
+  </data>
 </root>

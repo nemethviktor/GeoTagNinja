@@ -2021,4 +2021,14 @@ ArcGIS는 2024년 6월부터 등록 절차를 변경했습니다. [여기](https
   <data name="btn_FfmpegBrowse" xml:space="preserve">
     <value>찾아보기...</value>
   </data>
+  <data name="mbx_UpgradeNotice_ArcGisKeyNoLongerNeeded" xml:space="preserve">
+    <value>지도 검색 상자에는 더 이상 ArcGIS API 키가 필요하지 않습니다.
+
+이제 장소는 GeoNames(설정에 입력한 사용자 이름 사용), Photon, Nominatim 순서로 검색되므로 별도로 등록할 것이 없습니다. 이전에 저장한 키는 더 이상 사용되지 않습니다.</value>
+  </data>
+  <data name="mbx_UpgradeNotice_NewLanguage" xml:space="preserve">
+    <value>GeoTagNinja를 이제 {0}(Windows에 설정된 언어)로 사용할 수 있습니다.
+
+사용하려면 설정을 열고 언어 목록에서 선택한 뒤 앱을 다시 시작하세요. 번역은 초안이므로 수정 사항은 언제든지 환영합니다(도움을 주는 방법은 readme를 참고하세요). 영어를 선호하신다면 별도로 할 일은 없습니다.</value>
+  </data>
 </root>

@@ -2021,4 +2021,14 @@ Dito isso, o código _deveria_ conseguir interpretar outros formatos. Observe qu
   <data name="btn_FfmpegBrowse" xml:space="preserve">
     <value>Procurar...</value>
   </data>
+  <data name="mbx_UpgradeNotice_ArcGisKeyNoLongerNeeded" xml:space="preserve">
+    <value>O campo de busca do mapa não precisa mais de uma chave de API do ArcGIS.
+
+Agora os locais são pesquisados primeiro no GeoNames (usando o nome de usuário das Configurações), depois no Photon e por fim no Nominatim, então não há mais nada para registrar. Uma chave salva anteriormente não é mais usada.</value>
+  </data>
+  <data name="mbx_UpgradeNotice_NewLanguage" xml:space="preserve">
+    <value>O GeoTagNinja agora está disponível em {0}, o idioma definido no seu Windows.
+
+Para usar, abra as Configurações, escolha-o na lista Idioma e reinicie o aplicativo. As traduções são rascunhos iniciais, então correções são bem-vindas (veja o readme para saber como ajudar). Se preferir o inglês, não há nada a fazer.</value>
+  </data>
 </root>

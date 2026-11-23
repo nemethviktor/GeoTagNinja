@@ -2021,4 +2021,14 @@ ArcGIS ২০২৪ সালের জুন থেকে তাদের ন�
   <data name="btn_FfmpegBrowse" xml:space="preserve">
     <value>ব্রাউজ করুন...</value>
   </data>
+  <data name="mbx_UpgradeNotice_ArcGisKeyNoLongerNeeded" xml:space="preserve">
+    <value>মানচিত্রের সার্চ বক্সের জন্য আর ArcGIS API কী প্রয়োজন নেই।
+
+এখন GeoNames ব্যবহার করে স্থান খোঁজা হয় (সেটিংস থেকে নেওয়া ব্যবহারকারীর নাম দিয়ে), তারপর Photon, তারপর Nominatim, তাই এর জন্য আর কিছু নিবন্ধন করার নেই। আগে সংরক্ষণ করা কী আর ব্যবহৃত হয় না।</value>
+  </data>
+  <data name="mbx_UpgradeNotice_NewLanguage" xml:space="preserve">
+    <value>GeoTagNinja এখন {0} ভাষায় পাওয়া যাচ্ছে, যা আপনার Windows-এর ভাষা হিসেবে সেট করা আছে।
+
+এটি ব্যবহার করতে, সেটিংস খুলুন, ভাষা তালিকা থেকে এটি বেছে নিন এবং অ্যাপটি আবার চালু করুন। অনুবাদগুলো প্রাথমিক খসড়া, তাই সংশোধনী স্বাগত (কীভাবে সাহায্য করবেন তা readme-তে দেখুন)। আপনি যদি ইংরেজি পছন্দ করেন, তাহলে কিছু করার নেই।</value>
+  </data>
 </root>

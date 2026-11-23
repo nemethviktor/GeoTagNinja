@@ -2021,4 +2021,14 @@ Meski demikian, kode ini _seharusnya_ dapat memahami format lain. Perhatikan bah
   <data name="btn_FfmpegBrowse" xml:space="preserve">
     <value>Telusuri...</value>
   </data>
+  <data name="mbx_UpgradeNotice_ArcGisKeyNoLongerNeeded" xml:space="preserve">
+    <value>Kotak pencarian peta tidak lagi memerlukan kunci API ArcGIS.
+
+Kini tempat dicari menggunakan GeoNames (memakai nama pengguna dari Pengaturan), lalu Photon, lalu Nominatim, sehingga tidak ada yang perlu didaftarkan lagi. Kunci yang pernah disimpan sebelumnya tidak lagi digunakan.</value>
+  </data>
+  <data name="mbx_UpgradeNotice_NewLanguage" xml:space="preserve">
+    <value>GeoTagNinja kini tersedia dalam {0}, bahasa yang diatur di Windows Anda.
+
+Untuk menggunakannya, buka Pengaturan, pilih di daftar Bahasa, lalu mulai ulang aplikasi. Terjemahannya masih draf awal, jadi koreksi sangat diterima (lihat readme untuk cara membantu). Jika Anda lebih suka bahasa Inggris, tidak ada yang perlu dilakukan.</value>
+  </data>
 </root>

@@ -2021,4 +2021,14 @@ ArcGIS ने जून 2024 से अपनी पंजीकरण प्र
   <data name="btn_FfmpegBrowse" xml:space="preserve">
     <value>ब्राउज़ करें...</value>
   </data>
+  <data name="mbx_UpgradeNotice_ArcGisKeyNoLongerNeeded" xml:space="preserve">
+    <value>मानचित्र के खोज बॉक्स को अब ArcGIS API कुंजी की ज़रूरत नहीं है।
+
+अब स्थानों को पहले GeoNames (सेटिंग्स में दिए उपयोगकर्ता नाम के साथ), फिर Photon, और फिर Nominatim से खोजा जाता है, इसलिए इसके लिए अब कुछ भी पंजीकृत करने की ज़रूरत नहीं है। पहले सहेजी गई कुंजी अब उपयोग नहीं होती।</value>
+  </data>
+  <data name="mbx_UpgradeNotice_NewLanguage" xml:space="preserve">
+    <value>GeoTagNinja अब {0} में उपलब्ध है, जो आपके Windows में सेट की गई भाषा है।
+
+इसे उपयोग करने के लिए सेटिंग्स खोलें, भाषा सूची में से इसे चुनें और ऐप को दोबारा शुरू करें। अनुवाद प्रारंभिक मसौदे हैं, इसलिए सुधार का स्वागत है (मदद कैसे करें, यह readme में देखें)। यदि आप अंग्रेज़ी पसंद करते हैं, तो कुछ करने की ज़रूरत नहीं है।</value>
+  </data>
 </root>

@@ -2021,4 +2021,14 @@
   <data name="btn_FfmpegBrowse" xml:space="preserve">
     <value>Обзор...</value>
   </data>
+  <data name="mbx_UpgradeNotice_ArcGisKeyNoLongerNeeded" xml:space="preserve">
+    <value>Поле поиска на карте больше не требует ключа API ArcGIS.
+
+Теперь места ищутся сначала в GeoNames (с использованием имени пользователя из Настроек), затем в Photon и затем в Nominatim, поэтому регистрироваться больше не нужно. Ранее сохранённый ключ больше не используется.</value>
+  </data>
+  <data name="mbx_UpgradeNotice_NewLanguage" xml:space="preserve">
+    <value>GeoTagNinja теперь доступна на новом языке: {0}, том, что задан в вашей системе Windows.
+
+Чтобы использовать его, откройте Настройки, выберите его в списке «Язык» и перезапустите приложение. Переводы являются первоначальными черновиками, поэтому исправления приветствуются (как помочь, см. в readme). Если вы предпочитаете английский, ничего делать не нужно.</value>
+  </data>
 </root>

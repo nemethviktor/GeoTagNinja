@@ -2021,4 +2021,14 @@ Tak: zmień nazwy pozostałych plików.  Nie: przerwij operację – wszystkie p
   <data name="btn_FfmpegBrowse" xml:space="preserve">
     <value>Przeglądaj...</value>
   </data>
+  <data name="mbx_UpgradeNotice_ArcGisKeyNoLongerNeeded" xml:space="preserve">
+    <value>Pole wyszukiwania na mapie nie wymaga już klucza API ArcGIS.
+
+Miejsca są teraz wyszukiwane najpierw w GeoNames (z użyciem nazwy użytkownika z Ustawień), potem w Photon, a następnie w Nominatim, więc nie trzeba się już nigdzie rejestrować. Klucz zapisany wcześniej nie jest już używany.</value>
+  </data>
+  <data name="mbx_UpgradeNotice_NewLanguage" xml:space="preserve">
+    <value>GeoTagNinja jest teraz dostępna: {0}, czyli język ustawiony w Twoim systemie Windows.
+
+Aby z niego korzystać, otwórz Ustawienia, wybierz go na liście Język i uruchom aplikację ponownie. Tłumaczenia są wstępnymi wersjami roboczymi, więc poprawki są mile widziane (jak pomóc, znajdziesz w readme). Jeśli wolisz angielski, nie musisz nic robić.</value>
+  </data>
 </root>

@@ -2021,4 +2021,14 @@ ArcGIS జూన్ 2024 నుండి వారి నమోదు ప్ర�
   <data name="btn_FfmpegBrowse" xml:space="preserve">
     <value>బ్రౌజ్ చేయి...</value>
   </data>
+  <data name="mbx_UpgradeNotice_ArcGisKeyNoLongerNeeded" xml:space="preserve">
+    <value>మ్యాప్ సెర్చ్ బాక్స్‌కు ఇప్పుడు ArcGIS API కీ అవసరం లేదు.
+
+ఇప్పుడు ప్రాంతాలను ముందుగా GeoNames (సెట్టింగ్స్‌లోని యూజర్‌నేమ్ ఉపయోగించి), తర్వాత Photon, ఆపై Nominatim ద్వారా వెతుకుతారు, కాబట్టి దీనికోసం ఇక దేనిలోనూ నమోదు చేయాల్సిన అవసరం లేదు. ముందుగా సేవ్ చేసిన కీ ఇక ఉపయోగించబడదు.</value>
+  </data>
+  <data name="mbx_UpgradeNotice_NewLanguage" xml:space="preserve">
+    <value>GeoTagNinja ఇప్పుడు {0} భాషలో అందుబాటులో ఉంది; ఇది మీ Windows సెట్ చేసిన భాష.
+
+దీన్ని ఉపయోగించడానికి, సెట్టింగ్స్ తెరిచి, భాష జాబితాలో దీన్ని ఎంచుకుని, యాప్‌ను మళ్లీ ప్రారంభించండి. అనువాదాలు ప్రాథమిక డ్రాఫ్ట్‌లు, కాబట్టి సవరణలు స్వాగతం (ఎలా సహాయం చేయాలో readme లో చూడండి). మీరు ఇంగ్లీష్‌ను ఇష్టపడితే, ఏమీ చేయనవసరం లేదు.</value>
+  </data>
 </root>

@@ -2021,4 +2021,14 @@ ArcGIS ਨੇ ਜੂਨ 2024 ਤੋਂ ਆਪਣੀ ਰਜਿਸਟ੍ਰੇਸ�
   <data name="btn_FfmpegBrowse" xml:space="preserve">
     <value>ਲੱਭੋ...</value>
   </data>
+  <data name="mbx_UpgradeNotice_ArcGisKeyNoLongerNeeded" xml:space="preserve">
+    <value>ਨਕਸ਼ੇ ਦੇ ਖੋਜ ਬਾਕਸ ਨੂੰ ਹੁਣ ArcGIS API ਕੁੰਜੀ ਦੀ ਲੋੜ ਨਹੀਂ ਹੈ।
+
+ਹੁਣ ਥਾਵਾਂ ਨੂੰ ਪਹਿਲਾਂ GeoNames (ਸੈਟਿੰਗਾਂ ਵਿੱਚੋਂ ਵਰਤੋਂਕਾਰ ਨਾਮ ਦੀ ਵਰਤੋਂ ਕਰਕੇ), ਫਿਰ Photon, ਅਤੇ ਫਿਰ Nominatim ਤੋਂ ਲੱਭਿਆ ਜਾਂਦਾ ਹੈ, ਇਸ ਲਈ ਇਸ ਲਈ ਹੁਣ ਕਿਤੇ ਰਜਿਸਟਰ ਕਰਨ ਦੀ ਲੋੜ ਨਹੀਂ ਹੈ। ਪਹਿਲਾਂ ਸੰਭਾਲੀ ਗਈ ਕੁੰਜੀ ਹੁਣ ਵਰਤੀ ਨਹੀਂ ਜਾਂਦੀ।</value>
+  </data>
+  <data name="mbx_UpgradeNotice_NewLanguage" xml:space="preserve">
+    <value>GeoTagNinja ਹੁਣ {0} ਵਿੱਚ ਉਪਲਬਧ ਹੈ, ਜੋ ਤੁਹਾਡੇ Windows ਵਿੱਚ ਸੈੱਟ ਕੀਤੀ ਭਾਸ਼ਾ ਹੈ।
+
+ਇਸ ਨੂੰ ਵਰਤਣ ਲਈ, ਸੈਟਿੰਗਾਂ ਖੋਲ੍ਹੋ, ਭਾਸ਼ਾ ਸੂਚੀ ਵਿੱਚੋਂ ਇਸਨੂੰ ਚੁਣੋ ਅਤੇ ਐਪ ਨੂੰ ਮੁੜ ਚਾਲੂ ਕਰੋ। ਅਨੁਵਾਦ ਸ਼ੁਰੂਆਤੀ ਖਰੜੇ ਹਨ, ਇਸ ਲਈ ਸੁਧਾਰਾਂ ਦਾ ਸਵਾਗਤ ਹੈ (ਮਦਦ ਕਿਵੇਂ ਕਰਨੀ ਹੈ ਇਹ readme ਵਿੱਚ ਦੇਖੋ)। ਜੇ ਤੁਸੀਂ ਅੰਗਰੇਜ਼ੀ ਨੂੰ ਤਰਜੀਹ ਦਿੰਦੇ ਹੋ, ਤਾਂ ਕੁਝ ਕਰਨ ਦੀ ਲੋੜ ਨਹੀਂ ਹੈ।</value>
+  </data>
 </root>

@@ -2021,4 +2021,14 @@ ArcGIS 自 2024 年 6 月起更改了注册流程。请在[此处](https://locat
   <data name="btn_FfmpegBrowse" xml:space="preserve">
     <value>浏览...</value>
   </data>
+  <data name="mbx_UpgradeNotice_ArcGisKeyNoLongerNeeded" xml:space="preserve">
+    <value>地图的搜索框不再需要 ArcGIS API 密钥。
+
+现在地点搜索依次使用 GeoNames（使用“设置”中的用户名）、Photon 和 Nominatim，因此无需再为此注册任何服务。之前保存的密钥已不再使用。</value>
+  </data>
+  <data name="mbx_UpgradeNotice_NewLanguage" xml:space="preserve">
+    <value>GeoTagNinja 现已提供 {0} 版本，即您 Windows 设置的语言。
+
+要使用它，请打开“设置”，在“语言”下拉列表中选择它，然后重启应用。这些翻译是初稿，欢迎提出修正（如何帮助请参阅 readme）。如果您更喜欢英文，无需做任何操作。</value>
+  </data>
 </root>

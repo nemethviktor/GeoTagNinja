@@ -2021,4 +2021,14 @@ Ezzel együtt a kód _képes_ más elrendezéseket is értelmezni. Ha a vágóla
   <data name="btn_FfmpegBrowse" xml:space="preserve">
     <value>Tallózás...</value>
   </data>
+  <data name="mbx_UpgradeNotice_ArcGisKeyNoLongerNeeded" xml:space="preserve">
+    <value>A térkép keresőmezőjéhez már nincs szükség ArcGIS API-kulcsra.
+
+A helyeket mostantól a GeoNames szolgáltatással keresi (a Beállításokban megadott felhasználónévvel), majd a Photonnal, végül a Nominatimmal, így ehhez már semmit sem kell regisztrálni. A korábban mentett kulcs már nem használatos.</value>
+  </data>
+  <data name="mbx_UpgradeNotice_NewLanguage" xml:space="preserve">
+    <value>A GeoTagNinja mostantól elérhető {0} nyelven, amelyre a Windows nyelve be van állítva.
+
+Használatához nyissa meg a Beállításokat, válassza ki a Nyelv listából, majd indítsa újra az alkalmazást. A fordítások első vázlatok, ezért szívesen fogadjuk a javításokat (a readme fájlban olvashat arról, hogyan segíthet). Ha az angolt részesíti előnyben, nincs teendője.</value>
+  </data>
 </root>

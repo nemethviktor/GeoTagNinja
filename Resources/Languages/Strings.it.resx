@@ -2021,4 +2021,14 @@ Detto questo, il codice _dovrebbe_ essere in grado di interpretare anche altri f
   <data name="btn_FfmpegBrowse" xml:space="preserve">
     <value>Sfoglia...</value>
   </data>
+  <data name="mbx_UpgradeNotice_ArcGisKeyNoLongerNeeded" xml:space="preserve">
+    <value>La casella di ricerca della mappa non richiede più una chiave API di ArcGIS.
+
+Ora cerca i luoghi con GeoNames (usando il nome utente delle Impostazioni), poi con Photon e infine con Nominatim, quindi non c&apos;è più nulla da registrare. Una chiave salvata in precedenza non viene più usata.</value>
+  </data>
+  <data name="mbx_UpgradeNotice_NewLanguage" xml:space="preserve">
+    <value>GeoTagNinja è ora disponibile in {0}, la lingua impostata in Windows.
+
+Per usarla, apri Impostazioni, selezionala nell&apos;elenco Lingua e riavvia l&apos;app. Le traduzioni sono bozze iniziali, quindi le correzioni sono benvenute (vedi il readme per sapere come aiutare). Se preferisci l&apos;inglese, non devi fare nulla.</value>
+  </data>
 </root>

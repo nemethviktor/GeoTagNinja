@@ -1,8 +1,10 @@
 ﻿using NLog;
 using GeoTagNinja.Helpers.Data;
+using GeoTagNinja.Helpers.Localisation;
 using GeoTagNinja.Helpers.UI;
 using GeoTagNinja.Helpers.Update;
 using GeoTagNinja.Model;
+using GeoTagNinja.Resources.Languages;
 using System;
 using System.Collections.Generic;
 using System.Globalization;
@@ -24,16 +26,36 @@ internal sealed class UpgradeNotice
     }
 
     /// <summary>
+    ///     A notice whose text depends on the user (or is not wanted at all for some users): <paramref name="messageFactory" />
+    ///     runs when the notice is about to be shown and returns the text, or null to show nothing.
+    /// </summary>
+    internal UpgradeNotice(int showIfLastRunBuildAtMost,
+                           Func<string> messageFactory)
+    {
+        ShowIfLastRunBuildAtMost = showIfLastRunBuildAtMost;
+        MessageFactory = messageFactory;
+    }
+
+    /// <summary>
     ///     Shown when the build the user last ran is this or older. Set it to the last build that was released
     ///     <i>without</i> the change being announced (so it must be lower than the build that ships the notice).
     /// </summary>
     internal int ShowIfLastRunBuildAtMost { get; }
 
     /// <summary>
-    ///     The text, in English. It deliberately lives in code rather than in <c>Strings.resx</c>: a build can go
-    ///     public before translators have caught up, and a notice tied to a specific build shouldn't wait for them.
+    ///     The text, as given. Notices are normally built with the <c>messageFactory</c> constructor from a key in
+    ///     <c>Strings.resx</c>, so they are translated like everything else (a language without the key shows English).
     /// </summary>
     internal string Message { get; }
+
+    /// <summary>When set, decides the text (or null for "not for this user") at the moment of showing; see the constructor.</summary>
+    internal Func<string> MessageFactory { get; }
+
+    /// <summary>The text to show now, or null if this notice does not apply to this user after all.</summary>
+    internal string ResolveMessage()
+    {
+        return MessageFactory != null ? MessageFactory() : Message;
+    }
 }
 
 /// <summary>
@@ -61,12 +83,53 @@ internal static class UpgradeNotices
     [
         // The map search no longer needs an ArcGIS API key (GeoNames -> Photon -> Nominatim).
         new UpgradeNotice(showIfLastRunBuildAtMost: 9778,
-            message: "The map's search box no longer needs an ArcGIS API key." +
-                     Environment.NewLine + Environment.NewLine +
-                     "It now looks places up with GeoNames (using the username from your Settings), then Photon, " +
-                     "then Nominatim, so there is nothing to register for it any more. " +
-                     "A key you saved earlier is no longer used.")
+            messageFactory: () => Strings.ResourceManager.GetString(name: "mbx_UpgradeNotice_ArcGisKeyNoLongerNeeded")),
+
+        // The app is now translated: tell users still on English whose Windows is set to a language we have.
+        // 9807 is the last release that did not have the translations (each entry's cutoff is the newest release tag
+        // *before* the change it announces, not a copy of the previous entry's).
+        new UpgradeNotice(showIfLastRunBuildAtMost: 9807,
+            messageFactory: () => NewLanguageNoticeText(appLanguage: HelperVariables.AppLanguage,
+                windowsLanguage: LanguageManager.ResolveDefaultLanguage()))
     ];
+
+    /// <summary>
+    ///     The "GeoTagNinja is now available in your language" text, or null when it would be wrong to show it: the app
+    ///     is not in English already (the user chose a language, or follows Windows into one), or Windows is English or
+    ///     set to a language that is not translated well enough (<see cref="LanguageManager.ResolveDefaultLanguage" />).
+    ///     Pure, so it can be tested.
+    /// </summary>
+    /// <param name="appLanguage">The language the app is running in (a TwoLetterISOLanguageName).</param>
+    /// <param name="windowsLanguage">The translated language that matches the Windows display language, or "en".</param>
+    internal static string NewLanguageNoticeText(string appLanguage,
+                                                 string windowsLanguage)
+    {
+        const string english = "en";
+        if (string.IsNullOrEmpty(value: windowsLanguage) ||
+            windowsLanguage == english ||
+            (!string.IsNullOrEmpty(value: appLanguage) && appLanguage != english))
+        {
+            return null;
+        }
+
+        CultureInfo neutral = CultureInfo.GetCultureInfo(name: windowsLanguage);
+        string englishName = neutral.NativeName == neutral.EnglishName
+            ? neutral.EnglishName
+            : $"{neutral.NativeName} ({neutral.EnglishName})";
+
+        // In the language on offer, since that is the one the user's Windows speaks; the English is kept below it
+        // (unless there is no translation of the text, which would make the two the same).
+        string key = "mbx_UpgradeNotice_NewLanguage";
+        string inOffered = string.Format(provider: CultureInfo.InvariantCulture,
+            format: Strings.ResourceManager.GetString(name: key, culture: LanguageManager.CultureFor(code: windowsLanguage)),
+            neutral.NativeName);
+        string inEnglish = string.Format(provider: CultureInfo.InvariantCulture,
+            format: Strings.ResourceManager.GetString(name: key, culture: CultureInfo.InvariantCulture), englishName);
+
+        return inOffered == inEnglish
+            ? inEnglish
+            : inOffered + Environment.NewLine + Environment.NewLine + "----" + Environment.NewLine + Environment.NewLine + inEnglish;
+    }
 
     private static List<UpgradeNotice> _pending = [];
     private static int _buildToStoreAfterShowing;
@@ -204,12 +267,15 @@ internal static class UpgradeNotices
 
         try
         {
-            if (_pending.Count > 0)
+            List<string> messages = _pending.Select(selector: notice => notice.ResolveMessage())
+                                            .Where(predicate: message => !string.IsNullOrEmpty(value: message))
+                                            .ToList();
+            if (messages.Count > 0)
             {
                 UiServices.ShowMessageBox(
                     message: string.Join(separator: Environment.NewLine + Environment.NewLine + "----" +
                                                     Environment.NewLine + Environment.NewLine,
-                        values: _pending.Select(selector: notice => notice.Message)),
+                        values: messages),
                     caption: "GeoTagNinja",
                     icon: UiMessageIcon.Information);
             }

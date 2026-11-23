@@ -2611,4 +2611,16 @@ That said the code _should_ be able to comprehend other layouts. Note if the cli
     <value>Browse...</value>
     <comment>Settings: browse for the ffmpeg program</comment>
   </data>
+  <data name="mbx_UpgradeNotice_ArcGisKeyNoLongerNeeded" xml:space="preserve">
+    <value>The map&apos;s search box no longer needs an ArcGIS API key.
+
+It now looks places up with GeoNames (using the username from your Settings), then Photon, then Nominatim, so there is nothing to register for it any more. A key you saved earlier is no longer used.</value>
+    <comment>One-off message after an upgrade (shown in the app's language)</comment>
+  </data>
+  <data name="mbx_UpgradeNotice_NewLanguage" xml:space="preserve">
+    <value>GeoTagNinja is now available in {0}, the language your Windows is set to.
+
+To use it, open Settings, pick it in the Language list and restart the app. The translations are first drafts, so corrections are welcome (see the readme for how to help). If you prefer English, there is nothing to do.</value>
+    <comment>One-off message after an upgrade, for users still on English whose Windows is set to a language the app now has. {0} = that language's name. Shown in that language.</comment>
+  </data>
 </root>
