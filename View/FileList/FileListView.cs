@@ -350,11 +350,6 @@ public partial class FileListView : System.Windows.Forms.ListView
     private ListViewColumnSorter LvwColumnSorter;
 
     /// <summary>
-    ///     Tracks if the initializer ReadAndApplySetting was called.
-    /// </summary>
-    private bool _isInitialized;
-
-    /// <summary>
     ///     Pointer to the SHFILEINFO Structure that is initialized to be
     ///     used for this list view.
     /// </summary>
@@ -955,18 +950,8 @@ public partial class FileListView : System.Windows.Forms.ListView
     ///     Must be called before items are added to it.
     /// </summary>
     /// <param name="appLanguage">The application language to use</param>
-    /// <exception cref="InvalidOperationException">
-    ///     If this method is called
-    ///     more than once.
-    /// </exception>
     public void ReadAndApplySetting(string appLanguage)
     {
-        //if (_isInitialized)
-        //{
-        //    throw new InvalidOperationException(
-        //        message: "Trying to initialize the FileListView more than once.");
-        //}
-
         Log.Info(message: "Starting");
         _AppLanguage = appLanguage;
 
@@ -985,8 +970,6 @@ public partial class FileListView : System.Windows.Forms.ListView
         {
             InitializeImageList(); // must be here - if called in constructor, it won't work
         }
-
-        _isInitialized = true;
     }
 
     /// <summary>

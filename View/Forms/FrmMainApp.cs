@@ -506,7 +506,10 @@ public partial class FrmMainApp : Form
         // {
         //     await Task.Delay(500);
         // }
-        // one-off "this changed" messages for users upgrading from older builds
+        // one-off "this changed" messages (and the what's-new notes) for users upgrading from older builds. They open a
+        // dialog with a WebView2 in it, which needs the main window to be on screen and the map's own WebView2 to
+        // have got going, so wait for both rather than opening it from inside OnLoad.
+        await WaitUntilShownAsync();
         UpgradeNotices.ShowPendingNotices();
         // Windows 7 users: once, support for it ends in 2027
         LegacyWindowsNotice.ShowIfNeeded();
@@ -515,6 +518,28 @@ public partial class FrmMainApp : Form
 
         LaunchAutoUpdater();
         Log.Info(message: "OnLoad: Done.");
+    }
+
+    /// <summary>
+    /// Completes once the main window is visible, plus a short pause so the map's WebView2 can finish starting.
+    /// </summary>
+    private async Task WaitUntilShownAsync()
+    {
+        if (!Visible)
+        {
+            TaskCompletionSource<bool> shown = new();
+            void OnShownOnce(object sender,
+                             EventArgs e)
+            {
+                Shown -= OnShownOnce;
+                _ = shown.TrySetResult(result: true);
+            }
+
+            Shown += OnShownOnce;
+            await shown.Task;
+        }
+
+        await Task.Delay(millisecondsDelay: 1500);
     }
 
     /// <summary>

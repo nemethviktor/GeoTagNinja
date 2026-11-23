@@ -585,11 +585,9 @@ public class DirectoryElement
         {
             // An existing attribute that is being set to nothing keeps its slot but holds the blank sentinel, so
             // that the write path can still see that this tag was touched via the version and the deletion flag.
-            bool valueIsBlank = value == null ||
-                                string.IsNullOrWhiteSpace(value: value.ToString());
-
+            // The null test sits in the same expression as the dereference so that nullable flow analysis can see it.
             existingContainer.SetValue(version: version,
-                value: valueIsBlank
+                value: value == null || string.IsNullOrWhiteSpace(value: value.ToString())
                     ? existingContainer.BlankValue
                     : value,
                 isMarkedForDeletion: isMarkedForDeletion);

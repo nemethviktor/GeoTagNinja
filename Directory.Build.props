@@ -7,4 +7,9 @@
     <BaseOutputPath>$(BuildRoot)bin\</BaseOutputPath>
     <MSBuildProjectExtensionsPath>$(BaseIntermediateOutputPath)</MSBuildProjectExtensionsPath>
   </PropertyGroup>
+  <!-- CS8632: "string?" annotations outside a #nullable context. The code uses them as documentation
+       only (nullable context is not enabled on .NET Framework 4.8), so the warning is noise. -->
+  <PropertyGroup>
+    <NoWarn>$(NoWarn);CS8632</NoWarn>
+  </PropertyGroup>
 </Project>

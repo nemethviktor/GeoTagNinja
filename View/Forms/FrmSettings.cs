@@ -33,7 +33,6 @@ public partial class FrmSettings : Form
     private static List<Control> _lstTpgApplicationControls = []; // do not rename
     private static List<Control> _lstTpgGeoNamesControls = []; // do not rename
     private static bool _importHasBeenProcessed;
-    private bool _ignoreRestartWarnings;
     private string _languageSavedInSQL;
     private bool _nowLoadingSettingsData;
 
@@ -826,10 +825,7 @@ public partial class FrmSettings : Form
                                 ckb == ckb_UseDarkMode
                                )
                             {
-                                if (!_ignoreRestartWarnings)
-                                {
-                                    WarnUserToRestartApp();
-                                }
+                                WarnUserToRestartApp();
                             }
                         }
                     }
@@ -841,10 +837,7 @@ public partial class FrmSettings : Form
                         {
                             if (cbx == cbx_Language)
                             {
-                                if (!_ignoreRestartWarnings)
-                                {
-                                    WarnUserToRestartApp();
-                                }
+                                WarnUserToRestartApp();
                             }
                             else if (cbx == cbx_TryUseGeoNamesLanguage)
                             {

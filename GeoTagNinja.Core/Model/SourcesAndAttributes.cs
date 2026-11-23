@@ -1327,8 +1327,8 @@ public static class SourcesAndAttributes
     ///     Represents a mapping between an element and its attributes in the GeoTagNinja application.
     /// </summary>
     /// <remarks>
-    ///     This struct is used to map an element to its attributes, including input and output attributes, IPTC keywords, XMP
-    ///     subjects, and geodata information.
+    ///     This struct is used to map an element to its attributes, including input and output attributes and geodata
+    ///     information.
     ///     It also contains the order ID for the element and a flag indicating whether the element contains geodata.
     /// </remarks>
     private struct ElementAttributeMapping
@@ -1338,8 +1338,6 @@ public static class SourcesAndAttributes
         public Type TypeOfElement;
         public List<string> InAttributes;
         public List<string> OutAttributes;
-        public List<string> IPTCKeywords;
-        public List<string> XMPSubjects;
         public int OrderID;
         public bool isGeoData;
     }

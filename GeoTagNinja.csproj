@@ -154,9 +154,7 @@
     </Compile>
     <Compile Include="View\Forms\FrmMainApp.Help.cs" />
     <Compile Include="View\Forms\FrmMainApp.BatchRename.cs" />
-    <Compile Include="View\FileList\FileListView.BatchRename.cs">
-      <SubType>Component</SubType>
-    </Compile>
+    <Compile Include="View\FileList\FileListView.BatchRename.cs" />
     <Compile Include="View\Forms\FrmCustomiseFormControls.cs">
       <SubType>Form</SubType>
     </Compile>

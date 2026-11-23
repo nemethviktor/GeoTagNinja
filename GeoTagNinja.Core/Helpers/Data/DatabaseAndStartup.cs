@@ -18,8 +18,6 @@ internal static class DatabaseAndStartup
 {
     private static readonly Logger Log = LogManager.GetCurrentClassLogger();
 
-    private static readonly string DoubleQuote = @"""";
-
     /// <summary>
     ///     Creates the SQLite DB if it doesn't yet exist, adds whatever tables a database written by an earlier
     ///     version is missing, and runs the naming migrations.

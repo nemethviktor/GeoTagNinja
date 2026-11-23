@@ -194,6 +194,17 @@ internal sealed class FrmChangelog : Form
                 OpenExternally(uri: e.Uri);
             };
 
+            // if the page does not load (WebView2 can start and still show nothing), show the plain text instead
+            _web.NavigationCompleted += (_,
+                                         e) =>
+            {
+                if (!e.IsSuccess && _web.Visible)
+                {
+                    Log.Warn(message: $"Changelog: page did not load ({e.WebErrorStatus}), showing plain text");
+                    ShowPlainText();
+                }
+            };
+
             _web.NavigateToString(htmlContent: ChangelogParser.ToDocument(sections: _sections,
                 dark: ThemeHelper.IsDark));
         }

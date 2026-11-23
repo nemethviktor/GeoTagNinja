@@ -3,6 +3,7 @@
 **Build 9xxx [202xxxxx]** (upcoming release)
 - FIXED:
 	- Installing over a copy made by the old (Visual Studio) installer left two "GeoTagNinja" entries in Windows' installed apps. The new installer only recognised older installs marked as English; the old one was language-neutral. It now removes those too. If you already have two entries, uninstall the older one (the one without the long version number) once.
+	- The "what's new" notes shown after an update could come up blank. They are now shown once the main window is on screen (not from inside its start-up), and fall back to plain text if the page doesn't load.
 
 **Build 9823 [20261123]**
 - NEW & UPDATED:
