@@ -20,7 +20,21 @@ public partial class ImagePreview : PictureBox
     /// <summary>
     ///     Text to show when there is no image to be shown (is null).
     /// </summary>
-    public string EmptyText { get; set; } = "No image to show";
+    public string EmptyText
+    {
+        get;
+        set
+        {
+            // if the empty-text is what is showing right now, swap it (a language change) and repaint.
+            bool showingEmptyText = base.Image == null && _textToShow == field;
+            field = value;
+            if (showingEmptyText)
+            {
+                _textToShow = value;
+                Invalidate();
+            }
+        }
+    } = "No image to show";
 
     /// <summary>
     ///     Image to show.

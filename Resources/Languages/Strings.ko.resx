@@ -2031,4 +2031,16 @@ ArcGIS는 2024년 6월부터 등록 절차를 변경했습니다. [여기](https
 
 사용하려면 설정을 열고 언어 목록에서 선택한 뒤 앱을 다시 시작하세요. 번역은 초안이므로 수정 사항은 언제든지 환영합니다(도움을 주는 방법은 readme를 참고하세요). 영어를 선호하신다면 별도로 할 일은 없습니다.</value>
   </data>
+  <data name="lbl_MapSearch_Placeholder" xml:space="preserve">
+    <value>주소 또는 장소를 입력하세요. 예: 세종대로 1</value>
+  </data>
+  <data name="lbl_MapSearch_Searching" xml:space="preserve">
+    <value>검색 중...</value>
+  </data>
+  <data name="lbl_MapSearch_NoResults" xml:space="preserve">
+    <value>검색 결과가 없습니다.</value>
+  </data>
+  <data name="lbl_MapSearch_NoSuggestions" xml:space="preserve">
+    <value>제안 항목이 없습니다 - Enter를 눌러 더 넓게 검색하세요.</value>
+  </data>
 </root>

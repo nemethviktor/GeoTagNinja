@@ -1178,6 +1178,26 @@ public partial class FrmMainApp : Form
         return (LatCoordinate, LngCoordinate);
     }
 
+    /// <summary>
+    ///     The map search box's own texts in the current app language, as a JSON object literal for map.html.
+    /// </summary>
+    private static string MapSearchTextsJson() =>
+        JsonSerializer.Serialize(value: new Dictionary<string, string>
+        {
+            ["placeholder"] = HelperControlAndMessageBoxHandling.ReturnControlText(
+                controlName: "lbl_MapSearch_Placeholder",
+                fakeControlType: HelperControlAndMessageBoxHandling.FakeControlTypes.Label),
+            ["searching"] = HelperControlAndMessageBoxHandling.ReturnControlText(
+                controlName: "lbl_MapSearch_Searching",
+                fakeControlType: HelperControlAndMessageBoxHandling.FakeControlTypes.Label),
+            ["noResults"] = HelperControlAndMessageBoxHandling.ReturnControlText(
+                controlName: "lbl_MapSearch_NoResults",
+                fakeControlType: HelperControlAndMessageBoxHandling.FakeControlTypes.Label),
+            ["noSuggestions"] = HelperControlAndMessageBoxHandling.ReturnControlText(
+                controlName: "lbl_MapSearch_NoSuggestions",
+                fakeControlType: HelperControlAndMessageBoxHandling.FakeControlTypes.Label)
+        });
+
     private void UpdateWebView(IDictionary<string, string> replacements)
     {
         string htmlCode = _mapHtmlTemplateCode;
@@ -1187,6 +1207,10 @@ public partial class FrmMainApp : Form
         // The ArcGIS key is only used if the (currently disabled) ArcGIS provider in map.html is re-enabled.
         htmlCode = htmlCode.Replace(oldValue: "replaceGeoNamesUserName",
             newValue: JsonSerializer.Serialize(value: HelperVariables.UserSettingGeoNamesUserName ?? ""));
+        htmlCode = htmlCode.Replace(oldValue: "replaceSearchLanguage",
+            newValue: JsonSerializer.Serialize(value: HelperVariables.AppLanguage ?? ""));
+        htmlCode = htmlCode.Replace(oldValue: "replaceSearchTexts",
+            newValue: MapSearchTextsJson());
         htmlCode = htmlCode.Replace(oldValue: "replaceArcGisApiKey",
             newValue: JsonSerializer.Serialize(value: HelperVariables.UserSettingArcGisApiKey ?? ""));
 
@@ -3977,10 +4001,46 @@ context: ValueFormatContext.Display));
                 controlName: "FrmSettings"
             )
         };
+        string languageBefore = AppLanguage;
         _ = FrmSettings.ShowDialog();
+
+        if (AppLanguage != languageBefore)
+        {
+            ReapplyLanguage();
+        }
 
         // a settings import may have changed the view mode or thumbnail size
         SyncViewFromSettings();
+    }
+
+    /// <summary>
+    ///     Re-translates the main form after the app language was changed in Settings, so no restart is needed.
+    ///     Dialogs are created fresh each time and look the language up on demand, so only what this form (and the
+    ///     file list) translated once at startup has to be redone.
+    /// </summary>
+    private void ReapplyLanguage()
+    {
+        SuspendLayout();
+        AppStartupAssignLabelsToObjects(atStartup: false);
+        lvw_FileList.RefreshColumnHeaderText();
+        if (_folderTreePanel != null)
+        {
+            _folderTreePanel.Captions = BuildFolderTreeCaptions();
+        }
+
+        ResumeLayout();
+
+        // the map page was built with the old language for its place search; update it in place.
+        try
+        {
+            _ = wbv_MapArea.CoreWebView2?.ExecuteScriptAsync(
+                javaScript:
+                $"if (typeof setSearchTexts === 'function') {{ setSearchTexts({JsonSerializer.Serialize(value: AppLanguage ?? "")}, {MapSearchTextsJson()}); }}");
+        }
+        catch (Exception ex)
+        {
+            Log.Warn(message: $"Could not update the map search language: {ex.Message}");
+        }
     }
 
     /// <summary>

@@ -2031,4 +2031,16 @@
 
 لاستخدامها، افتح الإعدادات واختر منها في قائمة اللغة ثم أعد تشغيل التطبيق. الترجمات مسودات أولية، لذا فالتصويبات موضع ترحيب (راجع ملف readme لمعرفة كيفية المساعدة). إذا كنت تفضل الإنجليزية، فلا يلزمك فعل أي شيء.</value>
   </data>
+  <data name="lbl_MapSearch_Placeholder" xml:space="preserve">
+    <value>أدخل عنواناً أو مكاناً، مثل: شارع الملك فهد 1</value>
+  </data>
+  <data name="lbl_MapSearch_Searching" xml:space="preserve">
+    <value>جارٍ البحث...</value>
+  </data>
+  <data name="lbl_MapSearch_NoResults" xml:space="preserve">
+    <value>لم يتم العثور على نتائج.</value>
+  </data>
+  <data name="lbl_MapSearch_NoSuggestions" xml:space="preserve">
+    <value>لا توجد اقتراحات - اضغط Enter للبحث على نطاق أوسع.</value>
+  </data>
 </root>

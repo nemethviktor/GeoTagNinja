@@ -2031,4 +2031,16 @@ ArcGIS ने जून 2024 पासून त्यांची नोंद�
 
 वापरण्यासाठी, सेटिंग्ज उघडा, भाषा सूचीमधून ती निवडा आणि अॅप पुन्हा सुरू करा. भाषांतरे प्राथमिक मसुदे आहेत, त्यामुळे सुधारणा स्वागतार्ह आहेत (कशी मदत करावी ते readme मध्ये पहा). तुम्हाला इंग्रजी आवडत असल्यास, काहीही करण्याची गरज नाही.</value>
   </data>
+  <data name="lbl_MapSearch_Placeholder" xml:space="preserve">
+    <value>पत्ता किंवा ठिकाण टाका, उदा. महात्मा गांधी रोड 1</value>
+  </data>
+  <data name="lbl_MapSearch_Searching" xml:space="preserve">
+    <value>शोधत आहे...</value>
+  </data>
+  <data name="lbl_MapSearch_NoResults" xml:space="preserve">
+    <value>कोणतेही निकाल सापडले नाहीत.</value>
+  </data>
+  <data name="lbl_MapSearch_NoSuggestions" xml:space="preserve">
+    <value>सूचना नाहीत - अधिक व्यापक शोधासाठी Enter दाबा.</value>
+  </data>
 </root>

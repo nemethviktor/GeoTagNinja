@@ -2090,4 +2090,16 @@ Elle recherche désormais les lieux avec GeoNames (à l&apos;aide du nom d&apos;
 
 Pour l&apos;utiliser, ouvrez les Paramètres, choisissez-la dans la liste Langue et redémarrez l&apos;application. Les traductions sont des premières ébauches, donc vos corrections sont les bienvenues (consultez le readme pour savoir comment aider). Si vous préférez l&apos;anglais, vous n&apos;avez rien à faire.</value>
   </data>
+  <data name="lbl_MapSearch_Placeholder" xml:space="preserve">
+    <value>Saisissez une adresse ou un lieu, p. ex. 1 rue de Rivoli</value>
+  </data>
+  <data name="lbl_MapSearch_Searching" xml:space="preserve">
+    <value>Recherche en cours...</value>
+  </data>
+  <data name="lbl_MapSearch_NoResults" xml:space="preserve">
+    <value>Aucun résultat trouvé.</value>
+  </data>
+  <data name="lbl_MapSearch_NoSuggestions" xml:space="preserve">
+    <value>Aucune suggestion - appuyez sur Entrée pour élargir la recherche.</value>
+  </data>
 </root>

@@ -2031,4 +2031,16 @@ A helyeket mostantól a GeoNames szolgáltatással keresi (a Beállításokban m
 
 Használatához nyissa meg a Beállításokat, válassza ki a Nyelv listából, majd indítsa újra az alkalmazást. A fordítások első vázlatok, ezért szívesen fogadjuk a javításokat (a readme fájlban olvashat arról, hogyan segíthet). Ha az angolt részesíti előnyben, nincs teendője.</value>
   </data>
+  <data name="lbl_MapSearch_Placeholder" xml:space="preserve">
+    <value>Adja meg a címet vagy helyet, pl. Fő utca 1</value>
+  </data>
+  <data name="lbl_MapSearch_Searching" xml:space="preserve">
+    <value>Keresés...</value>
+  </data>
+  <data name="lbl_MapSearch_NoResults" xml:space="preserve">
+    <value>Nincs találat.</value>
+  </data>
+  <data name="lbl_MapSearch_NoSuggestions" xml:space="preserve">
+    <value>Nincs javaslat – nyomja meg az Entert a szélesebb kereséshez.</value>
+  </data>
 </root>

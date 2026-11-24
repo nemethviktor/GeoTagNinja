@@ -2623,4 +2623,20 @@ It now looks places up with GeoNames (using the username from your Settings), th
 To use it, open Settings, pick it in the Language list and restart the app. The translations are first drafts, so corrections are welcome (see the readme for how to help). If you prefer English, there is nothing to do.</value>
     <comment>One-off message after an upgrade, for users still on English whose Windows is set to a language the app now has. {0} = that language's name. Shown in that language.</comment>
   </data>
+  <data name="lbl_MapSearch_Placeholder" xml:space="preserve">
+    <value>Enter an address or place e.g. 1 York St</value>
+    <comment>Text in the map's place-search box (map.html). Refer to the English for translation pls.</comment>
+  </data>
+  <data name="lbl_MapSearch_Searching" xml:space="preserve">
+    <value>Searching...</value>
+    <comment>Text in the map's place-search box (map.html). Refer to the English for translation pls.</comment>
+  </data>
+  <data name="lbl_MapSearch_NoResults" xml:space="preserve">
+    <value>No results found.</value>
+    <comment>Text in the map's place-search box (map.html). Refer to the English for translation pls.</comment>
+  </data>
+  <data name="lbl_MapSearch_NoSuggestions" xml:space="preserve">
+    <value>No suggestions - press Enter to search more widely.</value>
+    <comment>Text in the map's place-search box (map.html). Refer to the English for translation pls.</comment>
+  </data>
 </root>

@@ -809,6 +809,7 @@ public partial class FrmSettings : Form
     private void btn_Generic_OK_Click(object sender,
                                       EventArgs e)
     {
+        bool languageChanged = false;
         if (!_importHasBeenProcessed)
         {
             IEnumerable<Control> controls = ControlTraversal.GetAllControls(control: this);
@@ -837,7 +838,9 @@ public partial class FrmSettings : Form
                         {
                             if (cbx == cbx_Language)
                             {
-                                WarnUserToRestartApp();
+                                // no restart needed: the new language is applied below, once saved, and the main
+                                // form re-translates itself when this dialog closes (FrmMainApp.ReapplyLanguage).
+                                languageChanged = true;
                             }
                             else if (cbx == cbx_TryUseGeoNamesLanguage)
                             {
@@ -905,6 +908,12 @@ public partial class FrmSettings : Form
             }
 
             ApplicationSettings.DataTransferSQLiteSettingsFromPreQueue();
+
+            if (languageChanged)
+            {
+                // re-reads cbx_Language from the settings just saved; sets AppLanguage and the UI culture.
+                _ = AppStartup.AppStartupReadAppLanguage();
+            }
         }
 
         HelperVariables.DtHelperDataApplicationSettingsPreQueue.Clear();

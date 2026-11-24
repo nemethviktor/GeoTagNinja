@@ -41,18 +41,7 @@ public partial class FrmMainApp
         _folderTreePanel = new FolderTreePanel
         {
             Dock = DockStyle.Fill,
-            Captions = new FolderTreePanel.FolderTreeCaptions
-            {
-                Title = FolderTreeText(controlName: "lbl_FolderTree_Title"),
-                Favourites = FolderTreeText(controlName: "tsb_FolderTree_Favourites"),
-                AddCurrent = FolderTreeText(controlName: "tmi_FolderTree_AddCurrent"),
-                RemoveCurrent = FolderTreeText(controlName: "tmi_FolderTree_RemoveCurrent"),
-                NoFavourites = FolderTreeText(controlName: "tmi_FolderTree_NoFavourites"),
-                Refresh = FolderTreeText(controlName: "tsb_FolderTree_Refresh"),
-                Hide = FolderTreeText(controlName: "tsb_FolderTree_Hide"),
-                AddThis = FolderTreeText(controlName: "cmi_FolderTree_AddThis"),
-                RemoveThis = FolderTreeText(controlName: "cmi_FolderTree_RemoveThis")
-            },
+            Captions = BuildFolderTreeCaptions(),
             Bookmarks = FolderBookmarks.Parse(text: ReadFolderTreeSetting(settingId: FolderBookmarksSettingId))
         };
         _folderTreePanel.FolderChosen += async (_,
@@ -141,6 +130,23 @@ public partial class FrmMainApp
             _folderTreeSyncTimer.Start();
         };
     }
+
+    /// <summary>
+    ///     The folder tree's captions in the current app language (also used to re-translate it after a language change).
+    /// </summary>
+    private static FolderTreePanel.FolderTreeCaptions BuildFolderTreeCaptions() =>
+        new()
+        {
+            Title = FolderTreeText(controlName: "lbl_FolderTree_Title"),
+            Favourites = FolderTreeText(controlName: "tsb_FolderTree_Favourites"),
+            AddCurrent = FolderTreeText(controlName: "tmi_FolderTree_AddCurrent"),
+            RemoveCurrent = FolderTreeText(controlName: "tmi_FolderTree_RemoveCurrent"),
+            NoFavourites = FolderTreeText(controlName: "tmi_FolderTree_NoFavourites"),
+            Refresh = FolderTreeText(controlName: "tsb_FolderTree_Refresh"),
+            Hide = FolderTreeText(controlName: "tsb_FolderTree_Hide"),
+            AddThis = FolderTreeText(controlName: "cmi_FolderTree_AddThis"),
+            RemoveThis = FolderTreeText(controlName: "cmi_FolderTree_RemoveThis")
+        };
 
     private static string FolderTreeText(string controlName) =>
         HelperControlAndMessageBoxHandling.ReturnControlText(

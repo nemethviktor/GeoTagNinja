@@ -137,6 +137,22 @@
         const geoNamesUserName = replaceGeoNamesUserName;
         const arcGisApiKey = replaceArcGisApiKey;
         const searchResultLimit = 6;
+        // The app's UI language (ISO 639-1, e.g. "hu"): the providers return place names in it where they can.
+        // A var so the app can change it live after a language change (see FrmMainApp.ReapplyLanguage).
+        var searchLanguage = replaceSearchLanguage;
+        // Photon only supports these (anything else is rejected with an error), so only send it one of them.
+        const photonLanguages = ['en', 'de', 'fr', 'it'];
+        // The search box's own texts (placeholder and status lines), translated by the app: { placeholder, searching, noResults, noSuggestions }.
+        var searchTexts = replaceSearchTexts;
+        var searchInput = null;
+        // Called by the app after a language change, so the open page follows without a reload.
+        function setSearchTexts(language, texts) {
+            searchLanguage = language;
+            searchTexts = texts;
+            if (searchInput) {
+                searchInput.placeholder = texts.placeholder;
+            }
+        }
 
         async function fetchJson(url, signal) {
             const response = await fetch(url, { signal: signal });
@@ -159,7 +175,8 @@
             enabled: function () { return geoNamesUserName.length > 0; },
             search: async function (query, signal) {
                 const data = await fetchJson('https://secure.geonames.org/searchJSON?style=MEDIUM&maxRows=' + searchResultLimit +
-                    '&q=' + encodeURIComponent(query) + '&username=' + encodeURIComponent(geoNamesUserName), signal);
+                    '&q=' + encodeURIComponent(query) + (searchLanguage ? '&lang=' + encodeURIComponent(searchLanguage) : '') +
+                    '&username=' + encodeURIComponent(geoNamesUserName), signal);
                 if (data.status) {
                     // GeoNames reports errors (invalid user, credits exhausted...) as HTTP 200 with a status object
                     throw new Error(data.status.message);
@@ -177,7 +194,9 @@
             search: async function (query, signal) {
                 const centre = map.getCenter(); // Photon uses this to rank nearer matches higher
                 const data = await fetchJson('https://photon.komoot.io/api/?limit=' + searchResultLimit +
-                    '&lat=' + centre.lat + '&lon=' + centre.lng + '&q=' + encodeURIComponent(query), signal);
+                    '&lat=' + centre.lat + '&lon=' + centre.lng +
+                    (photonLanguages.indexOf(searchLanguage) >= 0 ? '&lang=' + searchLanguage : '') +
+                    '&q=' + encodeURIComponent(query), signal);
                 return (data.features || []).map(function (f) {
                     const p = f.properties || {};
                     const street = [p.housenumber, p.street].filter(Boolean).join(' ');
@@ -196,7 +215,8 @@
             enabled: function () { return true; },
             search: async function (query, signal) {
                 const data = await fetchJson('https://nominatim.openstreetmap.org/search?format=jsonv2&limit=' + searchResultLimit +
-                    '&q=' + encodeURIComponent(query), signal);
+                    '&q=' + encodeURIComponent(query) +
+                    (searchLanguage ? '&accept-language=' + encodeURIComponent(searchLanguage) : ''), signal);
                 return data.map(function (r) {
                     return { label: r.display_name, lat: parseFloat(r.lat), lng: parseFloat(r.lon) };
                 });
@@ -274,7 +294,8 @@
                 var debounceTimer = null;
 
                 input.type = 'text';
-                input.placeholder = 'Enter an address or place e.g. 1 York St';
+                input.placeholder = searchTexts.placeholder;
+                searchInput = input; // so a language change can retitle it (setSearchTexts)
                 input.autocomplete = 'off';
                 list.style.display = 'none';
 
@@ -323,14 +344,14 @@
 
                 async function search(query, isSubmit) {
                     if (isSubmit || list.style.display === 'none') {
-                        showStatus('Searching...');
+                        showStatus(searchTexts.searching);
                     }
                     var outcome = await runPlaceSearch(query, isSubmit);
                     if (outcome.sequence !== searchSequence) {
                         return; // a newer search is already running
                     }
                     if (outcome.items.length === 0) {
-                        showStatus(isSubmit ? 'No results found.' : 'No suggestions - press Enter to search more widely.');
+                        showStatus(isSubmit ? searchTexts.noResults : searchTexts.noSuggestions);
                     } else if (isSubmit) {
                         showItems(outcome.items);
                         choose(outcome.items[0]);

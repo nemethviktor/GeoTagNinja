@@ -2031,4 +2031,16 @@ Ahora busca lugares con GeoNames (usando el nombre de usuario de Configuración)
 
 Para usarlo, abra Configuración, elíjalo en la lista Idioma y reinicie la aplicación. Las traducciones son borradores iniciales, así que agradecemos las correcciones (consulte el readme para saber cómo ayudar). Si prefiere el inglés, no tiene que hacer nada.</value>
   </data>
+  <data name="lbl_MapSearch_Placeholder" xml:space="preserve">
+    <value>Introduce una dirección o lugar, p. ej. Calle Mayor 1</value>
+  </data>
+  <data name="lbl_MapSearch_Searching" xml:space="preserve">
+    <value>Buscando...</value>
+  </data>
+  <data name="lbl_MapSearch_NoResults" xml:space="preserve">
+    <value>No se encontraron resultados.</value>
+  </data>
+  <data name="lbl_MapSearch_NoSuggestions" xml:space="preserve">
+    <value>No hay sugerencias: pulsa Enter para buscar en un área más amplia.</value>
+  </data>
 </root>

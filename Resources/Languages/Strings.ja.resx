@@ -2031,4 +2031,16 @@ ArcGIS は 2024 年 6 月に登録手続きを変更しました。[こちら](h
 
 使用するには、設定を開いて「言語」の一覧からこの言語を選び、アプリを再起動してください。翻訳は最初の草稿のため、修正の提案を歓迎します（協力方法は readme をご覧ください）。英語を希望する場合は、何もする必要はありません。</value>
   </data>
+  <data name="lbl_MapSearch_Placeholder" xml:space="preserve">
+    <value>住所または場所を入力（例: 東京都千代田区丸の内1-1）</value>
+  </data>
+  <data name="lbl_MapSearch_Searching" xml:space="preserve">
+    <value>検索中...</value>
+  </data>
+  <data name="lbl_MapSearch_NoResults" xml:space="preserve">
+    <value>結果が見つかりません。</value>
+  </data>
+  <data name="lbl_MapSearch_NoSuggestions" xml:space="preserve">
+    <value>候補はありません - Enter キーを押して、より広い範囲で検索してください。</value>
+  </data>
 </root>

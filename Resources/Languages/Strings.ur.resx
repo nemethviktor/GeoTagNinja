@@ -2031,4 +2031,16 @@ ArcGIS نے جون 2024 سے اپنا رجسٹریشن کا عمل تبدیل ک
 
 اسے استعمال کرنے کے لیے ترتیبات کھولیں، زبان کی فہرست میں سے اسے منتخب کریں اور ایپ کو دوبارہ شروع کریں۔ ترجمے ابتدائی مسودے ہیں، اس لیے اصلاحات خوش آمدید ہیں (مدد کیسے کریں یہ readme میں دیکھیں)۔ اگر آپ انگریزی کو ترجیح دیتے ہیں تو کچھ کرنے کی ضرورت نہیں۔</value>
   </data>
+  <data name="lbl_MapSearch_Placeholder" xml:space="preserve">
+    <value>پتہ یا مقام درج کریں، مثلاً مال روڈ 1</value>
+  </data>
+  <data name="lbl_MapSearch_Searching" xml:space="preserve">
+    <value>تلاش جاری ہے...</value>
+  </data>
+  <data name="lbl_MapSearch_NoResults" xml:space="preserve">
+    <value>کوئی نتیجہ نہیں ملا۔</value>
+  </data>
+  <data name="lbl_MapSearch_NoSuggestions" xml:space="preserve">
+    <value>کوئی تجویز نہیں - مزید وسیع تلاش کے لیے Enter دبائیں۔</value>
+  </data>
 </root>

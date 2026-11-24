@@ -2031,4 +2031,16 @@ ArcGIS از ژوئن ۲۰۲۴ روند ثبت‌نام خود را تغییر د
 
 برای استفاده از آن، تنظیمات را باز کنید، آن را در فهرست «زبان» انتخاب کنید و برنامه را دوباره راه‌اندازی کنید. ترجمه‌ها پیش‌نویس اولیه هستند، بنابراین اصلاحات شما استقبال می‌شود (برای دانستن نحوه کمک به readme مراجعه کنید). اگر انگلیسی را ترجیح می‌دهید، کاری لازم نیست.</value>
   </data>
+  <data name="lbl_MapSearch_Placeholder" xml:space="preserve">
+    <value>نشانی یا مکان را وارد کنید، مثلاً خیابان ولیعصر ۱</value>
+  </data>
+  <data name="lbl_MapSearch_Searching" xml:space="preserve">
+    <value>در حال جستجو...</value>
+  </data>
+  <data name="lbl_MapSearch_NoResults" xml:space="preserve">
+    <value>نتیجه‌ای یافت نشد.</value>
+  </data>
+  <data name="lbl_MapSearch_NoSuggestions" xml:space="preserve">
+    <value>پیشنهادی وجود ندارد - برای جستجوی گسترده‌تر Enter را بزنید.</value>
+  </data>
 </root>

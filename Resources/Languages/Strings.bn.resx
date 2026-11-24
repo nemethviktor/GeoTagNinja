@@ -2031,4 +2031,16 @@ ArcGIS ২০২৪ সালের জুন থেকে তাদের ন�
 
 এটি ব্যবহার করতে, সেটিংস খুলুন, ভাষা তালিকা থেকে এটি বেছে নিন এবং অ্যাপটি আবার চালু করুন। অনুবাদগুলো প্রাথমিক খসড়া, তাই সংশোধনী স্বাগত (কীভাবে সাহায্য করবেন তা readme-তে দেখুন)। আপনি যদি ইংরেজি পছন্দ করেন, তাহলে কিছু করার নেই।</value>
   </data>
+  <data name="lbl_MapSearch_Placeholder" xml:space="preserve">
+    <value>ঠিকানা বা স্থান লিখুন, যেমন মিরপুর রোড ১</value>
+  </data>
+  <data name="lbl_MapSearch_Searching" xml:space="preserve">
+    <value>খোঁজা হচ্ছে...</value>
+  </data>
+  <data name="lbl_MapSearch_NoResults" xml:space="preserve">
+    <value>কোনো ফলাফল পাওয়া যায়নি।</value>
+  </data>
+  <data name="lbl_MapSearch_NoSuggestions" xml:space="preserve">
+    <value>কোনো পরামর্শ নেই - আরও বিস্তৃত অনুসন্ধানের জন্য Enter চাপুন।</value>
+  </data>
 </root>

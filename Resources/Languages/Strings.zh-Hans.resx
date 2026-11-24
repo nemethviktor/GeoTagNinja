@@ -2031,4 +2031,16 @@ ArcGIS 自 2024 年 6 月起更改了注册流程。请在[此处](https://locat
 
 要使用它，请打开“设置”，在“语言”下拉列表中选择它，然后重启应用。这些翻译是初稿，欢迎提出修正（如何帮助请参阅 readme）。如果您更喜欢英文，无需做任何操作。</value>
   </data>
+  <data name="lbl_MapSearch_Placeholder" xml:space="preserve">
+    <value>输入地址或地点，例如：中山路1号</value>
+  </data>
+  <data name="lbl_MapSearch_Searching" xml:space="preserve">
+    <value>搜索中...</value>
+  </data>
+  <data name="lbl_MapSearch_NoResults" xml:space="preserve">
+    <value>未找到结果。</value>
+  </data>
+  <data name="lbl_MapSearch_NoSuggestions" xml:space="preserve">
+    <value>没有建议 - 按 Enter 键进行更广泛的搜索。</value>
+  </data>
 </root>

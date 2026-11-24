@@ -2031,4 +2031,16 @@ Sasa maeneo hutafutwa kwanza kupitia GeoNames (kwa kutumia jina la mtumiaji kuto
 
 Ili kuitumia, fungua Mipangilio, chagua lugha hiyo kwenye orodha ya Lugha kisha uanzishe upya programu. Tafsiri ni rasimu za awali, kwa hiyo marekebisho yanakaribishwa (tazama readme kuona jinsi ya kusaidia). Ukipendelea Kiingereza, huhitaji kufanya chochote.</value>
   </data>
+  <data name="lbl_MapSearch_Placeholder" xml:space="preserve">
+    <value>Weka anwani au mahali, mf. Barabara ya Uhuru 1</value>
+  </data>
+  <data name="lbl_MapSearch_Searching" xml:space="preserve">
+    <value>Inatafuta...</value>
+  </data>
+  <data name="lbl_MapSearch_NoResults" xml:space="preserve">
+    <value>Hakuna matokeo yaliyopatikana.</value>
+  </data>
+  <data name="lbl_MapSearch_NoSuggestions" xml:space="preserve">
+    <value>Hakuna mapendekezo - bonyeza Enter kutafuta zaidi.</value>
+  </data>
 </root>

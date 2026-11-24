@@ -883,6 +883,15 @@ public partial class FileListView : System.Windows.Forms.ListView
             Log.Trace(message: $"Added column: {clhName}");
         }
 
+        RefreshColumnHeaderText();
+    }
+
+    /// <summary>
+    ///     (Re)translates the column header text in the current app language. Widths, order and sorting are untouched,
+    ///     so it is also used when the language is changed while the app is running.
+    /// </summary>
+    internal void RefreshColumnHeaderText()
+    {
         // Encapsulate locatization - in case it fails above column setup still there...
         try
         {

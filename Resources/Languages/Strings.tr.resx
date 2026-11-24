@@ -2031,4 +2031,16 @@ Artık yerler önce GeoNames (Ayarlar&apos;daki kullanıcı adı kullanılarak),
 
 Kullanmak için Ayarlar&apos;ı açın, Dil listesinden seçin ve uygulamayı yeniden başlatın. Çeviriler ilk taslaklardır, bu yüzden düzeltmeler memnuniyetle karşılanır (nasıl yardımcı olabileceğinizi readme dosyasında bulabilirsiniz). İngilizceyi tercih ederseniz yapmanız gereken bir şey yok.</value>
   </data>
+  <data name="lbl_MapSearch_Placeholder" xml:space="preserve">
+    <value>Bir adres veya yer girin, örn. Atatürk Caddesi 1</value>
+  </data>
+  <data name="lbl_MapSearch_Searching" xml:space="preserve">
+    <value>Aranıyor...</value>
+  </data>
+  <data name="lbl_MapSearch_NoResults" xml:space="preserve">
+    <value>Sonuç bulunamadı.</value>
+  </data>
+  <data name="lbl_MapSearch_NoSuggestions" xml:space="preserve">
+    <value>Öneri yok - daha geniş arama için Enter tuşuna basın.</value>
+  </data>
 </root>

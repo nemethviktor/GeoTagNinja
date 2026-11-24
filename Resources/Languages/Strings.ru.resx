@@ -2031,4 +2031,16 @@
 
 Чтобы использовать его, откройте Настройки, выберите его в списке «Язык» и перезапустите приложение. Переводы являются первоначальными черновиками, поэтому исправления приветствуются (как помочь, см. в readme). Если вы предпочитаете английский, ничего делать не нужно.</value>
   </data>
+  <data name="lbl_MapSearch_Placeholder" xml:space="preserve">
+    <value>Введите адрес или место, например: ул. Тверская, 1</value>
+  </data>
+  <data name="lbl_MapSearch_Searching" xml:space="preserve">
+    <value>Поиск...</value>
+  </data>
+  <data name="lbl_MapSearch_NoResults" xml:space="preserve">
+    <value>Ничего не найдено.</value>
+  </data>
+  <data name="lbl_MapSearch_NoSuggestions" xml:space="preserve">
+    <value>Нет подсказок - нажмите Enter для более широкого поиска.</value>
+  </data>
 </root>

@@ -2031,4 +2031,16 @@ ArcGIS змінили процес реєстрації з червня 2024 р�
 
 Щоб скористатися нею, відкрийте Налаштування, виберіть цю мову у списку «Мова» та перезапустіть програму. Переклади є попередніми чернетками, тож виправлення вітаються (як допомогти, дивіться в readme). Якщо ви віддаєте перевагу англійській, нічого робити не потрібно.</value>
   </data>
+  <data name="lbl_MapSearch_Placeholder" xml:space="preserve">
+    <value>Введіть адресу або місце, наприклад: вул. Хрещатик, 1</value>
+  </data>
+  <data name="lbl_MapSearch_Searching" xml:space="preserve">
+    <value>Пошук...</value>
+  </data>
+  <data name="lbl_MapSearch_NoResults" xml:space="preserve">
+    <value>Результатів не знайдено.</value>
+  </data>
+  <data name="lbl_MapSearch_NoSuggestions" xml:space="preserve">
+    <value>Немає пропозицій - натисніть Enter для ширшого пошуку.</value>
+  </data>
 </root>

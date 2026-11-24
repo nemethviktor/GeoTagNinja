@@ -2031,4 +2031,16 @@ ArcGIS జూన్ 2024 నుండి వారి నమోదు ప్ర�
 
 దీన్ని ఉపయోగించడానికి, సెట్టింగ్స్ తెరిచి, భాష జాబితాలో దీన్ని ఎంచుకుని, యాప్‌ను మళ్లీ ప్రారంభించండి. అనువాదాలు ప్రాథమిక డ్రాఫ్ట్‌లు, కాబట్టి సవరణలు స్వాగతం (ఎలా సహాయం చేయాలో readme లో చూడండి). మీరు ఇంగ్లీష్‌ను ఇష్టపడితే, ఏమీ చేయనవసరం లేదు.</value>
   </data>
+  <data name="lbl_MapSearch_Placeholder" xml:space="preserve">
+    <value>చిరునామా లేదా ప్రదేశాన్ని నమోదు చేయండి, ఉదా. గాంధీ రోడ్ 1</value>
+  </data>
+  <data name="lbl_MapSearch_Searching" xml:space="preserve">
+    <value>వెతుకుతోంది...</value>
+  </data>
+  <data name="lbl_MapSearch_NoResults" xml:space="preserve">
+    <value>ఫలితాలు ఏవీ కనుగొనబడలేదు.</value>
+  </data>
+  <data name="lbl_MapSearch_NoSuggestions" xml:space="preserve">
+    <value>సూచనలు లేవు - మరింత విస్తృతంగా వెతకడానికి Enter నొక్కండి.</value>
+  </data>
 </root>

@@ -2031,4 +2031,16 @@ Kini tempat dicari menggunakan GeoNames (memakai nama pengguna dari Pengaturan),
 
 Untuk menggunakannya, buka Pengaturan, pilih di daftar Bahasa, lalu mulai ulang aplikasi. Terjemahannya masih draf awal, jadi koreksi sangat diterima (lihat readme untuk cara membantu). Jika Anda lebih suka bahasa Inggris, tidak ada yang perlu dilakukan.</value>
   </data>
+  <data name="lbl_MapSearch_Placeholder" xml:space="preserve">
+    <value>Masukkan alamat atau tempat, mis. Jalan Sudirman 1</value>
+  </data>
+  <data name="lbl_MapSearch_Searching" xml:space="preserve">
+    <value>Mencari...</value>
+  </data>
+  <data name="lbl_MapSearch_NoResults" xml:space="preserve">
+    <value>Tidak ada hasil yang ditemukan.</value>
+  </data>
+  <data name="lbl_MapSearch_NoSuggestions" xml:space="preserve">
+    <value>Tidak ada saran - tekan Enter untuk mencari lebih luas.</value>
+  </data>
 </root>

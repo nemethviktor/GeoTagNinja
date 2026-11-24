@@ -151,18 +151,29 @@
     </Compile>
     <Compile Include="View\Forms\FrmMainApp.FolderTree.cs">
       <DependentUpon>FrmMainApp.cs</DependentUpon>
+      <SubType>Form</SubType>
     </Compile>
-    <Compile Include="View\Forms\FrmMainApp.Help.cs" />
-    <Compile Include="View\Forms\FrmMainApp.BatchRename.cs" />
-    <Compile Include="View\FileList\FileListView.BatchRename.cs" />
+    <Compile Include="View\Forms\FrmMainApp.Help.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="View\Forms\FrmMainApp.BatchRename.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="View\FileList\FileListView.BatchRename.cs">
+      <SubType>Component</SubType>
+    </Compile>
     <Compile Include="View\Forms\FrmCustomiseFormControls.cs">
       <SubType>Form</SubType>
     </Compile>
     <Compile Include="View\Forms\FrmCustomiseFormControls.Designer.cs">
       <DependentUpon>FrmCustomiseFormControls.cs</DependentUpon>
     </Compile>
-    <Compile Include="View\Forms\FrmMainApp.ViewMenu.cs" />
-    <Compile Include="View\Forms\FrmMainApp.Startup.cs" />
+    <Compile Include="View\Forms\FrmMainApp.ViewMenu.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="View\Forms\FrmMainApp.Startup.cs">
+      <SubType>Form</SubType>
+    </Compile>
     <Compile Include="View\Forms\FrmPleaseWaitBox.cs">
       <SubType>Form</SubType>
     </Compile>

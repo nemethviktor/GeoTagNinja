@@ -2090,4 +2090,16 @@
 
 இதைப் பயன்படுத்த, அமைப்புகளைத் திறந்து, மொழி பட்டியலில் இதைத் தேர்ந்தெடுத்து, பயன்பாட்டை மீண்டும் தொடங்கவும். மொழிபெயர்ப்புகள் முதற்கட்ட வரைவுகள்; எனவே திருத்தங்கள் வரவேற்கப்படுகின்றன (உதவுவது எப்படி என்பதை readme இல் காண்க). நீங்கள் ஆங்கிலத்தை விரும்பினால், எதுவும் செய்ய வேண்டியதில்லை.</value>
   </data>
+  <data name="lbl_MapSearch_Placeholder" xml:space="preserve">
+    <value>முகவரி அல்லது இடத்தை உள்ளிடவும், எ.கா. அண்ணா சாலை 1</value>
+  </data>
+  <data name="lbl_MapSearch_Searching" xml:space="preserve">
+    <value>தேடுகிறது...</value>
+  </data>
+  <data name="lbl_MapSearch_NoResults" xml:space="preserve">
+    <value>முடிவுகள் எதுவும் கிடைக்கவில்லை.</value>
+  </data>
+  <data name="lbl_MapSearch_NoSuggestions" xml:space="preserve">
+    <value>பரிந்துரைகள் இல்லை - விரிவாகத் தேட Enter அழுத்தவும்.</value>
+  </data>
 </root>

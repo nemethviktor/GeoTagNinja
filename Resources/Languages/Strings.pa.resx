@@ -2031,4 +2031,16 @@ ArcGIS ਨੇ ਜੂਨ 2024 ਤੋਂ ਆਪਣੀ ਰਜਿਸਟ੍ਰੇਸ�
 
 ਇਸ ਨੂੰ ਵਰਤਣ ਲਈ, ਸੈਟਿੰਗਾਂ ਖੋਲ੍ਹੋ, ਭਾਸ਼ਾ ਸੂਚੀ ਵਿੱਚੋਂ ਇਸਨੂੰ ਚੁਣੋ ਅਤੇ ਐਪ ਨੂੰ ਮੁੜ ਚਾਲੂ ਕਰੋ। ਅਨੁਵਾਦ ਸ਼ੁਰੂਆਤੀ ਖਰੜੇ ਹਨ, ਇਸ ਲਈ ਸੁਧਾਰਾਂ ਦਾ ਸਵਾਗਤ ਹੈ (ਮਦਦ ਕਿਵੇਂ ਕਰਨੀ ਹੈ ਇਹ readme ਵਿੱਚ ਦੇਖੋ)। ਜੇ ਤੁਸੀਂ ਅੰਗਰੇਜ਼ੀ ਨੂੰ ਤਰਜੀਹ ਦਿੰਦੇ ਹੋ, ਤਾਂ ਕੁਝ ਕਰਨ ਦੀ ਲੋੜ ਨਹੀਂ ਹੈ।</value>
   </data>
+  <data name="lbl_MapSearch_Placeholder" xml:space="preserve">
+    <value>ਪਤਾ ਜਾਂ ਥਾਂ ਦਰਜ ਕਰੋ, ਜਿਵੇਂ ਕਿ ਮਾਲ ਰੋਡ 1</value>
+  </data>
+  <data name="lbl_MapSearch_Searching" xml:space="preserve">
+    <value>ਖੋਜ ਰਿਹਾ ਹੈ...</value>
+  </data>
+  <data name="lbl_MapSearch_NoResults" xml:space="preserve">
+    <value>ਕੋਈ ਨਤੀਜਾ ਨਹੀਂ ਮਿਲਿਆ।</value>
+  </data>
+  <data name="lbl_MapSearch_NoSuggestions" xml:space="preserve">
+    <value>ਕੋਈ ਸੁਝਾਅ ਨਹੀਂ - ਹੋਰ ਵਿਆਪਕ ਖੋਜ ਲਈ Enter ਦਬਾਓ।</value>
+  </data>
 </root>

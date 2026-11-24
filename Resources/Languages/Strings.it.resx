@@ -2031,4 +2031,16 @@ Ora cerca i luoghi con GeoNames (usando il nome utente delle Impostazioni), poi 
 
 Per usarla, apri Impostazioni, selezionala nell&apos;elenco Lingua e riavvia l&apos;app. Le traduzioni sono bozze iniziali, quindi le correzioni sono benvenute (vedi il readme per sapere come aiutare). Se preferisci l&apos;inglese, non devi fare nulla.</value>
   </data>
+  <data name="lbl_MapSearch_Placeholder" xml:space="preserve">
+    <value>Inserisci un indirizzo o un luogo, es. Via Roma 1</value>
+  </data>
+  <data name="lbl_MapSearch_Searching" xml:space="preserve">
+    <value>Ricerca in corso...</value>
+  </data>
+  <data name="lbl_MapSearch_NoResults" xml:space="preserve">
+    <value>Nessun risultato trovato.</value>
+  </data>
+  <data name="lbl_MapSearch_NoSuggestions" xml:space="preserve">
+    <value>Nessun suggerimento - premi Invio per cercare in modo più ampio.</value>
+  </data>
 </root>

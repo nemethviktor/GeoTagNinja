@@ -80,7 +80,11 @@ public partial class FrmMainApp
     ///     It also sets up tooltips for specific controls. The labels and tooltips are fetched from a data source using the
     ///     HelperControlAndMessageBoxHandling.ReturnControlText method.
     /// </summary>
-    private void AppStartupAssignLabelsToObjects()
+    /// <param name="atStartup">
+    ///     False when re-run after a language change: the one-off layout tweaks (column widths) are then skipped so that
+    ///     nothing the user has resized is reset.
+    /// </param>
+    private void AppStartupAssignLabelsToObjects(bool atStartup = true)
     {
         Log.Info(message: "Starting");
 
@@ -137,7 +141,11 @@ public partial class FrmMainApp
                         toolStripMenuItemText = ReturnControlText(controlName: toolStripMenuItemName,
                             fakeControlType: FakeControlTypes.ColumnHeader);
                         columnHeader.Text = toolStripMenuItemText;
-                        columnHeader.Width = 120; // arbitrary
+                        if (atStartup)
+                        {
+                            columnHeader.Width = 120; // arbitrary
+                        }
+
                         Log.Trace(message: $"{toolStripMenuItemName}: {toolStripMenuItemText}");
                     }
                 }
