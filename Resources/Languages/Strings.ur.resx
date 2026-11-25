@@ -1970,6 +1970,9 @@ ArcGIS نے جون 2024 سے اپنا رجسٹریشن کا عمل تبدیل ک
   <data name="ckb_ShowChangelogAfterUpdate" xml:space="preserve">
     <value>اپ ڈیٹ کے بعد، دکھائیں کہ کیا تبدیل ہوا ہے</value>
   </data>
+  <data name="ckb_CheckForUpdates" xml:space="preserve">
+    <value>اپ ڈیٹس چیک کریں (ہفتے میں ایک بار)</value>
+  </data>
   <data name="mbx_Helper_InfoRemoveGeoDataKeywordsRemain" xml:space="preserve">
     <value>مقام کا ڈیٹا ہٹا دیا گیا ہے، لیکن آپ کے کلیدی الفاظ کو چھوا نہیں گیا: ان میں موجود کوئی بھی مقامی نام یا "geo:" کلیدی الفاظ جیسے تھے ویسے رہیں گے۔ انہیں مقام کی تبدیلیوں کے ساتھ چلانے کے لیے ترتیبات میں "کلیدی الفاظ کو مقام کے ساتھ ہم آہنگ رکھیں" فعال کریں۔</value>
   </data>

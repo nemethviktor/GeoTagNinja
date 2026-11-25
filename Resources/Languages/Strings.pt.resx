@@ -1970,6 +1970,9 @@ Dito isso, o código _deveria_ conseguir interpretar outros formatos. Observe qu
   <data name="ckb_ShowChangelogAfterUpdate" xml:space="preserve">
     <value>Após uma atualização, mostrar o que mudou</value>
   </data>
+  <data name="ckb_CheckForUpdates" xml:space="preserve">
+    <value>Verificar atualizações (uma vez por semana)</value>
+  </data>
   <data name="mbx_Helper_InfoRemoveGeoDataKeywordsRemain" xml:space="preserve">
     <value>Os dados de localização foram removidos, mas as suas palavras-chave não foram alteradas: quaisquer nomes de lugares ou palavras-chave "geo:" nelas permanecem como estavam. Para que acompanhem as mudanças de localização, ative "Manter as palavras-chave alinhadas à localização" nas Configurações.</value>
   </data>

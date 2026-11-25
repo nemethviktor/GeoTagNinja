@@ -1967,6 +1967,9 @@ Detto questo, il codice _dovrebbe_ essere in grado di interpretare anche altri f
   <data name="ckb_ShowChangelogAfterUpdate" xml:space="preserve">
     <value>Dopo un aggiornamento, mostra cosa è cambiato</value>
   </data>
+  <data name="ckb_CheckForUpdates" xml:space="preserve">
+    <value>Controlla gli aggiornamenti (una volta a settimana)</value>
+  </data>
   <data name="mbx_Helper_InfoRemoveGeoDataKeywordsRemain" xml:space="preserve">
     <value>I dati di posizione sono stati rimossi, ma le parole chiave non sono state toccate: eventuali nomi di luoghi o parole chiave "geo:" restano come erano. Per farle seguire le modifiche di posizione, attiva "Mantieni le parole chiave allineate alla posizione" nelle Impostazioni.</value>
   </data>

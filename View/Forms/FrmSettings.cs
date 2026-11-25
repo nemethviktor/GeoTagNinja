@@ -6,6 +6,7 @@ using GeoTagNinja.Helpers.FileSystem;
 using GeoTagNinja.Helpers.Localisation;
 using GeoTagNinja.Helpers.Startup;
 using GeoTagNinja.Helpers.UI;
+using GeoTagNinja.Helpers.Update;
 using GeoTagNinja.Model;
 using GeoTagNinja.View.Dialogs;
 using System;
@@ -56,7 +57,7 @@ public partial class FrmSettings : Form
     ];
 
     private readonly List<string> _checkBoxesWithTrueDefaultValue =
-        ["ckb_AlwaysRecenterMap", "ckb_SyncGeoKeywords", "ckb_ShowChangelogAfterUpdate"];
+        ["ckb_AlwaysRecenterMap", "ckb_SyncGeoKeywords", "ckb_ShowChangelogAfterUpdate", "ckb_CheckForUpdates"];
 
     /// <summary>
     ///     This Form provides an interface for the user to edit various app and file-specific settings.
@@ -67,12 +68,21 @@ public partial class FrmSettings : Form
         FrmHelp.Attach(form: this, topicId: "settings");
         AddCodeCreatedCheckBox(name: "ckb_SyncGeoKeywords");
         AddCodeCreatedCheckBox(name: "ckb_ShowChangelogAfterUpdate");
+        AddCodeCreatedCheckBox(name: "ckb_CheckForUpdates");
         AddCodeCreatedCheckBox(name: "ckb_EnableVideoFiles");
         AddFfmpegPathControls();
 
         // this one is largely responsible for disabling the detection of "new" (changed) data. (ie when going from "noting" to "something")
         _nowLoadingSettingsData = true;
         AssignControlLabelsAndValues();
+        // Not armed yet (see UpdateCheckPolicy.ForceOffOnWindows7): when update checks are locked off the box shows
+        // as unticked and can't be changed.
+        if (UpdateCheckPolicy.IsLockedOff &&
+            Controls.Find(key: "ckb_CheckForUpdates", searchAllChildren: true).FirstOrDefault() is CheckBox updatesBox)
+        {
+            updatesBox.Checked = false;
+            updatesBox.Enabled = false;
+        }
         _nowLoadingSettingsData = false;
     }
 

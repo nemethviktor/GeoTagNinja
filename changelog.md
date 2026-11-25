@@ -4,6 +4,7 @@
 - NEW & UPDATED:
 	- Changing the language in `Settings` no longer needs a restart: the main window (menus, buttons, labels, tooltips and the file list column headers) switches as soon as you click `OK`, and windows opened afterwards use the new language. (Dark mode, imperial/metric and settings import still ask for a restart.) The folder tree captions and the "No image to show" text switch too.
 	- The map's place search now asks for results in the app's language (GeoNames, Nominatim, and Photon where it supports that language), so place names come back in, say, Hungarian. Ranking is unchanged.
+	- New setting `Check for updates (once a week)` in `Settings` (on by default, as before). Switched off, GeoTagNinja never goes online to look for a newer version of itself or of ExifTool. Groundwork (`UpdateCheckPolicy`, not switched on) for turning the checks off for good on Windows 7.
 - FIXED:
 	- Installing over a copy made by the old (Visual Studio) installer left two "GeoTagNinja" entries in Windows' installed apps. The new installer only recognised older installs marked as English; the old one was language-neutral. It now removes those too. If you already have two entries, uninstall the older one (the one without the long version number) once.
 	- The "what's new" notes shown after an update could come up blank. They are now shown once the main window is on screen (not from inside its start-up), and fall back to plain text if the page doesn't load.

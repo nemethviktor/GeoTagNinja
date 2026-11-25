@@ -2029,6 +2029,9 @@ Oui : renommer le reste.  Non : arrêter ; tous les fichiers restent tels qu'ils
   <data name="ckb_ShowChangelogAfterUpdate" xml:space="preserve">
     <value>Après une mise à jour, afficher les modifications</value>
   </data>
+  <data name="ckb_CheckForUpdates" xml:space="preserve">
+    <value>Rechercher les mises à jour (une fois par semaine)</value>
+  </data>
   <data name="mbx_Helper_InfoRemoveGeoDataKeywordsRemain" xml:space="preserve">
     <value>Les données de localisation ont été supprimées, mais vos mots-clés n'ont pas été modifiés : les noms de lieux ou les mots-clés « geo: » qu'ils contiennent restent tels quels. Pour qu'ils suivent les changements de localisation, activez « Garder les mots-clés synchronisés avec la localisation » dans les Paramètres.</value>
   </data>

@@ -2029,6 +2029,9 @@
   <data name="ckb_ShowChangelogAfterUpdate" xml:space="preserve">
     <value>புதுப்பித்த பிறகு என்ன மாறியுள்ளது என்பதைக் காட்டு</value>
   </data>
+  <data name="ckb_CheckForUpdates" xml:space="preserve">
+    <value>புதுப்பிப்புகளைச் சரிபார் (வாரத்திற்கு ஒரு முறை)</value>
+  </data>
   <data name="mbx_Helper_InfoRemoveGeoDataKeywordsRemain" xml:space="preserve">
     <value>இருப்பிடத் தரவு அகற்றப்பட்டது, ஆனால் உங்கள் முக்கிய வார்த்தைகள் தொடப்படவில்லை: அவற்றிலுள்ள இடப் பெயர்களும் "geo:" முக்கிய வார்த்தைகளும் அப்படியே இருக்கும். இருப்பிட மாற்றங்களை அவை பின்பற்ற வேண்டுமெனில், அமைப்புகளில் "இருப்பிடத்துடன் முக்கிய வார்த்தைகளை ஒத்திசையில் வை" என்பதை இயக்கவும்.</value>
   </data>

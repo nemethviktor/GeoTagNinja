@@ -1970,6 +1970,9 @@ ArcGIS ने जून 2024 पासून त्यांची नोंद�
   <data name="ckb_ShowChangelogAfterUpdate" xml:space="preserve">
     <value>अपडेटनंतर काय बदलले आहे ते दाखवा</value>
   </data>
+  <data name="ckb_CheckForUpdates" xml:space="preserve">
+    <value>अपडेट तपासा (आठवड्यातून एकदा)</value>
+  </data>
   <data name="mbx_Helper_InfoRemoveGeoDataKeywordsRemain" xml:space="preserve">
     <value>स्थान डेटा काढला गेला आहे, पण तुमच्या कीवर्ड्सना हात लावलेला नाही: त्यातील कोणतीही स्थानाची नावे किंवा "geo:" कीवर्ड्स जसे होते तसेच राहतील. स्थान बदलांनुसार ते बदलावेत यासाठी, सेटिंग्जमध्ये "स्थानाशी जुळवून कीवर्ड्स ठेवा" चालू करा.</value>
   </data>

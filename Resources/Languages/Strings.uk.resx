@@ -1970,6 +1970,9 @@ ArcGIS змінили процес реєстрації з червня 2024 р�
   <data name="ckb_ShowChangelogAfterUpdate" xml:space="preserve">
     <value>Після оновлення показувати, що змінилося</value>
   </data>
+  <data name="ckb_CheckForUpdates" xml:space="preserve">
+    <value>Перевіряти наявність оновлень (раз на тиждень)</value>
+  </data>
   <data name="mbx_Helper_InfoRemoveGeoDataKeywordsRemain" xml:space="preserve">
     <value>Дані місцезнаходження видалено, але ваші ключові слова не змінено: назви місць і ключові слова «geo:» у них залишаються без змін. Щоб вони змінювалися разом із місцезнаходженням, увімкніть «Підтримувати ключові слова відповідно до місцезнаходження» в налаштуваннях.</value>
   </data>

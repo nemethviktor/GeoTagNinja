@@ -1967,6 +1967,9 @@ ArcGIS ਨੇ ਜੂਨ 2024 ਤੋਂ ਆਪਣੀ ਰਜਿਸਟ੍ਰੇਸ�
   <data name="ckb_ShowChangelogAfterUpdate" xml:space="preserve">
     <value>ਅੱਪਡੇਟ ਤੋਂ ਬਾਅਦ ਦਿਖਾਓ ਕਿ ਕੀ ਬਦਲਿਆ ਹੈ</value>
   </data>
+  <data name="ckb_CheckForUpdates" xml:space="preserve">
+    <value>ਅੱਪਡੇਟਾਂ ਦੀ ਜਾਂਚ ਕਰੋ (ਹਫ਼ਤੇ ਵਿੱਚ ਇੱਕ ਵਾਰ)</value>
+  </data>
   <data name="mbx_Helper_InfoRemoveGeoDataKeywordsRemain" xml:space="preserve">
     <value>ਥਾਂ ਦਾ ਡੇਟਾ ਹਟਾ ਦਿੱਤਾ ਗਿਆ ਹੈ, ਪਰ ਤੁਹਾਡੇ ਕੀਵਰਡ ਨਹੀਂ ਛੇੜੇ ਗਏ: ਉਹਨਾਂ ਵਿੱਚ ਕੋਈ ਵੀ ਥਾਵਾਂ ਦੇ ਨਾਂ ਜਾਂ "geo:" ਕੀਵਰਡ ਜਿਵੇਂ ਸਨ ਤਿਵੇਂ ਰਹਿਣਗੇ। ਇਹ ਥਾਂ ਬਦਲਣ ਨਾਲ ਬਦਲਣ ਲਈ ਸੈਟਿੰਗਾਂ ਵਿੱਚ "ਕੀਵਰਡ ਨੂੰ ਥਾਂ ਦੇ ਨਾਲ ਮੇਲ ਵਿੱਚ ਰੱਖੋ" ਚਾਲੂ ਕਰੋ।</value>
   </data>

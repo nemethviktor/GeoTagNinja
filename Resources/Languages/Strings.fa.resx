@@ -1970,6 +1970,9 @@ ArcGIS از ژوئن ۲۰۲۴ روند ثبت‌نام خود را تغییر د
   <data name="ckb_ShowChangelogAfterUpdate" xml:space="preserve">
     <value>پس از به‌روزرسانی، آنچه تغییر کرده نمایش داده شود</value>
   </data>
+  <data name="ckb_CheckForUpdates" xml:space="preserve">
+    <value>بررسی به‌روزرسانی (هفته‌ای یک بار)</value>
+  </data>
   <data name="mbx_Helper_InfoRemoveGeoDataKeywordsRemain" xml:space="preserve">
     <value>داده‌های مکان حذف شد، اما کلیدواژه‌هایتان تغییری نکرده‌اند: هر نام مکان یا کلیدواژهٔ «geo:» در آن‌ها همان‌طور که بودند باقی می‌مانند. برای اینکه با تغییرات مکان همگام شوند، گزینهٔ «کلیدواژه‌ها با مکان همگام بمانند» را در تنظیمات فعال کنید.</value>
   </data>

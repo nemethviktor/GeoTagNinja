@@ -2,6 +2,7 @@
 using GeoTagNinja.Helpers.Data;
 using GeoTagNinja.Helpers.Exif;
 using GeoTagNinja.Helpers.UI;
+using GeoTagNinja.Helpers.Update;
 using GeoTagNinja.Model;
 using Newtonsoft.Json;
 using RestSharp;
@@ -197,7 +198,14 @@ internal static class APIVersionCheckers
             ? 0
             : await Task.Run(function: runningExifTool.GetVersion);
 
-        if (nowUnixTime > lastCheckUnixTime + checkUpdateVal ||
+        // "Check for updates" off (or locked off, see UpdateCheckPolicy): nothing goes online, neither the ExifTool
+        // and GTN version lookups nor the ExifTool download. (The local version above is still read: the About box
+        // shows it.)
+        if (!UpdateCheckPolicy.IsEnabled)
+        {
+            Log.Info(message: "Update checks are switched off.");
+        }
+        else if (nowUnixTime > lastCheckUnixTime + checkUpdateVal ||
             strLastOnlineVersionCheck == null)
         {
             Log.Info(message: "Checking for new ExifTool versions.");

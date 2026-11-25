@@ -1970,6 +1970,9 @@ Meski demikian, kode ini _seharusnya_ dapat memahami format lain. Perhatikan bah
   <data name="ckb_ShowChangelogAfterUpdate" xml:space="preserve">
     <value>Setelah pembaruan, tampilkan apa yang berubah</value>
   </data>
+  <data name="ckb_CheckForUpdates" xml:space="preserve">
+    <value>Periksa pembaruan (seminggu sekali)</value>
+  </data>
   <data name="mbx_Helper_InfoRemoveGeoDataKeywordsRemain" xml:space="preserve">
     <value>Data lokasi telah dihapus, tetapi kata kunci Anda tidak diubah: nama tempat atau kata kunci "geo:" di dalamnya tetap seperti semula. Agar mengikuti perubahan lokasi, aktifkan "Jaga kata kunci tetap selaras dengan lokasi" di Pengaturan.</value>
   </data>

@@ -1970,6 +1970,9 @@ Ezzel együtt a kód _képes_ más elrendezéseket is értelmezni. Ha a vágóla
   <data name="ckb_ShowChangelogAfterUpdate" xml:space="preserve">
     <value>Frissítés után mutassa meg, mi változott</value>
   </data>
+  <data name="ckb_CheckForUpdates" xml:space="preserve">
+    <value>Frissítések keresése (hetente egyszer)</value>
+  </data>
   <data name="mbx_Helper_InfoRemoveGeoDataKeywordsRemain" xml:space="preserve">
     <value>A helyadatok eltávolításra kerültek, de a kulcsszavakhoz nem nyúltunk: a bennük lévő helynevek és „geo:” kulcsszavak változatlanul maradnak. Ha azt szeretné, hogy kövessék a helyváltozásokat, kapcsolja be a Beállításokban a „A kulcsszavak igazítása a helyhez” lehetőséget.</value>
   </data>

@@ -1970,6 +1970,9 @@
   <data name="ckb_ShowChangelogAfterUpdate" xml:space="preserve">
     <value>После обновления показывать, что изменилось</value>
   </data>
+  <data name="ckb_CheckForUpdates" xml:space="preserve">
+    <value>Проверять наличие обновлений (раз в неделю)</value>
+  </data>
   <data name="mbx_Helper_InfoRemoveGeoDataKeywordsRemain" xml:space="preserve">
     <value>Данные о местоположении удалены, но ключевые слова не затронуты: любые названия мест и ключевые слова «geo:» в них остались без изменений. Чтобы они следовали за изменениями местоположения, включите «Синхронизировать ключевые слова с местоположением» в настройках.</value>
   </data>

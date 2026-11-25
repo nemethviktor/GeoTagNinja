@@ -1964,6 +1964,9 @@ Tak: zmień nazwy pozostałych plików.  Nie: przerwij operację – wszystkie p
   <data name="ckb_ShowChangelogAfterUpdate" xml:space="preserve">
     <value>Po aktualizacji pokaż wprowadzone zmiany</value>
   </data>
+  <data name="ckb_CheckForUpdates" xml:space="preserve">
+    <value>Sprawdzaj aktualizacje (raz w tygodniu)</value>
+  </data>
   <data name="mbx_Helper_InfoRemoveGeoDataKeywordsRemain" xml:space="preserve">
     <value>Dane lokalizacyjne zostały usunięte, ale słowa kluczowe pozostały bez zmian. Wszystkie zawarte w nich nazwy miejsc i słowa kluczowe "geo:" pozostają takie jak wcześniej. Aby były automatycznie dostosowywane do zmian lokalizacji, włącz w Ustawieniach opcję „Aktualizuj słowa kluczowe zgodnie z lokalizacją”.</value>
   </data>

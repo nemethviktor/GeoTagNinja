@@ -141,6 +141,13 @@ internal static class HelperVariables
     /// </summary>
     internal static bool UserSettingShowChangelogAfterUpdate = true;
 
+    /// <summary>
+    ///     The user's "Check for updates" choice: on (the default) checks for a newer GeoTagNinja and ExifTool at most
+    ///     once a week, off never does. Do not read it directly to decide whether to go online: ask
+    ///     <c>UpdateCheckPolicy.IsEnabled</c>, which also applies the (not yet armed) Windows 7 override.
+    /// </summary>
+    internal static bool UserSettingCheckForUpdates = true;
+
     internal static bool UserSettingDoNotDownloadAltitude = false;
 
     /// <summary>

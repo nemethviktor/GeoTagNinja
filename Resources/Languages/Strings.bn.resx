@@ -1970,6 +1970,9 @@ ArcGIS ২০২৪ সালের জুন থেকে তাদের ন�
   <data name="ckb_ShowChangelogAfterUpdate" xml:space="preserve">
     <value>আপডেটের পর কী পরিবর্তন হয়েছে তা দেখান</value>
   </data>
+  <data name="ckb_CheckForUpdates" xml:space="preserve">
+    <value>আপডেট আছে কি না দেখুন (সপ্তাহে একবার)</value>
+  </data>
   <data name="mbx_Helper_InfoRemoveGeoDataKeywordsRemain" xml:space="preserve">
     <value>অবস্থান ডেটা মুছে ফেলা হয়েছে, তবে আপনার কীওয়ার্ড স্পর্শ করা হয়নি: সেগুলোর মধ্যে থাকা যেকোনো স্থানের নাম বা "geo:" কীওয়ার্ড যেমন ছিল তেমনই আছে। অবস্থানের পরিবর্তনের সঙ্গে সেগুলোও মেলাতে চাইলে সেটিংসে "অবস্থানের সঙ্গে কীওয়ার্ড মিলিয়ে রাখুন" চালু করুন।</value>
   </data>

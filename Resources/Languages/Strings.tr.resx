@@ -1970,6 +1970,9 @@ Bununla birlikte kod diğer düzenleri de anlayabilmelidir. Panoda yukarıdakile
   <data name="ckb_ShowChangelogAfterUpdate" xml:space="preserve">
     <value>Güncellemeden sonra neyin değiştiğini göster</value>
   </data>
+  <data name="ckb_CheckForUpdates" xml:space="preserve">
+    <value>Güncellemeleri denetle (haftada bir)</value>
+  </data>
   <data name="mbx_Helper_InfoRemoveGeoDataKeywordsRemain" xml:space="preserve">
     <value>Konum verileri kaldırıldı, ancak anahtar kelimelerinize dokunulmadı: içlerindeki yer adları veya "geo:" anahtar kelimeleri olduğu gibi kalır. Bunların konum değişikliklerini izlemesi için Ayarlarda "Anahtar kelimeleri konumla uyumlu tut" seçeneğini açın.</value>
   </data>

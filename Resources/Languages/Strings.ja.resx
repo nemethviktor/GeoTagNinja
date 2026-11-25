@@ -1970,6 +1970,9 @@ ArcGIS は 2024 年 6 月に登録手続きを変更しました。[こちら](h
   <data name="ckb_ShowChangelogAfterUpdate" xml:space="preserve">
     <value>更新後に変更内容を表示する</value>
   </data>
+  <data name="ckb_CheckForUpdates" xml:space="preserve">
+    <value>アップデートを確認する (週に1回)</value>
+  </data>
   <data name="mbx_Helper_InfoRemoveGeoDataKeywordsRemain" xml:space="preserve">
     <value>位置情報は削除されましたが、キーワードは変更されていません。キーワード内の地名や「geo:」キーワードはそのまま残ります。位置の変更に合わせて更新するには、設定で「キーワードを位置情報と連動させる」をオンにしてください。</value>
   </data>

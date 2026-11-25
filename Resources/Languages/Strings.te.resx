@@ -1970,6 +1970,9 @@ ArcGIS జూన్ 2024 నుండి వారి నమోదు ప్ర�
   <data name="ckb_ShowChangelogAfterUpdate" xml:space="preserve">
     <value>నవీకరణ తర్వాత, ఏమి మారిందో చూపించు</value>
   </data>
+  <data name="ckb_CheckForUpdates" xml:space="preserve">
+    <value>అప్‌డేట్‌ల కోసం తనిఖీ చేయండి (వారానికి ఒకసారి)</value>
+  </data>
   <data name="mbx_Helper_InfoRemoveGeoDataKeywordsRemain" xml:space="preserve">
     <value>స్థాన డేటా తొలగించబడింది, కానీ మీ కీవర్డ్‌లను తాకలేదు: వాటిలోని ఏ స్థల పేర్లు లేదా "geo:" కీవర్డ్‌లు అలాగే ఉంటాయి. స్థాన మార్పులను అవి అనుసరించాలంటే, సెట్టింగ్‌లలో "స్థానానికి అనుగుణంగా కీవర్డ్‌లను ఉంచు" ఆన్ చేయండి.</value>
   </data>

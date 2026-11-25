@@ -1970,6 +1970,9 @@ Hata hivyo msimbo unapaswa kuelewa mipangilio mingine. Kumbuka kwamba ikiwa ubao
   <data name="ckb_ShowChangelogAfterUpdate" xml:space="preserve">
     <value>Baada ya sasisho, onyesha kilichobadilika</value>
   </data>
+  <data name="ckb_CheckForUpdates" xml:space="preserve">
+    <value>Angalia masasisho (mara moja kwa wiki)</value>
+  </data>
   <data name="mbx_Helper_InfoRemoveGeoDataKeywordsRemain" xml:space="preserve">
     <value>Data ya eneo imeondolewa, lakini maneno yako muhimu hayakuguswa: majina yoyote ya maeneo au maneno muhimu ya "geo:" yaliyomo yanabaki kama yalivyokuwa. Ili yafuate mabadiliko ya eneo, washa "Weka maneno muhimu sambamba na eneo" katika Mipangilio.</value>
   </data>

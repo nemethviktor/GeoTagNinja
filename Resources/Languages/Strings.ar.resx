@@ -1967,6 +1967,9 @@
   <data name="ckb_ShowChangelogAfterUpdate" xml:space="preserve">
     <value>بعد التحديث، عرض ما تغيّر</value>
   </data>
+  <data name="ckb_CheckForUpdates" xml:space="preserve">
+    <value>التحقق من وجود تحديثات (مرة في الأسبوع)</value>
+  </data>
   <data name="mbx_Helper_InfoRemoveGeoDataKeywordsRemain" xml:space="preserve">
     <value>تمت إزالة بيانات الموقع، لكن لم تُمسّ الكلمات المفتاحية الخاصة بك: أي أسماء أماكن أو كلمات « geo: » مفتاحية فيها تبقى كما هي. لكي تتبع هذه الكلمات تغييرات الموقع، فعّل « الحفاظ على الكلمات المفتاحية متزامنة مع الموقع » في الإعدادات.</value>
   </data>

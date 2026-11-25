@@ -1970,6 +1970,9 @@ Sí: renombrar el resto.  No: detener; todos los archivos siguen como estaban.</
   <data name="ckb_ShowChangelogAfterUpdate" xml:space="preserve">
     <value>Después de una actualización, mostrar qué ha cambiado</value>
   </data>
+  <data name="ckb_CheckForUpdates" xml:space="preserve">
+    <value>Buscar actualizaciones (una vez por semana)</value>
+  </data>
   <data name="mbx_Helper_InfoRemoveGeoDataKeywordsRemain" xml:space="preserve">
     <value>Los datos de ubicación se han eliminado, pero sus palabras clave no se han tocado: los nombres de lugar o las palabras clave "geo:" que contengan se mantienen como estaban. Para que sigan los cambios de ubicación, active "Mantener las palabras clave sincronizadas con la ubicación" en Ajustes.</value>
   </data>

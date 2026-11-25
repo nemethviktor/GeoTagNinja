@@ -1970,6 +1970,9 @@ ArcGIS ने जून 2024 से अपनी पंजीकरण प्र
   <data name="ckb_ShowChangelogAfterUpdate" xml:space="preserve">
     <value>अपडेट के बाद, क्या बदला है यह दिखाएँ</value>
   </data>
+  <data name="ckb_CheckForUpdates" xml:space="preserve">
+    <value>अपडेट की जाँच करें (सप्ताह में एक बार)</value>
+  </data>
   <data name="mbx_Helper_InfoRemoveGeoDataKeywordsRemain" xml:space="preserve">
     <value>स्थान डेटा हटा दिया गया है, लेकिन आपके कीवर्ड नहीं छुए गए हैं: उनमें मौजूद स्थान-नाम या "geo:" कीवर्ड जैसे थे वैसे ही रहेंगे। स्थान बदलने पर उन्हें साथ-साथ बदलवाने के लिए सेटिंग्स में "कीवर्ड को स्थान के साथ समकालिक रखें" चालू करें।</value>
   </data>

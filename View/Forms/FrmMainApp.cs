@@ -516,7 +516,12 @@ public partial class FrmMainApp : Form
 
         await APIVersionCheckers.CheckForNewVersions();
 
-        LaunchAutoUpdater();
+        // with update checks off AutoUpdater must not run either: it would offer whatever the last check left in
+        // updateJsonData.json
+        if (UpdateCheckPolicy.IsEnabled)
+        {
+            LaunchAutoUpdater();
+        }
         Log.Info(message: "OnLoad: Done.");
     }
 

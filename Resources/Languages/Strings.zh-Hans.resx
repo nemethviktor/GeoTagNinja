@@ -1970,6 +1970,9 @@ ArcGIS 自 2024 年 6 月起更改了注册流程。请在[此处](https://locat
   <data name="ckb_ShowChangelogAfterUpdate" xml:space="preserve">
     <value>更新后显示更改内容</value>
   </data>
+  <data name="ckb_CheckForUpdates" xml:space="preserve">
+    <value>检查更新（每周一次）</value>
+  </data>
   <data name="mbx_Helper_InfoRemoveGeoDataKeywordsRemain" xml:space="preserve">
     <value>位置数据已移除，但你的关键词未被改动：其中的地名或“geo:”关键词保持不变。若希望它们随位置变化而更新，请在设置中开启“使关键词与位置保持同步（地名和 geo: 关键词）”。</value>
   </data>
